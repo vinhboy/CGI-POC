@@ -1,0 +1,6 @@
+FROM mysql:5.6
+
+MAINTAINER Sravan Neppalli "sravan.neppalli@cgi.com"
+
+# add our custom config file
+COPY mysql/docker/small_memory_defaults.cnf /etc/mysql/conf.d

@@ -1,0 +1,7 @@
+FROM nhoag/angularjs
+
+MAINTAINER Sravan Neppalli "sravan.neppalli@cgi.com"
+
+WORKDIR /app
+
+COPY angular/ .

@@ -1,0 +1,54 @@
+version: '2'
+
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    links:
+      - dropwizard
+    ports:
+      - '80:80'
+    volumes:
+      - './angular/dist:/usr/share/nginx/html:ro'
+  angular:
+    build:
+      context: .
+      dockerfile: Dockerfile.angular
+    ports:
+      - '9000:9000'
+    volumes:
+      - './angular:/app'
+    tty:
+      true
+  dropwizard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dropwizard
+    links:
+      - mysql
+    ports:
+      - '8080:8080'
+      - '8081:8081'
+      - '8443:8443'
+      - '2003:2003'
+    environment:
+      MYSQL_ROOT_USERNAME: root
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_HOSTNAME: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DB_NAME: cgi_poc
+      KEYSTORE_FILE: development.keystore
+      KEYSTORE_PASSWORD: p@ssw0rd
+    volumes:
+      - './dropwizard:/usr/src/app'
+    tty:
+      true

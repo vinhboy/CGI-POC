@@ -1,0 +1,16 @@
+{
+	"GENERIC.MESSAGE.SUCCESS": "Operation success",
+	"GENERIC.MESSAGE.ERROR.SERVER": "An Error occurred !",
+	"GENERIC.MESSAGE.UNVALID.PASSWORDPATTERN":"Please  match the requested format for the password",
+	"LOGIN.MESSAGE.LOGGEDIN": "You are Logged in",
+	"LOGIN.MESSAGE.UNVALID": "Connection failed!Verify your email or password ",
+	"LOGIN.LABEL.USERNAME": "Username",
+	"LOGIN.LABEL.PASSWORD": "Password",
+	"LOGIN.LABEL.REMEMBERME": "Remember me",
+	"LOGIN.MESSAGE.UNVALID.PASSWORDREQUIRED":"the password is mandatory",
+	"LOGIN.MESSAGE.UNVALID.USERNAMEREQUIRED":"the username is mandatory",
+	"LOGIN.MESSAGE.PASSWORDFORGOT.LINK": "Forget username or password ?",
+	"LOGIN.MESSAGE.SIGNIN" : "Don't have an account",
+	"LOGIN.MESSAGE.SIGNIN.LINK" :"Create one now",
+	"LOGIN.BUTTON.SUBMIT" : "Log in"
+}

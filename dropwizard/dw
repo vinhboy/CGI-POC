@@ -1,0 +1,5 @@
+#!/usr/bin/perl
+
+if (@ARGV[0] =~ /^db$/i)          { exec("java -jar target/cgi-poc-dw-1.0-SNAPSHOT.jar db migrate config.yml") }
+elsif (@ARGV[0] =~ /^serve$/i)    { exec("java -jar target/cgi-poc-dw-1.0-SNAPSHOT.jar db migrate config.yml && java -jar target/cgi-poc-dw-1.0-SNAPSHOT.jar server config.yml") }
+else                              { print "allowed commands are db or serve.\n" }

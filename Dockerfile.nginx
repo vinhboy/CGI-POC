@@ -1,0 +1,5 @@
+FROM nginx
+
+MAINTAINER Sravan Neppalli "sravan.neppalli@cgi.com"
+
+EXPOSE 80
