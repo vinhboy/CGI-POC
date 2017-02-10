@@ -1,16 +1,20 @@
 package com.cgi.poc.dw.rest.resource;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.helper.IntegrationTest;
-import com.cgi.poc.dw.helper.validator.ResponseValidator;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.rest.model.UserRegistrationDto;
-import com.cgi.poc.dw.rest.model.error.ErrorMessage;
 import java.util.Arrays;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.json.JSONException;
@@ -26,7 +30,11 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   public void noArgument() {
     Client client = new JerseyClientBuilder().build();
     Response response = client.target(String.format(url, RULE.getLocalPort())).request().post(null);
-    ResponseValidator.validate(response, 400, ErrorMessage.LOGIN_FAIL_NO_CREDENTIALS.toString());
+
+    assertNotNull(response);
+    assertThat(response.readEntity(String.class),
+        containsString("Missing credentials."));
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
   }
 
   @Test
@@ -36,7 +44,11 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     loginUserDto.setPassword("test123");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
-    ResponseValidator.validate(response, 400, ErrorMessage.LOGIN_FAIL_NO_EMAIL.toString());
+
+    assertNotNull(response);
+    assertThat(response.readEntity(String.class),
+        containsString("Missing email."));
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
   }
 
   @Test
@@ -46,7 +58,11 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     loginUserDto.setEmail("helper@gmail.com");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
-    ResponseValidator.validate(response, 400, ErrorMessage.LOGIN_FAIL_NO_PASSWORD.toString());
+
+    assertNotNull(response);
+    assertThat(response.readEntity(String.class),
+        containsString("Missing password."));
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
   }
 
   @Test
@@ -57,12 +73,16 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     loginUserDto.setPassword("test123");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
-    ResponseValidator.validate(response, 401,
-        ErrorMessage.LOGIN_FAIL_USER_NOT_FOUND_OR_WRONG_PASSWORD.toString());
+
+    assertNotNull(response);
+    assertThat(response.readEntity(String.class),
+        containsString("Invalid username or password."));
+    assertEquals(Response.Status.NOT_FOUND.getStatusCode(),
+        response.getStatus());
   }
 
   @Test
-  public void signupUserLoginUserSuccess() throws JSONException {
+  public void registerUserLoginUserSuccess() throws JSONException {
     Client client = new JerseyClientBuilder().build();
     // registerUser user
     UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
@@ -123,9 +143,14 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     LoginUserDto loginUserDto = new LoginUserDto();
     loginUserDto.setEmail("wrong.pw@gmail.com");
     loginUserDto.setPassword("wrong");
+    
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
-    ResponseValidator.validate(response, 401,
-        ErrorMessage.LOGIN_FAIL_USER_NOT_FOUND_OR_WRONG_PASSWORD.toString());
+    
+    assertNotNull(response);
+    assertThat(response.readEntity(String.class),
+        containsString("Invalid username or password."));
+    assertEquals(Response.Status.NOT_FOUND.getStatusCode(),
+        response.getStatus());
   }
 }
