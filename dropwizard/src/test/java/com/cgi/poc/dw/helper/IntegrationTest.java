@@ -1,4 +1,4 @@
-package com.cgi.poc.dw.test;
+package com.cgi.poc.dw.helper;
 
 import com.cgi.poc.dw.CgiPocApplication;
 import com.cgi.poc.dw.CgiPocConfiguration;

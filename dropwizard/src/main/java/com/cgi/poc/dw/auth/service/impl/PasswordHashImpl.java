@@ -1,4 +1,6 @@
-package com.cgi.poc.dw.auth;
+package com.cgi.poc.dw.auth.service.impl;
+
+import com.cgi.poc.dw.auth.service.PasswordHash;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +14,7 @@ import javax.crypto.spec.PBEKeySpec;
  *  
  * Adapted from the http://crackstation.net/hashing-security.htm
  */
-public class PasswordHash {
+public class PasswordHashImpl implements PasswordHash {
 
   public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
   public static final int SALT_BYTE_SIZE = 27;
@@ -27,7 +29,7 @@ public class PasswordHash {
    * @param password the password to hash
    * @return a salted PBKDF2 hash of the password
    */
-  public static String createHash(String password)
+  public String createHash(String password)
       throws NoSuchAlgorithmException, InvalidKeySpecException {
     return createHash(password.toCharArray());
   }
@@ -38,7 +40,7 @@ public class PasswordHash {
    * @param password the password to hash
    * @return a salted PBKDF2 hash of the password
    */
-  public static String createHash(char[] password)
+  public String createHash(char[] password)
       throws NoSuchAlgorithmException, InvalidKeySpecException {
     // Generate a random salt
     SecureRandom random = new SecureRandom();
@@ -57,7 +59,7 @@ public class PasswordHash {
    * @param correctHash the hash of the valid password
    * @return true if the password is correct, false if not
    */
-  public static boolean validatePassword(String password, String correctHash)
+  public boolean validatePassword(String password, String correctHash)
       throws NoSuchAlgorithmException,
       InvalidKeySpecException {
     return validatePassword(password.toCharArray(), correctHash);
@@ -70,7 +72,7 @@ public class PasswordHash {
    * @param correctHash the hash of the valid password
    * @return true if the password is correct, false if not
    */
-  public static boolean validatePassword(char[] password, String correctHash)
+  public boolean validatePassword(char[] password, String correctHash)
       throws NoSuchAlgorithmException,
       InvalidKeySpecException {
     // Decode the hash into its parameters

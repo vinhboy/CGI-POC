@@ -1,4 +1,4 @@
-package com.cgi.poc.dw.test.validator;
+package com.cgi.poc.dw.helper.validator;
 
 import javax.ws.rs.core.Response;
 import org.junit.Assert;

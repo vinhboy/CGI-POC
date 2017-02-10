@@ -1,7 +1,7 @@
-package com.cgi.poc.dw.service.impl;
+package com.cgi.poc.dw.service;
 
-import com.cgi.poc.dw.auth.PasswordHash;
 import com.cgi.poc.dw.auth.service.JwtBuilderService;
+import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.rest.model.AuthTokenResponseDto;
@@ -9,10 +9,10 @@ import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.rest.model.error.ErrorMessage;
 import com.cgi.poc.dw.rest.model.error.ErrorMessageWebException;
 import com.cgi.poc.dw.rest.model.validator.LoginUserDtoValidator;
-import com.cgi.poc.dw.service.LoginService;
 import com.google.inject.Inject;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.Response;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
@@ -23,11 +23,13 @@ public class LoginServiceImpl implements LoginService {
   private final static Logger LOG = LoggerFactory.getLogger(LoginServiceImpl.class);
   private final UserDao userDao;
   private final JwtBuilderService jwtBuilderService;
+  private final PasswordHash passwordHash;
 
   @Inject
-  public LoginServiceImpl(UserDao userDao, JwtBuilderService jwtBuilderService) {
+  public LoginServiceImpl(UserDao userDao, JwtBuilderService jwtBuilderService, PasswordHash passwordHash) {
     this.userDao = userDao;
     this.jwtBuilderService = jwtBuilderService;
+    this.passwordHash = passwordHash;
   }
 
   @Override
@@ -61,15 +63,10 @@ public class LoginServiceImpl implements LoginService {
   private boolean hasValidPassword(LoginUserDto loginUserDto, User user) {
     boolean hasValidPassword = false;
     try {
-      hasValidPassword = PasswordHash.validatePassword(loginUserDto.getPassword(), user.getHash());
-    } catch (NoSuchAlgorithmException e) {
-      LOG.error("Unable to compute hash.", e);
-      throw new ErrorMessageWebException(
-          ErrorMessage.LOGIN_FAIL_USER_NOT_FOUND_OR_WRONG_PASSWORD);
-    } catch (InvalidKeySpecException e) {
-      LOG.warn("Unable to compute hash.", e);
-      throw new ErrorMessageWebException(
-          ErrorMessage.LOGIN_FAIL_USER_NOT_FOUND_OR_WRONG_PASSWORD);
+      hasValidPassword = passwordHash.validatePassword(loginUserDto.getPassword(), user.getPassword());
+    } catch (Exception e) {
+      LOG.error("Unable to compute password hash.", e);
+      throw new InternalServerErrorException("Unable to compute password hash.");
     }
     return hasValidPassword;
   }

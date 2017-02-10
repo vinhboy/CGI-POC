@@ -1,5 +1,6 @@
-package com.cgi.poc.dw.auth;
+package com.cgi.poc.dw.auth.service;
 
+import com.cgi.poc.dw.auth.service.impl.PasswordHashImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -14,19 +15,21 @@ public class PasswordHashUnitTest {
    */
   @Test
   public void passwordHashUnitTest() {
+
+    PasswordHashImpl passwordHash = new PasswordHashImpl();
     try {
       for (int i = 0; i < 100; i++) {
         String password = "" + i;
-        String hash = PasswordHash.createHash(password);
-        String secondHash = PasswordHash.createHash(password);
+        String hash = passwordHash.createHash(password);
+        String secondHash = passwordHash.createHash(password);
         if (hash.equals(secondHash)) {
           Assert.fail("FAILURE: TWO HASHES ARE EQUAL!");
         }
         String wrongPassword = "" + (i + 1);
         // do not accept wrong password
-        Assert.assertFalse(PasswordHash.validatePassword(wrongPassword, hash));
+        Assert.assertFalse(passwordHash.validatePassword(wrongPassword, hash));
         // do accept correct password
-        Assert.assertTrue(PasswordHash.validatePassword(password, hash));
+        Assert.assertTrue(passwordHash.validatePassword(password, hash));
       }
     } catch (Exception ex) {
       LOG.error("fail", ex);

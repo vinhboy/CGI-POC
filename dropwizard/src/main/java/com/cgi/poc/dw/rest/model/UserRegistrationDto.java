@@ -1,38 +1,33 @@
-package com.cgi.poc.dw.dao.model;
+package com.cgi.poc.dw.rest.model;
 
 import com.cgi.poc.dw.auth.model.Role;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.security.Principal;
+import com.cgi.poc.dw.dao.model.NotificationType;
+import java.io.Serializable;
 import java.util.List;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class User implements Principal {
+public class UserRegistrationDto implements Serializable {
 
-  private long id;
+  private static final long serialVersionUID = 1L;
+
   private String firstName;
+
   private String lastName;
+
   private String email;
+
   private String password;
-  @NotNull
+
   @Size(min = 10, max = 10)
   private String phone;
+
+  @Pattern(regexp = "\\d{5}")
   private String zipCode;
+
   private Role role;
+
   private List<NotificationType> notificationType;
-  private double latitude;
-  private double longitude;
-
-  public User() {
-  }
-  
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
 
   public String getFirstName() {
     return firstName;
@@ -97,31 +92,5 @@ public class User implements Principal {
   public void setNotificationType(
       List<NotificationType> notificationType) {
     this.notificationType = notificationType;
-  }
-
-  public double getLatitude() {
-    return latitude;
-  }
-
-  public void setLatitude(double latitude) {
-    this.latitude = latitude;
-  }
-
-  public double getLongitude() {
-    return longitude;
-  }
-
-  public void setLongitude(double longitude) {
-    this.longitude = longitude;
-  }
-
-  /*
-     * dropwizard requires to implement principal for authentication which
-     * implements getName()
-     */
-  @JsonIgnore
-  @Override
-  public String getName() {
-    return email;
   }
 }
