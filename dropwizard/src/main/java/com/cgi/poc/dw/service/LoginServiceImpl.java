@@ -10,8 +10,6 @@ import com.cgi.poc.dw.rest.model.error.ErrorMessage;
 import com.cgi.poc.dw.rest.model.error.ErrorMessageWebException;
 import com.cgi.poc.dw.rest.model.validator.LoginUserDtoValidator;
 import com.google.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.Response;
 import org.jose4j.lang.JoseException;

@@ -1,8 +1,7 @@
-package com.cgi.poc.dw.auth.service.impl;
+package com.cgi.poc.dw.auth.service;
 
 import com.cgi.poc.dw.CgiPocConfiguration;
 import com.cgi.poc.dw.auth.model.Keys;
-import com.cgi.poc.dw.auth.service.KeyBuilderService;
 import java.security.NoSuchAlgorithmException;
 import org.jose4j.keys.HmacKey;
 

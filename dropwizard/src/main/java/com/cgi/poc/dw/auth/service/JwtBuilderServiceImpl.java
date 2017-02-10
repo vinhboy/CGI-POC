@@ -1,7 +1,6 @@
-package com.cgi.poc.dw.auth.service.impl;
+package com.cgi.poc.dw.auth.service;
 
 import com.cgi.poc.dw.auth.model.Keys;
-import com.cgi.poc.dw.auth.service.JwtBuilderService;
 import com.cgi.poc.dw.dao.model.User;
 import com.google.inject.Inject;
 import org.jose4j.jws.AlgorithmIdentifiers;

@@ -2,11 +2,11 @@ package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.model.NotificationType;
+import com.cgi.poc.dw.helper.IntegrationTest;
+import com.cgi.poc.dw.helper.validator.ResponseValidator;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.rest.model.UserRegistrationDto;
 import com.cgi.poc.dw.rest.model.error.ErrorMessage;
-import com.cgi.poc.dw.helper.IntegrationTest;
-import com.cgi.poc.dw.helper.validator.ResponseValidator;
 import java.util.Arrays;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;

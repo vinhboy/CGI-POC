@@ -1,6 +1,4 @@
-package com.cgi.poc.dw.auth.service.impl;
-
-import com.cgi.poc.dw.auth.service.PasswordHash;
+package com.cgi.poc.dw.auth.service;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;

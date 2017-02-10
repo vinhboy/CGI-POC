@@ -1,14 +1,11 @@
-package com.cgi.poc.dw.dao.impl;
+package com.cgi.poc.dw.dao;
 
-import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.mapper.UserMapper;
 import com.cgi.poc.dw.dao.model.User;
-import java.util.Iterator;
 import java.util.List;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
-import org.skife.jdbi.v2.sqlobject.SqlBatch;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;

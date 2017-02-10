@@ -1,6 +1,5 @@
 package com.cgi.poc.dw.auth.service;
 
-import com.cgi.poc.dw.auth.service.impl.PasswordHashImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;

@@ -10,8 +10,6 @@ import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.rest.model.UserRegistrationDto;
 import com.cgi.poc.dw.rest.model.validator.UserRegistrationDtoValidator;
 import com.google.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.BadRequestException;

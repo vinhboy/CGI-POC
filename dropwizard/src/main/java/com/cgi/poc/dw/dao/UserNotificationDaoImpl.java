@@ -1,6 +1,5 @@
-package com.cgi.poc.dw.dao.impl;
+package com.cgi.poc.dw.dao;
 
-import com.cgi.poc.dw.dao.UserNotificationDao;
 import com.cgi.poc.dw.dao.mapper.UserNotificationMapper;
 import java.util.List;
 import org.skife.jdbi.v2.sqlobject.Bind;
