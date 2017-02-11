@@ -4,8 +4,6 @@ import com.cgi.poc.dw.auth.model.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.security.Principal;
 import java.util.List;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 public class User implements Principal {
 
@@ -14,8 +12,6 @@ public class User implements Principal {
   private String lastName;
   private String email;
   private String password;
-  @NotNull
-  @Size(min = 10, max = 10)
   private String phone;
   private String zipCode;
   private Role role;

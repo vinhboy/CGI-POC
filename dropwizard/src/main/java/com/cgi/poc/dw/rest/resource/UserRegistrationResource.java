@@ -7,8 +7,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -32,7 +32,23 @@ public class UserRegistrationResource {
       @ApiResponse(code = 200, message = "Success"),
       @ApiResponse(code = 500, message = "System Error")
   })
-  public Response signup(@Valid @NotNull UserRegistrationDto userRegistrationDto) {
+  public Response signup(@NotNull UserRegistrationDto userRegistrationDto) {
+
+    if (!isValid(userRegistrationDto.getPhone(), "\\d{10}")) {
+      throw new BadRequestException("Invalid phone number.");
+    }
+
+    if (!isValid(userRegistrationDto.getZipCode(), "\\d{5}")) {
+      throw new BadRequestException("Invalid zip code.");
+    }
+
     return userRegistrationService.registerUser(userRegistrationDto);
+  }
+
+  private boolean isValid(String input, String regex) {
+    if (input != null && input.matches(regex)) {
+      return true;
+    }
+    return false;
   }
 }

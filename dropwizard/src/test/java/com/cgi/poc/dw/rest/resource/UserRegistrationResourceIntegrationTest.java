@@ -49,7 +49,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     userRegistrationDto.setZipCode("98765");
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
-        .post(Entity.json(new UserRegistrationDto()));
+        .post(Entity.json(userRegistrationDto));
     assertNotNull(response);
     assertThat(response.readEntity(String.class),
         containsString("Missing email."));
@@ -198,10 +198,10 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(userRegistrationDto));
-    Assert.assertEquals(422, response.getStatus());
-    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
-    Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("errors")));
-    Assert.assertEquals("[\"phone size must be between 10 and 10\"]", responseJo.optString("errors"));
+    assertNotNull(response);
+    assertThat(response.readEntity(String.class),
+        containsString("Invalid phone number."));
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
   }
 
 
@@ -221,10 +221,10 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(userRegistrationDto));
-    Assert.assertEquals(422, response.getStatus());
-    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
-    Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("errors")));
-    Assert.assertEquals("[\"zipCode must match \\\"\\\\d{5}\\\"\"]", responseJo.optString("errors"));
+    assertNotNull(response);
+    assertThat(response.readEntity(String.class),
+        containsString("Invalid zip code."));
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
   }
 
   @Test

@@ -4,8 +4,6 @@ import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import java.io.Serializable;
 import java.util.List;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 public class UserRegistrationDto implements Serializable {
 
@@ -19,10 +17,8 @@ public class UserRegistrationDto implements Serializable {
 
   private String password;
 
-  @Size(min = 10, max = 10)
   private String phone;
 
-  @Pattern(regexp = "\\d{5}")
   private String zipCode;
 
   private Role role;
