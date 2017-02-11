@@ -3,6 +3,7 @@ package com.cgi.poc.dw.rest.resource;
 import com.cgi.poc.dw.rest.model.UserRegistrationDto;
 import com.cgi.poc.dw.service.UserRegistrationService;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -22,8 +23,15 @@ import javax.ws.rs.core.Response;
 @Api(value = "/register", basePath = "/")
 public class UserRegistrationResource {
 
+  private UserRegistrationService userRegistrationService;
+  
+  private String apiUrl;
+
   @Inject
-  UserRegistrationService userRegistrationService;
+  public UserRegistrationResource(@Named("apiUrl") String apiUrl, UserRegistrationService userRegistrationService) {
+    this.apiUrl = apiUrl;
+    this.userRegistrationService = userRegistrationService;
+  }
 
   @POST
   @ApiOperation(value = "User profile registration",

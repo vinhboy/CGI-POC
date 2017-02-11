@@ -26,6 +26,7 @@ import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -109,6 +110,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
             new EnvironmentVariableSubstitutor(false)
         )
     );
+    
   }
 
   @Override
@@ -123,6 +125,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
 
     // guice injector
     Injector injector = createInjector(configuration, environment, keys);
+    
     // resource registration
     registerResource(environment, injector, UserRegistrationResource.class);
     registerResource(environment, injector, LoginResource.class);
@@ -220,6 +223,8 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
+        //configs
+        bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
       }
     });
     return injector;
