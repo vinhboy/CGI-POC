@@ -1,7 +1,6 @@
 package com.cgi.poc.dw.service;
 
 import com.cgi.poc.dw.auth.MyPasswordValidator;
-import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;

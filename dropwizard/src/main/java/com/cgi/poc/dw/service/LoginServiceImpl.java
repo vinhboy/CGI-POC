@@ -36,10 +36,10 @@ public class LoginServiceImpl extends BaseServiceImpl implements LoginService {
   @Override
   public Response login(User user) {
 
-   if (user == null) {
+    if (user == null) {
       throw new BadRequestException("Missing credentials.");
     }
-    
+
     validate(user, "rest", LoginValidationGroup.class);
 
     User retUser = userDao.findUserByEmail(user.getEmail());
@@ -47,8 +47,7 @@ public class LoginServiceImpl extends BaseServiceImpl implements LoginService {
       LOG.warn("User not found.");
       throw new NotFoundException("Invalid username or password.");
     }
-    
-    
+
     if (hasValidPassword(user, retUser)) {
       String authToken;
       try {

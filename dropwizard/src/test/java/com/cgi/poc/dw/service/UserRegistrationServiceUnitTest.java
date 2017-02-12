@@ -96,7 +96,7 @@ public class UserRegistrationServiceUnitTest {
         String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
         String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
             .getCanonicalName();
-        
+
         if (tmp.equals("password") && annotation.equals("javax.validation.constraints.Size")) {
           assertThat(violation.getMessageTemplate())
               .isEqualTo("must be at least 2 characters in length.");

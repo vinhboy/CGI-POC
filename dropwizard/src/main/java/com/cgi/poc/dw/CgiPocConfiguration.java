@@ -43,7 +43,13 @@ public class CgiPocConfiguration extends Configuration {
    */
   @NotEmpty
   private String apiKey;
-
+  /**
+   * Jersey client default configuration.
+   */
+  @Valid
+  @NotNull
+  private JerseyClientConfiguration jerseyClientConfiguration
+      = new JerseyClientConfiguration();
 
   /* CORS */
   public CorsConfiguration getCorsConfiguration() {
@@ -74,15 +80,6 @@ public class CgiPocConfiguration extends Configuration {
   public void setJwtSignatureSecret(String jwtSignatureSecret) {
     this.jwtSignatureSecret = jwtSignatureSecret;
   }
-
-
-  /**
-   * Jersey client default configuration.
-   */
-  @Valid
-  @NotNull
-  private JerseyClientConfiguration jerseyClientConfiguration
-      = new JerseyClientConfiguration();
 
   /**
    * @return Jersey Client
