@@ -1,16 +1,54 @@
 package com.cgi.poc.dw.dao;
 
 import com.cgi.poc.dw.dao.model.User;
+import io.dropwizard.hibernate.AbstractDAO;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
-public interface UserDao {
+public class UserDao extends AbstractDAO<User> {
+    
+    public UserDao(SessionFactory factory) {
+        super(factory);
 
-  long createUser(User user) throws Exception;
+    }
 
-  User findUserByEmail(String email);
+  public List<User> getAllNormalUsers() {
+        Criteria criteria = this.criteria();
+        //role = 'RESIDENT'
+        criteria.add(Restrictions.eq("role", "RESIDENT"));
+       List<User> resultList = criteria.list();
+       return resultList;
+  }
+
+  public User findUserByEmail(String email) {
+
+        Criteria criteria = this.criteria();
+
+        //contract id, page, page size
+        criteria.add(Restrictions.eq("email", email));
+        User retUser = null;
+        try {
+            retUser = (User) criteria.uniqueResult();
+        } catch (Exception e) {
+            System.out.println("Error: Exception");
+            System.out.println(e);
+
+        }
+        return retUser;
+    }  
   
-  List<User> getAllNormalUsers();
+    public User create(User usr) {
+       usr =  this.persist(usr);
 
-  void createUserNotification(List<Integer> id, Iterator<String> notificationTypes);
+        return usr;
+
+    }
+    
+    public void flush() {
+        this.currentSession().flush();
+    }
 }

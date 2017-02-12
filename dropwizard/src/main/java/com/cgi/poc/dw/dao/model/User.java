@@ -1,117 +1,252 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.cgi.poc.dw.dao.model;
 
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.util.LoginValidationGroup;
+import com.cgi.poc.dw.util.PasswordType;
+import com.cgi.poc.dw.util.PersistValidationGroup;
+import com.cgi.poc.dw.util.RestValidationGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.List;
+import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
+import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.Cascade;
 
-public class User implements Principal {
+/**
+ *
+ * @author dawna.floyd
+ */
+@Entity
+@Table(name = "user")
+@XmlRootElement
+public class User implements Serializable, Principal {
 
-  private long id;
-  private String firstName;
-  private String lastName;
-  private String email;
-  private String password;
-  private String phone;
-  private String zipCode;
-  private Role role;
-  private List<NotificationType> notificationType;
-  private double latitude;
-  private double longitude;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    
+    @Basic(optional = false)
+    @NotNull()
+    @Size(min = 1, max = 65)
+    @Column(name = "first_name")
+    private String firstName;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 65)
+    @Column(name = "last_name")
+    private String lastName;
+    
+    @Pattern(groups={Default.class,LoginValidationGroup.class}, regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email address.")
+    @Basic(optional = false)
+    @NotNull( groups={Default.class,LoginValidationGroup.class})
+    @Size(min = 1, max = 150 , groups={Default.class,LoginValidationGroup.class})
+    @Column(name = "email")    
+    private String email;
+    
+    
+    @Basic(optional = false)
+    @NotNull(message="is missing", groups={Default.class,LoginValidationGroup.class})
+    @Size(min = 2, max = 150, message="must be at least 2 characters in length.")
+    @Column(name = "password")
+    @PasswordType(message="must be greate that 2 character, contain no whitespace, and have at least one number and one letter.", groups={RestValidationGroup.class,LoginValidationGroup.class})
+    private String password;
+    
+    //if the field contains phone or fax number consider using this annotation to enforce field validation
+    //@Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 10, max = 10)
+    @Column(name = "phone")
+    private String phone;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 13)
+    @Pattern(regexp = "\\d{5}")
+    @Column(name = "zip_code")
+    
+    private String zipCode;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 8)
+    @Column(name = "role")
+    
+    private String role;
+    //@Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    //@Basic(optional = false)
+    @NotNull (groups={PersistValidationGroup.class})
+    @Column(name = "latitude")
+    private double  latitude;
 
-  public User() {
-  }
-  
-  public long getId() {
-    return id;
-  }
+    //@Basic(optional = false)
+    @NotNull (groups={PersistValidationGroup.class})
+    @Column(name = "longitude")
+    private double  longitude;
+    
+    
+    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, orphanRemoval = true)
+    @NotNull 
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    private Set<UserNotification> notificationType;
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    public User() {
+    }
 
-  public String getFirstName() {
-    return firstName;
-  }
+    public User(Long id) {
+        this.id = id;
+    }
 
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
+    public User(Long id, String firstName, String lastName, String email, String password, String phone, String zipCode, String role, double  latitude, double  longitude) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.zipCode = zipCode;
+        this.role = role;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
-  public String getLastName() {
-    return lastName;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    public String getFirstName() {
+        return firstName;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-  public String getPassword() {
-    return password;
-  }
+    public String getLastName() {
+        return lastName;
+    }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-  public String getPhone() {
-    return phone;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public String getZipCode() {
-    return zipCode;
-  }
+    public String getPassword() {
+        return password;
+    }
 
-  public void setZipCode(String zipCode) {
-    this.zipCode = zipCode;
-  }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-  public Role getRole() {
-    return role;
-  }
+    public String getPhone() {
+        return phone;
+    }
 
-  public void setRole(Role role) {
-    this.role = role;
-  }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-  public List<NotificationType> getNotificationType() {
-    return notificationType;
-  }
+    public String getZipCode() {
+        return zipCode;
+    }
 
-  public void setNotificationType(
-      List<NotificationType> notificationType) {
-    this.notificationType = notificationType;
-  }
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
 
-  public double getLatitude() {
-    return latitude;
-  }
+    public String getRole() {
+        return role;
+    }
 
-  public void setLatitude(double latitude) {
-    this.latitude = latitude;
-  }
+    public void setRole(String role) {
+        this.role = role;
+    }
 
-  public double getLongitude() {
-    return longitude;
-  }
+    public double  getLatitude() {
+        return latitude;
+    }
 
-  public void setLongitude(double longitude) {
-    this.longitude = longitude;
-  }
+    public void setLatitude(double  latitude) {
+        this.latitude = latitude;
+    }
 
-  /*
+    public double  getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double  longitude) {
+        this.longitude = longitude;
+    }
+
+    public Set<UserNotification> getNotificationType() {
+        return notificationType;
+    }
+
+    public void setNotificationType(Set<UserNotification> notificationType) {
+        this.notificationType = notificationType;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof User)) {
+            return false;
+        }
+        User other = (User) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.cgi.poc.dw.dao.model.User[ id=" + id + " ]";
+    }
+    
+      /*
      * dropwizard requires to implement principal for authentication which
      * implements getName()
      */
@@ -120,4 +255,5 @@ public class User implements Principal {
   public String getName() {
     return email;
   }
+    
 }

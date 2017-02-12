@@ -12,8 +12,6 @@ import com.cgi.poc.dw.auth.service.KeyBuilderServiceImpl;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.auth.service.PasswordHashImpl;
 import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.UserDaoImpl;
-import com.cgi.poc.dw.dao.UserNotificationDao;
 import com.cgi.poc.dw.dao.UserNotificationDaoImpl;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.rest.resource.LoginResource;
@@ -22,17 +20,18 @@ import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
 import com.cgi.poc.dw.service.UserRegistrationService;
 import com.cgi.poc.dw.service.UserRegistrationServiceImpl;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -43,6 +42,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -54,6 +54,14 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.cgi.poc.dw.dao.User_2DaoImpl;
+import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
+import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
+import org.glassfish.jersey.server.ServerProperties;
+import com.cgi.poc.dw.dao.UserNotificationDao2;
+import com.cgi.poc.dw.dao.model.UserNotification;
+import com.google.inject.name.Names;
 
 /**
  * Main Dropwizard Application class.
@@ -62,6 +70,13 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
 
   private final static Logger LOG = LoggerFactory.getLogger(CgiPocApplication.class);
 
+  private final HibernateBundle<CgiPocConfiguration> hibernateBundle
+            = new HibernateBundle<CgiPocConfiguration>(User.class,UserNotification.class) {
+                @Override
+                public DataSourceFactory getDataSourceFactory(CgiPocConfiguration configuration) {
+                    return configuration.getDataSourceFactory();
+                }
+        };  
   /**
    * Application's main method.
    */
@@ -111,6 +126,12 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         )
     );
     
+    bootstrap.addBundle(hibernateBundle);
+    bootstrap.getObjectMapper().disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    // want to ensure that dates are stored in UTC
+    TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
+    System.setProperty("user.timezone", "Etc/UTC");
+    
   }
 
   @Override
@@ -123,17 +144,25 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
 
     Keys keys = new KeyBuilderServiceImpl().createKeys(configuration);
 
-    // guice injector
+    // guice injectorctor = createInjector(configuration, environment, keys);
+    // resource r
     Injector injector = createInjector(configuration, environment, keys);
-    
-    // resource registration
-    registerResource(environment, injector, UserRegistrationResource.class);
-    registerResource(environment, injector, LoginResource.class);
+    final UserDao userDAO = new UserDao(hibernateBundle.getSessionFactory());
+    //final UserNotificationDao2 userNotificationDao = new UserNotificationDao2(hibernateBundle.getSessionFactory());
+    PasswordHashImpl pwHash = new PasswordHashImpl();
+    JwtBuilderServiceImpl jwtBuilderService = new JwtBuilderServiceImpl (keys);
+    JwtReaderServiceImpl jwtReadSvc = new JwtReaderServiceImpl(keys);
+ 
+    environment.jersey().register(new UserRegistrationResource(userDAO, pwHash, environment.getValidator()));
+    environment.jersey().register(new LoginResource(userDAO, jwtBuilderService, pwHash, environment.getValidator()));
+    environment.jersey().register(new CustomConstraintViolationExceptionMapper());
+    environment.jersey().register(new CustomSQLConstraintViolationException());
+        environment.jersey().property(ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
 
     // CORS support
     configureCors(environment, configuration.getCorsConfiguration());
     // authentication
-    registerAuthentication(environment, injector, keys);
+    registerAuthentication(environment, injector, keys,userDAO,jwtReadSvc);
 
     LOG.debug("Application started");
   }
@@ -175,7 +204,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     env.jersey().register(injector.getInstance(theClass));
   }
 
-  private void registerAuthentication(Environment env, Injector injector, Keys keys) {
+  private void registerAuthentication(Environment env, Injector injector, Keys keys,UserDao userDAO,JwtReaderServiceImpl jwtReadSvc ) {
 
     final JwtConsumer consumer = new JwtConsumerBuilder()
         .setRequireExpirationTime() // the JWT must have an expiration time
@@ -194,7 +223,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
             .setRealm("realm")
             .setPrefix("Bearer")
             .setAuthorizer(injector.getInstance(UserRoleAuthorizer.class))
-            .setAuthenticator(injector.getInstance(DBAuthenticator.class))
+            .setAuthenticator(new DBAuthenticator(userDAO,jwtReadSvc))
             .buildAuthFilter();
 
     env.jersey().register(new AuthDynamicFeature(tokenAuthFilter));
@@ -212,19 +241,18 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         final DBIFactory factory = new DBIFactory();
         final DBI jdbi = factory.build(env, conf.getDataSourceFactory(), "mysqlDb");
 
-        final UserDaoImpl userDaoImpl = jdbi.onDemand(UserDaoImpl.class);
-        final UserNotificationDaoImpl userNotificationDaoImpl = jdbi.onDemand(UserNotificationDaoImpl.class);
-        bind(UserDao.class).toInstance(userDaoImpl);
-        bind(UserNotificationDao.class).toInstance(userNotificationDaoImpl);
+      //  final User_2DaoImpl userDaoImpl = jdbi.onDemand(User_2DaoImpl.class);
+      //  final UserNotificationDaoImpl userNotificationDaoImpl = jdbi.onDemand(UserNotificationDaoImpl.class);
+        //bind(User_2Dao.class).toInstance(userDaoImpl);
+      //  bind(UserNotificationDao2.class).toInstance(userNotificationDaoImpl);
 
         // services
         bind(JwtReaderService.class).to(JwtReaderServiceImpl.class).asEagerSingleton();
         bind(JwtBuilderService.class).to(JwtBuilderServiceImpl.class).asEagerSingleton();
         bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
-        bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
-        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
-        //configs
-        bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
+       // bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
+       // bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
+       bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
       }
     });
     return injector;

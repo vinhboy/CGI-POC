@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.UserNotificationDao;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.rest.model.UserRegistrationDto;
@@ -27,6 +26,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.skife.jdbi.v2.exceptions.UnableToCreateSqlObjectException;
+import com.cgi.poc.dw.dao.UserNotificationDao2;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserRegistrationServiceUnitTest {
@@ -35,7 +35,7 @@ public class UserRegistrationServiceUnitTest {
   private UserDao userDao;
   
   @Mock
-  private UserNotificationDao userNotificationDao;
+  private UserNotificationDao2 userNotificationDao;
   
   @Mock
   private PasswordHash passwordHash;
@@ -57,12 +57,12 @@ public class UserRegistrationServiceUnitTest {
     userRegistrationDto.setPhone("1234567890");
     userRegistrationDto.setZipCode("98765");
     
-    Long userId = new Long(1);
+    User newUser=null;
     Long notificationMethodId = new Long(2);
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:" 
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(userRegistrationDto.getPassword())).thenReturn(saltedHash);
-    when(userDao.createUser(any(User.class))).thenReturn(userId);
+    when(userDao.create(any(User.class))).thenReturn(newUser);
     when(userNotificationDao.findNotificationMethodIdByName("SMS")).thenReturn(notificationMethodId);
     doNothing().when(userNotificationDao).createUserNotification(anyLong(), anyList());
     Response actual = underTest.registerUser(userRegistrationDto);
@@ -87,7 +87,7 @@ public class UserRegistrationServiceUnitTest {
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(userRegistrationDto.getPassword())).thenReturn(saltedHash);
 
-    doThrow(new Exception("User already exists")).when(userDao).createUser(any(User.class));
+    doThrow(new Exception("User already exists")).when(userDao).create(any(User.class));
     try {
       underTest.registerUser(userRegistrationDto);
       fail("Expected ConflictException");

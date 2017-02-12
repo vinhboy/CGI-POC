@@ -1,5 +1,6 @@
 package com.cgi.poc.dw.service;
 
+import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.JwtBuilderService;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
@@ -48,7 +49,7 @@ public class LoginServiceImpl implements LoginService {
         throw new InternalServerErrorException("Unable to issue authToken.");
       }
       AuthTokenResponseDto authTokenResponseDto = new AuthTokenResponseDto(authToken,
-          user.getRole());
+          Role.valueOf(user.getRole()));
       return Response.ok().entity(authTokenResponseDto).build();
     } else {
       LOG.warn("Invalid password.");

@@ -20,12 +20,14 @@ public class DBAuthenticator implements Authenticator<JwtContext, User> {
 
   private final static Logger LOG = LoggerFactory.getLogger(DBAuthenticator.class);
 
-  @Inject
   UserDao userDao;
-
-  @Inject
   JwtReaderService jwtReaderService;
 
+    public DBAuthenticator(UserDao userDao, JwtReaderService jwtReaderService) {
+        this.userDao = userDao;
+        this.jwtReaderService = jwtReaderService;
+    }
+  
   @Override
   public Optional<User> authenticate(JwtContext context) throws AuthenticationException {
 

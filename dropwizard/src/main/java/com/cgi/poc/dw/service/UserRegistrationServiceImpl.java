@@ -3,10 +3,9 @@ package com.cgi.poc.dw.service;
 import com.cgi.poc.dw.auth.MyPasswordValidator;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
-import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.UserNotificationDao;
+import com.cgi.poc.dw.dao.User_2Dao;
 import com.cgi.poc.dw.dao.model.NotificationType;
-import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.dao.model.User_2;
 import com.cgi.poc.dw.rest.model.UserRegistrationDto;
 import com.cgi.poc.dw.rest.model.validator.UserRegistrationDtoValidator;
 import com.google.inject.Inject;
@@ -17,17 +16,18 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.cgi.poc.dw.dao.UserNotificationDao2;
 
 public class UserRegistrationServiceImpl implements UserRegistrationService {
 
   private final static Logger LOG = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
   private final static MyPasswordValidator myPasswordValidator = new MyPasswordValidator();
-  private final UserDao userDao;
-  private final UserNotificationDao userNotificationDao;
+  private final User_2Dao userDao;
+  private final UserNotificationDao2 userNotificationDao;
   private final PasswordHash passwordHash;
 
   @Inject
-  public UserRegistrationServiceImpl(UserDao userDao, UserNotificationDao userNotificationDao, PasswordHash passwordHash) {
+  public UserRegistrationServiceImpl(User_2Dao userDao, UserNotificationDao2 userNotificationDao, PasswordHash passwordHash) {
     this.userDao = userDao;
     this.userNotificationDao = userNotificationDao;
     this.passwordHash = passwordHash;
@@ -43,7 +43,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
       throw new InternalServerErrorException("Unable to create a password hash.");
     }
 
-    User user = createUser(userRegistrationDto, hash);
+    User_2 user = createUser(userRegistrationDto, hash);
 
     try {
       long id = userDao.createUser(user);
@@ -61,8 +61,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     return Response.ok().build();
   }
 
-  private User createUser(UserRegistrationDto userRegistrationDto, String hash) {
-    User user = new User();
+  private User_2 createUser(UserRegistrationDto userRegistrationDto, String hash) {
+    User_2 user = new User_2();
     user.setFirstName(userRegistrationDto.getFirstName());
     user.setLastName(userRegistrationDto.getLastName());
     user.setEmail(userRegistrationDto.getEmail());

@@ -8,7 +8,7 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 @RegisterMapper(UserNotificationMapper.class)
-public interface UserNotificationDaoImpl extends UserNotificationDao {
+public interface UserNotificationDaoImpl extends UserNotificationDao2 {
 
   @Override
   @SqlQuery("SELECT id FROM notification_method WHERE method = :methodName")
