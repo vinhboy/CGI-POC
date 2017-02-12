@@ -23,26 +23,13 @@ CREATE TABLE user (
   AUTO_INCREMENT = 1;
 
 
--- COMMENT :Creating notification_method TABLE.
-CREATE TABLE notification_method (
-  id     BIGINT      NOT NULL AUTO_INCREMENT,
-  method VARCHAR(10) NOT NULL,
-  PRIMARY KEY (id)
-)
-  AUTO_INCREMENT = 1;
-
--- COMMENT : Loading notification methods.
-INSERT INTO notification_method (method) VALUES ('EMAIL');
-INSERT INTO notification_method (method) VALUES ('SMS');
-INSERT INTO notification_method (method) VALUES ('PUSH');
 
 -- COMMENT :Creating user_notification TABLE.
 CREATE TABLE user_notification (
   user_id         BIGINT NOT NULL,
   notification_id BIGINT NOT NULL,
   PRIMARY KEY (user_id, notification_id),
-  FOREIGN KEY (user_id) REFERENCES user (id),
-  FOREIGN KEY (notification_id) REFERENCES notification_method (id)
+  FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
 -- ROLLBACK DROP DROP TABLE user; DROP DROP TABLE notification_method; DROP DROP TABLE user_notification;
