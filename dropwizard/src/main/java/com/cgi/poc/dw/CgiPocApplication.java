@@ -12,7 +12,6 @@ import com.cgi.poc.dw.auth.service.KeyBuilderServiceImpl;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.auth.service.PasswordHashImpl;
 import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.UserNotificationDaoImpl;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.rest.resource.LoginResource;
 import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
@@ -54,14 +53,17 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.cgi.poc.dw.dao.User_2DaoImpl;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
-import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import org.glassfish.jersey.server.ServerProperties;
-import com.cgi.poc.dw.dao.UserNotificationDao2;
 import com.cgi.poc.dw.dao.model.UserNotification;
+import com.google.inject.Provides;
+import com.google.inject.ProvisionException;
+import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+import javax.validation.Validator;
+import org.hibernate.SessionFactory;
+import org.hibernate.validator.internal.engine.ValidatorImpl;
 
 /**
  * Main Dropwizard Application class.
@@ -147,22 +149,18 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     // guice injectorctor = createInjector(configuration, environment, keys);
     // resource r
     Injector injector = createInjector(configuration, environment, keys);
-    final UserDao userDAO = new UserDao(hibernateBundle.getSessionFactory());
-    //final UserNotificationDao2 userNotificationDao = new UserNotificationDao2(hibernateBundle.getSessionFactory());
-    PasswordHashImpl pwHash = new PasswordHashImpl();
-    JwtBuilderServiceImpl jwtBuilderService = new JwtBuilderServiceImpl (keys);
-    JwtReaderServiceImpl jwtReadSvc = new JwtReaderServiceImpl(keys);
  
-    environment.jersey().register(new UserRegistrationResource(userDAO, pwHash, environment.getValidator()));
-    environment.jersey().register(new LoginResource(userDAO, jwtBuilderService, pwHash, environment.getValidator()));
-    environment.jersey().register(new CustomConstraintViolationExceptionMapper());
-    environment.jersey().register(new CustomSQLConstraintViolationException());
+    registerResource(environment, injector, UserRegistrationResource.class);
+    registerResource(environment, injector, LoginResource.class);
+    registerResource(environment, injector, CustomConstraintViolationExceptionMapper.class);
+    registerResource(environment, injector, CustomSQLConstraintViolationException.class);
+    
         environment.jersey().property(ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
 
     // CORS support
     configureCors(environment, configuration.getCorsConfiguration());
     // authentication
-    registerAuthentication(environment, injector, keys,userDAO,jwtReadSvc);
+    registerAuthentication(environment, injector, keys);
 
     LOG.debug("Application started");
   }
@@ -204,7 +202,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     env.jersey().register(injector.getInstance(theClass));
   }
 
-  private void registerAuthentication(Environment env, Injector injector, Keys keys,UserDao userDAO,JwtReaderServiceImpl jwtReadSvc ) {
+  private void registerAuthentication(Environment env, Injector injector, Keys keys) {
 
     final JwtConsumer consumer = new JwtConsumerBuilder()
         .setRequireExpirationTime() // the JWT must have an expiration time
@@ -223,7 +221,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
             .setRealm("realm")
             .setPrefix("Bearer")
             .setAuthorizer(injector.getInstance(UserRoleAuthorizer.class))
-            .setAuthenticator(new DBAuthenticator(userDAO,jwtReadSvc))
+            .setAuthenticator(injector.getInstance(DBAuthenticator.class))
             .buildAuthFilter();
 
     env.jersey().register(new AuthDynamicFeature(tokenAuthFilter));
@@ -233,27 +231,38 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
   private Injector createInjector(CgiPocConfiguration conf, Environment env, Keys keys)
       throws NoSuchAlgorithmException {
     Injector injector = Guice.createInjector(new AbstractModule() {
-      @Override
+       @Override
       protected void configure() {
         // keys
         bind(Keys.class).toInstance(keys);
-        // database
-        final DBIFactory factory = new DBIFactory();
-        final DBI jdbi = factory.build(env, conf.getDataSourceFactory(), "mysqlDb");
-
-      //  final User_2DaoImpl userDaoImpl = jdbi.onDemand(User_2DaoImpl.class);
-      //  final UserNotificationDaoImpl userNotificationDaoImpl = jdbi.onDemand(UserNotificationDaoImpl.class);
-        //bind(User_2Dao.class).toInstance(userDaoImpl);
-      //  bind(UserNotificationDao2.class).toInstance(userNotificationDaoImpl);
-
+         
         // services
+        bind(Validator.class).toInstance(env.getValidator());
         bind(JwtReaderService.class).to(JwtReaderServiceImpl.class).asEagerSingleton();
         bind(JwtBuilderService.class).to(JwtBuilderServiceImpl.class).asEagerSingleton();
         bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
-       // bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
-       // bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
-       bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
+        bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
+        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
+        bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
       }
+          @Singleton
+    @Provides
+    public SessionFactory provideSessionFactory() {
+
+    SessionFactory sf = hibernateBundle.getSessionFactory();
+    if (sf == null) {
+        try {
+            hibernateBundle.run(conf, env);
+            return hibernateBundle.getSessionFactory();
+        } catch (Exception e) {
+          //  logger.error("Unable to run hibernatebundle");
+        }
+    } else {
+        return sf;
+    }
+        return null;
+   }
+      
     });
     return injector;
   }

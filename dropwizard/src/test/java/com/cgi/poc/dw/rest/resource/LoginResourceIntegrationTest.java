@@ -10,8 +10,6 @@ import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
 import com.cgi.poc.dw.helper.IntegrationTest;
-import com.cgi.poc.dw.rest.model.LoginUserDto;
-import com.cgi.poc.dw.rest.model.UserRegistrationDto;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
 import java.util.Arrays;
@@ -47,7 +45,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   @Test
   public void noEmail() {
     Client client = new JerseyClientBuilder().build();
-    LoginUserDto loginUserDto = new LoginUserDto();
+    User loginUserDto = new User();
     loginUserDto.setPassword("test123");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
@@ -68,7 +66,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   
   public void noPassword() {
     Client client = new JerseyClientBuilder().build();
-    LoginUserDto loginUserDto = new LoginUserDto();
+    User loginUserDto = new User();
     loginUserDto.setEmail("helper@gmail.com");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
@@ -93,7 +91,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   @Test
   public void userNotFound() {
     Client client = new JerseyClientBuilder().build();
-    LoginUserDto loginUserDto = new LoginUserDto();
+    User loginUserDto = new User();
     loginUserDto.setEmail("user.not.found@gmail.com");
     loginUserDto.setPassword("test123");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
@@ -127,7 +125,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     client.target(String.format("http://localhost:%d/register", RULE.getLocalPort())).request()
         .post(Entity.json(userRegistrationDto));
     // login user
-    LoginUserDto loginUserDto = new LoginUserDto();
+    User loginUserDto = new User();
     loginUserDto.setEmail("success@gmail.com");
     loginUserDto.setPassword("test123");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
@@ -141,7 +139,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   @Test
   public void loginAdminSuccess() throws JSONException {
     Client client = new JerseyClientBuilder().build();
-    LoginUserDto loginUserDto = new LoginUserDto();
+    User loginUserDto = new User();
     loginUserDto.setEmail("admin@cgi.com");
     loginUserDto.setPassword("adminpw");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
@@ -156,20 +154,23 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   public void loginFailureWrongPassword() {
     Client client = new JerseyClientBuilder().build();
     // registerUser user
-    UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
+    User userRegistrationDto = new User();
     userRegistrationDto.setEmail("wrong.pw@gmail.com");
     userRegistrationDto.setPassword("test123");
     userRegistrationDto.setFirstName("john");
     userRegistrationDto.setLastName("smith");
-    userRegistrationDto.setNotificationType(Arrays.asList(NotificationType.SMS));
-    userRegistrationDto.setRole(Role.RESIDENT);
+    userRegistrationDto.setRole(Role.RESIDENT.name());
     userRegistrationDto.setPhone("1234567890");
     userRegistrationDto.setZipCode("98765");
+    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.SMS.ordinal()));
+    Set<UserNotification> notificationType = new HashSet<>();
+    notificationType.add(selNot);
+    userRegistrationDto.setNotificationType(notificationType);
 
     client.target(String.format("http://localhost:%d/register", RULE.getLocalPort())).request()
         .post(Entity.json(userRegistrationDto));
     // login user
-    LoginUserDto loginUserDto = new LoginUserDto();
+    User loginUserDto = new User();
     loginUserDto.setEmail("wrong.pw@gmail.com");
     loginUserDto.setPassword("wrong");
     

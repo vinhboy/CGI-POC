@@ -1,16 +1,16 @@
 package com.cgi.poc.dw.dao;
 
 import com.cgi.poc.dw.dao.model.User;
+import com.google.inject.Inject;
 import io.dropwizard.hibernate.AbstractDAO;
-import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 public class UserDao extends AbstractDAO<User> {
     
+    @Inject
     public UserDao(SessionFactory factory) {
         super(factory);
 
