@@ -19,7 +19,6 @@ import javax.validation.Validator;
  * @author dawna.floyd
  */
 public class BaseServiceImpl {
-	@javax.inject.Inject
 	private Validator validator;
 
     JsonFactory factory = null;

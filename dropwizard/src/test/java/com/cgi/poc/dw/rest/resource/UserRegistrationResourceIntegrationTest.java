@@ -108,8 +108,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
         String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage().replace("REPLACE", partString);
         assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
-
-
+    
   }
 
   @Test
@@ -216,7 +215,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
         assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
         // The data provided in the API call is invalid. Message: <XXXXX>
         // where XXX is the message associated to the validation
-        String partString  = "password  must be greate that 2 character, contain no whitespace, and have at least one number and one letter.";
+        String partString  = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
         String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage().replace("REPLACE", partString);
         assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
@@ -250,7 +249,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
         assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
         // The data provided in the API call is invalid. Message: <XXXXX>
         // where XXX is the message associated to the validation
-        String partString  = "password  must be greate that 2 character, contain no whitespace, and have at least one number and one letter.";
+        String partString  = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
         String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage().replace("REPLACE", partString);
         assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }

@@ -4,7 +4,6 @@ import com.cgi.poc.dw.auth.MyPasswordValidator;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
 import com.cgi.poc.dw.util.ErrorInfo;
@@ -12,19 +11,18 @@ import com.cgi.poc.dw.util.GeneralErrors;
 import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.cgi.poc.dw.util.RestValidationGroup;
 import com.google.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UserRegistrationServiceImpl extends BaseServiceImpl implements UserRegistrationService  {
+public class UserRegistrationServiceImpl extends BaseServiceImpl implements
+    UserRegistrationService {
 
   private final static Logger LOG = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
   private final static MyPasswordValidator myPasswordValidator = new MyPasswordValidator();
@@ -32,22 +30,23 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements User
   private final PasswordHash passwordHash;
 
   @Inject
-  public UserRegistrationServiceImpl(UserDao userDao,   PasswordHash passwordHash,
-         Validator validator) {
+  public UserRegistrationServiceImpl(UserDao userDao, PasswordHash passwordHash,
+      Validator validator) {
     super(validator);
     this.userDao = userDao;
     this.passwordHash = passwordHash;
   }
 
   public Response registerUser(User user) {
-       validate(user, "rest", RestValidationGroup.class, Default.class);
-      // check if the email already exists.
+    validate(user, "rest", RestValidationGroup.class, Default.class);
+    // check if the email already exists.
     User findUserByEmail = userDao.findUserByEmail(user.getEmail());
-    if (findUserByEmail != null){
-        ErrorInfo errRet = new ErrorInfo();
-        String errorString = GeneralErrors.DUPLICATE_ENTRY.getMessage().replace("REPLACE",  "email");
-        errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString );
-        throw new WebApplicationException(Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build());
+    if (findUserByEmail != null) {
+      ErrorInfo errRet = new ErrorInfo();
+      String errorString = GeneralErrors.DUPLICATE_ENTRY.getMessage().replace("REPLACE", "email");
+      errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
+      throw new WebApplicationException(
+          Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build());
     }
     String hash = null;
     try {
@@ -60,32 +59,23 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements User
 
     try {
       validate(user, "create", Default.class, PersistValidationGroup.class);
-      for(UserNotification notificationType : user.getNotificationType()){
-          notificationType.setUserId(user);
+      for (UserNotification notificationType : user.getNotificationType()) {
+        notificationType.setUserId(user);
       }
-      User retUser= userDao.create(user); 
+      User retUser = userDao.create(user);
 
-    }
-    catch (ConstraintViolationException exception) {
-        throw exception;
+    } catch (ConstraintViolationException exception) {
+      throw exception;
+    } catch (Exception exception) {
+      ErrorInfo errRet = new ErrorInfo();
+      String message = GeneralErrors.UNKNOWN_EXCEPTION.getMessage();
+      String errorString = message.replace("REPLACE1", exception.getClass().getCanonicalName())
+          .replace("REPLACE2", exception.getMessage());
+      errRet.addError(GeneralErrors.UNKNOWN_EXCEPTION.getCode(), errorString);
+      throw new WebApplicationException(
+          Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build());
     }
     return Response.ok().build();
 
-  }
-
-  private User createUser(User userIn, String hash) {
-    User user = new User();
-    user.setFirstName(user.getFirstName());
-    user.setLastName(user.getLastName());
-    user.setEmail(user.getEmail());
-    user.setPassword(hash);
-    user.setRole(Role.RESIDENT.name());
-    user.setNotificationType(userIn.getNotificationType());
-    user.setPhone(userIn.getPhone());
-    user.setZipCode(userIn.getZipCode());
-    //TODO: call external API to populate these based on ZipCode
-    user.setLatitude(0.0);
-    user.setLongitude(0.0);
-    return user;
   }
 }
