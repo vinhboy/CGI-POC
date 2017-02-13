@@ -10,6 +10,7 @@ import com.cgi.poc.dw.util.PasswordType;
 import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.cgi.poc.dw.util.RestValidationGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Set;
@@ -57,6 +58,9 @@ public class User implements Serializable, Principal {
   @Column(name = "last_name")
   private String lastName;
 
+  // pattern checks for XXX@YYY.com
+  // generated regex
+  @ApiModelProperty(value = "Validates for standard email format:  XXX@YYY.ZZZ. No whitespace allowed ", required = true)
   @Pattern(groups = {Default.class,
       LoginValidationGroup.class}, regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Invalid email address.")
   @Basic(optional = false)

@@ -83,7 +83,7 @@ public class UserRegistrationServiceUnitTest {
 
 
   @Test
-  public void registerUser_shouldThrowAnExceptionWhenEmailValidationFails() throws Exception {
+  public void registerPasswordValidationFails() throws Exception {
 
     user.setPassword("a"); //one character password
 
@@ -113,41 +113,138 @@ public class UserRegistrationServiceUnitTest {
   }
 
   @Test
-  public void registerUser_shouldThrowExceptionWhenUserAlreadyExists() throws Exception {
+  public void registerUserEmailValidationFails() throws Exception {
+
+    user.setPassword("aaa"); //one character password
+    user.setEmail("aaa"); //one character password
+
+    try {
+      underTest.registerUser(user);
+      fail("Expected an exception to be thrown");
+    } catch (ConstraintViolationException exception) {
+      Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+      for (ConstraintViolation violation : constraintViolations) {
+        String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+        String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
+            .getCanonicalName();
+
+        if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
+          assertThat(violation.getMessageTemplate())
+              .isEqualTo("Invalid email address.");
+        } else {
+          fail("not an expected constraint violation");
+        }
+      }
+    }
+  }
+  @Test
+  public void registerUserEmailValidationFailsWhiteSpave() throws Exception {
+
+    user.setPassword("aaa"); //one character password
+    user.setEmail("aaa @i23.com"); //one character password
+
+    try {
+      underTest.registerUser(user);
+      fail("Expected an exception to be thrown");
+    } catch (ConstraintViolationException exception) {
+      Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+      for (ConstraintViolation violation : constraintViolations) {
+        String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+        String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
+            .getCanonicalName();
+
+        if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
+          assertThat(violation.getMessageTemplate())
+              .isEqualTo("Invalid email address.");
+        } else {
+          fail("not an expected constraint violation");
+        }
+      }
+    }
+  }
+   @Test
+  public void registerUserEmailValidationFailsInvalidDomain() throws Exception {
+
+    user.setPassword("aaa"); //one character password
+    user.setEmail("aaa@ggg"); //(looks for patter @XX.YYY
+
+    try {
+      underTest.registerUser(user);
+      fail("Expected an exception to be thrown");
+    } catch (ConstraintViolationException exception) {
+      Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+      for (ConstraintViolation violation : constraintViolations) {
+        String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+        String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
+            .getCanonicalName();
+
+        if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
+          assertThat(violation.getMessageTemplate())
+              .isEqualTo("Invalid email address.");
+        } else {
+          fail("not an expected constraint violation");
+        }
+      }
+    }
+  }
+    @Test
+  public void registerUserEmailValidationFailsNoDomeain() throws Exception {
+
+    user.setPassword("aaa"); //one character password
+    user.setEmail("aaa@"); //(looks for patter @XX.YYY
+
+    try {
+      underTest.registerUser(user);
+      fail("Expected an exception to be thrown");
+    } catch (ConstraintViolationException exception) {
+      Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+      for (ConstraintViolation violation : constraintViolations) {
+        String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+        String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
+            .getCanonicalName();
+
+        if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
+          assertThat(violation.getMessageTemplate())
+              .isEqualTo("Invalid email address.");
+        } else {
+          fail("not an expected constraint violation");
+        }
+      }
+    }
+  }
+  @Test
+  public void registerUser_UserAlreadyExistsError() throws Exception {
 
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
 
     when(userDao.findUserByEmail(user.getEmail())).thenReturn(user);
-    try {
-      underTest.registerUser(user);
-      fail("Expected an exception to be thrown");
-    } catch (WebApplicationException exception) {
-      assertEquals(400, exception.getResponse().getStatus());
-      ErrorInfo errorInfo = (ErrorInfo) exception.getResponse().getEntity();
+ 
+      Response registerUser = underTest.registerUser(user);
+      
+      assertEquals(400, registerUser.getStatus());
+      ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
       String actualMessage = errorInfo.getErrors().get(0).getMessage();
       String actualCode = errorInfo.getErrors().get(0).getCode();
 
       assertEquals("ERR4", actualCode);
       assertEquals("Duplicate entry for key '<email>'", actualMessage);
-    }
+ 
   }
 
   @Test
-  public void registerUser_shouldThrowExceptionWhenCreateUserFails() throws Exception {
+  public void registerUser_CreateUserFails() throws Exception {
 
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
 
     doThrow(new HibernateException("Something went wrong.")).when(userDao).save(any(User.class));
-    try {
-      underTest.registerUser(user);
-      fail("Expected an exception to be thrown");
-    } catch (WebApplicationException exception) {
-      assertEquals(500, exception.getResponse().getStatus());
-      ErrorInfo errorInfo = (ErrorInfo) exception.getResponse().getEntity();
+    Response registerUser = underTest.registerUser(user);
+      
+      assertEquals(500, registerUser.getStatus());
+      ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
       String actualMessage = errorInfo.getErrors().get(0).getMessage();
       String actualCode = errorInfo.getErrors().get(0).getCode();
 
@@ -155,19 +252,17 @@ public class UserRegistrationServiceUnitTest {
       assertEquals(
           "An Unknown exception has occured. Type: <org.hibernate.HibernateException>. Message: <Something went wrong.>",
           actualMessage);
-    }
+ 
   }
 
   @Test
-  public void registerUser_shouldThrowExceptionWhenPasswordHashingFails() throws Exception {
+  public void registerUser_PasswordHashingFails() throws Exception {
 
     doThrow(new InvalidKeySpecException("Something went wrong.")).when(passwordHash).createHash(user.getPassword());
-    try {
-      underTest.registerUser(user);
-      fail("Expected ConflictException");
-    } catch (WebApplicationException exception) {
-      assertEquals(500, exception.getResponse().getStatus());
-      ErrorInfo errorInfo = (ErrorInfo) exception.getResponse().getEntity();
+       Response registerUser = underTest.registerUser(user);
+       
+      assertEquals(500, registerUser.getStatus());
+      ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
       String actualMessage = errorInfo.getErrors().get(0).getMessage();
       String actualCode = errorInfo.getErrors().get(0).getCode();
 
@@ -175,7 +270,6 @@ public class UserRegistrationServiceUnitTest {
       assertEquals(
           "An Unknown exception has occured. Type: <java.security.spec.InvalidKeySpecException>. Message: <Something went wrong.>",
           actualMessage);
-    }
-  }
+   }
 
 }

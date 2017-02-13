@@ -43,8 +43,7 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
       ErrorInfo errRet = new ErrorInfo();
       String errorString = GeneralErrors.DUPLICATE_ENTRY.getMessage().replace("REPLACE", "email");
       errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
-      throw new WebApplicationException(
-          Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build());
+      return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
     }
     String hash = null;
     try {
@@ -53,8 +52,7 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
     } catch (Exception exception) {
       LOG.error("Unable to create a password hash.", exception);
       ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-      throw new WebApplicationException(
-          Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build());
+      return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
     }
 
     try {
@@ -69,8 +67,7 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
     } catch (Exception exception) {
       LOG.error("Unable to save a user.", exception);
       ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-      throw new WebApplicationException(
-          Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build());
+      return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
     }
     return Response.ok().build();
 

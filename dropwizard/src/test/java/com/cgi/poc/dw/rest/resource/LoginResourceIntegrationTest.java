@@ -64,6 +64,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   }
 
 
+  @Test
   public void noPassword() {
     Client client = new JerseyClientBuilder().build();
     User loginUserDto = new User();

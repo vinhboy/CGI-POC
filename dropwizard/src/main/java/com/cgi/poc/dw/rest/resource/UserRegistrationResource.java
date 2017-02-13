@@ -15,6 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
@@ -41,6 +42,10 @@ public class UserRegistrationResource {
   })
   @Timed(name = "User.save")
   public Response signup(@NotNull User user) {
-    return userRegistrationService.registerUser(user);
+      Response response = userRegistrationService.registerUser(user);
+      if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+                throw new WebApplicationException(response);
+      }
+    return response;
   }
 }

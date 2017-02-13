@@ -253,7 +253,8 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
             hibernateBundle.run(conf, env);
             return hibernateBundle.getSessionFactory();
           } catch (Exception e) {
-            //  logger.error("Unable to run hibernatebundle");
+                LOG.error("Unable to run hibernatebundle");
+
           }
         } else {
           return sf;
