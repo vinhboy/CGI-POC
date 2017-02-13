@@ -91,25 +91,27 @@ public class User implements Serializable, Principal {
   @Size(min = 1, max = 13)
   @Pattern(regexp = "\\d{5}")
   @Column(name = "zip_code")
-
   private String zipCode;
+  
   @Basic(optional = false)
   @NotNull
   @Size(min = 1, max = 8)
   @Column(name = "role")
-
+  @JsonIgnore
   private String role;
+  
   //@Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
   //@Basic(optional = false)
   @NotNull(groups = {PersistValidationGroup.class})
   @Column(name = "latitude")
+  @JsonIgnore
   private Double latitude;
 
   //@Basic(optional = false)
   @NotNull(groups = {PersistValidationGroup.class})
   @Column(name = "longitude")
+  @JsonIgnore
   private Double longitude;
-
 
   @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, orphanRemoval = true)
   @NotNull

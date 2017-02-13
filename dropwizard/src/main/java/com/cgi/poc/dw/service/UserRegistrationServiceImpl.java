@@ -53,6 +53,9 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
   }
 
   public Response registerUser(User user) {
+    //Defaulting the user to RESIDENT
+    user.setRole("RESIDENT");
+    
     validate(user, "rest", RestValidationGroup.class, Default.class);
     // check if the email already exists.
     User findUserByEmail = userDao.findUserByEmail(user.getEmail());
