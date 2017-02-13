@@ -14,6 +14,16 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class CgiPocConfiguration extends Configuration {
 
+  private MapApiConfiguration mapApiConfiguration = new MapApiConfiguration();
+
+  public MapApiConfiguration getMapApiConfiguration() {
+    return mapApiConfiguration;
+  }
+  @JsonProperty("mapsApi")
+  public void setMapApiConfiguration(MapApiConfiguration mapApiConfiguration) {
+    this.mapApiConfiguration = mapApiConfiguration;
+  }
+
   /**
    * Assign swagger bundle configuration.
    */
@@ -33,16 +43,6 @@ public class CgiPocConfiguration extends Configuration {
   @NotEmpty
   private String jwtSignatureSecret;
 
-  /**
-   * The URL to access exchange rate API.
-   */
-  @NotEmpty
-  private String apiURL;
-  /**
-   * The key to access exchange rate API.
-   */
-  @NotEmpty
-  private String apiKey;
   /**
    * Jersey client default configuration.
    */
@@ -87,25 +87,5 @@ public class CgiPocConfiguration extends Configuration {
   @JsonProperty("jerseyClient")
   public JerseyClientConfiguration getJerseyClientConfiguration() {
     return jerseyClientConfiguration;
-  }
-
-  /**
-   * A getter for the URL of currency rates the API.
-   *
-   * @return the URL of currency rates the API.
-   */
-  @JsonProperty
-  public String getApiURL() {
-    return apiURL;
-  }
-
-  /**
-   * A getter for the API key of currency rates the API.
-   *
-   * @return the API key of currency rates the API.
-   */
-  @JsonProperty
-  public String getApiKey() {
-    return apiKey;
   }
 }

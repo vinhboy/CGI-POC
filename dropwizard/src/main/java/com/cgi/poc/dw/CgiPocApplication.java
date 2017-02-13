@@ -28,10 +28,11 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.google.inject.name.Names;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.client.JerseyClientBuilder;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
@@ -50,6 +51,7 @@ import java.util.logging.Level;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.validation.Validator;
+import javax.ws.rs.client.Client;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ServerProperties;
@@ -240,7 +242,16 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class)
             .asEagerSingleton();
-        bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
+        bind(JerseyClientConfiguration.class).toInstance(conf.getJerseyClientConfiguration());
+        bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
+        //Create Jersey client.
+        final Client client = new JerseyClientBuilder(env)
+            .using(conf.getJerseyClientConfiguration())
+            .build(getName());
+        bind(Client.class).toInstance(client);
+        //configs
+//        bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
+//        bindConstant().annotatedWith(Names.named("apiKey")).to(conf.getApiKey());
       }
 
       @Singleton

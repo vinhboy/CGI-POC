@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
@@ -14,6 +17,10 @@ import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
 import com.cgi.poc.dw.util.ErrorInfo;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,10 +28,18 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,10 +63,16 @@ public class UserRegistrationServiceUnitTest {
   @Spy
   private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
+  @Mock
+  private Client client;
+
+  @Mock
+  private MapApiConfiguration mapApiConfiguration;
+
   private User user;
 
   @Before
-  public void createUser() {
+  public void createUser() throws IOException {
     user = new User();
     user.setEmail("success@gmail.com");
     user.setPassword("test123");
@@ -66,16 +87,27 @@ public class UserRegistrationServiceUnitTest {
     Set<UserNotification> notificationType = new HashSet<>();
     notificationType.add(selNot);
     user.setNotificationType(notificationType);
+
+    JsonNode jsonRespone = new ObjectMapper()
+        .readTree(getClass().getResource("/google_api_geocode_response.json"));
+
+    when(mapApiConfiguration.getApiURL()).thenReturn("http://googleMapsURL.com");
+
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+    when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
   }
 
   @Test
   public void registerUser_shouldRegisterUserWhenGivenValidInput() throws Exception {
 
-    User newUser = null;
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
-    when(userDao.save(any(User.class))).thenReturn(newUser);
     Response actual = underTest.registerUser(user);
 
     assertEquals(200, actual.getStatus());
@@ -270,6 +302,38 @@ public class UserRegistrationServiceUnitTest {
       assertEquals(
           "An Unknown exception has occured. Type: <java.security.spec.InvalidKeySpecException>. Message: <Something went wrong.>",
           actualMessage);
-   }
+  }
+  
+  @Test
+  public void registerUser_shouldThrowExceptionWhenMapsAPICommunicationFails()
+      throws InvalidKeySpecException, NoSuchAlgorithmException {
 
+    String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
+        + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
+    when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
+
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+
+    doThrow(new ProcessingException("Processing failed.")).when(mockBuilder).get(String.class);
+
+    try {
+      underTest.registerUser(user);
+      fail("Expected an exception to be thrown");
+    } catch (WebApplicationException exception) {
+      assertEquals(500, exception.getResponse().getStatus());
+      ErrorInfo errorInfo = (ErrorInfo) exception.getResponse().getEntity();
+      String actualMessage = errorInfo.getErrors().get(0).getMessage();
+      String actualCode = errorInfo.getErrors().get(0).getCode();
+
+      assertEquals("ERR1", actualCode);
+      assertEquals(
+          "An Unknown exception has occured. Type: <javax.ws.rs.ProcessingException>. Message: <Processing failed.>",
+          actualMessage);
+    }
+  }
 }
