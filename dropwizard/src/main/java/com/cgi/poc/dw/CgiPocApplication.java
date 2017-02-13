@@ -18,6 +18,7 @@ import com.cgi.poc.dw.dao.UserNotificationDaoImpl;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.rest.resource.LoginResource;
 import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
+import com.cgi.poc.dw.sockets.AlertEndpoint;
 import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
 import com.cgi.poc.dw.service.UserRegistrationService;
@@ -37,6 +38,7 @@ import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.websockets.WebsocketBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import java.security.NoSuchAlgorithmException;
@@ -103,6 +105,11 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         return configuration.swaggerBundleConfiguration;
       }
     });
+
+    /**
+     * Adding Websocket bundle.
+     */
+    bootstrap.addBundle(new WebsocketBundle(AlertEndpoint.class));
 
     bootstrap.setConfigurationSourceProvider(
         new SubstitutingSourceProvider(
