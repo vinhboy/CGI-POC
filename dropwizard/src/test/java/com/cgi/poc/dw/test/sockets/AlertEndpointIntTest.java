@@ -1,7 +1,6 @@
 package com.cgi.poc.dw.test.sockets;
 
-import com.cgi.poc.dw.auth.PasswordHashUnitTest;
-import com.cgi.poc.dw.test.IntegrationTest;
+import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.test.helper.IntTestSocketClientHelper;
 import java.io.IOException;
 import java.net.URI;
@@ -15,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class AlertEndpointIntTest extends IntegrationTest {
 
-  private final static Logger LOG = LoggerFactory.getLogger(PasswordHashUnitTest.class);
+  private final static Logger LOG = LoggerFactory.getLogger(AlertEndpointIntTest.class);
   private static final String url = "ws://localhost:%d/alert";
 
   @Test
