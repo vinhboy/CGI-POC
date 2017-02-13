@@ -1,6 +1,7 @@
 package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.service.LoginService;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
@@ -38,8 +39,8 @@ public class LoginResource {
   })
   @UnitOfWork
   @Timed(name = "User.login")
-  public Response login(User user) {
-    Response response =  loginService.login(user);
+  public Response login(LoginUserDto loginUserDto) {
+    Response response =  loginService.login(loginUserDto);
       if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
                 throw new WebApplicationException(response);
       }
