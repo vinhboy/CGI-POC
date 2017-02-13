@@ -41,11 +41,16 @@ public class UserDao extends AbstractDAO<User> {
     return retUser;
   }
 
-  public User create(User usr) {
+  public User save(User usr) {
     usr = this.persist(usr);
 
     return usr;
 
+  }
+
+  public User remove(User usr) {
+    usr = this.remove(usr);
+    return usr;
   }
 
   public void flush() {

@@ -42,6 +42,7 @@ public class User implements Serializable, Principal {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Basic(optional = false)
   @Column(name = "id")
+  @JsonIgnore
   private Long id;
 
   @Basic(optional = false)
@@ -98,12 +99,12 @@ public class User implements Serializable, Principal {
   //@Basic(optional = false)
   @NotNull(groups = {PersistValidationGroup.class})
   @Column(name = "latitude")
-  private double latitude;
+  private Double latitude;
 
   //@Basic(optional = false)
   @NotNull(groups = {PersistValidationGroup.class})
   @Column(name = "longitude")
-  private double longitude;
+  private Double longitude;
 
 
   @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, orphanRemoval = true)
@@ -196,19 +197,19 @@ public class User implements Serializable, Principal {
     this.role = role;
   }
 
-  public double getLatitude() {
+  public Double getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(double latitude) {
+  public void setLatitude(Double latitude) {
     this.latitude = latitude;
   }
 
-  public double getLongitude() {
+  public Double getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(double longitude) {
+  public void setLongitude(Double longitude) {
     this.longitude = longitude;
   }
 

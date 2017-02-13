@@ -21,7 +21,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
@@ -48,7 +47,6 @@ public class UserRegistrationServiceUnitTest {
 
   @Spy
   private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-  ;
 
   private User user;
 
@@ -62,6 +60,8 @@ public class UserRegistrationServiceUnitTest {
     user.setRole(Role.RESIDENT.name());
     user.setPhone("1234567890");
     user.setZipCode("98765");
+    user.setLatitude(0.0);
+    user.setLongitude(0.0);
     UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.SMS.ordinal()));
     Set<UserNotification> notificationType = new HashSet<>();
     notificationType.add(selNot);
@@ -75,7 +75,7 @@ public class UserRegistrationServiceUnitTest {
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
-    when(userDao.create(any(User.class))).thenReturn(newUser);
+    when(userDao.save(any(User.class))).thenReturn(newUser);
     Response actual = underTest.registerUser(user);
 
     assertEquals(200, actual.getStatus());
@@ -141,7 +141,7 @@ public class UserRegistrationServiceUnitTest {
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
 
-    doThrow(new HibernateException("Something went wrong.")).when(userDao).create(any(User.class));
+    doThrow(new HibernateException("Something went wrong.")).when(userDao).save(any(User.class));
     try {
       underTest.registerUser(user);
       fail("Expected an exception to be thrown");
@@ -158,18 +158,23 @@ public class UserRegistrationServiceUnitTest {
     }
   }
 
-
   @Test
   public void registerUser_shouldThrowExceptionWhenPasswordHashingFails() throws Exception {
 
-    doThrow(new InvalidKeySpecException("Error")).when(passwordHash)
-        .createHash(user.getPassword());
+    doThrow(new InvalidKeySpecException("Something went wrong.")).when(passwordHash).createHash(user.getPassword());
     try {
       underTest.registerUser(user);
       fail("Expected ConflictException");
-    } catch (InternalServerErrorException exception) {
+    } catch (WebApplicationException exception) {
       assertEquals(500, exception.getResponse().getStatus());
-      assertEquals(exception.getMessage(), "Unable to create a password hash.");
+      ErrorInfo errorInfo = (ErrorInfo) exception.getResponse().getEntity();
+      String actualMessage = errorInfo.getErrors().get(0).getMessage();
+      String actualCode = errorInfo.getErrors().get(0).getCode();
+
+      assertEquals("ERR1", actualCode);
+      assertEquals(
+          "An Unknown exception has occured. Type: <java.security.spec.InvalidKeySpecException>. Message: <Something went wrong.>",
+          actualMessage);
     }
   }
 

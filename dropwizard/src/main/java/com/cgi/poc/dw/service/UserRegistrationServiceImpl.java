@@ -13,7 +13,6 @@ import com.google.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -51,9 +50,11 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
     try {
       hash = passwordHash.createHash(user.getPassword());
       user.setPassword(hash);
-    } catch (Exception e) {
-      LOG.error("Unable to create a password hash.", e);
-      throw new InternalServerErrorException("Unable to create a password hash.");
+    } catch (Exception exception) {
+      LOG.error("Unable to create a password hash.", exception);
+      ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
+      throw new WebApplicationException(
+          Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build());
     }
 
     try {
@@ -61,20 +62,26 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
       for (UserNotification notificationType : user.getNotificationType()) {
         notificationType.setUserId(user);
       }
-      User retUser = userDao.create(user);
+      User retUser = userDao.save(user);
 
     } catch (ConstraintViolationException exception) {
       throw exception;
     } catch (Exception exception) {
-      ErrorInfo errRet = new ErrorInfo();
-      String message = GeneralErrors.UNKNOWN_EXCEPTION.getMessage();
-      String errorString = message.replace("REPLACE1", exception.getClass().getCanonicalName())
-          .replace("REPLACE2", exception.getMessage());
-      errRet.addError(GeneralErrors.UNKNOWN_EXCEPTION.getCode(), errorString);
+      LOG.error("Unable to save a user.", exception);
+      ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
       throw new WebApplicationException(
           Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build());
     }
     return Response.ok().build();
 
+  }
+
+  private ErrorInfo getInternalErrorInfo(Exception exception, GeneralErrors generalErrors) {
+    ErrorInfo errRet = new ErrorInfo();
+    String message = generalErrors.getMessage();
+    String errorString = message.replace("REPLACE1", exception.getClass().getCanonicalName())
+        .replace("REPLACE2", exception.getMessage());
+    errRet.addError(generalErrors.getCode(), errorString);
+    return errRet;
   }
 }

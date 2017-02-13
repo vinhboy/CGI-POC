@@ -22,12 +22,33 @@ import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
   private static final String url = "http://localhost:%d/register";
 
+  private User tstUser;
+  
+  @Before
+  public void createUser() {
+    tstUser = new User();
+    tstUser.setEmail("success@gmail.com");
+    tstUser.setPassword("test123");
+    tstUser.setFirstName("john");
+    tstUser.setLastName("smith");
+    tstUser.setRole(Role.RESIDENT.toString());
+    tstUser.setPhone("1234567890");
+    tstUser.setZipCode("98765");
+    tstUser.setLatitude(0.0);
+    tstUser.setLongitude(0.0);
+    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
+    Set<UserNotification> notificationType = new HashSet<>();
+    notificationType.add(selNot);
+    tstUser.setNotificationType(notificationType);
+  }
+  
   @Test
   public void noArgument() throws JSONException {
     Client client = new JerseyClientBuilder().build();
@@ -36,20 +57,13 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     JSONObject responseJo = new JSONObject(response.readEntity(String.class));
     Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("errors")));
     Assert.assertEquals("[\"The request body may not be null\"]", responseJo.optString("errors"));
-
   }
 
   @Test
   public void noEmail() throws JSONException {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
-    tstUser.setPassword("test123");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    //tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    tstUser.setZipCode("98765");
+    tstUser.setEmail(null);
+
     UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
     Set<UserNotification> notificationType = new HashSet<>();
     notificationType.add(selNot);
@@ -74,19 +88,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidEmail() {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
     tstUser.setEmail("invalidEmail");
-    tstUser.setPassword("test123");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    //tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    tstUser.setZipCode("98765");
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(tstUser));
@@ -108,19 +110,9 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   @Test
   public void noPassword() {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
-    tstUser.setEmail("helper@gmail.com");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    //tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    tstUser.setZipCode("98765");
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
-
+    tstUser.setEmail("nopass@gmail.com");
+    tstUser.setPassword(null);
+    
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
@@ -145,19 +137,8 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidPasswordTooShort() {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
-    tstUser.setEmail("helper@gmail.com");
+    tstUser.setEmail("invalidpass@gmail.com");
     tstUser.setPassword("a");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    //tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    tstUser.setZipCode("98765");
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
@@ -187,19 +168,8 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidPasswordContainsWhiteSpace() {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
-    tstUser.setEmail("helper@gmail.com");
+    tstUser.setEmail("success123@gmail.com");
     tstUser.setPassword("abcd abcd");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    //tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    tstUser.setZipCode("98765");
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
@@ -222,19 +192,8 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidPasswordNoAlphabeticalCharacters() {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
-    tstUser.setEmail("helper@gmail.com");
+    tstUser.setEmail("success11@gmail.com");
     tstUser.setPassword("123");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    // tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    tstUser.setZipCode("98765");
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
@@ -253,22 +212,9 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     }
   }
 
-  //@Test
+  @Test
   public void signupSuccess() {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
-    tstUser.setEmail("success@gmail.com");
-    tstUser.setPassword("test123");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    //tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    tstUser.setZipCode("98765");
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
@@ -278,20 +224,8 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidPhoneNumber() throws JSONException {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
-    tstUser.setEmail("success@gmail.com");
-    tstUser.setPassword("test123");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    // tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    //less than 10 digits
-    tstUser.setPhone("123456789");
-    tstUser.setZipCode("98765");
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
+    tstUser.setEmail("invalidphonenumber1@gmail.com");
+    tstUser.setPhone("44343");
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
@@ -306,27 +240,14 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
           .replace("REPLACE", partString);
       assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
-
   }
 
 
   @Test
   public void invalidZipCode() throws JSONException {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
-    tstUser.setEmail("success@gmail.com");
-    tstUser.setPassword("test123");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    // tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    //less than 5 digits
-    tstUser.setZipCode("9875");
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
+    tstUser.setEmail("invalidzipcode@gmail.com");
+    tstUser.setZipCode("983");
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
@@ -343,24 +264,12 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
       assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
   }
-
+  
   @Test
   public void signupUserAlreadyExist() {
     Client client = new JerseyClientBuilder().build();
-    User tstUser = new User();
-    tstUser.setEmail("duplicate@gmail.com");
-    tstUser.setPassword("test123");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    // tstUser.setNotificationType(Arrays.asList(NotificationType.SMS));
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    tstUser.setZipCode("98765");
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
-
+    tstUser.setEmail("alreadyexists@gmail.com");
+    
     Response response1 = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()

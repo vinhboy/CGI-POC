@@ -5,6 +5,7 @@
  */
 package com.cgi.poc.dw.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -39,6 +40,7 @@ public class UserNotification implements Serializable {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,
       org.hibernate.annotations.CascadeType.PERSIST})
+  @JsonIgnore
   private User userId;
 
   public UserNotification() {

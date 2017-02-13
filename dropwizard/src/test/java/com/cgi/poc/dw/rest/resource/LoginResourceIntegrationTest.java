@@ -109,21 +109,23 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   public void registerUserLoginUserSuccess() throws JSONException {
     Client client = new JerseyClientBuilder().build();
     // registerUser user
-    User userRegistrationDto = new User();
-    userRegistrationDto.setEmail("success@gmail.com");
-    userRegistrationDto.setPassword("test123");
-    userRegistrationDto.setFirstName("john");
-    userRegistrationDto.setLastName("smith");
-    userRegistrationDto.setRole(Role.RESIDENT.name());
-    userRegistrationDto.setPhone("1234567890");
-    userRegistrationDto.setZipCode("98765");
+    User user = new User();
+    user.setEmail("success@gmail.com");
+    user.setPassword("test123");
+    user.setFirstName("john");
+    user.setLastName("smith");
+    user.setRole(Role.RESIDENT.name());
+    user.setPhone("1234567890");
+    user.setZipCode("98765");
+    user.setLatitude(0.0);
+    user.setLongitude(0.0);
     UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
     Set<UserNotification> notificationType = new HashSet<>();
     notificationType.add(selNot);
-    userRegistrationDto.setNotificationType(notificationType);
+    user.setNotificationType(notificationType);
 
     client.target(String.format("http://localhost:%d/register", RULE.getLocalPort())).request()
-        .post(Entity.json(userRegistrationDto));
+        .post(Entity.json(user));
     // login user
     User loginUserDto = new User();
     loginUserDto.setEmail("success@gmail.com");
@@ -142,6 +144,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     User loginUserDto = new User();
     loginUserDto.setEmail("admin@cgi.com");
     loginUserDto.setPassword("adminpw");
+    
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
     Assert.assertEquals(200, response.getStatus());
@@ -154,21 +157,23 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   public void loginFailureWrongPassword() {
     Client client = new JerseyClientBuilder().build();
     // registerUser user
-    User userRegistrationDto = new User();
-    userRegistrationDto.setEmail("wrong.pw@gmail.com");
-    userRegistrationDto.setPassword("test123");
-    userRegistrationDto.setFirstName("john");
-    userRegistrationDto.setLastName("smith");
-    userRegistrationDto.setRole(Role.RESIDENT.name());
-    userRegistrationDto.setPhone("1234567890");
-    userRegistrationDto.setZipCode("98765");
+    User user = new User();
+    user.setEmail("wrong.pw@gmail.com");
+    user.setPassword("test123");
+    user.setFirstName("john");
+    user.setLastName("smith");
+    user.setRole(Role.RESIDENT.name());
+    user.setPhone("1234567890");
+    user.setZipCode("98765");
+    user.setLatitude(0.0);
+    user.setLongitude(0.0);
     UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.SMS.ordinal()));
     Set<UserNotification> notificationType = new HashSet<>();
     notificationType.add(selNot);
-    userRegistrationDto.setNotificationType(notificationType);
+    user.setNotificationType(notificationType);
 
     client.target(String.format("http://localhost:%d/register", RULE.getLocalPort())).request()
-        .post(Entity.json(userRegistrationDto));
+        .post(Entity.json(user));
     // login user
     User loginUserDto = new User();
     loginUserDto.setEmail("wrong.pw@gmail.com");

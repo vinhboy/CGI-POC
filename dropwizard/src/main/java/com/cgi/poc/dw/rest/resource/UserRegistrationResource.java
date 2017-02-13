@@ -39,7 +39,7 @@ public class UserRegistrationResource {
       @ApiResponse(code = 200, message = "Success"),
       @ApiResponse(code = 500, message = "System Error")
   })
-  @Timed(name = "User.create")
+  @Timed(name = "User.save")
   public Response signup(@NotNull User user) {
     return userRegistrationService.registerUser(user);
   }
