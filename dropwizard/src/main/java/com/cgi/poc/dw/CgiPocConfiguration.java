@@ -14,6 +14,16 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class CgiPocConfiguration extends Configuration {
 
+  private MapApiConfiguration mapApiConfiguration = new MapApiConfiguration();
+
+  public MapApiConfiguration getMapApiConfiguration() {
+    return mapApiConfiguration;
+  }
+  @JsonProperty("mapsApi")
+  public void setMapApiConfiguration(MapApiConfiguration mapApiConfiguration) {
+    this.mapApiConfiguration = mapApiConfiguration;
+  }
+
   /**
    * Assign swagger bundle configuration.
    */
@@ -34,16 +44,12 @@ public class CgiPocConfiguration extends Configuration {
   private String jwtSignatureSecret;
 
   /**
-   * The URL to access exchange rate API.
+   * Jersey client default configuration.
    */
-  @NotEmpty
-  private String apiURL;
-  /**
-   * The key to access exchange rate API.
-   */
-  @NotEmpty
-  private String apiKey;
-
+  @Valid
+  @NotNull
+  private JerseyClientConfiguration jerseyClientConfiguration
+      = new JerseyClientConfiguration();
 
   /* CORS */
   public CorsConfiguration getCorsConfiguration() {
@@ -75,40 +81,11 @@ public class CgiPocConfiguration extends Configuration {
     this.jwtSignatureSecret = jwtSignatureSecret;
   }
 
-
-  /**
-   * Jersey client default configuration.
-   */
-  @Valid
-  @NotNull
-  private JerseyClientConfiguration jerseyClientConfiguration
-      = new JerseyClientConfiguration();
-
   /**
    * @return Jersey Client
    */
   @JsonProperty("jerseyClient")
   public JerseyClientConfiguration getJerseyClientConfiguration() {
     return jerseyClientConfiguration;
-  }
-
-  /**
-   * A getter for the URL of currency rates the API.
-   *
-   * @return the URL of currency rates the API.
-   */
-  @JsonProperty
-  public String getApiURL() {
-    return apiURL;
-  }
-
-  /**
-   * A getter for the API key of currency rates the API.
-   *
-   * @return the API key of currency rates the API.
-   */
-  @JsonProperty
-  public String getApiKey() {
-    return apiKey;
   }
 }

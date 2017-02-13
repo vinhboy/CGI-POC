@@ -7,7 +7,7 @@ server:
   adminConnectors:
   - type: http
     port: 8381
-    
+
 #Jersey client settings
 jerseyClient:
     #The maximum idle time for a connection, once established.

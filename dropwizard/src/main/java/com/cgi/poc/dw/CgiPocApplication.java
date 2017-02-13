@@ -11,11 +11,8 @@ import com.cgi.poc.dw.auth.service.JwtReaderServiceImpl;
 import com.cgi.poc.dw.auth.service.KeyBuilderServiceImpl;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.auth.service.PasswordHashImpl;
-import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.UserDaoImpl;
-import com.cgi.poc.dw.dao.UserNotificationDao;
-import com.cgi.poc.dw.dao.UserNotificationDaoImpl;
 import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.dao.model.UserNotification;
 import com.cgi.poc.dw.rest.resource.LoginResource;
 import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
 import com.cgi.poc.dw.sockets.AlertEndpoint;
@@ -23,18 +20,24 @@ import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
 import com.cgi.poc.dw.service.UserRegistrationService;
 import com.cgi.poc.dw.service.UserRegistrationServiceImpl;
+import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
+import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.client.JerseyClientBuilder;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
-import io.dropwizard.jdbi.DBIFactory;
+import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -45,15 +48,19 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
+import javax.validation.Validator;
+import javax.ws.rs.client.Client;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.hibernate.SessionFactory;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +70,14 @@ import org.slf4j.LoggerFactory;
 public class CgiPocApplication extends Application<CgiPocConfiguration> {
 
   private final static Logger LOG = LoggerFactory.getLogger(CgiPocApplication.class);
+
+  private final HibernateBundle<CgiPocConfiguration> hibernateBundle
+      = new HibernateBundle<CgiPocConfiguration>(User.class, UserNotification.class) {
+    @Override
+    public DataSourceFactory getDataSourceFactory(CgiPocConfiguration configuration) {
+      return configuration.getDataSourceFactory();
+    }
+  };
 
   /**
    * Application's main method.
@@ -117,7 +132,13 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
             new EnvironmentVariableSubstitutor(false)
         )
     );
-    
+
+    bootstrap.addBundle(hibernateBundle);
+    bootstrap.getObjectMapper().disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    // want to ensure that dates are stored in UTC
+    TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
+    System.setProperty("user.timezone", "Etc/UTC");
+
   }
 
   @Override
@@ -130,12 +151,16 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
 
     Keys keys = new KeyBuilderServiceImpl().createKeys(configuration);
 
-    // guice injector
+    // guice injectorctor = createInjector(configuration, environment, keys);
+    // resource r
     Injector injector = createInjector(configuration, environment, keys);
-    
-    // resource registration
+
     registerResource(environment, injector, UserRegistrationResource.class);
     registerResource(environment, injector, LoginResource.class);
+    registerResource(environment, injector, CustomConstraintViolationExceptionMapper.class);
+    registerResource(environment, injector, CustomSQLConstraintViolationException.class);
+
+    environment.jersey().property(ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
 
     // CORS support
     configureCors(environment, configuration.getCorsConfiguration());
@@ -215,24 +240,46 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
       protected void configure() {
         // keys
         bind(Keys.class).toInstance(keys);
-        // database
-        final DBIFactory factory = new DBIFactory();
-        final DBI jdbi = factory.build(env, conf.getDataSourceFactory(), "mysqlDb");
-
-        final UserDaoImpl userDaoImpl = jdbi.onDemand(UserDaoImpl.class);
-        final UserNotificationDaoImpl userNotificationDaoImpl = jdbi.onDemand(UserNotificationDaoImpl.class);
-        bind(UserDao.class).toInstance(userDaoImpl);
-        bind(UserNotificationDao.class).toInstance(userNotificationDaoImpl);
 
         // services
+        bind(Validator.class).toInstance(env.getValidator());
         bind(JwtReaderService.class).to(JwtReaderServiceImpl.class).asEagerSingleton();
         bind(JwtBuilderService.class).to(JwtBuilderServiceImpl.class).asEagerSingleton();
         bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
-        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
+        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class)
+            .asEagerSingleton();
+        bind(JerseyClientConfiguration.class).toInstance(conf.getJerseyClientConfiguration());
+        bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
+        //Create Jersey client.
+        final Client client = new JerseyClientBuilder(env)
+            .using(conf.getJerseyClientConfiguration())
+            .build(getName());
+        bind(Client.class).toInstance(client);
         //configs
-        bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
+//        bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
+//        bindConstant().annotatedWith(Names.named("apiKey")).to(conf.getApiKey());
       }
+
+      @Singleton
+      @Provides
+      public SessionFactory provideSessionFactory() {
+
+        SessionFactory sf = hibernateBundle.getSessionFactory();
+        if (sf == null) {
+          try {
+            hibernateBundle.run(conf, env);
+            return hibernateBundle.getSessionFactory();
+          } catch (Exception e) {
+                LOG.error("Unable to run hibernatebundle");
+
+          }
+        } else {
+          return sf;
+        }
+        return null;
+      }
+
     });
     return injector;
   }

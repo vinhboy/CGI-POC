@@ -34,22 +34,11 @@ VALUES (1,
         -121.4941738
 );
 
-CREATE TABLE notification_method (
-  id     BIGINT      NOT NULL AUTO_INCREMENT,
-  method VARCHAR(10) NOT NULL,
-  PRIMARY KEY (id)
-)
-  AUTO_INCREMENT = 1;
-
-INSERT INTO notification_method (method) VALUES ('EMAIL');
-INSERT INTO notification_method (method) VALUES ('SMS');
-INSERT INTO notification_method (method) VALUES ('PUSH');
 
 CREATE TABLE user_notification (
   user_id         BIGINT NOT NULL,
   notification_id BIGINT NOT NULL,
   PRIMARY KEY (user_id, notification_id),
   FOREIGN KEY (user_id) REFERENCES user (id),
-  FOREIGN KEY (notification_id) REFERENCES notification_method (id)
 );
 

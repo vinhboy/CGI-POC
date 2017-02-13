@@ -1,79 +1,129 @@
 package com.cgi.poc.dw.service;
 
-import com.cgi.poc.dw.auth.MyPasswordValidator;
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.UserNotificationDao;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.rest.model.UserRegistrationDto;
-import com.cgi.poc.dw.rest.model.validator.UserRegistrationDtoValidator;
+import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.util.ErrorInfo;
+import com.cgi.poc.dw.util.GeneralErrors;
+import com.cgi.poc.dw.util.PersistValidationGroup;
+import com.cgi.poc.dw.util.RestValidationGroup;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.InternalServerErrorException;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+import javax.validation.groups.Default;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UserRegistrationServiceImpl implements UserRegistrationService {
+public class UserRegistrationServiceImpl extends BaseServiceImpl implements
+    UserRegistrationService {
 
   private final static Logger LOG = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
-  private final static MyPasswordValidator myPasswordValidator = new MyPasswordValidator();
+
   private final UserDao userDao;
-  private final UserNotificationDao userNotificationDao;
+
   private final PasswordHash passwordHash;
 
+  private Client client;
+
+  private MapApiConfiguration mapApiConfiguration;
+
+  //The name of the query param for the 
+  private static final String ADDRESS = "address";
+
+
   @Inject
-  public UserRegistrationServiceImpl(UserDao userDao, UserNotificationDao userNotificationDao, PasswordHash passwordHash) {
+  public UserRegistrationServiceImpl(MapApiConfiguration mapApiConfiguration, UserDao userDao,
+      PasswordHash passwordHash,
+      Validator validator, Client client) {
+    super(validator);
     this.userDao = userDao;
-    this.userNotificationDao = userNotificationDao;
     this.passwordHash = passwordHash;
+    this.client = client;
+    this.mapApiConfiguration = mapApiConfiguration;
+
   }
 
-  public Response registerUser(UserRegistrationDto userRegistrationDto) {
-    UserRegistrationDtoValidator.validate(userRegistrationDto, myPasswordValidator);
+  public Response registerUser(User user) {
+    validate(user, "rest", RestValidationGroup.class, Default.class);
+    // check if the email already exists.
+    User findUserByEmail = userDao.findUserByEmail(user.getEmail());
+    if (findUserByEmail != null) {
+      ErrorInfo errRet = new ErrorInfo();
+      String errorString = GeneralErrors.DUPLICATE_ENTRY.getMessage().replace("REPLACE", "email");
+      errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
+      return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
+    }
     String hash = null;
     try {
-      hash = passwordHash.createHash(userRegistrationDto.getPassword());
-    } catch (Exception e) {
-      LOG.error("Unable to create a password hash.", e);
-      throw new InternalServerErrorException("Unable to create a password hash.");
+      hash = passwordHash.createHash(user.getPassword());
+      user.setPassword(hash);
+    } catch (Exception exception) {
+      LOG.error("Unable to create a password hash.", exception);
+      ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
+      return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
     }
 
-    User user = createUser(userRegistrationDto, hash);
+    setUserGeoCoordinates(user);
 
     try {
-      long id = userDao.createUser(user);
-      List<Long> notificationTypes = new ArrayList<>();
-      for(NotificationType notificationType : userRegistrationDto.getNotificationType()){
-        long notificationMethodId = userNotificationDao.findNotificationMethodIdByName(notificationType.name());
-        notificationTypes.add(notificationMethodId);
+      validate(user, "save", Default.class, PersistValidationGroup.class);
+      for (UserNotification notificationType : user.getNotificationType()) {
+        notificationType.setUserId(user);
       }
-      userNotificationDao.createUserNotification(id, notificationTypes);
+      User retUser = userDao.save(user);
+
+    } catch (ConstraintViolationException exception) {
+      throw exception;
     } catch (Exception exception) {
-      String msg = "Unable to create user as user may already exists.";
-      LOG.warn(msg, exception);
-      throw new BadRequestException(msg);
+      LOG.error("Unable to save a user.", exception);
+      ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
+      return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
     }
     return Response.ok().build();
+
   }
 
-  private User createUser(UserRegistrationDto userRegistrationDto, String hash) {
-    User user = new User();
-    user.setFirstName(userRegistrationDto.getFirstName());
-    user.setLastName(userRegistrationDto.getLastName());
-    user.setEmail(userRegistrationDto.getEmail());
-    user.setPassword(hash);
-    user.setRole(Role.RESIDENT);
-    user.setNotificationType(userRegistrationDto.getNotificationType());
-    user.setPhone(userRegistrationDto.getPhone());
-    user.setZipCode(userRegistrationDto.getZipCode());
-    //TODO: call external API to populate these based on ZipCode
-    user.setLatitude(0.0);
-    user.setLongitude(0.0);
-    return user;
+  //invoke Google Maps API to retrieve latitude and longitude by zipCode
+  private void setUserGeoCoordinates(User user) {
+    try {
+      String response = client
+          .target(mapApiConfiguration.getApiURL())
+          .queryParam(ADDRESS, user.getZipCode())
+          .request(MediaType.APPLICATION_JSON)
+          .get(String.class);
+
+      final ObjectNode node = new ObjectMapper().readValue(response, ObjectNode.class);
+
+      if (node.path("results").size() > 0 && "OK".equals(node.path("status"))) {
+        user.setLatitude(node.findParent("location").findValue("lat").asDouble());
+        user.setLongitude(node.findParent("location").findValue("lng").asDouble());
+      } else {
+        user.setLatitude(0.0);
+        user.setLongitude(0.0);
+      }
+    } catch (Exception exception) {
+      LOG.error("Unable to make maps api call.", exception);
+      ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
+      throw new WebApplicationException(
+          Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build());
+    }
+  }
+
+  private ErrorInfo getInternalErrorInfo(Exception exception, GeneralErrors generalErrors) {
+    ErrorInfo errRet = new ErrorInfo();
+    String message = generalErrors.getMessage();
+    String errorString = message.replace("REPLACE1", exception.getClass().getCanonicalName())
+        .replace("REPLACE2", exception.getMessage());
+    errRet.addError(generalErrors.getCode(), errorString);
+    return errRet;
   }
 }
