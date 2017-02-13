@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.dropwizard.testing.ResourceHelpers;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -102,11 +104,11 @@ public class FireEventValidationTest extends IntegrationTest {
      * Test of min required fields on model
      */
     @Test
-    public void testExampleFromSource() throws IOException, ParseException {
+    public void testExampleFromSource() throws IOException, ParseException, URISyntaxException {
          JSONParser parser = new JSONParser();
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("sameEvents/exampleFireEvent.json").getFile());
-        
+           File file = new File(ClassLoader.getSystemResource("exampleFireEvent.json").toURI());
+         
             Object obj = parser.parse(new FileReader(file));
 
            JSONObject jsonObject = (JSONObject) obj;

@@ -33,22 +33,19 @@ import org.jose4j.json.internal.json_simple.JSONObject;
  * @author dawna.floyd
  */
  
-public class FireEventDAOTest extends IntegrationTest  {
+public class FireEventDAOTest extends DaoUnitTestBase  {
     
-    protected  SessionFactory sessionFactory;
-    private Session session;
+ 
     FireEventDAO eventDAO;
-    Validator validator;
-    
+     
      public FireEventDAOTest() {
-
+        super();
         
     }
     
     @BeforeClass
     public static void setUpClass() {
-
-    }
+     }
     
     @AfterClass
     public static void tearDownClass() {
@@ -56,20 +53,16 @@ public class FireEventDAOTest extends IntegrationTest  {
     
     @Before
     public void setUp() throws Exception {
-         sessionFactory = HibernateUtil.getInstance().getSessionFactory();
-         session = sessionFactory.openSession();
-        Transaction beginTransaction = sessionFactory.getCurrentSession().beginTransaction();
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-        eventDAO = new FireEventDAO(sessionFactory,validator); 
+      super.setUp();
+        eventDAO = new FireEventDAO(getSessionFactory(),validator); 
         
     }
     
     @After
     public void tearDown() {
-        
-        sessionFactory.getCurrentSession().close();
-    }
+              super.tearDown();
+
+     }
  
     /**
      * Test of update method, of class FireEventDAO.
@@ -99,7 +92,7 @@ public class FireEventDAOTest extends IntegrationTest  {
 
 
         
-        sessionFactory.getCurrentSession().flush(); // have to do this.. so that the sql is actually executed.
+         flush(); // have to do this.. so that the sql is actually executed.
 
         FireEvent result2 = eventDAO.findById(event.getUniquefireidentifier());        
         assertThat(result2.getUniquefireidentifier()).isEqualTo(event.getUniquefireidentifier());
@@ -127,7 +120,7 @@ public class FireEventDAOTest extends IntegrationTest  {
         event.setHotlink("http://msn.com");
         event.setIncidenttypecategory("A");
         FireEvent result = eventDAO.findById("noWay");   
-        sessionFactory.getCurrentSession().flush(); // have to do this.. so that the sql is actually executed.
+         flush(); // have to do this.. so that the sql is actually executed.
         assertNull(result);
 
     
@@ -144,7 +137,7 @@ public class FireEventDAOTest extends IntegrationTest  {
         FireEvent result = eventDAO.update(event);
         boolean bExceptionCaught = false;
         try {
-            sessionFactory.getCurrentSession().flush();            
+             flush();            
         } catch (ConstraintViolationException hibernateException) {
             Set<ConstraintViolation<?>> constraintViolations = hibernateException.getConstraintViolations();
             for ( ConstraintViolation violation : constraintViolations ) {

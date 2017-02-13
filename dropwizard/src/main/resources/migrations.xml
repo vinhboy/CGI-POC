@@ -127,6 +127,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="link" type="varchar(80)" />
+            <column name="geometry" type="json" />
             <column name="objectid" type="integer" />
             <column name="shape" type="geometry" />
             <column name="name" type="varchar(20)" />
@@ -146,6 +147,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="objectid" type="integer" />
+            <column name="geometry" type="json" />
             <column name="depth" type="NUMERIC(10,5)" />
             <column name="latitude" type="NUMERIC(25,20)" />
             <column name="longitude" type="NUMERIC(25,20)" />
@@ -164,6 +166,7 @@
             <column name="id" type="NUMERIC(10,2)" >
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="geometry" type="json" />
             <column name="yeah" type="integer" />
             <column name="month" type="integer" />
             <column name="day" type="integer" />
@@ -250,6 +253,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="link" type="varchar(80)" />
+            <column name="geometry" type="json" />
             <column name="objectid" type="integer" />
             <column name="shape" type="geometry" />
             <column name="alert" type="varchar(10)" />

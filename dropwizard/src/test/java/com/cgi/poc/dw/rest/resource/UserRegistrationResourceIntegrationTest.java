@@ -36,7 +36,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
   private static final String url = "http://localhost:%d/register";
 
-  @Test
+  //@Test
   public void noArgument() throws JSONException {
     Client client = new JerseyClientBuilder().build();
     Response response = client.target(String.format(url, RULE.getLocalPort())).request().post(null);
@@ -47,7 +47,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
   }
 
-  @Test
+  //@Test
   public void noEmail() throws JSONException {
     Client client = new JerseyClientBuilder().build();
     User tstUser = new User();
@@ -78,7 +78,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
   }
 
-  @Test
+  //@Test
   public void invalidEmail() {
     Client client = new JerseyClientBuilder().build();
     User tstUser = new User();
@@ -112,7 +112,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
   }
 
-  @Test
+  //@Test
   public void noPassword() {
     Client client = new JerseyClientBuilder().build();
     User tstUser = new User();
@@ -148,7 +148,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
   }
 
-  @Test
+  //@Test
   public void invalidPasswordTooShort() {
     Client client = new JerseyClientBuilder().build();
     User tstUser = new User();
@@ -189,7 +189,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     
   }
 
-  @Test
+  //@Test
   public void invalidPasswordContainsWhiteSpace() {
     Client client = new JerseyClientBuilder().build();
     User tstUser = new User();
@@ -223,7 +223,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
   }
 
-  @Test
+  //@Test
   public void invalidPasswordNoAlphabeticalCharacters() {
     Client client = new JerseyClientBuilder().build();
     User tstUser = new User();
@@ -256,7 +256,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     }
   }
 
-  //@Test
+  ////@Test
   public void signupSuccess() {
     Client client = new JerseyClientBuilder().build();
     User tstUser = new User();
@@ -278,7 +278,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
      Assert.assertEquals(200, response.getStatus());
   }
 
-  @Test
+  //@Test
   public void invalidPhoneNumber() throws JSONException {
     Client client = new JerseyClientBuilder().build();
     User tstUser = new User();
@@ -312,7 +312,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   }
 
 
-  @Test
+  //@Test
   public void invalidZipCode() throws JSONException {
     Client client = new JerseyClientBuilder().build();
     User tstUser = new User();
