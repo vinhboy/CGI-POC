@@ -34,12 +34,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -103,7 +99,7 @@ public class UserRegistrationServiceUnitTest {
   }
 
   @Test
-  public void registerUser_shouldRegisterUserWhenGivenValidInput() throws Exception {
+  public void registerUser_RegisterUserWithValidInput() throws Exception {
 
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
@@ -111,11 +107,12 @@ public class UserRegistrationServiceUnitTest {
     Response actual = underTest.registerUser(user);
 
     assertEquals(200, actual.getStatus());
+    assertEquals(user, actual.getEntity());
   }
 
 
   @Test
-  public void registerPasswordValidationFails() throws Exception {
+  public void registerUser_PasswordValidationFails() throws Exception {
 
     user.setPassword("a"); //one character password
 
@@ -145,7 +142,7 @@ public class UserRegistrationServiceUnitTest {
   }
 
   @Test
-  public void registerUserEmailValidationFails() throws Exception {
+  public void registerUser_EmailValidationFails() throws Exception {
 
     user.setPassword("aaa"); //one character password
     user.setEmail("aaa"); //one character password
@@ -170,7 +167,7 @@ public class UserRegistrationServiceUnitTest {
     }
   }
   @Test
-  public void registerUserEmailValidationFailsWhiteSpave() throws Exception {
+  public void registerUser_EmailValidationFailsWhiteSpave() throws Exception {
 
     user.setPassword("aaa"); //one character password
     user.setEmail("aaa @i23.com"); //one character password
@@ -195,7 +192,7 @@ public class UserRegistrationServiceUnitTest {
     }
   }
    @Test
-  public void registerUserEmailValidationFailsInvalidDomain() throws Exception {
+  public void registerUser_EmailValidationFailsInvalidDomain() throws Exception {
 
     user.setPassword("aaa"); //one character password
     user.setEmail("aaa@ggg"); //(looks for patter @XX.YYY
@@ -305,7 +302,7 @@ public class UserRegistrationServiceUnitTest {
   }
   
   @Test
-  public void registerUser_shouldThrowExceptionWhenMapsAPICommunicationFails()
+  public void registerUser_MapsAPICommunicationFails()
       throws InvalidKeySpecException, NoSuchAlgorithmException {
 
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
@@ -336,4 +333,20 @@ public class UserRegistrationServiceUnitTest {
           actualMessage);
     }
   }
+
+  @Test
+  public void registerUser_ReturnsExpectedGeoCoordinates() throws Exception {
+
+    String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
+        + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
+    when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
+    Response actual = underTest.registerUser(user);
+
+    User actualUser = (User) actual.getEntity();
+
+    assertEquals(200, actual.getStatus());
+    assertEquals(new Double(38.5824933), actualUser.getLatitude());
+    assertEquals(new Double(-121.4941738), actualUser.getLongitude());
+  }
+
 }
