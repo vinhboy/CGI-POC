@@ -13,6 +13,8 @@ import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.auth.service.PasswordHashImpl;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.service.EmailService;
+import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.rest.resource.LoginResource;
 import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
 import com.cgi.poc.dw.sockets.AlertEndpoint;
@@ -246,9 +248,11 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(JwtBuilderService.class).to(JwtBuilderServiceImpl.class).asEagerSingleton();
         bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
-        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class)
-            .asEagerSingleton();
+        bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
+        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
+        bind(MailConfiguration.class).toInstance(conf.getMailConfig());
+
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)
             .using(conf.getJerseyClientConfiguration())
@@ -267,7 +271,6 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
             return hibernateBundle.getSessionFactory();
           } catch (Exception e) {
                 LOG.error("Unable to run hibernatebundle");
-
           }
         } else {
           return sf;
