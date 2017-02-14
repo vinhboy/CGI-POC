@@ -53,11 +53,11 @@ import static org.junit.Assert.fail;
  *
  * @author dawna.floyd
  */
-public class EventEarthquakeValidationTest extends IntegrationTest {
+public class EventEarthquakeValidationTest extends BaseTest {
 
-    Validator validator;
 
     public EventEarthquakeValidationTest() {
+        super();
 
     }
 
@@ -72,13 +72,14 @@ public class EventEarthquakeValidationTest extends IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+       super.setUp();
+
 
     }
 
     @After
     public void tearDown() {
+               super.tearDown();
 
     }
 

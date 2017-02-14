@@ -5,10 +5,9 @@
  */
 package com.cgi.poc.dw.dao;
 
-import com.cgi.poc.dw.dao.model.EventEarthquake;
+import com.cgi.poc.dw.dao.model.EventWeather;
 import io.dropwizard.hibernate.AbstractDAO;
-import java.util.List;
-import javax.validation.Validator;
+ import javax.validation.Validator;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -17,40 +16,41 @@ import org.slf4j.Logger;
 
 /**
  *
- * @author dawna.floyd
+ * @author candy.giles
  */
-public class EventEarthquakeDAO extends AbstractDAO<EventEarthquake> {
+public class EventWeatherDAO extends AbstractDAO<EventWeather> {
 
   private final static Logger LOG = LoggerFactory.getLogger(FireEventDAO.class);
 
     private int pageNumber = 0;
     private int pageSize = 0;
     Validator validator;
- 
-    public EventEarthquakeDAO(SessionFactory factory, Validator validator) {
+
+
+    public EventWeatherDAO(SessionFactory factory, Validator validator) {
         super(factory);
         this.validator = validator;
 
     }
 
-    public List<EventEarthquake> findById(String id) {
+    public EventWeather findById(String id) {
 
         //return Optional.fromNullable(get(id));
         Criteria criteria = this.criteria();
 
         //contract id, page, page size
-        criteria.add(Restrictions.eq("eventEarthquakePK.eqid", id));
-        List<EventEarthquake> resultList  = null;
-        resultList  =  criteria.list();
- 
-        return resultList;
+        criteria.add(Restrictions.eq("warnid", id));
+        EventWeather event = null;
+        event = (EventWeather) criteria.uniqueResult();
+        
+        return event;
     }
-    public EventEarthquake selectForUpdate(EventEarthquake event) {
-        return ((EventEarthquake) this.currentSession().load(EventEarthquake.class,event.getEventEarthquakePK()));
+    public EventWeather selectForUpdate(EventWeather event) {
+        return ((EventWeather) this.currentSession().load(EventWeather.class, event.getWarnid()));
     }
     
-    public EventEarthquake save(EventEarthquake event) {
-        EventEarthquake merge = (EventEarthquake)  currentSession().merge(event);
+    public EventWeather update(EventWeather event) {
+        EventWeather merge = (EventWeather)  currentSession().merge(event);
         return  merge;
     }
 

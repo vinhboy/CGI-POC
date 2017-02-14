@@ -8,20 +8,12 @@ package com.cgi.poc.dw.dao;
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.google.common.collect.ImmutableMap;
 import io.dropwizard.hibernate.AbstractDAO;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Set;
-import java.util.UUID;
-import java.util.logging.Logger;
-import javax.validation.ConstraintViolation;
+import org.slf4j.Logger;
 import javax.validation.Validator;
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.jdbc.ReturningWork;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -29,7 +21,7 @@ import org.hibernate.jdbc.ReturningWork;
  */
 public class FireEventDAO extends AbstractDAO<FireEvent> {
 
-    private static final Logger logger = Logger.getLogger(FireEventDAO.class.getName());
+  private final static Logger LOG = LoggerFactory.getLogger(FireEventDAO.class);
 
     private int pageNumber = 0;
     private int pageSize = 0;
@@ -57,13 +49,9 @@ public class FireEventDAO extends AbstractDAO<FireEvent> {
         //contract id, page, page size
         criteria.add(Restrictions.eq("uniquefireidentifier", id));
         FireEvent event = null;
-        try {
-            event = (FireEvent) criteria.uniqueResult();
-        } catch (Exception e) {
-            System.out.println("Error: Exception");
-            System.out.println(e);
-
-        }
+        
+        event = (FireEvent) criteria.uniqueResult();
+         
         return event;
     }
     public FireEvent selectForUpdate(FireEvent event) {

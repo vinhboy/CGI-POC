@@ -18,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  *
@@ -64,6 +65,7 @@ public class EventVolcano implements Serializable {
     private String descrpt;
     @Column(name = "last_modified")
     @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp 
     private Date lastModified;
     @Column(name = "notification_id")
     private Integer notificationId;

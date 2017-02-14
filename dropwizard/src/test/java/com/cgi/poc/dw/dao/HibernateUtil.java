@@ -82,6 +82,12 @@ public HibernateUtil() {
   
         configuration.addAnnotatedClass(FireEvent.class);
         configuration.addAnnotatedClass(EventEarthquake.class);
+        configuration.addAnnotatedClass(EventWeather.class);
+        configuration.addAnnotatedClass(EventFlood.class);
+        configuration.addAnnotatedClass(EventHurricanes.class);
+        configuration.addAnnotatedClass(EventTsunami.class);
+        configuration.addAnnotatedClass(EventVolcano.class);
+        
 
         sessionFactory = configuration.buildSessionFactory();
         openSession = sessionFactory.openSession();

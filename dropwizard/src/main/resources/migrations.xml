@@ -264,6 +264,28 @@
  
         </createTable>
     </changeSet>
+    <changeSet id="12" author="Dawna Floyd">
+        <addColumn tableName="event_weather">
+            <column name="idp_validendtime" type="timestamp" />
+        </addColumn>
+        <dropColumn tableName="event_weather" columnName="dp_validtime"/>
+
+    </changeSet>
+    <changeSet id="13" author="Dawna Floyd">
+    <comment> change from json to text data data. Json data type seems to be loosing precision in x/y coordinates</comment> 
+    <modifyDataType columnName="geometry" newDataType="text" tableName="event_fire"/>
+    <modifyDataType columnName="geometry" newDataType="text" tableName="event_weather"/>
+    <modifyDataType columnName="geometry" newDataType="text" tableName="event_flood"/>
+    <modifyDataType columnName="geometry" newDataType="text" tableName="event_hurricanes"/>
+    <modifyDataType columnName="geometry" newDataType="text" tableName="event_earthQuake"/>
+    <modifyDataType columnName="geometry" newDataType="text" tableName="event_tsunami"/>
+    <modifyDataType columnName="geometry" newDataType="text" tableName="event_volcano"/>
+    
+    </changeSet>
+    <changeSet id="14" author="Dawna Floyd">
+    <modifyDataType columnName="firecause" newDataType="VARCHAR(15)" tableName="event_fire"/>
+    <modifyDataType columnName="iscomplex" newDataType="VARCHAR(5)" tableName="event_fire"/>
+    </changeSet>
 
 
 </databaseChangeLog>

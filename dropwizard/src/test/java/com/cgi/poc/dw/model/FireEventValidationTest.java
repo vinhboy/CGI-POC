@@ -48,17 +48,16 @@ import static org.junit.Assert.assertEquals;
  *
  * @author dawna.floyd
  */
-public class FireEventValidationTest extends IntegrationTest {
+public class FireEventValidationTest extends BaseTest {
 
-    Validator validator;
-
+ 
     public FireEventValidationTest() {
-
+       super();
     }
 
     @BeforeClass
     public static void setUpClass() {
-
+       
     }
 
     @AfterClass
@@ -67,13 +66,13 @@ public class FireEventValidationTest extends IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+       super.setUp();
 
     }
 
     @After
     public void tearDown() {
+               super.tearDown();
 
     }
 
@@ -135,7 +134,7 @@ public class FireEventValidationTest extends IntegrationTest {
         testEvent.setHotlink("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
         testEvent.setStatus("123");
         testEvent.setState("1123");
-        testEvent.setIscomplex("1123");
+        testEvent.setIscomplex("123456789012345678901234567890");
         testEvent.setComplexparentirwinid("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
         testEvent.setFirecause("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
         testEvent.setPooresponsibleunit("1234567890");

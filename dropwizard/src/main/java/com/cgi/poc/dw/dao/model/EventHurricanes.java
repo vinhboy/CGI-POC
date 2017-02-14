@@ -18,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  *
@@ -67,7 +68,8 @@ public class EventHurricanes implements Serializable {
     private String wind;
     @Column(name = "last_modified")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModified;
+     @UpdateTimestamp 
+   private Date lastModified;
     @Column(name = "notification_id")
     private Integer notificationId;
 

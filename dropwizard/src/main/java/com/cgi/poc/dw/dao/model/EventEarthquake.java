@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  *
@@ -94,10 +95,10 @@ public class EventEarthquake implements Serializable {
     
     @Column(name = "last_modified")
     @Temporal(TemporalType.TIMESTAMP)
-    
+    @UpdateTimestamp 
     private Date lastModified;
+
     @Column(name = "notification_id")
-    
     private Integer notificationId;
 
     public EventEarthquake() {

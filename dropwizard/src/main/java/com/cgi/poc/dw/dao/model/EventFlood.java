@@ -5,6 +5,9 @@
  */
 package com.cgi.poc.dw.dao.model;
 
+import com.cgi.poc.dw.util.JsonCoordinate;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,8 +20,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  *
@@ -60,90 +66,125 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class EventFlood implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @Valid
     @EmbeddedId
     protected EventFloodPK eventFloodPK;
+    
     @Column(name = "objectid")
     private Integer objectid;
+    
+    @NotNull
     @Column(name = "geometry")
     private String geometry;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    
+// @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "latitude")
     private BigDecimal latitude;
+    
+    
     @Column(name = "longitude")
     private BigDecimal longitude;
+
     @Size(max = 2)
     @Column(name = "state")
     private String state;
+
     @Size(max = 50)
     @Column(name = "idp_source")
+    @JsonProperty("idp_source")
     private String idpSource;
+
     @Size(max = 50)
     @Column(name = "idp_subset")
+    @JsonProperty("idp_subset")
     private String idpSubset;
+
     @Lob
     @Column(name = "shape")
     private byte[] shape;
+
     @Size(max = 5)
     @Column(name = "gaugelid")
     private String gaugelid;
+
     @Size(max = 90)
     @Column(name = "location")
     private String location;
+
     @Size(max = 24)
     @Column(name = "observed")
     private String observed;
+
     @Size(max = 5)
     @Column(name = "units")
     private String units;
+
     @Size(max = 24)
     @Column(name = "action")
     private String action;
+
     @Size(max = 24)
     @Column(name = "flood")
     private String flood;
+
     @Size(max = 24)
     @Column(name = "moderate")
     private String moderate;
+
     @Size(max = 24)
     @Column(name = "major")
     private String major;
+
     @Size(max = 24)
     @Column(name = "lowthresh")
     private String lowthresh;
+
     @Size(max = 5)
     @Column(name = "lowthreshu")
     private String lowthreshu;
+
     @Size(max = 5)
     @Column(name = "wfo")
     private String wfo;
+
     @Size(max = 30)
     @Column(name = "hdatum")
     private String hdatum;
+
     @Size(max = 5)
     @Column(name = "pedts")
     private String pedts;
+
     @Size(max = 24)
     @Column(name = "secvalue")
     private String secvalue;
+
     @Size(max = 5)
     @Column(name = "secunit")
     private String secunit;
+
     @Size(max = 128)
     @Column(name = "url")
     private String url;
+
     @Size(max = 25)
     @Column(name = "status")
     private String status;
+
     @Size(max = 24)
     @Column(name = "forecast")
     private String forecast;
+
     @Column(name = "last_modified")
     @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp 
     private Date lastModified;
+
     @Column(name = "notification_id")
     private Integer notificationId;
 
     public EventFlood() {
+       this.eventFloodPK =  new EventFloodPK();
     }
 
     public EventFlood(EventFloodPK eventFloodPK) {
@@ -162,6 +203,24 @@ public class EventFlood implements Serializable {
         this.eventFloodPK = eventFloodPK;
     }
 
+        public String getWaterbody() {
+        return this.eventFloodPK.getWaterbody();
+    }
+
+    public void setWaterbody(String waterbody) {
+          this.eventFloodPK.setWaterbody (waterbody);
+    }
+
+    public String getObstime() {
+        return this.eventFloodPK.getObstime();
+    }
+
+    public void setObstime(String obstime) {
+          this.eventFloodPK.setObstime(obstime);
+    }
+    
+    
+    
     public Integer getObjectid() {
         return objectid;
     }
@@ -182,6 +241,7 @@ public class EventFlood implements Serializable {
         return latitude;
     }
 
+    @JsonDeserialize(using = JsonCoordinate.class)
     public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
@@ -190,6 +250,7 @@ public class EventFlood implements Serializable {
         return longitude;
     }
 
+    @JsonDeserialize(using = JsonCoordinate.class)
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }

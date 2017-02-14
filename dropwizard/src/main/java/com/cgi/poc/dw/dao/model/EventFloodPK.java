@@ -16,7 +16,6 @@ import javax.validation.constraints.Size;
  *
  * @author dawna.floyd
  */
-@Embeddable
 public class EventFloodPK implements Serializable {
 
     @Basic(optional = false)
@@ -24,6 +23,7 @@ public class EventFloodPK implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "waterbody")
     private String waterbody;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 26)

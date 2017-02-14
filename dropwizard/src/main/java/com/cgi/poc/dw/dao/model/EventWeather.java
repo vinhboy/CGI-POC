@@ -5,6 +5,8 @@
  */
 package com.cgi.poc.dw.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.CaseFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -21,6 +23,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -49,7 +53,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EventWeather.findByIdpCurrentForecast", query = "SELECT e FROM EventWeather e WHERE e.idpCurrentForecast = :idpCurrentForecast"),
     @NamedQuery(name = "EventWeather.findByIdpTimeSeries", query = "SELECT e FROM EventWeather e WHERE e.idpTimeSeries = :idpTimeSeries"),
     @NamedQuery(name = "EventWeather.findByIdpIssueddate", query = "SELECT e FROM EventWeather e WHERE e.idpIssueddate = :idpIssueddate"),
-    @NamedQuery(name = "EventWeather.findByDpValidtime", query = "SELECT e FROM EventWeather e WHERE e.dpValidtime = :dpValidtime"),
     @NamedQuery(name = "EventWeather.findByIdpValidtime", query = "SELECT e FROM EventWeather e WHERE e.idpValidtime = :idpValidtime"),
     @NamedQuery(name = "EventWeather.findByIdpFcstHour", query = "SELECT e FROM EventWeather e WHERE e.idpFcstHour = :idpFcstHour"),
     @NamedQuery(name = "EventWeather.findByStArea", query = "SELECT e FROM EventWeather e WHERE e.stArea = :stArea"),
@@ -65,75 +68,116 @@ public class EventWeather implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "warnid")
     private String warnid;
+    
     @Column(name = "objectid")
     private Integer objectid;
-     @Column(name = "geometry")
+    
+    @Column(name = "geometry")
     private String geometry;
+    
     @Size(max = 2)
     @Column(name = "phenom")
     private String phenom;
+    
     @Size(max = 2)
     @Column(name = "sig")
     private String sig;
+    
     @Size(max = 4)
     @Column(name = "wfo")
     private String wfo;
+    
     @Size(max = 4)
     @Column(name = "event")
     private String event;
+    
     @Size(max = 20)
     @Column(name = "issuance")
     private String issuance;
+    
     @Size(max = 20)
     @Column(name = "expiration")
     private String expiration;
+    
     @Size(max = 128)
     @Column(name = "url")
     private String url;
-    @Size(max = 4)
+    
+    @NotNull
+    @Size(min = 1, max = 4)
     @Column(name = "msg_type")
+    @JsonProperty("msg_type")
     private String msgType;
-    @Size(max = 64)
+    
+    @NotNull
+    @Size(min = 1,max = 64)
+    @JsonProperty("prod_type")
     @Column(name = "prod_type")
     private String prodType;
+    
+    @JsonProperty("idp_source")
     @Size(max = 50)
     @Column(name = "idp_source")
     private String idpSource;
+    
+    @JsonProperty("idp_subset")
     @Size(max = 50)
     @Column(name = "idp_subset")
     private String idpSubset;
+    
+    @JsonProperty("idp_filedate")
     @Column(name = "idp_filedate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date idpFiledate;
+    
+    @JsonProperty("idp_ingestdate")
     @Column(name = "idp_ingestdate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date idpIngestdate;
+    
+    @JsonProperty("idp_current_forecast")
     @Column(name = "idp_current_forecast")
     private Integer idpCurrentForecast;
+    
+    @JsonProperty("idp_time_series")
     @Column(name = "idp_time_series")
     private Integer idpTimeSeries;
+    
+    @JsonProperty("idp_issueddate")
     @Column(name = "idp_issueddate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date idpIssueddate;
-    @Column(name = "dp_validtime")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dpValidtime;
+    
+    @JsonProperty("idp_validtime")
     @Column(name = "idp_validtime")
     @Temporal(TemporalType.TIMESTAMP)
     private Date idpValidtime;
+    
+    @JsonProperty("idp_validendtime")
+    @Column(name = "idp_validendtime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date idpValidendtime;
+    
+    @JsonProperty("idp_fcst_hour")
     @Column(name = "idp_fcst_hour")
     private Integer idpFcstHour;
+    
     @Lob
     @Column(name = "shape")
     private byte[] shape;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @JsonProperty("st_area(shape)")
     @Column(name = "st_area")
     private BigDecimal stArea;
+    
+    @JsonProperty("st_length(shape)")
     @Column(name = "st_length")
     private BigDecimal stLength;
+    
     @Column(name = "last_modified")
     @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp 
     private Date lastModified;
+    
     @Column(name = "notification_id")
     private Integer notificationId;
 
@@ -228,8 +272,8 @@ public class EventWeather implements Serializable {
         return msgType;
     }
 
-    public void setMsgType(String msgType) {
-        this.msgType = msgType;
+    public void setMsgType(String msg_type) {
+        this.msgType = msg_type;
     }
 
     public String getProdType() {
@@ -296,20 +340,20 @@ public class EventWeather implements Serializable {
         this.idpIssueddate = idpIssueddate;
     }
 
-    public Date getDpValidtime() {
-        return dpValidtime;
-    }
-
-    public void setDpValidtime(Date dpValidtime) {
-        this.dpValidtime = dpValidtime;
-    }
-
     public Date getIdpValidtime() {
         return idpValidtime;
     }
 
     public void setIdpValidtime(Date idpValidtime) {
         this.idpValidtime = idpValidtime;
+    }
+
+    public Date getIdpValidendtime() {
+        return idpValidendtime;
+    }
+
+    public void setIdpValidendtime(Date idpValidendtime) {
+        this.idpValidendtime = idpValidendtime;
     }
 
     public Integer getIdpFcstHour() {
@@ -335,12 +379,11 @@ public class EventWeather implements Serializable {
     public void setStArea(BigDecimal stArea) {
         this.stArea = stArea;
     }
-
     public BigDecimal getStLength() {
         return stLength;
     }
 
-    public void setStLength(BigDecimal stLength) {
+     public void setStLength(BigDecimal stLength) {
         this.stLength = stLength;
     }
 
@@ -383,6 +426,6 @@ public class EventWeather implements Serializable {
     @Override
     public String toString() {
         return "com.cgi.poc.dw.dao.model.EventWeather[ warnid=" + warnid + " ]";
-    }
+    } 
     
 }

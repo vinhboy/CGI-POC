@@ -21,6 +21,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  *
@@ -287,6 +288,7 @@ public class EventTsunami implements Serializable {
     private String url;
     @Column(name = "last_modified")
     @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp 
     private Date lastModified;
     @Column(name = "notification_id")
     private Integer notificationId;

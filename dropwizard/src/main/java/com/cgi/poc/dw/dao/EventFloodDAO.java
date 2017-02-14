@@ -5,7 +5,7 @@
  */
 package com.cgi.poc.dw.dao;
 
-import com.cgi.poc.dw.dao.model.EventEarthquake;
+import com.cgi.poc.dw.dao.model.EventFlood;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.util.List;
 import javax.validation.Validator;
@@ -19,7 +19,7 @@ import org.slf4j.Logger;
  *
  * @author dawna.floyd
  */
-public class EventEarthquakeDAO extends AbstractDAO<EventEarthquake> {
+public class EventFloodDAO extends AbstractDAO<EventFlood> {
 
   private final static Logger LOG = LoggerFactory.getLogger(FireEventDAO.class);
 
@@ -27,30 +27,30 @@ public class EventEarthquakeDAO extends AbstractDAO<EventEarthquake> {
     private int pageSize = 0;
     Validator validator;
  
-    public EventEarthquakeDAO(SessionFactory factory, Validator validator) {
+    public EventFloodDAO(SessionFactory factory, Validator validator) {
         super(factory);
         this.validator = validator;
 
     }
 
-    public List<EventEarthquake> findById(String id) {
+    public List<EventFlood> findById(String id) {
 
         //return Optional.fromNullable(get(id));
         Criteria criteria = this.criteria();
 
         //contract id, page, page size
-        criteria.add(Restrictions.eq("eventEarthquakePK.eqid", id));
-        List<EventEarthquake> resultList  = null;
+        criteria.add(Restrictions.eq("eventFloodPK.waterbody", id));
+        List<EventFlood> resultList  = null;
         resultList  =  criteria.list();
  
         return resultList;
     }
-    public EventEarthquake selectForUpdate(EventEarthquake event) {
-        return ((EventEarthquake) this.currentSession().load(EventEarthquake.class,event.getEventEarthquakePK()));
+    public EventFlood selectForUpdate(EventFlood event) {
+        return ((EventFlood) this.currentSession().load(EventFlood.class,event.getEventFloodPK()));
     }
     
-    public EventEarthquake save(EventEarthquake event) {
-        EventEarthquake merge = (EventEarthquake)  currentSession().merge(event);
+    public EventFlood save(EventFlood event) {
+        EventFlood merge = (EventFlood)  currentSession().merge(event);
         return  merge;
     }
 
