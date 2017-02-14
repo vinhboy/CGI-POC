@@ -1,7 +1,9 @@
 package com.cgi.poc.dw.rest.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.model.NotificationType;
@@ -12,9 +14,13 @@ import com.cgi.poc.dw.util.Error;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
 import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
 import java.util.HashSet;
 import java.util.Set;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -39,7 +45,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   @Before
   public void createUser() {
     tstUser = new User();
-    tstUser.setEmail("success@gmail.com");
+    tstUser.setEmail("sampleuser@cgi.com");
     tstUser.setPassword("test123");
     tstUser.setFirstName("john");
     tstUser.setLastName("smith");
@@ -229,12 +235,23 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  public void signupSuccess() {
+  public void signupSuccess() throws MessagingException {
     Client client = new JerseyClientBuilder().build();
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     Assert.assertEquals(200, response.getStatus());
+
+    //verify email registration
+    smtpServer.waitForIncomingEmail(1);
+    MimeMessage[] receivedMails = smtpServer.getReceivedMessages();
+    assertEquals( "Should have received 2 emails.", 1, receivedMails.length);
+
+    for(MimeMessage mail : receivedMails) {
+      assertTrue(GreenMailUtil.getHeaders(mail).contains("Registration confirmation"));
+      assertTrue(GreenMailUtil.getBody(mail).contains("Hello there, thank you for registering."));
+    }
+    assertEquals("sampleuser@cgi.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
   }
 
   @Test

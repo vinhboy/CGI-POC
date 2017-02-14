@@ -87,7 +87,7 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
       
       userDao.save(user);
       
-      //TODO: make this configurable
+      //Future TODO enhancement: make the subject and email body configurable
       emailService.send(null, Arrays.asList(user.getEmail()), "Registration confirmation", "Hello there, thank you for registering." );
       
     } catch (ConstraintViolationException exception) {
