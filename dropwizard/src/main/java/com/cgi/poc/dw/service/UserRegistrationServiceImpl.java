@@ -87,7 +87,8 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
       
       userDao.save(user);
       
-      emailService.send(null, Arrays.asList("vsejdini@surgeforward.com"), "testing mail :)", "Hello there, how are you ?" );
+      //TODO: make this configurable
+      emailService.send(null, Arrays.asList(user.getEmail()), "Registration confirmation", "Hello there, thank you for registering." );
       
     } catch (ConstraintViolationException exception) {
       throw exception;
