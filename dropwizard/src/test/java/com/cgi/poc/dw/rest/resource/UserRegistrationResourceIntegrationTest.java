@@ -11,6 +11,8 @@ import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.util.Error;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
 import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.client.Client;
@@ -21,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +33,8 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   private static final String url = "http://localhost:%d/register";
 
   private User tstUser;
+
+  private GreenMail smtpServer;
   
   @Before
   public void createUser() {
@@ -47,6 +52,17 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     Set<UserNotification> notificationType = new HashSet<>();
     notificationType.add(selNot);
     tstUser.setNotificationType(notificationType);
+
+    smtpServer = new GreenMail(new ServerSetup(3025, "127.0.0.1",
+        ServerSetup.PROTOCOL_SMTP));
+    smtpServer.start();
+  }
+
+  @After
+  public void exit() {
+    if (smtpServer != null) {
+      smtpServer.stop();
+    }
   }
   
   @Test
