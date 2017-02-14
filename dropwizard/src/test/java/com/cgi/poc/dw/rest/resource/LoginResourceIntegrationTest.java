@@ -10,6 +10,7 @@ import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
@@ -44,7 +45,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   @Test
   public void noEmail() {
     Client client = new JerseyClientBuilder().build();
-    User loginUserDto = new User();
+    LoginUserDto loginUserDto = new LoginUserDto();
     loginUserDto.setPassword("test123");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
@@ -67,7 +68,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   @Test
   public void noPassword() {
     Client client = new JerseyClientBuilder().build();
-    User loginUserDto = new User();
+    LoginUserDto loginUserDto = new LoginUserDto();
     loginUserDto.setEmail("helper@gmail.com");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
@@ -93,7 +94,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   @Test
   public void userNotFound() {
     Client client = new JerseyClientBuilder().build();
-    User loginUserDto = new User();
+    LoginUserDto loginUserDto = new LoginUserDto();
     loginUserDto.setEmail("user.not.found@gmail.com");
     loginUserDto.setPassword("test123");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
@@ -128,7 +129,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     client.target(String.format("http://localhost:%d/register", RULE.getLocalPort())).request()
         .post(Entity.json(user));
     // login user
-    User loginUserDto = new User();
+    LoginUserDto loginUserDto = new LoginUserDto();
     loginUserDto.setEmail("success@gmail.com");
     loginUserDto.setPassword("test123");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
@@ -142,7 +143,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   @Test
   public void loginAdminSuccess() throws JSONException {
     Client client = new JerseyClientBuilder().build();
-    User loginUserDto = new User();
+    LoginUserDto loginUserDto = new LoginUserDto();
     loginUserDto.setEmail("admin@cgi.com");
     loginUserDto.setPassword("adminpw");
     
@@ -176,7 +177,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     client.target(String.format("http://localhost:%d/register", RULE.getLocalPort())).request()
         .post(Entity.json(user));
     // login user
-    User loginUserDto = new User();
+    LoginUserDto loginUserDto = new LoginUserDto();
     loginUserDto.setEmail("wrong.pw@gmail.com");
     loginUserDto.setPassword("wrong");
 

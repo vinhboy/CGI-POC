@@ -53,6 +53,9 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
   }
 
   public Response registerUser(User user) {
+    //Defaulting the user to RESIDENT
+    user.setRole("RESIDENT");
+    
     validate(user, "rest", RestValidationGroup.class, Default.class);
     // check if the email already exists.
     User findUserByEmail = userDao.findUserByEmail(user.getEmail());
@@ -79,8 +82,9 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
       for (UserNotification notificationType : user.getNotificationType()) {
         notificationType.setUserId(user);
       }
-      User retUser = userDao.save(user);
-
+      
+      userDao.save(user);
+      
     } catch (ConstraintViolationException exception) {
       throw exception;
     } catch (Exception exception) {
@@ -88,8 +92,7 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
       ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
       return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
     }
-    return Response.ok().build();
-
+    return Response.ok().entity(user).build();
   }
 
   //invoke Google Maps API to retrieve latitude and longitude by zipCode
@@ -103,9 +106,9 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
 
       final ObjectNode node = new ObjectMapper().readValue(response, ObjectNode.class);
 
-      if (node.path("results").size() > 0 && "OK".equals(node.path("status"))) {
-        user.setLatitude(node.findParent("location").findValue("lat").asDouble());
-        user.setLongitude(node.findParent("location").findValue("lng").asDouble());
+      if (node.path("results").size() > 0 && "OK".equals(node.path("status").asText())) {
+        user.setLatitude(node.get("results").get(0).get("geometry").get("location").get("lat").asDouble());
+        user.setLongitude(node.get("results").get(0).get("geometry").get("location").get("lng").asDouble());
       } else {
         user.setLatitude(0.0);
         user.setLongitude(0.0);

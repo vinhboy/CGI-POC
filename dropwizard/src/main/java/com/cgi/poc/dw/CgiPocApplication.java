@@ -33,7 +33,6 @@ import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.client.JerseyClientBuilder;
-import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
@@ -249,16 +248,12 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class)
             .asEagerSingleton();
-        bind(JerseyClientConfiguration.class).toInstance(conf.getJerseyClientConfiguration());
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)
             .using(conf.getJerseyClientConfiguration())
             .build(getName());
         bind(Client.class).toInstance(client);
-        //configs
-//        bindConstant().annotatedWith(Names.named("apiUrl")).to(conf.getApiURL());
-//        bindConstant().annotatedWith(Names.named("apiKey")).to(conf.getApiKey());
       }
 
       @Singleton
