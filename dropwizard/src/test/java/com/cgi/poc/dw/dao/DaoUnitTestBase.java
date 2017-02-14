@@ -30,7 +30,7 @@ public class DaoUnitTestBase {
     Validator validator;
     JSONParser parser;
     HibernateUtil dbUtil;
-
+    Transaction dbTransaction;
 
     @Before
     public void setUp() throws Exception {
@@ -38,7 +38,7 @@ public class DaoUnitTestBase {
         sessionFactory = dbUtil.getSessionFactory();
         session = dbUtil.getOpenSession();
          
-        Transaction beginTransaction = sessionFactory.getCurrentSession().beginTransaction();
+        dbTransaction = sessionFactory.getCurrentSession().beginTransaction();
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         JSONParser parser = new JSONParser();
@@ -47,7 +47,7 @@ public class DaoUnitTestBase {
     
     @After
     public void tearDown() {
-        
+        dbTransaction.rollback();
         sessionFactory.getCurrentSession().close();
     }
     

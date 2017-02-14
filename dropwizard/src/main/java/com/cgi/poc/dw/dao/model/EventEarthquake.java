@@ -11,6 +11,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -18,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -46,43 +49,59 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class EventEarthquake implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Valid
     @EmbeddedId
+    @Valid
     protected EventEarthquakePK eventEarthquakePK;
+    
     @Column(name = "objectid")
     private Integer objectid;
+    
+    @NotNull
     @Column(name = "geometry")
     private String geometry;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    
     @Column(name = "depth")
+    
     private BigDecimal depth;
     @Column(name = "latitude")
+    
     private BigDecimal latitude;
     @Column(name = "longitude")
+    
     private BigDecimal longitude;
     @Column(name = "magnitude")
+    
     private BigDecimal magnitude;
+    
     @Column(name = "numstations")
     private Integer numstations;
-    @Size(max = 200)
+    
+    @Size(max = 200)    
     @Column(name = "region")
     private String region;
-    @Size(max = 50)
+    
+    @Size(max = 50)    
     @Column(name = "source")
     private String source;
+    
     @Size(max = 50)
     @Column(name = "version")
     private String version;
+    
     @Lob
     @Column(name = "shape")
     private byte[] shape;
+    
     @Column(name = "last_modified")
     @Temporal(TemporalType.TIMESTAMP)
+    
     private Date lastModified;
     @Column(name = "notification_id")
+    
     private Integer notificationId;
 
     public EventEarthquake() {
+        setEventEarthquakePK( new EventEarthquakePK());
     }
 
     public EventEarthquake(EventEarthquakePK eventEarthquakePK) {
@@ -101,6 +120,23 @@ public class EventEarthquake implements Serializable {
         this.eventEarthquakePK = eventEarthquakePK;
     }
 
+    
+    public String getEqid() {
+        return this.eventEarthquakePK.getEqid();
+    }
+
+    public void setEqid(String eqid) {
+        this.eventEarthquakePK.setEqid( eqid );
+    }
+
+    public Date getDatetime() {
+        return this.eventEarthquakePK.getDatetime();
+    }
+
+    public void setDatetime(Date datetime) {
+        this.eventEarthquakePK.setDatetime(datetime);
+    }
+    
     public Integer getObjectid() {
         return objectid;
     }

@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -26,6 +27,7 @@ public class EventEarthquakePK implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "eqid")
     private String eqid;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "datetime")
@@ -40,15 +42,14 @@ public class EventEarthquakePK implements Serializable {
         this.datetime = datetime;
     }
 
-    public String getEqid() {
+     public String getEqid() {
         return eqid;
     }
 
     public void setEqid(String eqid) {
         this.eqid = eqid;
     }
-
-    public Date getDatetime() {
+     public Date getDatetime() {
         return datetime;
     }
 
