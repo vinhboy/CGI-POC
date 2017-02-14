@@ -34,14 +34,14 @@ public class BrowserFactory {
 		// Invoke Chrome Browser
 		else if (browserName.equalsIgnoreCase("chrome")) {
 
-			System.setProperty("webdriver.chrome.driver", DataProviderFactory.getConfig().getChromePath());
+			//System.setProperty("webdriver.chrome.driver", DataProviderFactory.getConfig().getChromePath());
 			driver = new ChromeDriver();
 		}
 
 		// Invoke IE Browser
 		else if (browserName.equalsIgnoreCase("ie")) {
 
-			System.setProperty("webdriver.ie.driver", DataProviderFactory.getConfig().getIEPath());
+			//System.setProperty("webdriver.ie.driver", DataProviderFactory.getConfig().getIEPath());
 			driver = new InternetExplorerDriver();
 		}
 
