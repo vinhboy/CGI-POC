@@ -78,8 +78,8 @@ public class EmailServiceImpl implements EmailService {
             dataSource = new ByteArrayDataSource(attachments.get(i), mimeTypes.get(i));
           } catch (IOException exception) {
             LOG.error("Email attachment error for {}.", toEmails[i], exception);
+            return;
           }
-
           // add the attachment
           email.attach(dataSource, fileNames.get(i), "attachment");
         }
