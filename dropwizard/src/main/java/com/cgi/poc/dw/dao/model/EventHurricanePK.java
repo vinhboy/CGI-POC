@@ -20,23 +20,24 @@ import javax.validation.constraints.Size;
  * @author dawna.floyd
  */
 @Embeddable
-public class EventHurricanesPK implements Serializable {
+public class EventHurricanePK implements Serializable {
 
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 10)
     @Column(name = "id")
     private String id;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "pubdate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date pubdate;
 
-    public EventHurricanesPK() {
+    public EventHurricanePK() {
     }
 
-    public EventHurricanesPK(String id, Date pubdate) {
+    public EventHurricanePK(String id, Date pubdate) {
         this.id = id;
         this.pubdate = pubdate;
     }
@@ -68,10 +69,10 @@ public class EventHurricanesPK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof EventHurricanesPK)) {
+        if (!(object instanceof EventHurricanePK)) {
             return false;
         }
-        EventHurricanesPK other = (EventHurricanesPK) object;
+        EventHurricanePK other = (EventHurricanePK) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -83,7 +84,7 @@ public class EventHurricanesPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cgi.poc.dw.dao.model.EventHurricanesPK[ id=" + id + ", pubdate=" + pubdate + " ]";
+        return "com.cgi.poc.dw.dao.model.EventHurricanePK[ id=" + id + ", pubdate=" + pubdate + " ]";
     }
     
 }

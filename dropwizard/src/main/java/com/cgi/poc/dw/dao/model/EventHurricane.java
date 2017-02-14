@@ -5,6 +5,7 @@
  */
 package com.cgi.poc.dw.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -28,68 +30,96 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "event_hurricanes")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "EventHurricanes.findAll", query = "SELECT e FROM EventHurricanes e"),
-    @NamedQuery(name = "EventHurricanes.findById", query = "SELECT e FROM EventHurricanes e WHERE e.eventHurricanesPK.id = :id"),
-    @NamedQuery(name = "EventHurricanes.findByPubdate", query = "SELECT e FROM EventHurricanes e WHERE e.eventHurricanesPK.pubdate = :pubdate"),
-    @NamedQuery(name = "EventHurricanes.findByLink", query = "SELECT e FROM EventHurricanes e WHERE e.link = :link"),
-    @NamedQuery(name = "EventHurricanes.findByObjectid", query = "SELECT e FROM EventHurricanes e WHERE e.objectid = :objectid"),
-    @NamedQuery(name = "EventHurricanes.findByName", query = "SELECT e FROM EventHurricanes e WHERE e.name = :name"),
-    @NamedQuery(name = "EventHurricanes.findByType", query = "SELECT e FROM EventHurricanes e WHERE e.type = :type"),
-    @NamedQuery(name = "EventHurricanes.findByMovement", query = "SELECT e FROM EventHurricanes e WHERE e.movement = :movement"),
-    @NamedQuery(name = "EventHurricanes.findByWind", query = "SELECT e FROM EventHurricanes e WHERE e.wind = :wind"),
-    @NamedQuery(name = "EventHurricanes.findByLastModified", query = "SELECT e FROM EventHurricanes e WHERE e.lastModified = :lastModified"),
-    @NamedQuery(name = "EventHurricanes.findByNotificationId", query = "SELECT e FROM EventHurricanes e WHERE e.notificationId = :notificationId")})
-public class EventHurricanes implements Serializable {
+    @NamedQuery(name = "EventHurricane.findAll", query = "SELECT e FROM EventHurricane e"),
+    @NamedQuery(name = "EventHurricane.findById", query = "SELECT e FROM EventHurricane e WHERE e.eventHurricanePK.id = :id"),
+    @NamedQuery(name = "EventHurricane.findByPubdate", query = "SELECT e FROM EventHurricane e WHERE e.eventHurricanePK.pubdate = :pubdate"),
+    @NamedQuery(name = "EventHurricane.findByLink", query = "SELECT e FROM EventHurricane e WHERE e.link = :link"),
+    @NamedQuery(name = "EventHurricane.findByObjectid", query = "SELECT e FROM EventHurricane e WHERE e.objectid = :objectid"),
+    @NamedQuery(name = "EventHurricane.findByName", query = "SELECT e FROM EventHurricane e WHERE e.name = :name"),
+    @NamedQuery(name = "EventHurricane.findByType", query = "SELECT e FROM EventHurricane e WHERE e.type = :type"),
+    @NamedQuery(name = "EventHurricane.findByMovement", query = "SELECT e FROM EventHurricane e WHERE e.movement = :movement"),
+    @NamedQuery(name = "EventHurricane.findByWind", query = "SELECT e FROM EventHurricane e WHERE e.wind = :wind"),
+    @NamedQuery(name = "EventHurricane.findByLastModified", query = "SELECT e FROM EventHurricane e WHERE e.lastModified = :lastModified"),
+    @NamedQuery(name = "EventHurricane.findByNotificationId", query = "SELECT e FROM EventHurricane e WHERE e.notificationId = :notificationId")})
+public class EventHurricane implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected EventHurricanesPK eventHurricanesPK;
+    @Valid
+    protected EventHurricanePK eventHurricanePK;
+    
     @Size(max = 80)
     @Column(name = "link")
     private String link;
+    
     @Column(name = "geometry")
     private String geometry;
+    @JsonProperty("OBJECTID")    
     @Column(name = "objectid")
     private Integer objectid;
+    
     @Lob
     @Column(name = "shape")
     private byte[] shape;
+    
     @Size(max = 20)
     @Column(name = "name")
     private String name;
+    
     @Size(max = 25)
     @Column(name = "type")
     private String type;
+    
     @Size(max = 30)
     @Column(name = "movement")
     private String movement;
+    
     @Size(max = 10)
     @Column(name = "wind")
     private String wind;
+    
     @Column(name = "last_modified")
     @Temporal(TemporalType.TIMESTAMP)
-     @UpdateTimestamp 
-   private Date lastModified;
+    @UpdateTimestamp 
+    private Date lastModified;
+    
     @Column(name = "notification_id")
     private Integer notificationId;
 
-    public EventHurricanes() {
+    public EventHurricane() {
+        this.eventHurricanePK = new EventHurricanePK ();
     }
 
-    public EventHurricanes(EventHurricanesPK eventHurricanesPK) {
-        this.eventHurricanesPK = eventHurricanesPK;
+    public EventHurricane(EventHurricanePK eventHurricanePK) {
+        this.eventHurricanePK = eventHurricanePK;
     }
 
-    public EventHurricanes(String id, Date pubdate) {
-        this.eventHurricanesPK = new EventHurricanesPK(id, pubdate);
+    public EventHurricane(String id, Date pubdate) {
+        this.eventHurricanePK = new EventHurricanePK(id, pubdate);
     }
 
-    public EventHurricanesPK getEventHurricanesPK() {
-        return eventHurricanesPK;
+        public String getId() {
+        return this.eventHurricanePK.getId();
     }
 
-    public void setEventHurricanesPK(EventHurricanesPK eventHurricanesPK) {
-        this.eventHurricanesPK = eventHurricanesPK;
+    public void setId(String id) {
+        this.eventHurricanePK.setId(id);
+    }
+
+    public Date getPubdate() {
+        return this.eventHurricanePK.getPubdate();
+    }
+
+    public void setPubdate(Date pubdate) {
+        this.eventHurricanePK.setPubdate(pubdate);
+    }
+    
+    public EventHurricanePK getEventHurricanePK() {
+        return eventHurricanePK;
+    }
+
+    public void setEventHurricanePK(EventHurricanePK eventHurricanePK) {
+        this.eventHurricanePK = eventHurricanePK;
     }
 
     public String getLink() {
@@ -175,18 +205,18 @@ public class EventHurricanes implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (eventHurricanesPK != null ? eventHurricanesPK.hashCode() : 0);
+        hash += (eventHurricanePK != null ? eventHurricanePK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof EventHurricanes)) {
+        if (!(object instanceof EventHurricane)) {
             return false;
         }
-        EventHurricanes other = (EventHurricanes) object;
-        if ((this.eventHurricanesPK == null && other.eventHurricanesPK != null) || (this.eventHurricanesPK != null && !this.eventHurricanesPK.equals(other.eventHurricanesPK))) {
+        EventHurricane other = (EventHurricane) object;
+        if ((this.eventHurricanePK == null && other.eventHurricanePK != null) || (this.eventHurricanePK != null && !this.eventHurricanePK.equals(other.eventHurricanePK))) {
             return false;
         }
         return true;
@@ -194,7 +224,7 @@ public class EventHurricanes implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cgi.poc.dw.dao.model.EventHurricanes[ eventHurricanesPK=" + eventHurricanesPK + " ]";
+        return "com.cgi.poc.dw.dao.model.EventHurricane[ eventHurricanePK=" + eventHurricanePK + " ]";
     }
     
 }

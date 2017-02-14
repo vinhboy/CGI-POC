@@ -5,6 +5,7 @@
  */
 package com.cgi.poc.dw.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -42,35 +44,47 @@ public class EventVolcano implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
+    @Valid
     protected EventVolcanoPK eventVolcanoPK;
+    
     @Size(max = 80)
     @Column(name = "link")
     private String link;
 
     @Column(name = "geometry")
     private String geometry;
+    
     @Column(name = "objectid")
+    @JsonProperty("OBJECTID")    
     private Integer objectid;
+    
     @Lob
     @Column(name = "shape")
     private byte[] shape;
+    
     @Size(max = 10)
     @Column(name = "alert")
     private String alert;
+    
     @Size(max = 8)
     @Column(name = "color")
     private String color;
+    
     @Size(max = 160)
     @Column(name = "descrpt")
     private String descrpt;
+    
     @Column(name = "last_modified")
     @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp 
     private Date lastModified;
+    
     @Column(name = "notification_id")
     private Integer notificationId;
 
     public EventVolcano() {
+                this.eventVolcanoPK = new EventVolcanoPK ();
+
     }
 
     public EventVolcano(EventVolcanoPK eventVolcanoPK) {
@@ -88,7 +102,21 @@ public class EventVolcano implements Serializable {
     public void setEventVolcanoPK(EventVolcanoPK eventVolcanoPK) {
         this.eventVolcanoPK = eventVolcanoPK;
     }
+        public String getId() {
+        return this.eventVolcanoPK.getId();
+    }
 
+    public void setId(String id) {
+        this.eventVolcanoPK.setId(id);
+    }
+
+    public Date getPubdate() {
+        return this.eventVolcanoPK.getPubdate();
+    }
+
+    public void setPubdate(Date pubdate) {
+        this.eventVolcanoPK.setPubdate(pubdate);
+    }
     public String getLink() {
         return link;
     }

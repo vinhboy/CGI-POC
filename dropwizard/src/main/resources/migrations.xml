@@ -286,6 +286,9 @@
     <modifyDataType columnName="firecause" newDataType="VARCHAR(15)" tableName="event_fire"/>
     <modifyDataType columnName="iscomplex" newDataType="VARCHAR(5)" tableName="event_fire"/>
     </changeSet>
+    <changeSet id="15" author="Dawna Floyd">
+    <modifyDataType columnName="id" newDataType="VARCHAR(60)" tableName="event_volcano"/>
+    </changeSet>
 
 
 </databaseChangeLog>

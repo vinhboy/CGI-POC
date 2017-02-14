@@ -12,7 +12,7 @@ import com.cgi.poc.dw.dao.model.EventEarthquake;
 import com.cgi.poc.dw.dao.model.EventFlood;
 import com.cgi.poc.dw.dao.model.EventTsunami;
 import com.cgi.poc.dw.dao.model.EventVolcano;
-import com.cgi.poc.dw.dao.model.EventHurricanes;
+import com.cgi.poc.dw.dao.model.EventHurricane;
 import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
@@ -84,7 +84,7 @@ public HibernateUtil() {
         configuration.addAnnotatedClass(EventEarthquake.class);
         configuration.addAnnotatedClass(EventWeather.class);
         configuration.addAnnotatedClass(EventFlood.class);
-        configuration.addAnnotatedClass(EventHurricanes.class);
+        configuration.addAnnotatedClass(EventHurricane.class);
         configuration.addAnnotatedClass(EventTsunami.class);
         configuration.addAnnotatedClass(EventVolcano.class);
         

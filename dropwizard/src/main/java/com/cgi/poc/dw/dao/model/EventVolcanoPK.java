@@ -24,7 +24,7 @@ public class EventVolcanoPK implements Serializable {
 
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 10)
+    @Size(min = 1, max = 60)
     @Column(name = "id")
     private String id;
     @Basic(optional = false)

@@ -62,7 +62,7 @@ public class FireEventDAOTest extends DaoUnitTestBase  {
      }
  
     /**
-     * Test of update method, of class FireEventDAO.
+     * Test of save method, of class FireEventDAO.
      */
     @Test
     public void testCRUD() throws IOException, URISyntaxException, ParseException {
@@ -79,7 +79,7 @@ public class FireEventDAOTest extends DaoUnitTestBase  {
            
          event.setGeometry(geo.toJSONString());
          
-        FireEvent result = eventDAO.update(event);
+        FireEvent result = eventDAO.save(event);
         Set<ConstraintViolation<FireEvent>> errors = validator.validate(result);
          flush(); // have to do this.. so that the sql is actually executed.
         assertThat(result.getIncidentname()).isEqualTo(event.getIncidentname());
@@ -197,7 +197,7 @@ public class FireEventDAOTest extends DaoUnitTestBase  {
         event.setNotificationId(1);
         event.setHotlink("http://msn.com");
         event.setIncidenttypecategory("A");
-        FireEvent result = eventDAO.update(event);
+        FireEvent result = eventDAO.save(event);
         boolean bExceptionCaught = false;
         try {
              flush();            

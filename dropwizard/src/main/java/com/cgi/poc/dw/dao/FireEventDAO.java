@@ -58,7 +58,7 @@ public class FireEventDAO extends AbstractDAO<FireEvent> {
         return ((FireEvent) this.currentSession().load(FireEvent.class, event.getUniquefireidentifier()));
     }
     
-    public FireEvent update(FireEvent event) {
+    public FireEvent save(FireEvent event) {
         FireEvent merge = (FireEvent)  currentSession().merge(event);
         return  merge;
     }
