@@ -47,8 +47,8 @@ public class BrowserFactory {
 
 		// Maximize the Window and wait for until the page load form 10 seconds
 		driver.manage().window().maximize();
-		 driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-		//impliciteWait(20);
+		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+	
 		return driver;
 	}
 
