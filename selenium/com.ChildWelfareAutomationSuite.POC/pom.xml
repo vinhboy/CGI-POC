@@ -88,6 +88,7 @@
 <version>3.0</version>
 <configuration>
 <compilerVersion>1.8</compilerVersion>
+<fork>true</fork>
 <source>1.6</source>
 <target>1.6</target>
 </configuration>
