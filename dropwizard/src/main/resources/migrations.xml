@@ -289,6 +289,10 @@
     <changeSet id="15" author="Dawna Floyd">
     <modifyDataType columnName="id" newDataType="VARCHAR(60)" tableName="event_volcano"/>
     </changeSet>
-
+    <changeSet id="16" author="Dawna Floyd">
+       <renameColumn newColumnName="year" oldColumnName="yeah" columnDataType="integer" tableName="event_tsunami"/>
+       <modifyDataType columnName="comments" newDataType="VARCHAR(4000)" tableName="event_tsunami"/>
+       <modifyDataType columnName="second" newDataType="NUMERIC(4,2)" tableName="event_tsunami"/>
+    </changeSet>
 
 </databaseChangeLog>
