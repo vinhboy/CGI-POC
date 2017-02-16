@@ -139,7 +139,7 @@
         </createTable>
     </changeSet>
     <changeSet id="9" author="Dawna Floyd">
-        <createTable tableName="event_earthQuake">
+        <createTable tableName="event_earthquake">
             <column name="eqid" type="varchar(50)" >
                 <constraints primaryKey="true" nullable="false"/>
             </column>
