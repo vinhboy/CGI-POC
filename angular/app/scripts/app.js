@@ -2,8 +2,6 @@
 
 var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages' ]);
 
-var POP_UP_DURATION = 30 * 1000; // jshint ignore:line
-
 var HOST = 'localhost';
 
 cgiWebApp.constant('urls', {

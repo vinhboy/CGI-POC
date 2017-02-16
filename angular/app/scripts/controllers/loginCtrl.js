@@ -24,7 +24,7 @@ cgiWebApp.controller('loginController',
     successMessage: 'GENERIC.MESSAGE.SUCCESS'
   };
 
-  $scope.popUp = function(code, message, duration) {
+  $scope.popUp = function(code, message) {
     if (code === 'error') {
       $scope.model.errorNotif = true;
       $scope.model.errorMessage = message;
@@ -41,29 +41,21 @@ cgiWebApp.controller('loginController',
         password: $scope.user.password
       };
 
-      //call to the authenticate service
       Authenticator.authenticate(dataObject).then(function(response) {
       if (response.status === 200) {
         $scope.model.errorNotif = false;
-
-        //                                          $scope.$parent.USER = data.user;
-        //                                          $scope.$parent.template.url = '';
         $scope.model.successNotif = true;
         $scope.model.successMessage = 'LOGIN.MESSAGE.LOGGEDIN';
-        //                                            $scope.$parent.navigate('INDEX');
         $sessionStorage.put('jwt', response.data.authToken);
 
       } else if (response.status === 401) {
-        $scope.popUp('error', 'LOGIN.MESSAGE.UNVALID', POP_UP_DURATION); // jshint ignore:line
+        $scope.popUp('error', 'LOGIN.MESSAGE.UNVALID');
       } else {
-        $scope.popUp('error', 'GENERIC.MESSAGE.ERROR.SERVER', POP_UP_DURATION); // jshint ignore:line
+        $scope.popUp('error', 'GENERIC.MESSAGE.ERROR.SERVER');
       }
-
         $scope.authForm.$setPristine();
         $scope.authForm.$setUntouched();
-
       });
-      // Making the fields empty
       clearFields();
     }
   };
