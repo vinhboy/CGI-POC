@@ -1,36 +1,36 @@
-<div ng-if="$parent.USER?false:true" class="usa-content">
+<div class="usa-content">
   <div class="usa-grid login-alert">
-    <div class="usa-alert usa-alert-error" ng-show="model.errorNotif">
+    <div class="usa-alert usa-alert-error" role="alert" ng-if="model.errorNotif">
       <div class="usa-alert-body">
-        <h3 class="usa-alert-heading">Error Status</h3>
+        <h3 class="usa-alert-heading">Error</h3>
         <p class="usa-alert-text" translate="{{model.errorMessage}}"></p>
       </div>
     </div>
-		<div class="usa-alert usa-alert-success" ng-show="model.successNotif">
+		<div class="usa-alert usa-alert-success" ng-if="model.successNotif">
       <div class="usa-alert-body">
-        <h3 class="usa-alert-heading">Success Status</h3>
+        <h3 class="usa-alert-heading">Success</h3>
         <p class="usa-alert-text" translate="{{model.successMessage}}"></p>
       </div>
     </div>
   </div>
   <div class="centeredForm">
-    <form class="usa-form-large" name="authForm">
+    <form class="usa-form-large" name="authForm" ng-submit="submitForm()">
       <fieldset>
         <div class="loginFormDiv">
           <label for="username">{{'LOGIN.LABEL.USERNAME' | translate}}</label>
-          <input id="username" name="username" type="text" data-autocapitalize="off" data-autocorrect="off" ng-model="user.username" required="true" />
+          <input id="username" name="username" type="text" data-autocapitalize="off"
+            data-autocorrect="off" ng-model="user.username" ng-required="true"
+            placeholder="example@domain.com" />
         </div>
           <div class="loginFormDiv passwordDiv">
             <label for="password">{{'LOGIN.LABEL.PASSWORD' | translate}}</label>
-            <input id="password" name="password" type="password" ng-model="user.password" required="false">
-          </div>
-          <div class="loginFormDiv">
-            <h5 class="login-text">{{'LOGIN.MESSAGE.SIGNIN' | translate}}
-              <a href="" ng-click="toggleRegistrationModal()">{{'LOGIN.MESSAGE.SIGNIN.LINK' | translate}}</a>.
-            </h5>
+            <input id="password" name="password" type="password" ng-model="user.password"
+              ng-required="true" placeholder="xxxxxxxxx">
           </div>
           <div>
-            <button class="usa-button-primary-alt usa-button-login" ng-click="submitForm(authForm.$valid)">{{'LOGIN.BUTTON.SUBMIT' | translate}}</button>
+            <input type="submit" class="usa-button-primary-alt usa-button-login"
+              value="{{'LOGIN.BUTTON.SUBMIT' | translate}}"
+              ng-disabled="!authForm.$dirty"></button>
           </div>
       </fieldset>
     </form>

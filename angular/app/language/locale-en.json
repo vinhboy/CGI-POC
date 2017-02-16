@@ -4,7 +4,7 @@
   "GENERIC.MESSAGE.INVALID.PASSWORDPATTERN":"Please  match the requested format for the password",
   "LOGIN.MESSAGE.LOGGEDIN": "You are Logged in",
   "LOGIN.MESSAGE.INVALID": "Incorrect username/password combination",
-  "LOGIN.LABEL.USERNAME": "Username",
+  "LOGIN.LABEL.USERNAME": "Email",
   "LOGIN.LABEL.PASSWORD": "Password",
   "LOGIN.LABEL.REMEMBERME": "Remember me",
   "LOGIN.MESSAGE.INVALID.PASSWORDREQUIRED":"Password must be at least 8 characters and contain 3 of the 4 following requirements: one upper case letter, one lower case letter, one number, and one special character",

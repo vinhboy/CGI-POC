@@ -20,8 +20,8 @@ cgiWebApp.controller('loginController',
   $scope.model = {
     errorNotif: false,
     successNotif: false,
-    errorMessage: 'GENERIC.MESSAGE.ERROR.SERVER',
-    successMessage: 'GENERIC.MESSAGE.SUCCESS'
+    errorMessage: '',
+    successMessage: ''
   };
 
   $scope.popUp = function(code, message) {
@@ -37,24 +37,22 @@ cgiWebApp.controller('loginController',
     }
   };
 
-  $scope.submitForm = function(isValid) {
+  $scope.submitForm = function() {
     $scope.popUp();
-    if (isValid) {
-      var credentials = {
-        email: $scope.user.username,
-        password: $scope.user.password
-      };
+    var credentials = {
+      email: $scope.user.username,
+      password: $scope.user.password
+    };
 
-      Authenticator.authenticate(credentials).then(function(response) {
-        if (response.status === 200) {
-          $scope.popUp('success', 'LOGIN.MESSAGE.LOGGEDIN');
-          $sessionStorage.put('jwt', response.data.authToken);
-        }
-        clearFields();
-      }).catch(function(){
-        $scope.popUp('error', 'LOGIN.MESSAGE.INVALID');
-      });
-    }
+    Authenticator.authenticate(credentials).then(function(response) {
+      if (response.status === 200) {
+        $scope.popUp('success', 'LOGIN.MESSAGE.LOGGEDIN');
+        $sessionStorage.put('jwt', response.data.authToken);
+      }
+      clearFields();
+    }).catch(function(response){
+      $scope.popUp('error', 'LOGIN.MESSAGE.INVALID');
+    });
   };
 
   var clearFields = function() {
