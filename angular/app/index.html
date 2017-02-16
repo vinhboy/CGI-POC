@@ -33,22 +33,21 @@
 		<link rel="stylesheet" href="uswds-0.14.0/css/uswds.css">
 
 	</head>
-	<body ng-app="cgi-web-app">
+	<body data-ng-app="cgi-web-app">
 		<div ng-controller="websocketController"></div>
 
 		<div class="main-content" id="main-content" ng-view></div>
 
 		<!-- build:js(.) scripts/vendor.js -->
 		<!-- bower:js -->
-		<script src="bower_components/jquery/dist/jquery.js"></script>
 		<script src="bower_components/angular/angular.js"></script>
-		<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-		<script src="bower_components/angular-route/angular-route.js"></script>
+		<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 		<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 		<script src="bower_components/angular-translate/angular-translate.js"></script>
+		<script src="bower_components/angular-messages/angular-messages.js"></script>
+		<script src="bower_components/angular-websocket/dist/angular-websocket.js"></script>
 		<script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
 		<script src="bower_components/angular-sessionstorage/angular-sessionstorage.js"></script>
-		<script src="bower_components/angular-websocket/dist/angular-websocket.js"></script>
 		<!-- endbower -->
 		<!-- endbuild -->
 
