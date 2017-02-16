@@ -49,14 +49,8 @@ cgiWebApp.controller('loginController',
         $scope.popUp('success', 'LOGIN.MESSAGE.LOGGEDIN');
         $sessionStorage.put('jwt', response.data.authToken);
       }
-      clearFields();
-    }).catch(function(response){
+    }).catch(function(){
       $scope.popUp('error', 'LOGIN.MESSAGE.INVALID');
     });
-  };
-
-  var clearFields = function() {
-    $scope.user.username = '';
-    $scope.user.password = '';
   };
 }]);

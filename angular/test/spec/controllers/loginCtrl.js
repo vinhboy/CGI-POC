@@ -47,7 +47,7 @@ describe('loginController', function() {
     it('should set the success message', function() {
       spyOn($scope, 'popUp');
 
-      $scope.submitForm(true);
+      $scope.submitForm();
       deferred.resolve({ status: 200, data: { autToken: 'token' } });
       $scope.$apply();
 
@@ -57,7 +57,7 @@ describe('loginController', function() {
     it('should save the JWT auth token', function() {
       spyOn($sessionStorage, 'put');
 
-      $scope.submitForm(true);
+      $scope.submitForm();
       deferred.resolve({ status: 200, data: { authToken: 'the jwt auth token' } });
       $scope.$apply();
 
@@ -67,16 +67,11 @@ describe('loginController', function() {
     it('should set the error message on unauthorized', function() {
       spyOn($scope, 'popUp');
 
-      $scope.submitForm(true);
+      $scope.submitForm();
       deferred.reject();
       $scope.$apply();
 
       expect($scope.popUp).toHaveBeenCalledWith('error', 'LOGIN.MESSAGE.INVALID');
-    });
-
-    it('should not do anything if the form is invalid', function() {
-      $scope.submitForm(false);
-      expect(authenticationService.authenticate).not.toHaveBeenCalled();
     });
   });
 });
