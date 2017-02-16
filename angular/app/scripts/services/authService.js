@@ -8,25 +8,12 @@
  *
  * authentication service.
  */
-cgiWebApp // jshint ignore:line
-  .service('Authenticator', ['$http', '$location', 'urls', function($http, $location, urls) {
+cgiWebApp.service('Authenticator',
+  ['$http', 'urls',
+  function($http, urls) {
 
-    this.authenticate = function(dataObject) {
-
-      var res = $http
-        .post(
-          urls.BASE + '/login',
-          //'http://localhost:8080/login',
-          dataObject);
-      var promise = res.then(function successCallback(response) {
-
-        return response;
-
-      }, function errorCallback(response) {
-        return response;
-      });
-
-      return promise;
-    };
-
-  }]);
+  this.authenticate = function(credentials) {
+    var endpoint = urls.BASE + '/login';
+    return $http.post(endpoint, credentials);
+  };
+}]);
