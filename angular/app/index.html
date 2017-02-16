@@ -36,8 +36,6 @@
 	<body data-ng-app="cgi-web-app">
 		<div ng-controller="websocketController"></div>
 
-		<div class="main-content" id="main-content" ng-view></div>
-
 		<!-- build:js(.) scripts/vendor.js -->
 		<!-- bower:js -->
 		<script src="bower_components/angular/angular.js"></script>
@@ -59,5 +57,14 @@
 		<script src="/scripts/controllers/loginCtrl.js"></script>
 		<script src="/scripts/controllers/websocketCtrl.js"></script>
 		<!-- endbuild -->
+		<div class="headerZone">
+      <div data-ui-view data-name="header"></div>
+    </div>
+    <div class="contentZone">
+      <div data-ui-view data-name="pageContent"></div>
+    </div>
+    <div class="footerZone">
+      <div data-ui-view data-name="footer"></div>
+    </div>
 	</body>
 </html>
