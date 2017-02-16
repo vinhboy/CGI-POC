@@ -5,14 +5,21 @@ describe('loginController', function() {
   var $scope;
   var authenticationService;
   var $sessionStorage;
+  var $q;
+  var deferred;
 
   beforeEach(module('cgi-web-app'));
 
-  beforeEach(inject(function($rootScope, $controller, _Authenticator_, _$sessionStorage_) {
-    $scope = $rootScope.$new();
+  beforeEach(inject(function(_$rootScope_, _$controller_, _Authenticator_, _$sessionStorage_, _$q_) {
+    $q = _$q_;
+    $scope = _$rootScope_.$new();
     authenticationService = _Authenticator_;
     $sessionStorage = _$sessionStorage_;
-    loginController = $controller('loginController', {
+
+    deferred = _$q_.defer();
+    spyOn(authenticationService, 'authenticate').and.returnValue(deferred.promise);
+
+    loginController = _$controller_('loginController', {
       $scope: $scope,
       Authenticator: authenticationService,
       $sessionStorage: $sessionStorage
@@ -21,6 +28,7 @@ describe('loginController', function() {
 
   it('should initially not have any notifications', function() {
     expect($scope.model.errorNotif).toBe(false);
+    expect($scope.model.successNotif).toBe(false);
   });
 
   it('should assign error notifications on pop-up', function() {
@@ -37,31 +45,36 @@ describe('loginController', function() {
 
   describe('authentication', function() {
     it('should set the success message', function() {
-      spyOn(authenticationService, 'authenticate').and.returnValue({ success: true });
       spyOn($scope, 'popUp');
+
       $scope.submitForm(true);
-      expect($scope.model.errorNotif).toBe(false);
-      expect($scope.model.successNotif).toBe(true);
-      expect($scope.model.successMessage).toBe('LOGIN.MESSAGE.LOGGEDIN');
-      expect($scope.popUp).not.toHaveBeenCalled();
+      deferred.resolve({ status: 200, data: { autToken: 'token' } });
+      $scope.$apply();
+
+      expect($scope.popUp).toHaveBeenCalledWith('success', 'LOGIN.MESSAGE.LOGGEDIN');
+    });
+
+    it('should save the JWT auth token', function() {
+      spyOn($sessionStorage, 'put');
+
+      $scope.submitForm(true);
+      deferred.resolve({ status: 200, data: { authToken: 'the jwt auth token' } });
+      $scope.$apply();
+
+      expect($sessionStorage.put).toHaveBeenCalledWith('jwt', 'the jwt auth token');
     });
 
     it('should set the error message on unauthorized', function() {
-      spyOn(authenticationService, 'authenticate').and.returnValue({ success: false, error_code: 401 });
       spyOn($scope, 'popUp');
-      $scope.submitForm(true);
-      expect($scope.popUp).toHaveBeenCalledWith('error', 'LOGIN.MESSAGE.UNVALID');
-    });
 
-    it('should set the error message on any error', function() {
-      spyOn(authenticationService, 'authenticate').and.returnValue({ success: false, error_code: 500 });
-      spyOn($scope, 'popUp');
       $scope.submitForm(true);
-      expect($scope.popUp).toHaveBeenCalledWith('error', 'GENERIC.MESSAGE.ERROR.SERVER');
+      deferred.reject();
+      $scope.$apply();
+
+      expect($scope.popUp).toHaveBeenCalledWith('error', 'LOGIN.MESSAGE.INVALID');
     });
 
     it('should not do anything if the form is invalid', function() {
-      spyOn(authenticationService, 'authenticate');
       $scope.submitForm(false);
       expect(authenticationService.authenticate).not.toHaveBeenCalled();
     });

@@ -1,9 +1,15 @@
-<div data-ng-if="$parent.USER?false:true" class="usa-content">
+<div ng-if="$parent.USER?false:true" class="usa-content">
   <div class="usa-grid login-alert">
-    <div class="usa-alert usa-alert-error" role="alert" data-ng-show="errorNotif">
+    <div class="usa-alert usa-alert-error" role="alert" ng-show="model.errorNotif">
       <div class="usa-alert-body">
         <h3 class="usa-alert-heading">Error Status</h3>
-        <p class="usa-alert-text">{{errorMessage | translate}}</p>
+        <p class="usa-alert-text" translate="{{model.errorMessage}}"></p>
+      </div>
+    </div>
+		<div class="usa-alert usa-alert-success" ng-show="model.successNotif">
+      <div class="usa-alert-body">
+        <h3 class="usa-alert-heading">Success Status</h3>
+        <p class="usa-alert-text" translate="{{model.successMessage}}"></p>
       </div>
     </div>
   </div>
@@ -12,19 +18,19 @@
       <fieldset>
         <div class="loginFormDiv">
           <label for="username">{{'LOGIN.LABEL.USERNAME' | translate}}</label>
-          <input id="username" name="username" type="text" data-autocapitalize="off" data-autocorrect="off" data-ng-model="user.username" required="true" />
+          <input id="username" name="username" type="text" data-autocapitalize="off" data-autocorrect="off" ng-model="user.username" required="true" />
         </div>
           <div class="loginFormDiv passwordDiv">
             <label for="password">{{'LOGIN.LABEL.PASSWORD' | translate}}</label>
-            <input id="password" name="password" type="password" data-ng-model="user.password" required="false" data-ng-pattern="$parent.VALID_PWD_REGEX">
+            <input id="password" name="password" type="password" ng-model="user.password" required="false" ng-pattern="$parent.VALID_PWD_REGEX">
           </div>
           <div class="loginFormDiv">
             <h5 class="login-text">{{'LOGIN.MESSAGE.SIGNIN' | translate}}
-              <a href="" data-ng-click="toggleRegistrationModal()">{{'LOGIN.MESSAGE.SIGNIN.LINK' | translate}}</a>.
+              <a href="" ng-click="toggleRegistrationModal()">{{'LOGIN.MESSAGE.SIGNIN.LINK' | translate}}</a>.
             </h5>
           </div>
           <div>
-            <button class="usa-button-primary-alt usa-button-login" data-ng-click="submitForm(authForm.$valid)">{{'LOGIN.BUTTON.SUBMIT' | translate}}</button>
+            <button class="usa-button-primary-alt usa-button-login" ng-click="submitForm(authForm.$valid)">{{'LOGIN.BUTTON.SUBMIT' | translate}}</button>
           </div>
       </fieldset>
     </form>

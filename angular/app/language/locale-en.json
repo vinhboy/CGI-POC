@@ -3,7 +3,7 @@
   "GENERIC.MESSAGE.ERROR.SERVER": "An Error occurred !",
   "GENERIC.MESSAGE.INVALID.PASSWORDPATTERN":"Please  match the requested format for the password",
   "LOGIN.MESSAGE.LOGGEDIN": "You are Logged in",
-  "LOGIN.MESSAGE.INVALID": "Connection failed!Verify your email or password ",
+  "LOGIN.MESSAGE.INVALID": "Incorrect username/password combination",
   "LOGIN.LABEL.USERNAME": "Username",
   "LOGIN.LABEL.PASSWORD": "Password",
   "LOGIN.LABEL.REMEMBERME": "Remember me",
