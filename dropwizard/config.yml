@@ -1,11 +1,5 @@
 jwtSignatureSecret: o5KnhuFU8q8bo6qPxG2Z75q3yLlNiVCSOUd0vqbv6X8E8QLUSbP6Uxn7hn2678NZ3sQ1ZKy9ih7jAHXu
 
-#API settings
-#API URL
-apiURL: http://maps.googleapis.com/maps/api/geocode/json
-#API key
-apiKey: <your_key>
-
 # Database settings.
 database:
 
@@ -45,7 +39,7 @@ server:
 #Jersey client settings
 jerseyClient:
     #The maximum idle time for a connection, once established.
-    timeout: 512ms
+    timeout: 1000ms
     #The size of the work queue of the pool used for asynchronous requests.
     #Additional threads will be spawn only if the queue is reached its maximum size.
     workQueueSize: 16
@@ -72,6 +66,34 @@ cors:
    - x-api-key
    - x-requested-by
    - x-requested-with
+
+mapsApi:
+  apiURL: http://maps.googleapis.com/maps/api/geocode/json
+  apiKey: <your_key>
+
+# Notification mail settings.
+mail:
+
+   #The host running the SMTP server to use. 
+  hostname: "smtp.gmail.com"
+
+   #The port at which the SMTP server listens on. 
+  port: 587
+
+   #The address used as From for outgoing notification mails sent by the server.
+  systemEmail: "someuser@gmail.com"
+
+   #The username used to access the mail server.
+  username: "someuser"
+
+   #The password used to access the mail server.
+  password: "somepass"
+  
+   #Connect using SSL.
+  ssl: true
+  
+   #Connect using TLS.
+  tls: true
 
 # Logging settings
 logging:
