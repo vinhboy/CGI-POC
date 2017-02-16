@@ -1,47 +1,37 @@
 'use strict';
 
 describe('loginController', function() {
-    var loginController;
-    var $scope;
-    var $rootScope;
-    var $controller;
+  var loginController;
+  var $scope;
+  var authenticationService;
+  var $sessionStorage;
 
+  beforeEach(module('cgi-web-app'));
 
-    beforeEach(module('cgi-web-app', function($translateProvider) {
-        $translateProvider.translations('en', {});
-    }));
-
-    beforeEach(inject(function($injector) {
-        $rootScope = $injector.get('$rootScope');
-        $controller = $injector.get('$controller');
-        $scope = $rootScope.$new();
-    }));
-
-    beforeEach(inject(function($controller) {
-        loginController = $controller('loginController', {
-            $scope : $scope
-        });
-    }));
-
-    it('should not have error notifications', function() {
-        expect($scope.model.errorNotif).toBe(false);
+  beforeEach(inject(function($rootScope, $controller, _Authenticator_, _$sessionStorage_) {
+    $scope = $rootScope.$new();
+    authenticationService = _Authenticator_;
+    $sessionStorage = _$sessionStorage_;
+    loginController = $controller('loginController', {
+      $scope: $scope,
+      Authenticator: authenticationService,
+      $sessionStorage: $sessionStorage
     });
+  }));
 
-    it('should have error notifications', function() {
-        $scope.popUp('error', 'errorMessage', 0);
-        expect($scope.model.errorNotif).toBe(true);
-        expect($scope.model.errorMessage).toBe('errorMessage');
-    });
+  it('should initially not have any notifications', function() {
+    expect($scope.model.errorNotif).toBe(false);
+  });
 
-    it('should have success notifications', function() {
-        $scope.popUp('success', 'successMessage', 0);
-        expect($scope.model.successNotif).toBe(true);
-        expect($scope.model.successMessage).toBe('successMessage');
-    });
+  it('should assign error notifications on pop-up', function() {
+    $scope.popUp('error', 'errorMessage', 0);
+    expect($scope.model.errorNotif).toBe(true);
+    expect($scope.model.errorMessage).toBe('errorMessage');
+  });
 
-  describe('authentication', function() {
-    it('should set the authentication token into the storage', function() {
-
-    });
+  it('should assign success notifications on pop-up', function() {
+    $scope.popUp('success', 'successMessage', 0);
+    expect($scope.model.successNotif).toBe(true);
+    expect($scope.model.successMessage).toBe('successMessage');
   });
 });

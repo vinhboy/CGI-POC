@@ -9,8 +9,8 @@
 'use strict';
 
 cgiWebApp.controller('loginController',
-  ['$scope', '$rootScope', '$state','Authenticator','$timeout', '$sessionStorage',
-  function ($scope, $rootScope, $state, Authenticator, uswdsLoadService, $timeout, $sessionStorage) {
+  ['$scope', 'Authenticator', '$sessionStorage',
+  function ($scope, Authenticator, $sessionStorage) {
 
   $scope.user = {
     username: '',
