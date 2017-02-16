@@ -12,6 +12,13 @@ import com.cgi.poc.dw.auth.service.KeyBuilderServiceImpl;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.auth.service.PasswordHashImpl;
 import com.cgi.poc.dw.dao.UserDao;
+import com.cgi.poc.dw.dao.model.EventEarthquake;
+import com.cgi.poc.dw.dao.model.EventFlood;
+import com.cgi.poc.dw.dao.model.EventHurricane;
+import com.cgi.poc.dw.dao.model.EventTsunami;
+import com.cgi.poc.dw.dao.model.EventVolcano;
+import com.cgi.poc.dw.dao.model.EventWeather;
+import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.rest.resource.LoginResource;
 import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
@@ -73,12 +80,15 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
   private final static Logger LOG = LoggerFactory.getLogger(CgiPocApplication.class);
 
   private final HibernateBundle<CgiPocConfiguration> hibernateBundle
-            = new HibernateBundle<CgiPocConfiguration>(User.class,UserNotification.class) {
+            = new HibernateBundle<CgiPocConfiguration>(User.class,UserNotification.class,
+            FireEvent.class, EventEarthquake.class, EventWeather.class,EventFlood.class,
+            EventHurricane.class, EventTsunami.class,EventVolcano.class ) {
                 @Override
                 public DataSourceFactory getDataSourceFactory(CgiPocConfiguration configuration) {
                     return configuration.getDataSourceFactory();
                 }
-        };  
+        }; 
+
   /**
    * Application's main method.
    */
