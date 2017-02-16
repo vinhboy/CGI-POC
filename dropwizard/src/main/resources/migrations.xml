@@ -277,7 +277,7 @@
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_weather"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_flood"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_hurricanes"/>
-    <modifyDataType columnName="geometry" newDataType="text" tableName="event_earthQuake"/>
+    <modifyDataType columnName="geometry" newDataType="text" tableName="event_earthquake"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_tsunami"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_volcano"/>
     
