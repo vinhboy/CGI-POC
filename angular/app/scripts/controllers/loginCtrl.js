@@ -36,26 +36,21 @@ cgiWebApp.controller('loginController',
 
   $scope.submitForm = function(isValid) {
     if (isValid) {
-      var dataObject = {
+      var credentials = {
         email: $scope.user.username,
         password: $scope.user.password
       };
 
-      Authenticator.authenticate(dataObject).then(function(response) {
-      if (response.status === 200) {
+      var authenticationResult = Authenticator.authenticate(credentials);
+      if (authenticationResult.success) {
         $scope.model.errorNotif = false;
         $scope.model.successNotif = true;
         $scope.model.successMessage = 'LOGIN.MESSAGE.LOGGEDIN';
-        $sessionStorage.put('jwt', response.data.authToken);
-
-      } else if (response.status === 401) {
+      } else if (authenticationResult.error_code === 401) {
         $scope.popUp('error', 'LOGIN.MESSAGE.UNVALID');
       } else {
         $scope.popUp('error', 'GENERIC.MESSAGE.ERROR.SERVER');
       }
-        $scope.authForm.$setPristine();
-        $scope.authForm.$setUntouched();
-      });
       clearFields();
     }
   };

@@ -34,4 +34,36 @@ describe('loginController', function() {
     expect($scope.model.successNotif).toBe(true);
     expect($scope.model.successMessage).toBe('successMessage');
   });
+
+  describe('authentication', function() {
+    it('should set the success message', function() {
+      spyOn(authenticationService, 'authenticate').and.returnValue({ success: true });
+      spyOn($scope, 'popUp');
+      $scope.submitForm(true);
+      expect($scope.model.errorNotif).toBe(false);
+      expect($scope.model.successNotif).toBe(true);
+      expect($scope.model.successMessage).toBe('LOGIN.MESSAGE.LOGGEDIN');
+      expect($scope.popUp).not.toHaveBeenCalled();
+    });
+
+    it('should set the error message on unauthorized', function() {
+      spyOn(authenticationService, 'authenticate').and.returnValue({ success: false, error_code: 401 });
+      spyOn($scope, 'popUp');
+      $scope.submitForm(true);
+      expect($scope.popUp).toHaveBeenCalledWith('error', 'LOGIN.MESSAGE.UNVALID');
+    });
+
+    it('should set the error message on any error', function() {
+      spyOn(authenticationService, 'authenticate').and.returnValue({ success: false, error_code: 500 });
+      spyOn($scope, 'popUp');
+      $scope.submitForm(true);
+      expect($scope.popUp).toHaveBeenCalledWith('error', 'GENERIC.MESSAGE.ERROR.SERVER');
+    });
+
+    it('should not do anything if the form is invalid', function() {
+      spyOn(authenticationService, 'authenticate');
+      $scope.submitForm(false);
+      expect(authenticationService.authenticate).not.toHaveBeenCalled();
+    });
+  });
 });
