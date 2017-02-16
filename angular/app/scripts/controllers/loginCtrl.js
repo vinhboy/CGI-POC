@@ -38,6 +38,7 @@ cgiWebApp.controller('loginController',
   };
 
   $scope.submitForm = function(isValid) {
+    $scope.popUp();
     if (isValid) {
       var credentials = {
         email: $scope.user.username,
@@ -46,11 +47,11 @@ cgiWebApp.controller('loginController',
 
       Authenticator.authenticate(credentials).then(function(response) {
         if (response.status === 200) {
-          $scope.popUp('success', 'LOGIN.MESSAGE.LOGGEDIN')
+          $scope.popUp('success', 'LOGIN.MESSAGE.LOGGEDIN');
           $sessionStorage.put('jwt', response.data.authToken);
         }
         clearFields();
-      }).catch(function(response){
+      }).catch(function(){
         $scope.popUp('error', 'LOGIN.MESSAGE.INVALID');
       });
     }
@@ -59,5 +60,5 @@ cgiWebApp.controller('loginController',
   var clearFields = function() {
     $scope.user.username = '';
     $scope.user.password = '';
-  }
+  };
 }]);
