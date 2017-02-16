@@ -22,7 +22,7 @@ public abstract class BaseClass {
 	@BeforeMethod
 	public void setUp() {
 		// Launch the specific Browser type
-		driver = BrowserFactory.getBrowser("safari");
+		driver = BrowserFactory.getBrowser("chrome");
 		driver.get(DataProviderFactory.getConfig().getApplicationUrl());
 		BrowserFactory.impliciteWait(25);
 
