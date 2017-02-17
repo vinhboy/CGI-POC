@@ -17,7 +17,7 @@
     <form class="usa-form-large" name="authForm" ng-submit="submitForm()">
       <fieldset>
         <div class="loginFormDiv" ng-class="{ 'usa-input-error': authForm.username.$touched && authForm.username.$invalid }">
-          <label for="username">{{'LOGIN.LABEL.USERNAME' | translate}}</label>
+          <label for="username" translate="LOGIN.LABEL.USERNAME"></label>
           <input id="username" name="username" type="text" data-autocapitalize="off"
             data-autocorrect="off" ng-model="user.username" ng-required="true"
             placeholder="example@domain.com" />
@@ -26,7 +26,7 @@
             </div>
         </div>
           <div class="loginFormDiv passwordDiv" ng-class="{ 'usa-input-error': authForm.password.$touched && authForm.password.$invalid }">
-            <label for="password">{{'LOGIN.LABEL.PASSWORD' | translate}}</label>
+            <label for="password" translate="LOGIN.LABEL.PASSWORD"></label>
             <input id="password" name="password" type="password" ng-model="user.password"
               ng-required="true" placeholder="xxxxxxxxx">
             <div ng-messages="authForm.password.$error" ng-show="authForm.password.$touched">
@@ -35,8 +35,7 @@
           </div>
           <div>
             <input type="submit" class="usa-button-primary-alt usa-button-login"
-              value="{{'LOGIN.BUTTON.SUBMIT' | translate}}"
-              ng-disabled="!authForm.$dirty"></button>
+              translate="LOGIN.BUTTON.SUBMIT" ng-disabled="!authForm.$dirty"></button>
           </div>
       </fieldset>
     </form>
