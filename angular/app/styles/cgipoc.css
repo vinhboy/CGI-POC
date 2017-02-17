@@ -3,7 +3,8 @@
 
 
 .usa-width-one-third.scrollable-section {
-  background: 'black';
+  overflow: auto;
+  max-height: 100vh;
 }
 
 .centeredForm {

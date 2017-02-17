@@ -17,7 +17,6 @@ cgiWebApp.controller('landingController',
   function ($scope ) {
 
 
-    console.log('landing controller invoked');
     $scope.model = {
       notifications: []
     };
