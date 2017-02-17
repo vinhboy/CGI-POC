@@ -8,36 +8,115 @@
         <div ng-class="{ 'usa-input-error': profileForm.firstName.$touched && profileForm.firstName.$invalid }">
           <label for="firstName" class="profile-label"
             translate="REGISTRATION.LABEL.FIRSTNAME"></label>
+          <div ng-messages="profileForm.firstName.$error" ng-if="profileForm.firstName.$touched">
+            <span ng-message="required" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.FIRSTINVALID"></span>
+          </div>
           <input id="firstName" name="firstName" type="text" ng-model="profile.firstName" ng-required="true"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.FIRSTNAME' | translate }}" />
-            <div ng-messages="profileForm.firstName.$error" ng-if="profileForm.firstName.$touched">
-              <span ng-message="required" class="usa-input-error-message" role="alert"
-                translate="REGISTRATION.MESSAGE.INVALID.FIRSTINVALID"></span>
-            </div>
         </div>
 
         <div ng-class="{ 'usa-input-error': profileForm.lastName.$touched && profileForm.lastName.$invalid }">
           <label for="lastName" class="profile-label"
             translate="REGISTRATION.LABEL.LASTNAME"></label>
+          <div ng-messages="profileForm.lastName.$error" ng-if="profileForm.lastName.$touched">
+            <span ng-message="required" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.LASTINVALID"></span>
+          </div>
           <input id="lastName" name="lastName" type="text" ng-model="profile.lastName" ng-required="true"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.LASTNAME' | translate }}" />
-            <div ng-messages="profileForm.lastName.$error" ng-if="profileForm.lastName.$touched">
-              <span ng-message="required" class="usa-input-error-message" role="alert"
-                translate="REGISTRATION.MESSAGE.INVALID.LASTINVALID"></span>
-            </div>
         </div>
 
         <div ng-class="{ 'usa-input-error': profileForm.email.$touched && profileForm.email.$invalid }">
           <label for="email" class="usa-input-required profile-label"
             translate="REGISTRATION.LABEL.EMAIL"></label>
-          <input id="email" name="email" type="text" ng-model="profile.email" ng-required="true"
+          <div ng-messages="profileForm.email.$error" ng-if="profileForm.email.$touched">
+            <span ng-message="required" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.EMAILREQUIRED"></span>
+            <span ng-message="email" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.EMAILINVALID"></span>
+          </div>
+          <input id="email" name="email" type="email" ng-model="profile.email" ng-required="true"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.EMAIL' | translate }}" />
-            <div ng-messages="profileForm.email.$error" ng-if="profileForm.email.$touched">
-              <span ng-message="required" class="usa-input-error-message" role="alert"
-                translate="REGISTRATION.MESSAGE.INVALID.EMAILREQUIRED"></span>
-              <span ng-message="email" class="usa-input-error-message" role="alert"
-                translate="REGISTRATION.MESSAGE.INVALID.EMAILINVALID"></span>
-            </div>
+        </div>
+
+        <div ng-class="{ 'usa-input-error': profileForm.password.$touched && profileForm.password.$invalid }">
+          <label for="password" class="usa-input-required profile-label"
+            translate="REGISTRATION.LABEL.PASSWORD"></label>
+          <div ng-messages="profileForm.password.$error" ng-if="profileForm.password.$touched">
+            <span ng-message="required" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.PASSWORDREQUIRED"></span>
+            <span ng-message="pattern" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.PASSWORDINVALID"></span>
+          </div>
+          <input id="password" name="password" type="password" ng-model="profile.password" ng-required="true" ng-pattern="regexPassword"
+            class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.PASSWORD' | translate }}" />
+
+          <label for="passwordConfirmation" class="usa-input-required profile-label"
+            translate="REGISTRATION.LABEL.PASSWORD.CONFIRMATION"></label>
+          <div ng-messages="profileForm.passwordConfirmation.$error" ng-if="profileForm.passwordConfirmation.$touched">
+            <span ng-message="required" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.PASSWORDNOMATCH"></span>
+            <span ng-message="pattern" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.PASSWORDNOMATCH"></span>
+          </div>
+          <input id="passwordConfirmation" name="passwordConfirmation" type="password" ng-model="profile.passwordConfirmation"
+            data-match="profile.password" ng-required="true" class="profile-form-input" />
+        </div>
+
+        <div ng-class="{ 'usa-input-error': profileForm.phone.$touched && profileForm.phone.$invalid }">
+          <label for="phone" class="profile-label"
+            translate="REGISTRATION.LABEL.PHONE"></label>
+          <div ng-messages="profileForm.phone.$error" ng-if="profileForm.phone.$touched">
+            <span ng-message="required" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.PHONENUMBERREQUIRED"></span>
+          </div>
+          <input id="phone" name="phone" type="text" ng-model="profile.phone" ng-required="true"
+            class="profile-form-input" placeholder="XXX-XXX-XXXX" />
+        </div>
+
+        <div ng-class="{ 'usa-input-error': profileForm.zipCode.$touched && profileForm.zipCode.$invalid }">
+          <label for="zipCode" class="profile-label"
+            translate="REGISTRATION.LABEL.ZIPCODE"></label>
+          <div ng-messages="profileForm.zipCode.$error" ng-if="profileForm.zipCode.$touched">
+            <span ng-message="required" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.ZIPCODEREQUIRED"></span>
+            <span ng-message="pattern" class="usa-input-error-message" role="alert"
+              translate="REGISTRATION.MESSAGE.INVALID.ZIPCODEINVALID"></span>
+          </div>
+          <input id="zipCode" name="zipCode" type="text" ng-model="profile.zipCode" ng-required="true"
+            ng-pattern="regexZip" class="profile-form-input zipCode" placeholder="XXXXX" maxlength="5" />
+          <div class="zipCodeText" translate="REGISTRATION.LABEL.ZIPCODE.INFO"></div>
+
+          <div>
+            <h5>
+              <span class="usa-input-required notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.OPTIONS"></span>
+            </h5>
+            <hr />
+          </div>
+
+          <ul class="usa-unstyled-list">
+            <li>
+              <input id="email" type="checkbox" name="notification" value="email" ng-model="profile.emailNotification" ng-required="true">
+              <label for="email" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.EMAIL"></label>
+            </li>
+            <li>
+              <input id="push" type="checkbox" name="notification" value="push" ng-model="profile.pushNotification" ng-required="true">
+              <label for="push" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.PUSH"></label>
+            </li>
+            <li>
+              <input id="sms" type="checkbox" name="notification" value="sms" ng-model="profile.smsNotification" ng-required="true">
+              <label for="sms" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.TEXT"></label>
+            </li>
+            <li>
+              <input id="phone" type="checkbox" name="notification" value="phone" ng-model="profile.geoNotification" ng-required="true">
+              <label for="phone" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.PHONE"></label>
+            </li>
+          </ul>
+
+          <div ng-messages="profileForm.notification.$error" ng-show="submitted && profileForm.notification.$invalid">
+            <span class="usa-input-error-message" role="alert" ng-message="required" translate="REGISTRATION.MESSAGE.INVALID.CHECKBOXREQUIRED"></span>
+          </div>
         </div>
 
         <div>
