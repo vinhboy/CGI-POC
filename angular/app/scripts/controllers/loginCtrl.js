@@ -13,7 +13,7 @@ cgiWebApp.controller('loginController',
   function ($scope, Authenticator, $sessionStorage, $state) {
 
   $scope.user = {
-    username: '',
+    email: '',
     password: ''
   };
 
@@ -34,7 +34,7 @@ cgiWebApp.controller('loginController',
   $scope.submitForm = function() {
     $scope.popUp();
     var credentials = {
-      email: $scope.user.username,
+      email: $scope.user.email,
       password: $scope.user.password
     };
 
