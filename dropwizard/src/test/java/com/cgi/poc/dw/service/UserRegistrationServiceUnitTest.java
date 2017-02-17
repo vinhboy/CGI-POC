@@ -70,6 +70,9 @@ public class UserRegistrationServiceUnitTest {
   @Mock
   private EmailService emailService;
 
+  @Mock
+  private TextMessageService textMessageService;
+
   private User user;
 
   @Before
