@@ -112,7 +112,7 @@
       <artifactId>commons-email</artifactId>
       <version>1.4</version>
     </dependency>
-    <!-- test dependencies -->
+
     <dependency>
       <groupId>io.dropwizard</groupId>
       <artifactId>dropwizard-testing</artifactId>
