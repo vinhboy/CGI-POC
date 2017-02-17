@@ -32,6 +32,14 @@
           <div ng-messages="authForm.password.$error" ng-show="authForm.password.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert">Password is required</span>
           </div>
+        </div>
+        <div class="loginFormDiv">
+          <h5 class="login-text" translate="LOGIN.MESSAGE.SIGNUP"></h5>
+          <h5 class="login-text">
+            <a class="login-text" ui-sref="register" translate="LOGIN.MESSAGE.SIGNUP.LINK"></a>.
+          </h5>
+        </div>
+        <div>
           <div>
             <input type="submit" class="usa-button-primary-alt usa-button-login"
               translate="LOGIN.BUTTON.SUBMIT" ng-disabled="!authForm.$dirty"></button>

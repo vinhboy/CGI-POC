@@ -31,14 +31,14 @@ cgiWebApp.constant('urls', {
       'footer':{
       }*/
   }
-  }).state('registration', {
-    url : '/registration',
+}).state('register', {
+    url : '/register',
     views:{
       //'header': {
       //},
       'pageContent':{
-        templateUrl: '/views/registration.html',
-        controller: 'registrationCtrl'
+        templateUrl: '/views/register.html',
+        controller: 'ProfileController'
       }/*,
       'footer':{
       }*/
