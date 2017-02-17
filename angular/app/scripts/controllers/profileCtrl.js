@@ -20,11 +20,11 @@ cgiWebApp.controller('ProfileController',
     confirmPassword: '',
     phone: '',
     zipCode: '',
-    notificationType: [],
     emailNotification: false,
     pushNotification: false,
     smsNotification: false,
-    geoNotification: false
+    geoNotification: false,
+    notificationType: []
   };
 
   $scope.regexZip = /^\d{5}$/;
@@ -44,5 +44,9 @@ cgiWebApp.controller('ProfileController',
       console.log('boo failed registering! ');
       console.log(response);
     });
+  };
+
+  $scope.someSelected = function() {
+    return $scope.profile.emailNotification || $scope.profile.pushNotification || $scope.profile.smsNotification || $scope.profile.geoNotification;
   };
 }]);

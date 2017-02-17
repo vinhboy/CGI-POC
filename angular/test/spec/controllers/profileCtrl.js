@@ -53,4 +53,30 @@ describe('ProfileController', function() {
       expect(profileService.register).toHaveBeenCalledWith($scope.profile);
     });
   });
+
+  describe('someSelected', function() {
+    it('should be false if all are unchecked', function() {
+      $scope.profile.emailNotification = false;
+      $scope.profile.pushNotification = false;
+      $scope.profile.smsNotification = false;
+      $scope.profile.geoNotification = false;
+      expect($scope.someSelected()).toBe(false);
+    });
+
+    it('should be true if all are checked', function() {
+      $scope.profile.emailNotification = true;
+      $scope.profile.pushNotification = true;
+      $scope.profile.smsNotification = true;
+      $scope.profile.geoNotification = true;
+      expect($scope.someSelected()).toBe(true);
+    });
+
+    it('should be true if some are checked', function() {
+      $scope.profile.emailNotification = false;
+      $scope.profile.pushNotification = false;
+      $scope.profile.smsNotification = true;
+      $scope.profile.geoNotification = false;
+      expect($scope.someSelected()).toBe(true);
+    });
+  });
 });

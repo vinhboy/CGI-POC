@@ -64,7 +64,7 @@
         </div>
 
         <div ng-class="{ 'usa-input-error': profileForm.zipCode.$touched && profileForm.zipCode.$invalid }">
-          <label for="zipCode" class="profile-label"
+          <label for="zipCode" class="usa-input-required profile-label"
             translate="REGISTRATION.LABEL.ZIPCODE"></label>
           <div ng-messages="profileForm.zipCode.$error" ng-if="profileForm.zipCode.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
@@ -86,25 +86,30 @@
 
           <ul class="usa-unstyled-list">
             <li>
-              <input id="email" type="checkbox" name="notification" value="email" ng-model="profile.emailNotification" ng-required="true">
+              <input id="email" type="checkbox" name="notification" value="1"
+                ng-model="profile.emailNotification" data-ng-required="!someSelected()">
               <label for="email" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.EMAIL"></label>
             </li>
             <li>
-              <input id="push" type="checkbox" name="notification" value="push" ng-model="profile.pushNotification" ng-required="true">
+              <input id="push" type="checkbox" name="notification" value="3"
+                ng-model="profile.pushNotification" data-ng-required="!someSelected()">
               <label for="push" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.PUSH"></label>
             </li>
             <li>
-              <input id="sms" type="checkbox" name="notification" value="sms" ng-model="profile.smsNotification" ng-required="true">
+              <input id="sms" type="checkbox" name="notification" value="2"
+                ng-model="profile.smsNotification" data-ng-required="!someSelected()">
               <label for="sms" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.TEXT"></label>
             </li>
             <li>
-              <input id="phone" type="checkbox" name="notification" value="phone" ng-model="profile.geoNotification" ng-required="true">
+              <input id="phone" type="checkbox" name="notification" value="4"
+                ng-model="profile.geoNotification" data-ng-required="!someSelected()">
               <label for="phone" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.PHONE"></label>
             </li>
           </ul>
 
           <div ng-messages="profileForm.notification.$error" ng-show="submitted && profileForm.notification.$invalid">
-            <span class="usa-input-error-message" role="alert" ng-message="required" translate="REGISTRATION.MESSAGE.INVALID.CHECKBOXREQUIRED"></span>
+            <span class="usa-input-error-message" role="alert" ng-message="required"
+              translate="REGISTRATION.MESSAGE.INVALID.CHECKBOXREQUIRED"></span>
           </div>
         </div>
 
