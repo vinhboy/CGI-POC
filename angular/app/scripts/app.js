@@ -35,26 +35,42 @@ cgiWebApp.constant('urls', {
         controller: 'ProfileController'
       }
     }
+  }).state('landing', {
+    url: '/landing',
+    views: {
+      'header': {
+        templateUrl: '/views/userHeader.html',
+        controller: 'LandingController'
+      },
+      'pageContent': {
+        templateUrl: '/views/landing.html',
+        controller: 'LandingController'
+      },
+      'footer': {
+        templateUrl: '/views/userFooter.html',
+        controller: 'LandingController'
+      }
+    }
   }).state('profile', {
     url: '/profile',
     views: {
       'header': {
-        templateUrl: 'views/userHeader.html',
+        templateUrl: '/views/userHeader.html',
         controller: 'profileController'
       },
       'pageContent': {
-        templateUrl: 'views/userProfile.html',
+        templateUrl: '/views/userProfile.html',
         controller: 'profileController'
       },
       'footer': {
-        templateUrl: 'views/userFooter.html'
+        templateUrl: '/views/userFooter.html'
       }
     }
   }).state('restricted', {
     url: '/restricted',
     views: {
       'pageContent': {
-        templateUrl: 'views/restricted.html',
+        templateUrl: '/views/restricted.html',
         controller: 'loginController'
       }
     }

@@ -4,7 +4,6 @@ describe('ProfileService', function() {
   var profileService;
   var $httpBackend;
   var urls;
-  var profile;
 
   beforeEach(module('cgi-web-app'));
 

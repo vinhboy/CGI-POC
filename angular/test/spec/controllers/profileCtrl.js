@@ -4,15 +4,17 @@ describe('ProfileController', function() {
   var profileController;
   var $scope;
   var profileService;
+  var $state;
   var $q;
   var deferred;
 
   beforeEach(module('cgi-web-app'));
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _ProfileService_, _$q_) {
+  beforeEach(inject(function(_$rootScope_, _$controller_, _ProfileService_, _$state_, _$q_) {
     $q = _$q_;
     $scope = _$rootScope_.$new();
     profileService = _ProfileService_;
+    $state = _$state_;
 
     deferred = _$q_.defer();
     spyOn(profileService, 'register').and.returnValue(deferred.promise);
@@ -61,6 +63,16 @@ describe('ProfileController', function() {
       $scope.$apply();
       expect(profileService.register).toHaveBeenCalled();
       expect($scope.processNotificationTypes).toHaveBeenCalled();
+    });
+
+    it('should redirect if successful', function() {
+      $scope.profile = {};
+      spyOn($state, 'go');
+      $scope.registerProfile($scope.profile);
+      deferred.resolve({ status: 200, data: {} });
+      $scope.$apply();
+      expect(profileService.register).toHaveBeenCalled();
+      expect($state.go).toHaveBeenCalledWith('landing');
     });
   });
 

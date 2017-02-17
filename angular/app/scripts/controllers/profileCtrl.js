@@ -9,8 +9,8 @@
 'use strict';
 
 cgiWebApp.controller('ProfileController',
-  ['$scope', 'ProfileService',
-  function ($scope, ProfileService) {
+  ['$scope', 'ProfileService', '$state',
+  function ($scope, ProfileService, $state) {
 
   $scope.profile = {
     firstName: '',
@@ -52,8 +52,7 @@ cgiWebApp.controller('ProfileController',
 
     ProfileService.register($scope.profile).then(function(response) {
       if (response.status === 200) {
-        console.log('yay success registering!');
-        console.log(response);
+        $state.go('landing');
       }
     }).catch(function(){
       window.alert('something went very wrong.');
