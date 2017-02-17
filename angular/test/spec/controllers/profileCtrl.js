@@ -27,7 +27,6 @@ describe('ProfileController', function() {
     expect($scope.profile.firstName).toBe('');
     expect($scope.profile.lastName).toBe('');
     expect($scope.profile.email).toBe('');
-    expect($scope.profile.confirmEmail).toBe('');
     expect($scope.profile.password).toBe('');
     expect($scope.profile.confirmPassword).toBe('');
     expect($scope.profile.phone).toBe('');
@@ -36,6 +35,7 @@ describe('ProfileController', function() {
     expect($scope.profile.emailNotification).toBe(false);
     expect($scope.profile.pushNotification).toBe(false);
     expect($scope.profile.smsNotification).toBe(false);
+    expect($scope.profile.geoNotification).toBe(false);
   });
 
   it('initializes these pattern validations', function() {

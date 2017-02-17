@@ -16,7 +16,6 @@ cgiWebApp.controller('ProfileController',
     firstName: '',
     lastName: '',
     email: '',
-    confirmEmail: '',
     password: '',
     confirmPassword: '',
     phone: '',
@@ -24,7 +23,8 @@ cgiWebApp.controller('ProfileController',
     notificationType: [],
     emailNotification: false,
     pushNotification: false,
-    smsNotification:false
+    smsNotification: false,
+    geoNotification: false
   };
 
   $scope.regexZip = /^\d{5}$/;
