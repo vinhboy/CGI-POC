@@ -1,64 +1,4 @@
-jwtSignatureSecret: yt1V2tuIYVFrLYZx3lidEe7Xk7SFGoG8b2GH3vAtFOpaYdvrgCOfif5bZkhzujdtLKvdJ2CaY9QXZZ4b
-
-server:
-  applicationConnectors:
-  - type: http 
-    port: 8380
-  adminConnectors:
-  - type: http
-    port: 8381
-    
-#Jersey client settings
-jerseyClient:
-    #The maximum idle time for a connection, once established.
-    timeout: 1000ms
-    #The size of the work queue of the pool used for asynchronous requests.
-    #Additional threads will be spawn only if the queue is reached its maximum size.
-    workQueueSize: 16
-
-
-mapsApi:
-  apiURL: http://maps.googleapis.com/maps/api/geocode/json
-  apiKey: <your_key>
-
-# Notification mail settings.
-mail:
-
-   #The host running the SMTP server to use. 
-  hostname: "127.0.0.1"
-
-   #The port at which the SMTP server listens on. 
-  port: 3025
-
-   #The address used as From for outgoing notification mails sent by the server.
-  systemEmail: "mysystememail@cgi.com"
-
-   #The username used to access the mail server.
-  username: "myusername"
-
-   #The password used to access the mail server.
-  password: "mypass"
-  
-   #Connect using SSL.
-  ssl: false
-  
-   #Connect using TLS.
-  tls: false
-
-logging:
-  loggers:
-    org.glassfish.jersey.filter.LoggingFilter: INFO
-    
-# Swagger settings
-swagger:
-  resourcePackage: com.cgi.poc.dw.rest.resource
 jwtSignatureSecret: o5KnhuFU8q8bo6qPxG2Z75q3yLlNiVCSOUd0vqbv6X8E8QLUSbP6Uxn7hn2678NZ3sQ1ZKy9ih7jAHXu
-
-#API settings
-#API URL
-apiURL: http://maps.googleapis.com/maps/api/geocode/json
-#API key
-apiKey: <your_key>
 
 # Database settings.
 database:
@@ -127,6 +67,34 @@ cors:
    - x-requested-by
    - x-requested-with
 
+mapsApi:
+  apiURL: http://maps.googleapis.com/maps/api/geocode/json
+  apiKey: <your_key>
+
+# Notification mail settings.
+mail:
+
+   #The host running the SMTP server to use. 
+  hostname: "127.0.0.1"
+
+   #The port at which the SMTP server listens on. 
+  port: 3025
+
+   #The address used as From for outgoing notification mails sent by the server.
+  systemEmail: "someuser@gmail.com"
+
+   #The username used to access the mail server.
+  username: "someuser"
+
+   #The password used to access the mail server.
+  password: "somepass"
+  
+   #Connect using SSL.
+  ssl: false
+  
+   #Connect using TLS.
+  tls: false
+
 # Logging settings
 logging:
   level: INFO
@@ -136,3 +104,8 @@ logging:
 # Swagger settings
 swagger:
   resourcePackage: com.cgi.poc.dw.rest.resource
+
+twilio:
+  accountSID: ACf7fd4c1c6ce58597ea87ef2b6c179cdb
+  authToken: ff0440de6f1a7586bfaa9d87f558e1a4
+  phoneNumber: +15005550006

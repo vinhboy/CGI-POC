@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.dao.HibernateUtil;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
@@ -16,8 +17,12 @@ import com.cgi.poc.dw.util.GeneralErrors;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -27,6 +32,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -69,8 +76,19 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     if (smtpServer != null) {
       smtpServer.stop();
     }
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      Connection sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      int res = st.executeUpdate("delete from user_notification");
+      res = st.executeUpdate("delete from user");
+      sqlConnection.commit();
+    } catch (Exception ex) {
+      Logger.getLogger(UserRegistrationResourceIntegrationTest.class.getName())
+          .log(Level.SEVERE, null, ex);
+    }
   }
-  
+
   @Test
   public void noArgument() throws JSONException {
     Client client = new JerseyClientBuilder().build();
@@ -237,7 +255,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   @Test
   public void signupSuccess() throws MessagingException {
     Client client = new JerseyClientBuilder().build();
-
+    tstUser.setEmail("random_mail12@gmail.com");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     Assert.assertEquals(200, response.getStatus());
@@ -245,13 +263,13 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     //verify email registration
     smtpServer.waitForIncomingEmail(1);
     MimeMessage[] receivedMails = smtpServer.getReceivedMessages();
-    assertEquals( "Should have received 2 emails.", 1, receivedMails.length);
+    assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
 
     for(MimeMessage mail : receivedMails) {
       assertTrue(GreenMailUtil.getHeaders(mail).contains("Registration confirmation"));
       assertTrue(GreenMailUtil.getBody(mail).contains("Hello there, thank you for registering."));
     }
-    assertEquals("sampleuser@cgi.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
+    assertEquals("random_mail12@gmail.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
   }
 
   @Test
