@@ -1,0 +1,51 @@
+<div class="modal-content usa-content usa-form-large">
+  <form class="usa-form-large" name="profileForm" ng-submit="registerProfile()">
+    <fieldset>
+      <div class="registrationFormDiv">
+        <h3 class="profile-label" translate="REGISTRATION.LABEL.TITLE"></h3>
+        <hr/>
+
+        <div ng-class="{ 'usa-input-error': profileForm.firstName.$touched && profileForm.firstName.$invalid }">
+          <label for="firstName" class="profile-label"
+            translate="REGISTRATION.LABEL.FIRSTNAME"></label>
+          <input id="firstName" name="firstName" type="text" ng-model="profile.firstName" ng-pattern="regexName"
+            class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.FIRSTNAME' | translate }}" />
+            <div ng-messages="profileForm.firstName.$error" ng-if="profileForm.firstName.$touched">
+              <span ng-message="pattern" class="usa-input-error-message" role="alert"
+                translate="REGISTRATION.MESSAGE.INVALID.FIRSTINVALID"></span>
+            </div>
+        </div>
+
+        <div ng-class="{ 'usa-input-error': profileForm.lastName.$touched && profileForm.lastName.$invalid }">
+          <label for="lastName" class="profile-label"
+            translate="REGISTRATION.LABEL.LASTNAME"></label>
+          <input id="lastName" name="lastName" type="text" ng-model="profile.lastName" ng-pattern="regexName"
+            class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.LASTNAME' | translate }}" />
+            <div ng-messages="profileForm.lastName.$error" ng-if="profileForm.lastName.$touched">
+              <span ng-message="pattern" class="usa-input-error-message" role="alert"
+                translate="REGISTRATION.MESSAGE.INVALID.LASTINVALID"></span>
+            </div>
+        </div>
+
+        <div ng-class="{ 'usa-input-error': profileForm.email.$touched && profileForm.email.$invalid }">
+          <label for="email" class="usa-input-required profile-label"
+            translate="REGISTRATION.LABEL.EMAIL"></label>
+          <input id="email" name="email" type="text" ng-model="profile.email" ng-required="true"
+            class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.EMAIL' | translate }}" />
+            <div ng-messages="profileForm.email.$error" ng-if="profileForm.email.$touched">
+              <span ng-message="required" class="usa-input-error-message" role="alert"
+                translate="REGISTRATION.MESSAGE.INVALID.EMAILREQUIRED"></span>
+              <span ng-message="email" class="usa-input-error-message" role="alert"
+                translate="REGISTRATION.MESSAGE.INVALID.EMAILINVALID"></span>
+            </div>
+        </div>
+
+        <div>
+          <input type="submit" class="usa-width-one-half usa-button-primary"
+            translate="REGISTRATION.BUTTON.SAVE" ng-disabled="!profileForm.$dirty"></button>
+        </div>
+
+      </div>
+    </fieldset>
+  </form>
+</div>
