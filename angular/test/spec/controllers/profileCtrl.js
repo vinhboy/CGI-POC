@@ -79,4 +79,36 @@ describe('ProfileController', function() {
       expect($scope.someSelected()).toBe(true);
     });
   });
+
+  describe('processNotificationTypes', function() {
+    it('notificationType should be empty if nothing is checked', function() {
+      $scope.profile.emailNotification = false; // id: 1
+      $scope.profile.pushNotification = false; // id: 3
+      $scope.profile.smsNotification = false; // id: 2
+      $scope.profile.geoNotification = false; // not yet defined
+      profileController.processNotificationTypes();
+      expect($scope.profile.notificationType.length).toBe(0);
+    });
+
+    it('notificationType should include everything if everything is checked', function() {
+      $scope.profile.emailNotification = true; // id: 1
+      $scope.profile.pushNotification = true; // id: 3
+      $scope.profile.smsNotification = true; // id: 2
+      $scope.profile.geoNotification = true; // not yet defined
+      profileController.processNotificationTypes();
+      expect($scope.profile.notificationType[0].notificationId).toBe(1);
+      expect($scope.profile.notificationType[1].notificationId).toBe(2);
+      expect($scope.profile.notificationType[2].notificationId).toBe(3);
+    });
+
+    it('notificationType should only include checked', function() {
+      $scope.profile.emailNotification = true; // id: 1
+      $scope.profile.pushNotification = false; // id: 3
+      $scope.profile.smsNotification = true; // id: 2
+      $scope.profile.geoNotification = false; // not yet defined
+      profileController.processNotificationTypes();
+      expect($scope.profile.notificationType[0].notificationId).toBe(1);
+      expect($scope.profile.notificationType[1].notificationId).toBe(2);
+    });
+  });
 });

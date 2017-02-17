@@ -49,4 +49,18 @@ cgiWebApp.controller('ProfileController',
   $scope.someSelected = function() {
     return $scope.profile.emailNotification || $scope.profile.pushNotification || $scope.profile.smsNotification || $scope.profile.geoNotification;
   };
+
+  this.processNotificationTypes = function() {
+    var notificationTypes = [];
+    if ($scope.profile.emailNotification) {
+      notificationTypes.push({ notificationId: 1 });
+    }
+    if ($scope.profile.smsNotification) {
+      notificationTypes.push({ notificationId: 2 });
+    }
+    if ($scope.profile.pushNotification) {
+      notificationTypes.push({ notificationId: 3 });
+    }
+    $scope.profile.notificationType = notificationTypes;
+  };
 }]);
