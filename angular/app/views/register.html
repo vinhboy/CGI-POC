@@ -5,25 +5,17 @@
         <h3 class="profile-label" translate="REGISTRATION.LABEL.TITLE"></h3>
         <hr/>
 
-        <div ng-class="{ 'usa-input-error': profileForm.firstName.$touched && profileForm.firstName.$invalid }">
+        <div>
           <label for="firstName" class="profile-label"
             translate="REGISTRATION.LABEL.FIRSTNAME"></label>
-          <div ng-messages="profileForm.firstName.$error" ng-if="profileForm.firstName.$touched">
-            <span ng-message="required" class="usa-input-error-message" role="alert"
-              translate="REGISTRATION.MESSAGE.INVALID.FIRSTINVALID"></span>
-          </div>
-          <input id="firstName" name="firstName" type="text" ng-model="profile.firstName" ng-required="true"
+          <input id="firstName" name="firstName" type="text" ng-model="profile.firstName"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.FIRSTNAME' | translate }}" />
         </div>
 
-        <div ng-class="{ 'usa-input-error': profileForm.lastName.$touched && profileForm.lastName.$invalid }">
+        <div>
           <label for="lastName" class="profile-label"
             translate="REGISTRATION.LABEL.LASTNAME"></label>
-          <div ng-messages="profileForm.lastName.$error" ng-if="profileForm.lastName.$touched">
-            <span ng-message="required" class="usa-input-error-message" role="alert"
-              translate="REGISTRATION.MESSAGE.INVALID.LASTINVALID"></span>
-          </div>
-          <input id="lastName" name="lastName" type="text" ng-model="profile.lastName" ng-required="true"
+          <input id="lastName" name="lastName" type="text" ng-model="profile.lastName"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.LASTNAME' | translate }}" />
         </div>
 
@@ -64,14 +56,10 @@
             data-match="profile.password" ng-required="true" class="profile-form-input" />
         </div>
 
-        <div ng-class="{ 'usa-input-error': profileForm.phone.$touched && profileForm.phone.$invalid }">
+        <div>
           <label for="phone" class="profile-label"
             translate="REGISTRATION.LABEL.PHONE"></label>
-          <div ng-messages="profileForm.phone.$error" ng-if="profileForm.phone.$touched">
-            <span ng-message="required" class="usa-input-error-message" role="alert"
-              translate="REGISTRATION.MESSAGE.INVALID.PHONENUMBERREQUIRED"></span>
-          </div>
-          <input id="phone" name="phone" type="text" ng-model="profile.phone" ng-required="true"
+          <input id="phone" name="phone" type="text" ng-model="profile.phone"
             class="profile-form-input" placeholder="XXX-XXX-XXXX" />
         </div>
 
@@ -88,6 +76,7 @@
             ng-pattern="regexZip" class="profile-form-input zipCode" placeholder="XXXXX" maxlength="5" />
           <div class="zipCodeText" translate="REGISTRATION.LABEL.ZIPCODE.INFO"></div>
 
+          <br />
           <div>
             <h5>
               <span class="usa-input-required notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.OPTIONS"></span>
