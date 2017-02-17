@@ -16,7 +16,6 @@ import org.testng.Assert;
 import org.testng.Reporter;
 
 
-
 // Initializing Browser Class
 public class BrowserFactory {
 
