@@ -49,11 +49,11 @@
           <div ng-messages="profileForm.passwordConfirmation.$error" ng-if="profileForm.passwordConfirmation.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
               translate="REGISTRATION.MESSAGE.INVALID.PASSWORDNOMATCH"></span>
-            <span ng-message="pattern" class="usa-input-error-message" role="alert"
+            <span ng-message="compareTo" class="usa-input-error-message" role="alert"
               translate="REGISTRATION.MESSAGE.INVALID.PASSWORDNOMATCH"></span>
           </div>
           <input id="passwordConfirmation" name="passwordConfirmation" type="password" ng-model="profile.passwordConfirmation"
-            data-match="profile.password" ng-required="true" class="profile-form-input" />
+            compare-to="profile.password" ng-required="true" class="profile-form-input" />
         </div>
 
         <div>

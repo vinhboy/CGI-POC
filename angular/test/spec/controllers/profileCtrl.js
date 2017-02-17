@@ -52,6 +52,16 @@ describe('ProfileController', function() {
       $scope.$apply();
       expect(profileService.register).toHaveBeenCalledWith($scope.profile);
     });
+
+    it('should transform the notificationTypes', function() {
+      $scope.profile = { smsNotification: true };
+      spyOn($scope, 'processNotificationTypes').and.callThrough();
+      $scope.registerProfile($scope.profile);
+      deferred.resolve({ status: 200, data: {} });
+      $scope.$apply();
+      expect(profileService.register).toHaveBeenCalledWith($scope.profile);
+      expect($scope.processNotificationTypes).toHaveBeenCalled();
+    });
   });
 
   describe('someSelected', function() {
@@ -86,7 +96,7 @@ describe('ProfileController', function() {
       $scope.profile.pushNotification = false; // id: 3
       $scope.profile.smsNotification = false; // id: 2
       $scope.profile.geoNotification = false; // not yet defined
-      profileController.processNotificationTypes();
+      $scope.processNotificationTypes();
       expect($scope.profile.notificationType.length).toBe(0);
     });
 
@@ -95,7 +105,7 @@ describe('ProfileController', function() {
       $scope.profile.pushNotification = true; // id: 3
       $scope.profile.smsNotification = true; // id: 2
       $scope.profile.geoNotification = true; // not yet defined
-      profileController.processNotificationTypes();
+      $scope.processNotificationTypes();
       expect($scope.profile.notificationType[0].notificationId).toBe(1);
       expect($scope.profile.notificationType[1].notificationId).toBe(2);
       expect($scope.profile.notificationType[2].notificationId).toBe(3);
@@ -106,7 +116,7 @@ describe('ProfileController', function() {
       $scope.profile.pushNotification = false; // id: 3
       $scope.profile.smsNotification = true; // id: 2
       $scope.profile.geoNotification = false; // not yet defined
-      profileController.processNotificationTypes();
+      $scope.processNotificationTypes();
       expect($scope.profile.notificationType[0].notificationId).toBe(1);
       expect($scope.profile.notificationType[1].notificationId).toBe(2);
     });
