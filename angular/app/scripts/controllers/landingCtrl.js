@@ -11,5 +11,5 @@
 cgiWebApp.controller('LandingController',
   ['$scope',
   function ($scope) {
-
+    $scope.nothing = 'no-op';
 }]);

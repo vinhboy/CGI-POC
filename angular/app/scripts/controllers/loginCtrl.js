@@ -47,4 +47,9 @@ cgiWebApp.controller('loginController',
       $scope.popUp('error', 'LOGIN.MESSAGE.INVALID');
     });
   };
+
+  $scope.logout = function() {
+    $sessionStorage.remove('jwt');
+    $state.go('login');
+  };
 }]);
