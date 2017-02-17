@@ -25,13 +25,12 @@
               <span ng-message="required" class="usa-input-error-message" role="alert">Email is required</span>
             </div>
         </div>
-          <div class="loginFormDiv passwordDiv" ng-class="{ 'usa-input-error': authForm.password.$touched && authForm.password.$invalid }">
-            <label for="password" translate="LOGIN.LABEL.PASSWORD"></label>
-            <input id="password" name="password" type="password" ng-model="user.password"
-              ng-required="true" placeholder="xxxxxxxxx">
-            <div ng-messages="authForm.password.$error" ng-show="authForm.password.$touched">
-              <span ng-message="required" class="usa-input-error-message" role="alert">Password is required</span>
-            </div>
+        <div class="loginFormDiv passwordDiv" ng-class="{ 'usa-input-error': authForm.password.$touched && authForm.password.$invalid }">
+          <label for="password" translate="LOGIN.LABEL.PASSWORD"></label>
+          <input id="password" name="password" type="password" ng-model="user.password"
+            ng-required="true" placeholder="xxxxxxxxx">
+          <div ng-messages="authForm.password.$error" ng-show="authForm.password.$touched">
+            <span ng-message="required" class="usa-input-error-message" role="alert">Password is required</span>
           </div>
           <div>
             <input type="submit" class="usa-button-primary-alt usa-button-login"
