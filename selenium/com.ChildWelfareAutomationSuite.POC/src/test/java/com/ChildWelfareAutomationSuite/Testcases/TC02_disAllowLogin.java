@@ -31,6 +31,7 @@ public class TC02_disAllowLogin extends BaseClass {
 		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC_02_DisAllowLogin_1")));
 	}
 	
+	
 //	//DisAllow Login with Blank Username
 //	@Test(description = "Enter Blank Username & Verify the Error Mesg")
 //

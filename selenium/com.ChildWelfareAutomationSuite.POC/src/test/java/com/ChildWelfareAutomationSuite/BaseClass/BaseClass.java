@@ -25,7 +25,7 @@ public abstract class BaseClass {
 		driver = BrowserFactory.getBrowser("chrome");
 		driver.get(DataProviderFactory.getConfig().getApplicationUrl());
 	
-		
+	
 
 	}
 

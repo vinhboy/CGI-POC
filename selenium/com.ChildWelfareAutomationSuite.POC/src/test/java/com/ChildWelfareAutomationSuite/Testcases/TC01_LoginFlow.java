@@ -34,8 +34,7 @@ public class TC01_LoginFlow extends BaseClass {
 		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC_01_AllowLogin_2")));
 		
 	}
-	
-	
+		
 	@Test(description="Verify login success message with valid user")
 
 	public void TC01_AllowLogin_1() throws InterruptedException {

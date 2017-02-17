@@ -14,7 +14,6 @@ public class LoginPage {
 	public LoginPage(WebDriver ldriver) {
 		this.driver = ldriver;
 	}
-
 	// Login Page Objects Properties-Object Repository
 	@FindBy(id = "username")
 	WebElement Username;
