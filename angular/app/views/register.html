@@ -8,10 +8,10 @@
         <div ng-class="{ 'usa-input-error': profileForm.firstName.$touched && profileForm.firstName.$invalid }">
           <label for="firstName" class="profile-label"
             translate="REGISTRATION.LABEL.FIRSTNAME"></label>
-          <input id="firstName" name="firstName" type="text" ng-model="profile.firstName" ng-pattern="regexName"
+          <input id="firstName" name="firstName" type="text" ng-model="profile.firstName" ng-required="true"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.FIRSTNAME' | translate }}" />
             <div ng-messages="profileForm.firstName.$error" ng-if="profileForm.firstName.$touched">
-              <span ng-message="pattern" class="usa-input-error-message" role="alert"
+              <span ng-message="required" class="usa-input-error-message" role="alert"
                 translate="REGISTRATION.MESSAGE.INVALID.FIRSTINVALID"></span>
             </div>
         </div>
@@ -19,10 +19,10 @@
         <div ng-class="{ 'usa-input-error': profileForm.lastName.$touched && profileForm.lastName.$invalid }">
           <label for="lastName" class="profile-label"
             translate="REGISTRATION.LABEL.LASTNAME"></label>
-          <input id="lastName" name="lastName" type="text" ng-model="profile.lastName" ng-pattern="regexName"
+          <input id="lastName" name="lastName" type="text" ng-model="profile.lastName" ng-required="true"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.LASTNAME' | translate }}" />
             <div ng-messages="profileForm.lastName.$error" ng-if="profileForm.lastName.$touched">
-              <span ng-message="pattern" class="usa-input-error-message" role="alert"
+              <span ng-message="required" class="usa-input-error-message" role="alert"
                 translate="REGISTRATION.MESSAGE.INVALID.LASTINVALID"></span>
             </div>
         </div>
