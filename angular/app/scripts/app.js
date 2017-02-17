@@ -2,12 +2,10 @@
 
 var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages' ]);
 
-var HOST = 'localhost';
-
 cgiWebApp.constant('urls', {
   // have to be change depending of the environment
-  BASE: 'http://' + HOST + ':8080',
-  HOSTNAME: HOST
+  BASE: 'http://localhost:8080',
+  WS_BASE: 'ws://localhost:8080'
 }).config([ '$translateProvider', '$urlRouterProvider', '$stateProvider', function($translateProvider, $urlRouterProvider, $stateProvider) {
 
   $translateProvider.useStaticFilesLoader({
