@@ -15,8 +15,21 @@ cgiWebApp.controller('ProfileController',
   $scope.profile = {
     firstName: '',
     lastName: '',
-    email: ''
+    email: '',
+    confirmEmail: '',
+    password: '',
+    confirmPassword: '',
+    phone: '',
+    zipCode: '',
+    notificationType: [],
+    emailNotification: false,
+    pushNotification: false,
+    smsNotification:false
   };
+
+  $scope.regexZip = /^\d{5}$/;
+  $scope.regexPhone = /^\d{3}-?\d{3}-?\d{4}$/;
+  $scope.regexPassword = /^(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*/;
 
   $scope.registerProfile = function() {
     console.log('registering: ');
