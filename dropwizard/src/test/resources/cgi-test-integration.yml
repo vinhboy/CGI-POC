@@ -104,6 +104,13 @@ logging:
 # Swagger settings
 swagger:
   resourcePackage: com.cgi.poc.dw.rest.resource
+scheduler:
+  thread: 2
+  jobs:    
+     - eventURL: https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query
+       delay: 10
+       period: 10
+       timeUnit: SECONDS
 
 twilio:
   accountSID: ACf7fd4c1c6ce58597ea87ef2b6c179cdb
