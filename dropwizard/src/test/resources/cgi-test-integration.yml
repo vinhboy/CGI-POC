@@ -90,10 +90,10 @@ mail:
   password: "somepass"
   
    #Connect using SSL.
-  ssl: true
+  ssl: false
   
    #Connect using TLS.
-  tls: true
+  tls: false
 
 # Logging settings
 logging:
