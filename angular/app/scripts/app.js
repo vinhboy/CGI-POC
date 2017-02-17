@@ -20,58 +20,43 @@ cgiWebApp.constant('urls', {
   $urlRouterProvider.otherwise('login');
 
   $stateProvider.state('login', {
-    url : '/login',
-    views:{
-      //'header': {
-      //},
-      'pageContent':{
+    url: '/login',
+    views: {
+      'pageContent': {
         templateUrl: '/views/login.html',
         controller: 'loginController'
-      }/*,
-      'footer':{
-      }*/
-  }
-}).state('register', {
-    url : '/register',
-    views:{
-      //'header': {
-      //},
-      'pageContent':{
+      }
+    }
+  }).state('register', {
+    url: '/register',
+    views: {
+      'pageContent': {
         templateUrl: '/views/register.html',
         controller: 'ProfileController'
-      }/*,
-      'footer':{
-      }*/
+      }
     }
-  // controller: 'signupController'
   }).state('profile', {
-    url : '/profile',
-    views:{
+    url: '/profile',
+    views: {
       'header': {
         templateUrl: 'views/userHeader.html',
         controller: 'profileController'
       },
-      'pageContent':{
+      'pageContent': {
         templateUrl: 'views/userProfile.html',
         controller: 'profileController'
       },
-      'footer':{
+      'footer': {
         templateUrl: 'views/userFooter.html'
       }
     }
-    //controller : 'customizationCtrl'
   }).state('restricted', {
-    url : '/restricted',
-    views:{
-      //'header': {
-      //},
-      'pageContent':{
+    url: '/restricted',
+    views: {
+      'pageContent': {
         templateUrl: 'views/restricted.html',
         controller: 'loginController'
-      }/*,
-      'footer':{
-      }*/
+      }
     }
-    // controller: 'RestrictedController'
   });
 }]);
