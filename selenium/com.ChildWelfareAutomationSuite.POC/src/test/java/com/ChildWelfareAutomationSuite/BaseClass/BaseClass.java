@@ -24,7 +24,8 @@ public abstract class BaseClass {
 		// Launch the specific Browser type
 		driver = BrowserFactory.getBrowser("chrome");
 		driver.get(DataProviderFactory.getConfig().getApplicationUrl());
-		BrowserFactory.impliciteWait(25);
+	
+		
 
 	}
 

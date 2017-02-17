@@ -42,7 +42,7 @@ public class BrowserFactory {
 		// Invoke IE Browser
 		else if (browserName.equalsIgnoreCase("ie")) {
 
-			//System.setProperty("webdriver.ie.driver", DataProviderFactory.getConfig().getIEPath());
+			System.setProperty("webdriver.ie.driver", DataProviderFactory.getConfig().getIEPath());
 			driver = new InternetExplorerDriver();
 		}
 		
@@ -118,7 +118,7 @@ public class BrowserFactory {
 	
 	public static String waitFor()   {
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			return "Failed - unable to load the page";
 		}
