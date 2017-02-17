@@ -50,7 +50,19 @@ cgiWebApp.controller('ProfileController',
   $scope.registerProfile = function() {
     $scope.processNotificationTypes();
 
-    ProfileService.register($scope.profile).then(function(response) {
+    var toPost = {
+      email: $scope.profile.email,
+      password: $scope.profile.password,
+      firstName: $scope.profile.firstName,
+      lastName: $scope.profile.lastName,
+      phone: $scope.profile.phone,
+      zipCode: $scope.profile.zipCode,
+      latitude: 0,
+      longitude: 0,
+      notificationType: $scope.profile.notificationType
+    };
+
+    ProfileService.register(toPost).then(function(response) {
       if (response.status === 200) {
         $state.go('landing');
       }
