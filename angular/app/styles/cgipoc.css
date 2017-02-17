@@ -1,6 +1,11 @@
 .usa-grid {
   background: #edf4f7; }
 
+
+.usa-width-one-third.scrollable-section {
+  background: 'black';
+}
+
 .centeredForm {
   margin-top: 10%; }
 

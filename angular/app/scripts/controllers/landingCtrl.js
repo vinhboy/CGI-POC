@@ -17,8 +17,30 @@ cgiWebApp.controller('landingController',
   function ($scope ) {
 
 
+    console.log('landing controller invoked');
+    $scope.model = {
+      notifications: []
+    };
+
     //TODO confirm the type of user
 
-    //
+    $scope.initLoad = function(){
+      //http request api
+      //then, error handle
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', date: Date(), zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+
+
+    };
+
+    $scope.initLoad();
 
 }]);

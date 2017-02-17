@@ -73,5 +73,20 @@ cgiWebApp.constant('urls', {
       }*/
     }
     // controller: 'RestrictedController'
+  }).state('landing', {
+    url : '/landing',
+    views:{
+      'header': {
+        template: '<p>Header with logo, etc</p>'
+      },
+      'pageContent':{
+        templateUrl: 'views/landing.html',
+        controller: 'landingController'
+      },
+      'footer':{
+          template: '<p>CGI 2017</p>'
+      }
+    }
+
   });
 }]);
