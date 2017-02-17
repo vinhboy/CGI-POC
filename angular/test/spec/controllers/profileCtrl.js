@@ -28,7 +28,7 @@ describe('ProfileController', function() {
     expect($scope.profile.lastName).toBe('');
     expect($scope.profile.email).toBe('');
     expect($scope.profile.password).toBe('');
-    expect($scope.profile.confirmPassword).toBe('');
+    expect($scope.profile.passwordConfirmation).toBe('');
     expect($scope.profile.phone).toBe('');
     expect($scope.profile.zipCode).toBe('');
     expect($scope.profile.notificationType.length).toBe(0);
@@ -50,7 +50,7 @@ describe('ProfileController', function() {
       $scope.registerProfile($scope.profile);
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
-      expect(profileService.register).toHaveBeenCalledWith($scope.profile);
+      expect(profileService.register).toHaveBeenCalled();
     });
 
     it('should transform the notificationTypes', function() {
@@ -59,7 +59,7 @@ describe('ProfileController', function() {
       $scope.registerProfile($scope.profile);
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
-      expect(profileService.register).toHaveBeenCalledWith($scope.profile);
+      expect(profileService.register).toHaveBeenCalled();
       expect($scope.processNotificationTypes).toHaveBeenCalled();
     });
   });

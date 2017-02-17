@@ -17,14 +17,16 @@ cgiWebApp.controller('ProfileController',
     lastName: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    passwordConfirmation: '',
     phone: '',
     zipCode: '',
     emailNotification: false,
     pushNotification: false,
     smsNotification: false,
     geoNotification: false,
-    notificationType: []
+    notificationType: [],
+    latitude: 0,
+    longitude: 0
   };
 
   $scope.regexZip = /^\d{5}$/;
@@ -50,11 +52,11 @@ cgiWebApp.controller('ProfileController',
 
     ProfileService.register($scope.profile).then(function(response) {
       if (response.status === 200) {
-        console.log('yay success registering! ');
+        console.log('yay success registering!');
         console.log(response);
       }
     }).catch(function(){
-      alert('something went very wrong.');
+      window.alert('something went very wrong.');
     });
   };
 
