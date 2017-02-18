@@ -75,3 +75,9 @@ cgiWebApp.constant('urls', {
     // controller: 'RestrictedController'
   });
 }]);
+
+//get geo localization
+//TODO verify if the user is sign in and if he accept the geoloclization
+navigator.geolocation.getCurrentPosition(function(position) {
+    
+}

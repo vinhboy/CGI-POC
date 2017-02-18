@@ -4,7 +4,7 @@
 -- COMMENT : Loading tables with helper admin user.
 
 /* insert ADMIN user with password adminpw */
-INSERT INTO user (id, first_name, last_name, email, password, phone, zip_code, role, latitude, longitude)
+INSERT INTO user (id, first_name, last_name, email, password, phone, zip_code, role, latitude, longitude, geo_loc_latitude, geo_loc_longitude)
 VALUES ( 1,
 'john',
 'smith',
@@ -14,5 +14,7 @@ VALUES ( 1,
 '95814',
 'ADMIN',
 38.5824933,
--121.4941738
+-121.4941738,
+0.0,
+0.0
 );

@@ -1,5 +1,27 @@
 package com.cgi.poc.dw;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.logging.Level;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import javax.validation.Validator;
+import javax.ws.rs.client.Client;
+
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.hibernate.SessionFactory;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cgi.poc.dw.auth.DBAuthenticator;
 import com.cgi.poc.dw.auth.JwtAuthFilter;
 import com.cgi.poc.dw.auth.UserRoleAuthorizer;
@@ -20,15 +42,18 @@ import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
-import com.cgi.poc.dw.service.EmailService;
-import com.cgi.poc.dw.service.EmailServiceImpl;
+import com.cgi.poc.dw.rest.resource.LocalizationResource;
 import com.cgi.poc.dw.rest.resource.LoginResource;
 import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
-import com.cgi.poc.dw.sockets.AlertEndpoint;
+import com.cgi.poc.dw.service.EmailService;
+import com.cgi.poc.dw.service.EmailServiceImpl;
+import com.cgi.poc.dw.service.LocalizationService;
+import com.cgi.poc.dw.service.LocalizationServiceImpl;
 import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
 import com.cgi.poc.dw.service.UserRegistrationService;
 import com.cgi.poc.dw.service.UserRegistrationServiceImpl;
+import com.cgi.poc.dw.sockets.AlertEndpoint;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -38,6 +63,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -52,25 +78,6 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.websockets.WebsocketBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.logging.Level;
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.validation.Validator;
-import javax.ws.rs.client.Client;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
-import org.glassfish.jersey.logging.LoggingFeature;
-import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import org.hibernate.SessionFactory;
-import org.jose4j.jwt.consumer.JwtConsumer;
-import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Main Dropwizard Application class.
@@ -167,6 +174,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
 
     registerResource(environment, injector, UserRegistrationResource.class);
     registerResource(environment, injector, LoginResource.class);
+    registerResource(environment, injector, LocalizationResource.class);
     registerResource(environment, injector, CustomConstraintViolationExceptionMapper.class);
     registerResource(environment, injector, CustomSQLConstraintViolationException.class);
 
@@ -259,6 +267,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
+        bind(LocalizationService.class).to(LocalizationServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         bind(MailConfiguration.class).toInstance(conf.getMailConfig());
 

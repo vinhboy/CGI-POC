@@ -38,228 +38,269 @@ import org.hibernate.annotations.Cascade;
 @XmlRootElement
 public class User implements Serializable, Principal {
 
-  private static final long serialVersionUID = 1L;
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Basic(optional = false)
-  @Column(name = "id")
-  @JsonIgnore
-  private Long id;
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "id")
+	@JsonIgnore
+	private Long id;
 
-  @Basic(optional = false)
-  @NotNull()
-  @Size(min = 1, max = 65)
-  @Column(name = "first_name")
-  private String firstName;
+	@Basic(optional = false)
+	@NotNull()
+	@Size(min = 1, max = 65)
+	@Column(name = "first_name")
+	private String firstName;
 
-  @Basic(optional = false)
-  @NotNull
-  @Size(min = 1, max = 65)
-  @Column(name = "last_name")
-  private String lastName;
+	@Basic(optional = false)
+	@NotNull
+	@Size(min = 1, max = 65)
+	@Column(name = "last_name")
+	private String lastName;
 
-  // pattern checks for XXX@YYY.com
-  // generated regex
-  @ApiModelProperty(value = "Validates for standard email format:  XXX@YYY.ZZZ. No whitespace allowed ", required = true)
-  @Pattern(groups = {Default.class,
-      LoginValidationGroup.class}, regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Invalid email address.")
-  @Basic(optional = false)
-  @NotNull(groups = {Default.class, LoginValidationGroup.class})
-  @Size(min = 1, max = 150, groups = {Default.class, LoginValidationGroup.class})
-  @Column(name = "email")
-  private String email;
+	// pattern checks for XXX@YYY.com
+	// generated regex
+	@ApiModelProperty(value = "Validates for standard email format:  XXX@YYY.ZZZ. No whitespace allowed ", required = true)
+	@Pattern(groups = { Default.class,
+			LoginValidationGroup.class }, regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Invalid email address.")
+	@Basic(optional = false)
+	@NotNull(groups = { Default.class, LoginValidationGroup.class })
+	@Size(min = 1, max = 150, groups = { Default.class, LoginValidationGroup.class })
+	@Column(name = "email")
+	private String email;
 
+	@Basic(optional = false)
+	@NotNull(message = "is missing", groups = { Default.class, LoginValidationGroup.class })
+	@Size(min = 2, max = 150, message = "must be at least 2 characters in length.")
+	@Column(name = "password")
+	@PasswordType(message = "must be greater that 2 character, contain no whitespace, and have at least one number and one letter.", groups = {
+			RestValidationGroup.class, LoginValidationGroup.class })
+	private String password;
 
-  @Basic(optional = false)
-  @NotNull(message = "is missing", groups = {Default.class, LoginValidationGroup.class})
-  @Size(min = 2, max = 150, message = "must be at least 2 characters in length.")
-  @Column(name = "password")
-  @PasswordType(message = "must be greater that 2 character, contain no whitespace, and have at least one number and one letter.", groups = {
-      RestValidationGroup.class, LoginValidationGroup.class})
-  private String password;
+	// if the field contains phone or fax number consider using this annotation
+	// to enforce field validation
+	// @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$",
+	// message="Invalid phone/fax format, should be as xxx-xxx-xxxx")
+	@Basic(optional = false)
+	@NotNull
+	@Size(min = 10, max = 10)
+	@Column(name = "phone")
+	private String phone;
 
-  //if the field contains phone or fax number consider using this annotation to enforce field validation
-  //@Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")
-  @Basic(optional = false)
-  @NotNull
-  @Size(min = 10, max = 10)
-  @Column(name = "phone")
-  private String phone;
+	@Basic(optional = false)
+	@NotNull
+	@Size(min = 1, max = 13)
+	@Pattern(regexp = "\\d{5}")
+	@Column(name = "zip_code")
+	private String zipCode;
 
-  @Basic(optional = false)
-  @NotNull
-  @Size(min = 1, max = 13)
-  @Pattern(regexp = "\\d{5}")
-  @Column(name = "zip_code")
-  private String zipCode;
-  
-  @Basic(optional = false)
-  @NotNull
-  @Size(min = 1, max = 8)
-  @Column(name = "role")
-  @JsonIgnore
-  private String role;
-  
-  //@Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-  //@Basic(optional = false)
-  @NotNull(groups = {PersistValidationGroup.class})
-  @Column(name = "latitude")
-  @JsonIgnore
-  private Double latitude;
+	@Basic(optional = false)
+	@NotNull
+	@Size(min = 1, max = 8)
+	@Column(name = "role")
+	@JsonIgnore
+	private String role;
 
-  //@Basic(optional = false)
-  @NotNull(groups = {PersistValidationGroup.class})
-  @Column(name = "longitude")
-  @JsonIgnore
-  private Double longitude;
+	// @Max(value=?) @Min(value=?)//if you know range of your decimal fields
+	// consider using these annotations to enforce field validation
+	// @Basic(optional = false)
+	@NotNull(groups = { PersistValidationGroup.class })
+	@Column(name = "latitude")
+	@JsonIgnore
+	private Double latitude;
 
-  @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, orphanRemoval = true)
-  @NotNull
-  @Cascade({org.hibernate.annotations.CascadeType.ALL})
-  private Set<UserNotification> notificationType;
+	// @Basic(optional = false)
+	@NotNull(groups = { PersistValidationGroup.class })
+	@Column(name = "longitude")
+	@JsonIgnore
+	private Double longitude;
 
-  public User() {
-  }
+	@NotNull(groups = { PersistValidationGroup.class })
+	@Column(name = "geo_loc_latitude")
+	private Double geoLocLatitude;
 
-  public User(Long id) {
-    this.id = id;
-  }
+	@NotNull(groups = { PersistValidationGroup.class })
+	@Column(name = "geo_loc_longitude")
+	private Double geoLocLongitude;
 
-  public User(Long id, String firstName, String lastName, String email, String password,
-      String phone, String zipCode, String role, double latitude, double longitude) {
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.password = password;
-    this.phone = phone;
-    this.zipCode = zipCode;
-    this.role = role;
-    this.latitude = latitude;
-    this.longitude = longitude;
-  }
+	@OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, orphanRemoval = true)
+	@NotNull
+	@Cascade({ org.hibernate.annotations.CascadeType.ALL })
+	private Set<UserNotification> notificationType;
 
-  public Long getId() {
-    return id;
-  }
+	public User() {
+	}
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+	public User(Long id) {
+		this.id = id;
+	}
 
-  public String getFirstName() {
-    return firstName;
-  }
+	public User(Long id, String firstName, String lastName, String email, String password, String phone, String zipCode,
+			String role, double latitude, double longitude) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.phone = phone;
+		this.zipCode = zipCode;
+		this.role = role;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
 
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
+	public Long getId() {
+		return id;
+	}
 
-  public String getLastName() {
-    return lastName;
-  }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
+	public String getFirstName() {
+		return firstName;
+	}
 
-  public String getEmail() {
-    return email;
-  }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+	public String getLastName() {
+		return lastName;
+	}
 
-  public String getPassword() {
-    return password;
-  }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+	public String getEmail() {
+		return email;
+	}
 
-  public String getPhone() {
-    return phone;
-  }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
+	public String getPassword() {
+		return password;
+	}
 
-  public String getZipCode() {
-    return zipCode;
-  }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-  public void setZipCode(String zipCode) {
-    this.zipCode = zipCode;
-  }
+	public String getPhone() {
+		return phone;
+	}
 
-  public String getRole() {
-    return role;
-  }
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-  public void setRole(String role) {
-    this.role = role;
-  }
+	public String getZipCode() {
+		return zipCode;
+	}
 
-  public Double getLatitude() {
-    return latitude;
-  }
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
+	}
 
-  public void setLatitude(Double latitude) {
-    this.latitude = latitude;
-  }
+	public String getRole() {
+		return role;
+	}
 
-  public Double getLongitude() {
-    return longitude;
-  }
+	public void setRole(String role) {
+		this.role = role;
+	}
 
-  public void setLongitude(Double longitude) {
-    this.longitude = longitude;
-  }
+	public Double getLatitude() {
+		return latitude;
+	}
 
-  public Set<UserNotification> getNotificationType() {
-    return notificationType;
-  }
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
 
-  public void setNotificationType(Set<UserNotification> notificationType) {
-    this.notificationType = notificationType;
-  }
+	public Double getLongitude() {
+		return longitude;
+	}
 
-  @Override
-  public int hashCode() {
-    int hash = 0;
-    hash += (id != null ? id.hashCode() : 0);
-    return hash;
-  }
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+	
+	/**
+	 * @return the geoLatitude
+	 */
+	public Double getGeoLocLatitude() {
+		return geoLocLatitude;
+	}
 
-  @Override
-  public boolean equals(Object object) {
-    // TODO: Warning - this method won't work in the case the id fields are not set
-    if (!(object instanceof User)) {
-      return false;
-    }
-    User other = (User) object;
-    if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-      return false;
-    }
-    return true;
-  }
+	/**
+	 * @param geoLocLatitude
+	 *            the geo Localization Latitude to set
+	 */
+	public void setGeoLocLatitude(Double geoLocLatitude) {
+		this.geoLocLatitude = geoLocLatitude;
+	}
+	
+	/**
+	 * @return the geoLocLongitude
+	 */
+	public Double getGeoLocLongitude() {
+		return geoLocLongitude;
+	}
 
-  @Override
-  public String toString() {
-    return "com.cgi.poc.dw.dao.model.User[ id=" + id + " ]";
-  }
+	/**
+	 * @param geoLocLongitude
+	 *            the geo Localization Longitude to set
+	 */
+	public void setGeoLocLongitude(Double geoLocLongitude) {
+		this.geoLocLongitude = geoLocLongitude;
+	}
 
-  /*
- * dropwizard requires to implement principal for authentication which
- * implements getName()
- */
-  @JsonIgnore
-  @Override
-  public String getName() {
-    return email;
-  }
+	public Set<UserNotification> getNotificationType() {
+		return notificationType;
+	}
+
+	public void setNotificationType(Set<UserNotification> notificationType) {
+		this.notificationType = notificationType;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (id != null ? id.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are
+		// not set
+		if (!(object instanceof User)) {
+			return false;
+		}
+		User other = (User) object;
+		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "com.cgi.poc.dw.dao.model.User[ id=" + id + " ]";
+	}
+
+	/*
+	 * dropwizard requires to implement principal for authentication which
+	 * implements getName()
+	 */
+	@JsonIgnore
+	@Override
+	public String getName() {
+		return email;
+	}
 
 }
