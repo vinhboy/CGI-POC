@@ -17,7 +17,7 @@ import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,8 +87,8 @@ public class UserRegistrationServiceUnitTest {
     user.setZipCode("98765");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.SMS.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
+    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
+    Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     user.setNotificationType(notificationType);
 
@@ -106,6 +106,7 @@ public class UserRegistrationServiceUnitTest {
     when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
     
     doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
+    when(textMessageService.send(anyString(), anyString())).thenReturn(true);
   }
 
   @Test

@@ -19,12 +19,15 @@ import com.cgi.poc.dw.auth.service.PasswordHashImpl;
 import com.cgi.poc.dw.dao.model.EventEarthquake;
 import com.cgi.poc.dw.dao.model.EventFlood;
 import com.cgi.poc.dw.dao.model.EventHurricane;
+import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.EventTsunami;
 import com.cgi.poc.dw.dao.model.EventVolcano;
 import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.dao.model.UserNotificationType;
+import com.cgi.poc.dw.rest.resource.AdminResource;
 import com.cgi.poc.dw.jobs.JobExecutionService;
 import com.cgi.poc.dw.jobs.JobFactory;
 import com.cgi.poc.dw.jobs.JobFactoryImpl;
@@ -35,10 +38,15 @@ import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
 import com.cgi.poc.dw.service.TextMessageService;
 import com.cgi.poc.dw.service.TextMessageServiceImpl;
 import com.cgi.poc.dw.sockets.AlertEndpoint;
+import com.cgi.poc.dw.service.AdminService;
+import com.cgi.poc.dw.service.AdminServiceImpl;
+import com.cgi.poc.dw.service.EmailService;
+import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
 import com.cgi.poc.dw.service.UserRegistrationService;
 import com.cgi.poc.dw.service.UserRegistrationServiceImpl;
+import com.cgi.poc.dw.sockets.AlertEndpoint;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -91,9 +99,10 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
   private final static Logger LOG = LoggerFactory.getLogger(CgiPocApplication.class);
 
   private final HibernateBundle<CgiPocConfiguration> hibernateBundle
-            = new HibernateBundle<CgiPocConfiguration>(User.class,UserNotification.class,
-            FireEvent.class, EventEarthquake.class, EventWeather.class,EventFlood.class,
-            EventHurricane.class, EventTsunami.class,EventVolcano.class ) {
+      = new HibernateBundle<CgiPocConfiguration>(User.class, UserNotificationType.class,
+      FireEvent.class, EventEarthquake.class, EventWeather.class, EventFlood.class,
+      EventHurricane.class, EventTsunami.class, EventVolcano.class, EventNotification.class,
+      EventNotificationZipcode.class) {
     @Override
     public DataSourceFactory getDataSourceFactory(CgiPocConfiguration configuration) {
       return configuration.getDataSourceFactory();
@@ -172,10 +181,9 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
 
     Keys keys = new KeyBuilderServiceImpl().createKeys(configuration);
 
-    // guice injectorctor = createInjector(configuration, environment, keys);
-    // resource r
     Injector injector = createInjector(configuration, environment, keys);
 
+    registerResource(environment, injector, AdminResource.class);
     registerResource(environment, injector, UserRegistrationResource.class);
     registerResource(environment, injector, LoginResource.class);
     registerResource(environment, injector, CustomConstraintViolationExceptionMapper.class);
@@ -277,7 +285,9 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
-        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
+        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class)
+            .asEagerSingleton();
+        bind(AdminService.class).to(AdminServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         bind(MailConfiguration.class).toInstance(conf.getMailConfig());
         bind(TwilioApiConfiguration.class).toInstance(conf.getTwilioApiConfiguration());
@@ -302,7 +312,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
             hibernateBundle.run(conf, env);
             return hibernateBundle.getSessionFactory();
           } catch (Exception e) {
-                LOG.error("Unable to run hibernatebundle");
+            LOG.error("Unable to run hibernatebundle");
           }
         } else {
           return sf;

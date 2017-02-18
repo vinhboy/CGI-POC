@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThat;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.util.ErrorInfo;
@@ -121,8 +121,8 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setZipCode("98765");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
+    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
+    Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     user.setNotificationType(notificationType);
 
@@ -154,8 +154,8 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setZipCode("98765");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.SMS.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
+    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
+    Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     user.setNotificationType(notificationType);
 
