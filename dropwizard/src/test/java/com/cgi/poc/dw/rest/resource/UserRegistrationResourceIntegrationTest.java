@@ -9,7 +9,7 @@ import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.HibernateUtil;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.util.Error;
 import com.cgi.poc.dw.util.ErrorInfo;
@@ -61,8 +61,8 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     tstUser.setZipCode("98765");
     tstUser.setLatitude(0.0);
     tstUser.setLongitude(0.0);
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
+    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
+    Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     tstUser.setNotificationType(notificationType);
 
@@ -104,8 +104,8 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     Client client = new JerseyClientBuilder().build();
     tstUser.setEmail(null);
 
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
+    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
+    Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     tstUser.setNotificationType(notificationType);
 

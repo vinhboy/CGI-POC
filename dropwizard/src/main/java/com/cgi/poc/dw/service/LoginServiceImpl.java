@@ -5,7 +5,7 @@ import com.cgi.poc.dw.auth.service.JwtBuilderService;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.rest.model.AuthTokenResponseDto;
+import com.cgi.poc.dw.rest.model.AccessTokenDto;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.util.LoginValidationGroup;
 import com.google.inject.Inject;
@@ -57,9 +57,9 @@ public class LoginServiceImpl extends BaseServiceImpl implements LoginService {
         LOG.error("Unable to create authToken.", e);
         throw new InternalServerErrorException("Unable to issue authToken.");
       }
-      AuthTokenResponseDto authTokenResponseDto = new AuthTokenResponseDto(authToken,
+      AccessTokenDto accessTokenDto = new AccessTokenDto(authToken,
           Role.valueOf(retUser.getRole()));
-      return Response.ok().entity(authTokenResponseDto).build();
+      return Response.ok().entity(accessTokenDto).build();
     } else {
       LOG.warn("Invalid password.");
       throw new NotFoundException("Invalid username or password.");
