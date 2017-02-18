@@ -265,12 +265,8 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
       protected void configure() {
         // keys
         bind(Keys.class).toInstance(keys);
-
 	// scheduler
         bind(JobsConfiguration.class).toInstance(conf.getJobsConfiguration());
-
-  
-         
         bindConstant().annotatedWith(Names.named("eventUrl")).to(200);
         bind(Validator.class).toInstance(env.getValidator());
         bind(JobFactory.class).to(JobFactoryImpl.class).asEagerSingleton();
