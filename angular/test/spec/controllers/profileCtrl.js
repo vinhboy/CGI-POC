@@ -43,8 +43,8 @@ describe('ProfileController', function() {
     expect($scope.profile.allowNotificationsByLocation).toBe(false);
   });
 
-  it('initializes the restApiErrors', function() {
-    expect($scope.restApiErrors.length).toBe(0);
+  it('initializes the apiErrors', function() {
+    expect($scope.apiErrors.length).toBe(0);
   });
 
   it('should have these pattern validations', function() {
@@ -69,7 +69,6 @@ describe('ProfileController', function() {
       $scope.registerProfile($scope.profile);
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
-      expect(profileService.register).toHaveBeenCalled();
       expect($scope.processNotificationTypes).toHaveBeenCalled();
     });
 
@@ -81,7 +80,6 @@ describe('ProfileController', function() {
       $scope.registerProfile($scope.profile);
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
-      expect(profileService.register).toHaveBeenCalled();
       expect($scope.generatePhoneNumber).toHaveBeenCalled();
     });
 
@@ -90,8 +88,16 @@ describe('ProfileController', function() {
       $scope.registerProfile($scope.profile);
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
-      expect(profileService.register).toHaveBeenCalled();
       expect($state.go).toHaveBeenCalledWith('landing');
+    });
+
+    it('should construct apiErrors if failed', function() {
+      spyOn($scope, 'processApiErrors');
+      $scope.registerProfile($scope.profile);
+      var response = { status: 404, data: {} };
+      deferred.reject(response);
+      $scope.$apply();
+      expect($scope.processApiErrors).toHaveBeenCalledWith(response);
     });
   });
 
@@ -158,6 +164,49 @@ describe('ProfileController', function() {
       };
       $scope.generatePhoneNumber();
       expect($scope.profile.phone).toBe('3132527456');
+    });
+  });
+
+  describe('processApiErrors', function() {
+    it('should construct the apiErrors', function() {
+      var response = {
+        status: 404,
+        data: {
+          errors: [
+            { code: 'ERR3', message: 'Stuff cannot be blank' },
+            { code: 'ERR4', message: 'You should be blank' },
+            { code: 'ERR3', message: 'Please do not be blank' }
+          ]
+        }
+      };
+      $scope.processApiErrors(response);
+      expect($scope.apiErrors[0]).toBe('Stuff cannot be blank');
+      expect($scope.apiErrors[1]).toBe('You should be blank');
+      expect($scope.apiErrors[2]).toBe('Please do not be blank');
+    });
+
+    it('should ignore other pieces of data', function() {
+      var response = {
+        status: 404,
+        data: {
+          err: [
+            { code: 'ERR3', message: 'Stuff cannot be blank' }
+          ],
+          errors: [
+            { code: 'ERR4', error: 'You should be blank' },
+            { code: 'ERR3', errorMessage: 'Please do not be blank' }
+          ]
+        },
+        datas: {
+          errors: [
+            { code: 'ERR3', message: 'Stuff cannot be blank' },
+            { code: 'ERR4', message: 'You should be blank' },
+            { code: 'ERR3', message: 'Please do not be blank' }
+          ]
+        }
+      };
+      $scope.processApiErrors(response);
+      expect($scope.apiErrors.length).toBe(0);
     });
   });
 });

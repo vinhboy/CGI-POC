@@ -12,7 +12,7 @@ cgiWebApp.controller('ProfileController',
   ['$scope', 'ProfileService', '$state',
   function ($scope, ProfileService, $state) {
 
-  $scope.restApiErrors = [];
+  $scope.apiErrors = [];
 
   $scope.profile = {
     firstName: '',
@@ -41,6 +41,17 @@ cgiWebApp.controller('ProfileController',
   $scope.regexPhoneAreaCode = /^\d{3}$/;
   $scope.regexPhoneCentralOfficeCode = /^\d{3}$/;
   $scope.regexPhoneLineNumber = /^\d{4}$/;
+
+  $scope.processApiErrors = function(response) {
+    $scope.apiErrors = [];
+    if (response.data && response.data.errors) {
+      for (var i = 0; i < response.data.errors.length; i++) {
+        if (response.data.errors[i].message) {
+          $scope.apiErrors.push(response.data.errors[i].message);
+        }
+      }
+    }
+  };
 
   $scope.processNotificationTypes = function() {
     var notificationTypes = [];
@@ -82,8 +93,8 @@ cgiWebApp.controller('ProfileController',
       if (response.status === 200) {
         $state.go('landing');
       }
-    }).catch(function(response){
-      window.alert('something went very wrong.');
+    }).catch(function(response) {
+      $scope.processApiErrors(response);
     });
   };
 
