@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -47,7 +48,7 @@ public class AdminResource {
   })
   @UnitOfWork
   @Timed(name = "Admin.publishNotification")
-  public Response publishNotification(@Auth User principal, @Valid EventNotification eventNotification) {
+  public Response publishNotification(@Auth User principal, @NotNull @Valid EventNotification eventNotification) {
     Response response =  adminService.publishNotification(principal, eventNotification);
     if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
       throw new WebApplicationException(response);

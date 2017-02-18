@@ -52,7 +52,7 @@ public class AdminServiceUnitTest {
   private EventNotification eventNotification;
 
   @Before
-  public void createUser() throws IOException {
+  public void createEventNotification() throws IOException {
     user = new User();
     user.setEmail("success@gmail.com");
     user.setPassword("test123");
