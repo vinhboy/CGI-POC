@@ -296,7 +296,7 @@ public class APICallerServiceTest extends IntegrationTest {
 	public void callFloodServiceAPI_NullPointerException() {
 		try {
 			EventFloodAPICallerServiceImpl apiCallerService = new EventFloodAPICallerServiceImpl(
-					"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27action%27%20OR%20status%20%3D%20%27minor%27%20OR%20status%20%3D%20%27major%27%20OR%20status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326", client, eventFloodDAO,
+					"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27major%27%20OR%20)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326", client, eventFloodDAO,
 					null);
 			apiCallerService.callServiceAPI();
 			fail("Expected ConflictException");
