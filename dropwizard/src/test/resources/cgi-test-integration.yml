@@ -7,13 +7,13 @@ database:
     driverClass: com.mysql.jdbc.Driver
 
     # the username
-    user: cgi_user
+    user: root
 
     # the password
-    password: cgi_P@ssw0rd
+    password: test
 
     # the JDBC URL
-    url: jdbc:mysql://localhost:3306/cgi_poc?createDatabaseIfNotExist=true
+    url: jdbc:mysql://mysql:3306/cgi_poc?createDatabaseIfNotExist=true
 
     # The initial size of the connection pool.
     initialSize: 2
