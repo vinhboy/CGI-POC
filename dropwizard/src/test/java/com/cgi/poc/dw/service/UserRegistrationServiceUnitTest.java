@@ -70,6 +70,10 @@ public class UserRegistrationServiceUnitTest {
   @Mock
   private EmailService emailService;
 
+  @Mock
+  private TextMessageService textMessageService;
+
+
   private User user;
 
   @Before
@@ -103,6 +107,7 @@ public class UserRegistrationServiceUnitTest {
     when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
     
     doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
+    when(textMessageService.send(anyString(), anyString())).thenReturn(true);
   }
 
   @Test

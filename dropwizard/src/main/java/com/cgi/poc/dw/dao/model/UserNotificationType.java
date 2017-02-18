@@ -23,10 +23,10 @@ import org.hibernate.annotations.Cascade;
  * @author dawna.floyd
  */
 @Entity
-@IdClass(UserNotificationPK.class)
+@IdClass(UserNotificationTypePK.class)
 @Table(name = "user_notification")
 @XmlRootElement
-public class UserNotification implements Serializable {
+public class UserNotificationType implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -43,10 +43,10 @@ public class UserNotification implements Serializable {
   @JsonIgnore
   private User userId;
 
-  public UserNotification() {
+  public UserNotificationType() {
   }
 
-  public UserNotification(Long notificationId) {
+  public UserNotificationType(Long notificationId) {
     this.notificationId = notificationId;
   }
 

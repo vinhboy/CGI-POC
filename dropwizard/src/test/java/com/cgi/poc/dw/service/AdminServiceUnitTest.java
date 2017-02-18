@@ -111,7 +111,57 @@ public class AdminServiceUnitTest {
 
         if (tmp.equals("zipCode") && annotation.equals("javax.validation.constraints.Pattern")) {
           assertThat(violation.getMessageTemplate())
-              .isEqualTo("Invalid ZipCode.");
+              .isEqualTo("is invalid.");
+        } else {
+          fail("not an expected constraint violation");
+        }
+      }
+    }
+  }
+
+  @Test
+  public void publishNotification_InvalidIsEmergencyFlag() {
+
+    eventNotification.setIsEmergency("Yes");
+    try {
+      underTest.publishNotification(user, eventNotification);
+      fail("Expected an exception to be thrown");
+
+    } catch (ConstraintViolationException exception) {
+      Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+      for (ConstraintViolation violation : constraintViolations) {
+        String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+        String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
+            .getCanonicalName();
+
+        if (tmp.equals("isEmergency") && annotation.equals("javax.validation.constraints.Pattern")) {
+          assertThat(violation.getMessageTemplate())
+              .isEqualTo("is invalid.");
+        } else {
+          fail("not an expected constraint violation");
+        }
+      }
+    }
+  }
+
+  @Test
+  public void publishNotification_InvalidDescription() {
+
+    eventNotification.setDescription("abc");
+    try {
+      underTest.publishNotification(user, eventNotification);
+      fail("Expected an exception to be thrown");
+
+    } catch (ConstraintViolationException exception) {
+      Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+      for (ConstraintViolation violation : constraintViolations) {
+        String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+        String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
+            .getCanonicalName();
+
+        if (tmp.equals("description") && annotation.equals("javax.validation.constraints.Size")) {
+          assertThat(violation.getMessage())
+              .isEqualTo("size must be between 5 and 2048");
         } else {
           fail("not an expected constraint violation");
         }

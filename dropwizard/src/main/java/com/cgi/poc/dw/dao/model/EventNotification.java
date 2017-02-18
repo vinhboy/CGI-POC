@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.Cascade;
@@ -35,6 +36,7 @@ public class EventNotification implements Serializable {
 
   @Basic(optional = false)
   @NotNull
+  @Pattern(regexp = "y|n", message = "is invalid.")
   @Column(name = "isEmergency")
   private String isEmergency;
   

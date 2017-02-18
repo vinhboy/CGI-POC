@@ -309,10 +309,10 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
       assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
       // The data provided in the API call is invalid. Message: <XXXXX>
       // where XXX is the message associated to the validation
-      String partString = "zipCode  must match \"\\d{5}\"";
+      String partString = "zipCode  is invalid.";
       String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
           .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+      assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
     }
   }
   

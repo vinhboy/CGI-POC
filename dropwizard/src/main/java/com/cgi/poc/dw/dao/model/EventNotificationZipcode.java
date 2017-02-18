@@ -32,7 +32,7 @@ public class EventNotificationZipcode implements Serializable {
   
   @Basic(optional = false)
   @NotNull
-  @Pattern(regexp = "\\d{5}", message = "Invalid ZipCode.")
+  @Pattern(regexp = "\\d{5}", message = "is invalid.")
   @Column(name = "zip_code")
   private String zipCode;
   
