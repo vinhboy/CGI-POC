@@ -134,8 +134,12 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
   private ErrorInfo getInternalErrorInfo(Exception exception, GeneralErrors generalErrors) {
     ErrorInfo errRet = new ErrorInfo();
     String message = generalErrors.getMessage();
+    String exMsg = "";
+    if (exception.getMessage() != null){
+        exMsg  = exception.getMessage();
+    }
     String errorString = message.replace("REPLACE1", exception.getClass().getCanonicalName())
-        .replace("REPLACE2", exception.getMessage());
+        .replace("REPLACE2", exMsg);
     errRet.addError(generalErrors.getCode(), errorString);
     return errRet;
   }

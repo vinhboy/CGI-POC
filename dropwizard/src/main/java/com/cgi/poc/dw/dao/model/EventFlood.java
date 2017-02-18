@@ -241,8 +241,7 @@ public class EventFlood implements Serializable {
         return latitude;
     }
 
-    @JsonDeserialize(using = JsonCoordinate.class)
-    public void setLatitude(BigDecimal latitude) {
+     public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
@@ -250,8 +249,7 @@ public class EventFlood implements Serializable {
         return longitude;
     }
 
-    @JsonDeserialize(using = JsonCoordinate.class)
-    public void setLongitude(BigDecimal longitude) {
+     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 

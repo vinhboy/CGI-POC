@@ -73,7 +73,6 @@ public class UserRegistrationServiceUnitTest {
   @Mock
   private TextMessageService textMessageService;
 
-
   private User user;
 
   @Before
