@@ -139,22 +139,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("authToken")));
     Assert.assertEquals(Role.RESIDENT.toString(), responseJo.optString("role"));
   }
-
-  @Test
-  public void loginAdminSuccess() throws JSONException {
-    Client client = new JerseyClientBuilder().build();
-    LoginUserDto loginUserDto = new LoginUserDto();
-    loginUserDto.setEmail("admin@cgi.com");
-    loginUserDto.setPassword("adminpw");
-    
-    Response response = client.target(String.format(url, RULE.getLocalPort())).request()
-        .post(Entity.json(loginUserDto));
-    Assert.assertEquals(200, response.getStatus());
-    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
-    Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("authToken")));
-    Assert.assertEquals(Role.ADMIN.toString(), responseJo.optString("role"));
-  }
-
+  
   @Test
   public void loginFailureWrongPassword() {
     Client client = new JerseyClientBuilder().build();

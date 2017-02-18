@@ -11,12 +11,21 @@ import com.cgi.poc.dw.auth.service.JwtReaderServiceImpl;
 import com.cgi.poc.dw.auth.service.KeyBuilderServiceImpl;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.auth.service.PasswordHashImpl;
+import com.cgi.poc.dw.dao.model.EventEarthquake;
+import com.cgi.poc.dw.dao.model.EventFlood;
+import com.cgi.poc.dw.dao.model.EventHurricane;
+import com.cgi.poc.dw.dao.model.EventTsunami;
+import com.cgi.poc.dw.dao.model.EventVolcano;
+import com.cgi.poc.dw.dao.model.EventWeather;
+import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
 import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.rest.resource.LoginResource;
 import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
+import com.cgi.poc.dw.service.TextMessageService;
+import com.cgi.poc.dw.service.TextMessageServiceImpl;
 import com.cgi.poc.dw.sockets.AlertEndpoint;
 import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
@@ -73,7 +82,9 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
   private final static Logger LOG = LoggerFactory.getLogger(CgiPocApplication.class);
 
   private final HibernateBundle<CgiPocConfiguration> hibernateBundle
-      = new HibernateBundle<CgiPocConfiguration>(User.class, UserNotification.class) {
+            = new HibernateBundle<CgiPocConfiguration>(User.class,UserNotification.class,
+            FireEvent.class, EventEarthquake.class, EventWeather.class,EventFlood.class,
+            EventHurricane.class, EventTsunami.class,EventVolcano.class ) {
     @Override
     public DataSourceFactory getDataSourceFactory(CgiPocConfiguration configuration) {
       return configuration.getDataSourceFactory();
@@ -249,9 +260,11 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
+        bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
         bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         bind(MailConfiguration.class).toInstance(conf.getMailConfig());
+        bind(TwilioApiConfiguration.class).toInstance(conf.getTwilioApiConfiguration());
 
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)
