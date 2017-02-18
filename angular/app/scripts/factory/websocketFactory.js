@@ -11,7 +11,7 @@
 cgiWebApp // jshint ignore:line
   .factory('WebsocketInit', ['$websocket', 'urls', 'Broadcaster', function($websocket, urls, Broadcaster) {
     // Open a WebSocket connection
-    var dataStream = $websocket('ws://' + urls.HOSTNAME + ':8080' + '/alert');
+    var dataStream = $websocket(urls.WS_BASE + '/alert');
 
     // Inital connection callback.
     dataStream.onOpen(function(){

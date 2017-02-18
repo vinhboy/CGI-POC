@@ -5,16 +5,18 @@ describe('loginController', function() {
   var $scope;
   var authenticationService;
   var $sessionStorage;
+  var $state;
   var $q;
   var deferred;
 
   beforeEach(module('cgi-web-app'));
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _Authenticator_, _$sessionStorage_, _$q_) {
+  beforeEach(inject(function(_$rootScope_, _$controller_, _Authenticator_, _$sessionStorage_, _$state_, _$q_) {
     $q = _$q_;
     $scope = _$rootScope_.$new();
     authenticationService = _Authenticator_;
     $sessionStorage = _$sessionStorage_;
+    $state = _$state_;
 
     deferred = _$q_.defer();
     spyOn(authenticationService, 'authenticate').and.returnValue(deferred.promise);
@@ -22,36 +24,30 @@ describe('loginController', function() {
     loginController = _$controller_('loginController', {
       $scope: $scope,
       Authenticator: authenticationService,
-      $sessionStorage: $sessionStorage
+      $sessionStorage: $sessionStorage,
+      $state: $state
     });
   }));
 
   it('should initially not have any notifications', function() {
     expect($scope.model.errorNotif).toBe(false);
-    expect($scope.model.successNotif).toBe(false);
   });
 
   it('should assign error notifications on pop-up', function() {
-    $scope.popUp('error', 'errorMessage', 0);
+    $scope.popUp('error', 'errorMessage');
     expect($scope.model.errorNotif).toBe(true);
     expect($scope.model.errorMessage).toBe('errorMessage');
   });
 
-  it('should assign success notifications on pop-up', function() {
-    $scope.popUp('success', 'successMessage', 0);
-    expect($scope.model.successNotif).toBe(true);
-    expect($scope.model.successMessage).toBe('successMessage');
-  });
-
   describe('authentication', function() {
-    it('should set the success message', function() {
-      spyOn($scope, 'popUp');
+    it('should redirect to landing page on success', function() {
+      spyOn($state, 'go');
 
       $scope.submitForm();
       deferred.resolve({ status: 200, data: { autToken: 'token' } });
       $scope.$apply();
 
-      expect($scope.popUp).toHaveBeenCalledWith('success', 'LOGIN.MESSAGE.LOGGEDIN');
+      expect($state.go).toHaveBeenCalledWith('landing');
     });
 
     it('should save the JWT auth token', function() {
@@ -72,6 +68,20 @@ describe('loginController', function() {
       $scope.$apply();
 
       expect($scope.popUp).toHaveBeenCalledWith('error', 'LOGIN.MESSAGE.INVALID');
+    });
+  });
+
+  describe('logout', function() {
+    it('should clear the session', function() {
+      spyOn($sessionStorage, 'remove');
+      $scope.logout();
+      expect($sessionStorage.remove).toHaveBeenCalledWith('jwt');
+    });
+
+    it('should redirect to login', function() {
+      spyOn($state, 'go');
+      $scope.logout();
+      expect($state.go).toHaveBeenCalledWith('login');
     });
   });
 });
