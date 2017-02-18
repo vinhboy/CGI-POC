@@ -22,6 +22,7 @@
         <div ng-class="{ 'usa-input-error': profileForm.email.$touched && profileForm.email.$invalid }">
           <label for="email" class="usa-input-required profile-label"
             translate="REGISTRATION.LABEL.EMAIL"></label>
+          <div class="emailAddressText" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
           <div ng-messages="profileForm.email.$error" ng-if="profileForm.email.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
               translate="REGISTRATION.MESSAGE.INVALID.EMAILREQUIRED"></span>
