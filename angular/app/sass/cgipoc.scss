@@ -24,6 +24,9 @@ body{
 .profile-label{
     margin-top:1.4rem;
 }
+.profile-form-input-notification-by-location {
+	margin-top:1.4rem;
+}
 .loginFormDiv{
     width:90%;
     margin-left:auto;
@@ -73,17 +76,19 @@ input.phone{
     margin-right: 1rem;
     width: 5rem;
 }
+input.phoneLong{
+    display:inline-block;
+    width: 6rem;
+}
 .zipCodeText{
     float:right;
     width:80%;
 }
+.emailAddressText{
+}
 input.zipCode{
     display:inline-block;
     width: 7rem;
-}
-input.phoneLong{
-    display:inline-block;
-    width: 6rem;
 }
 /* The Modal (background) */
 .modal.fade {

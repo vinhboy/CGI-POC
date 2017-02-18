@@ -1,0 +1,18 @@
+<header class="usa-header usa-header-extended" role="banner">
+  <div class="usa-header-logo">
+    <img class="usa-footer-slim-logo-img" src="/images/logo_mycalerts_header.png" alt="Logo image" />
+    <h3 class="usa-footer-slim-logo-heading"  ></h3>
+  </div>
+  <div class="usa-nav-inner">
+    <div class="usa-nav-secondary">
+      <ul ng-show="isLoggedIn()" class="usa-unstyled-list usa-nav-secondary-links">
+        <li>
+          <a ui-sref="manageProfile" translate="HEADER.USER.MANAGEPROFILE"></a>
+        </li>
+        <li>
+          <a href="#" translate="HEADER.USER.LOGOUT"></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

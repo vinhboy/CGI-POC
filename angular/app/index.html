@@ -35,7 +35,7 @@
 		<link rel="stylesheet" href="uswds-0.14.0/css/uswds.css">
 
 	</head>
-	<body data-ng-app="cgi-web-app">
+	<body data-ng-app="cgi-web-app" ng-controller="bodyController">
 		<div ng-controller="websocketController"></div>
 
 		<!-- build:js(.) scripts/vendor.js -->
@@ -59,15 +59,27 @@
 		<script src="/scripts/controllers/loginCtrl.js"></script>
 		<script src="/scripts/controllers/landingCtrl.js"></script>
 		<script src="/scripts/controllers/websocketCtrl.js"></script>
+		<script src="/scripts/services/profileService.js"></script>
+		<script src="/scripts/controllers/profileCtrl.js"></script>
+		<script src="/scripts/controllers/landingCtrl.js"></script>
+		<script src="/scripts/controllers/bodyController.js"></script>
+		<script src="/scripts/controllers/headerController.js"></script>
+		<script src="/scripts/controllers/footerController.js"></script>
 		<!-- endbuild -->
 		<div class="headerZone">
-      <div data-ui-view data-name="header"></div>
+                    <div data-ui-view data-name="header">
+     <ng-include src="'views/userHeader.html'" ng-controller="headerController"></ng-include>
+ 
+                    </div>
     </div>
     <div class="contentZone">
       <div data-ui-view data-name="pageContent"></div>
     </div>
     <div class="footerZone">
-      <div data-ui-view data-name="footer"></div>
+        <div data-ui-view data-name="footer">
+                 <ng-include src="'views/userFooter.html'" ng-controller="footerController"></ng-include>
+
+        </div>
     </div>
 	</body>
 </html>
