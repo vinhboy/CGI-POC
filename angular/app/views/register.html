@@ -1,4 +1,17 @@
 <div class="modal-content usa-content usa-form-large">
+  <div class="usa-grid registration-alert">
+    <div class="usa-alert usa-alert-error" role="alert" ng-if="restApiErrors.length > 0">
+      <div class="usa-alert-body">
+        <h3 class="usa-alert-heading">Error</h3>
+        <ul>
+          <li ng-repeat="restApiError in restApiErrors">
+            {{ restApiError }}
+          </li>
+        </ul>
+        <p class="usa-alert-text" translate="{{model.errorMessage}}"></p>
+      </div>
+    </div>
+  </div>
   <form class="usa-form-large" name="profileForm" ng-submit="registerProfile()">
     <fieldset>
       <div class="registrationFormDiv">
