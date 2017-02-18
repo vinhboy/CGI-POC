@@ -104,3 +104,39 @@ logging:
 # Swagger settings
 swagger:
   resourcePackage: com.cgi.poc.dw.rest.resource
+#Jobs settings
+scheduler:
+  #number of thread to use to run the jobs
+  thread: 5
+  #Define a job for an event API
+  jobs:
+    # the URL of the API event
+     - eventType: Fire
+       eventURL: https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326
+       #the delay to start the job after the server start
+       delay: 1
+       #the delay between to running job's
+       period: 5
+       #the time unit to define the delay and the period
+       timeUnit: SECONDS
+      # the URL of the API event
+     - eventType: Weather
+       eventURL: https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326
+       #the delay to start the job after the server start
+       delay: 1
+       #the delay between to running job's
+       period: 10
+       #the time unit to define the delay and the period
+       timeUnit: SECONDS
+     - eventType: Flood
+       eventURL: https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27action%27%20OR%20status%20%3D%20%27minor%27%20OR%20status%20%3D%20%27major%27%20OR%20status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326
+       #the delay to start the job after the server start
+       delay: 1
+       #the delay between to running job's
+       period: 5
+       #the time unit to define the delay and the period
+       timeUnit: SECONDS
+twilio:
+  accountSID: AC911b35928f09f10ffa8e544127a22016
+  authToken: dc093bd56e75d4897a2fac1f374578ca
+  phoneNumber: +19162490778

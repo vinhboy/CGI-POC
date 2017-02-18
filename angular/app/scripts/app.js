@@ -2,12 +2,10 @@
 
 var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages' ]);
 
-var HOST = 'localhost';
-
 cgiWebApp.constant('urls', {
   // have to be change depending of the environment
-  BASE: 'http://' + HOST + ':8080',
-  HOSTNAME: HOST
+  BASE: 'http://localhost:8080',
+  WS_BASE: 'ws://localhost:8080'
 }).config([ '$translateProvider', '$urlRouterProvider', '$stateProvider', function($translateProvider, $urlRouterProvider, $stateProvider) {
 
   $translateProvider.useStaticFilesLoader({
@@ -20,59 +18,37 @@ cgiWebApp.constant('urls', {
   $urlRouterProvider.otherwise('login');
 
   $stateProvider.state('login', {
-    url : '/login',
-    views:{
-      //'header': {
-      //},
-      'pageContent':{
+    url: '/login',
+    views: {
+      'pageContent': {
         templateUrl: '/views/login.html',
         controller: 'loginController'
-      }/*,
-      'footer':{
-      }*/
-  }
-  }).state('registration', {
-    url : '/registration',
-    views:{
-      //'header': {
-      //},
-      'pageContent':{
-        templateUrl: '/views/registration.html',
-        controller: 'registrationCtrl'
-      }/*,
-      'footer':{
-      }*/
-    }
-  // controller: 'signupController'
-  }).state('profile', {
-    url : '/profile',
-    views:{
-      'header': {
-        templateUrl: 'views/userHeader.html',
-        controller: 'profileController'
-      },
-      'pageContent':{
-        templateUrl: 'views/userProfile.html',
-        controller: 'profileController'
-      },
-      'footer':{
-        templateUrl: 'views/userFooter.html'
       }
     }
-    //controller : 'customizationCtrl'
-  }).state('restricted', {
-    url : '/restricted',
-    views:{
-      //'header': {
-      //},
-      'pageContent':{
-        templateUrl: 'views/restricted.html',
-        controller: 'loginController'
-      }/*,
-      'footer':{
-      }*/
+  }).state('register', {
+    url: '/register',
+    views: {
+      'pageContent': {
+        templateUrl: '/views/register.html',
+        controller: 'ProfileController'
+      }
     }
-    // controller: 'RestrictedController'
+  }).state('landing', {
+    url: '/landing',
+    views: {
+      'header': {
+        templateUrl: '/views/userHeader.html',
+        controller: 'LandingController'
+      },
+      'pageContent': {
+        templateUrl: '/views/landing.html',
+        controller: 'LandingController'
+      },
+      'footer': {
+        templateUrl: '/views/userFooter.html',
+        controller: 'LandingController'
+      }
+    }
   });
 }]);
 

@@ -6,6 +6,7 @@
 package com.cgi.poc.dw.dao;
 
 import com.cgi.poc.dw.dao.model.EventHurricane;
+import com.google.inject.Inject;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.util.List;
 import javax.validation.Validator;
@@ -27,6 +28,7 @@ public class EventHurricaneDAO extends AbstractDAO<EventHurricane> {
     private int pageSize = 0;
     Validator validator;
  
+    @Inject
     public EventHurricaneDAO(SessionFactory factory, Validator validator) {
         super(factory);
         this.validator = validator;

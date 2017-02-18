@@ -21,6 +21,11 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.cgi.poc.dw.api.service.APICallerService;
+import com.cgi.poc.dw.api.service.APIServiceFactory;
+import com.cgi.poc.dw.api.service.impl.APIServiceFactoryImpl;
+import com.cgi.poc.dw.api.service.impl.EventWeatherAPICallerServiceImpl;
+import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
 
 import com.cgi.poc.dw.auth.DBAuthenticator;
 import com.cgi.poc.dw.auth.JwtAuthFilter;
@@ -42,6 +47,7 @@ import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
+
 import com.cgi.poc.dw.rest.resource.LocalizationResource;
 import com.cgi.poc.dw.rest.resource.LoginResource;
 import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
@@ -49,11 +55,18 @@ import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.service.LocalizationService;
 import com.cgi.poc.dw.service.LocalizationServiceImpl;
+
+import com.cgi.poc.dw.jobs.JobExecutionService;
+import com.cgi.poc.dw.jobs.JobFactory;
+import com.cgi.poc.dw.jobs.JobFactoryImpl;
+import com.cgi.poc.dw.service.TextMessageService;
+import com.cgi.poc.dw.service.TextMessageServiceImpl;
+import com.cgi.poc.dw.sockets.AlertEndpoint;
+
 import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
 import com.cgi.poc.dw.service.UserRegistrationService;
 import com.cgi.poc.dw.service.UserRegistrationServiceImpl;
-import com.cgi.poc.dw.sockets.AlertEndpoint;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -63,7 +76,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-
+import com.google.inject.name.Names;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -185,6 +198,10 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     // authentication
     registerAuthentication(environment, injector, keys);
 
+    /**
+     * Adding Job Scheduler
+     */
+    environment.lifecycle().manage(injector.getInstance(JobExecutionService.class));
     LOG.debug("Application started");
   }
 
@@ -258,19 +275,27 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
       protected void configure() {
         // keys
         bind(Keys.class).toInstance(keys);
-
-        // services
+	// scheduler
+        bind(JobsConfiguration.class).toInstance(conf.getJobsConfiguration());
+        bindConstant().annotatedWith(Names.named("eventUrl")).to(200);
         bind(Validator.class).toInstance(env.getValidator());
+        bind(JobFactory.class).to(JobFactoryImpl.class).asEagerSingleton();
+        bind(APIServiceFactory.class).to(APIServiceFactoryImpl.class).asEagerSingleton();
         bind(JwtReaderService.class).to(JwtReaderServiceImpl.class).asEagerSingleton();
         bind(JwtBuilderService.class).to(JwtBuilderServiceImpl.class).asEagerSingleton();
         bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
+        bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
         bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
         bind(LocalizationService.class).to(LocalizationServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         bind(MailConfiguration.class).toInstance(conf.getMailConfig());
-
+        bind(TwilioApiConfiguration.class).toInstance(conf.getTwilioApiConfiguration());
+        bind(FireEventAPICallerServiceImpl.class);
+        bind(EventWeatherAPICallerServiceImpl.class);        
+        bind(APICallerService.class).annotatedWith(Names.named("fireService")).to(FireEventAPICallerServiceImpl.class);
+        bind(APICallerService.class).annotatedWith(Names.named("weatherService")).to(FireEventAPICallerServiceImpl.class);
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)
             .using(conf.getJerseyClientConfiguration())
