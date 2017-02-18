@@ -32,23 +32,31 @@ describe('ProfileController', function() {
     expect($scope.profile.password).toBe('');
     expect($scope.profile.passwordConfirmation).toBe('');
     expect($scope.profile.phone).toBe('');
+    expect($scope.profile.phoneNumber.areaCode).toBe('');
+    expect($scope.profile.phoneNumber.centralOfficeCode).toBe('');
+    expect($scope.profile.phoneNumber.lineNumber).toBe('');
     expect($scope.profile.zipCode).toBe('');
     expect($scope.profile.notificationType.length).toBe(0);
     expect($scope.profile.emailNotification).toBe(false);
     expect($scope.profile.pushNotification).toBe(false);
     expect($scope.profile.smsNotification).toBe(false);
-    expect($scope.profile.geoNotification).toBe(false);
+    expect($scope.profile.allowNotificationsByLocation).toBe(false);
   });
 
-  it('initializes these pattern validations', function() {
+  it('initializes the restApiErrors', function() {
+    expect($scope.restApiErrors.length).toBe(0);
+  });
+
+  it('should have these pattern validations', function() {
     expect('12345').toMatch($scope.regexZip);
-    expect('123-456-7890').toMatch($scope.regexPhone);
     expect('abcABC123').toMatch($scope.regexPassword);
+    expect('123').toMatch($scope.regexPhoneAreaCode);
+    expect('123').toMatch($scope.regexPhoneCentralOfficeCode);
+    expect('1234').toMatch($scope.regexPhoneLineNumber);
   });
 
   describe('register', function() {
     it('should call the ProfileService.register', function() {
-      $scope.profile = {};
       $scope.registerProfile($scope.profile);
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
@@ -56,7 +64,7 @@ describe('ProfileController', function() {
     });
 
     it('should transform the notificationTypes', function() {
-      $scope.profile = { smsNotification: true };
+      $scope.profile.smsNotification = true;
       spyOn($scope, 'processNotificationTypes').and.callThrough();
       $scope.registerProfile($scope.profile);
       deferred.resolve({ status: 200, data: {} });
@@ -65,8 +73,19 @@ describe('ProfileController', function() {
       expect($scope.processNotificationTypes).toHaveBeenCalled();
     });
 
+    it('should construct the phoneNumber', function() {
+      $scope.profile.phoneNumber.areaCode = '313';
+      $scope.profile.phoneNumber.centralOfficeCode = '252';
+      $scope.profile.phoneNumber.lineNumber = '7456';
+      spyOn($scope, 'generatePhoneNumber').and.callThrough();
+      $scope.registerProfile($scope.profile);
+      deferred.resolve({ status: 200, data: {} });
+      $scope.$apply();
+      expect(profileService.register).toHaveBeenCalled();
+      expect($scope.generatePhoneNumber).toHaveBeenCalled();
+    });
+
     it('should redirect if successful', function() {
-      $scope.profile = {};
       spyOn($state, 'go');
       $scope.registerProfile($scope.profile);
       deferred.resolve({ status: 200, data: {} });
@@ -81,7 +100,6 @@ describe('ProfileController', function() {
       $scope.profile.emailNotification = false;
       $scope.profile.pushNotification = false;
       $scope.profile.smsNotification = false;
-      $scope.profile.geoNotification = false;
       expect($scope.someSelected()).toBe(false);
     });
 
@@ -89,7 +107,6 @@ describe('ProfileController', function() {
       $scope.profile.emailNotification = true;
       $scope.profile.pushNotification = true;
       $scope.profile.smsNotification = true;
-      $scope.profile.geoNotification = true;
       expect($scope.someSelected()).toBe(true);
     });
 
@@ -97,7 +114,6 @@ describe('ProfileController', function() {
       $scope.profile.emailNotification = false;
       $scope.profile.pushNotification = false;
       $scope.profile.smsNotification = true;
-      $scope.profile.geoNotification = false;
       expect($scope.someSelected()).toBe(true);
     });
   });
@@ -107,7 +123,6 @@ describe('ProfileController', function() {
       $scope.profile.emailNotification = false; // id: 1
       $scope.profile.pushNotification = false; // id: 3
       $scope.profile.smsNotification = false; // id: 2
-      $scope.profile.geoNotification = false; // not yet defined
       $scope.processNotificationTypes();
       expect($scope.profile.notificationType.length).toBe(0);
     });
@@ -116,7 +131,6 @@ describe('ProfileController', function() {
       $scope.profile.emailNotification = true; // id: 1
       $scope.profile.pushNotification = true; // id: 3
       $scope.profile.smsNotification = true; // id: 2
-      $scope.profile.geoNotification = true; // not yet defined
       $scope.processNotificationTypes();
       expect($scope.profile.notificationType[0].notificationId).toBe(1);
       expect($scope.profile.notificationType[1].notificationId).toBe(2);
@@ -127,10 +141,23 @@ describe('ProfileController', function() {
       $scope.profile.emailNotification = true; // id: 1
       $scope.profile.pushNotification = false; // id: 3
       $scope.profile.smsNotification = true; // id: 2
-      $scope.profile.geoNotification = false; // not yet defined
       $scope.processNotificationTypes();
       expect($scope.profile.notificationType[0].notificationId).toBe(1);
       expect($scope.profile.notificationType[1].notificationId).toBe(2);
+    });
+  });
+
+  describe('generatePhoneNumber', function() {
+    it('generates the phone number', function() {
+      $scope.profile = {
+        phoneNumber: {
+          areaCode: '313',
+          centralOfficeCode: '252',
+          lineNumber: '7456'
+        }
+      };
+      $scope.generatePhoneNumber();
+      expect($scope.profile.phone).toBe('3132527456');
     });
   });
 });
