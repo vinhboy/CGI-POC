@@ -5,13 +5,11 @@
  */
 package com.cgi.poc.dw.api.service.impl;
 
-import com.cgi.poc.dw.api.service.APICallerService;
 import com.cgi.poc.dw.api.service.APIServiceFactory;
-import com.cgi.poc.dw.api.service.impl.APICallerServiceImpl;
+import com.cgi.poc.dw.dao.EventFloodDAO;
 import com.google.inject.Inject;
 import com.cgi.poc.dw.dao.FireEventDAO;
 import com.cgi.poc.dw.dao.EventWeatherDAO;
-import com.google.inject.BindingAnnotation;
 import javax.ws.rs.client.Client;
 import org.hibernate.SessionFactory;
 
@@ -34,6 +32,10 @@ public class APIServiceFactoryImpl implements APIServiceFactory{
     @Override
     public EventWeatherAPICallerServiceImpl create(Client client, String eventUrl, EventWeatherDAO eventDAO) {
         return new EventWeatherAPICallerServiceImpl ( eventUrl, client,eventDAO, sessionFactory);
+    }
+    @Override
+    public EventFloodAPICallerServiceImpl create(Client client, String eventUrl, EventFloodDAO eventDAO) {
+        return new EventFloodAPICallerServiceImpl ( eventUrl, client,eventDAO, sessionFactory);
     }
     
 }

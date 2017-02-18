@@ -12,10 +12,15 @@ import org.slf4j.LoggerFactory;
 import com.cgi.poc.dw.JobsConfiguration;
 import com.cgi.poc.dw.api.service.APICallerService;
 import com.cgi.poc.dw.api.service.APIServiceFactory;
+import com.cgi.poc.dw.api.service.impl.APICallerServiceImpl;
+import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
+import com.cgi.poc.dw.dao.EventFloodDAO;
+import com.cgi.poc.dw.dao.EventWeatherDAO;
 import com.cgi.poc.dw.dao.FireEventDAO;
 import com.google.inject.Inject;
 
 import io.dropwizard.lifecycle.Managed;
+import javax.ws.rs.InternalServerErrorException;
 
 /**
  * 
@@ -38,7 +43,10 @@ public class JobExecutionService implements Managed{
     Client client;
     @Inject
     FireEventDAO fireEventDAO;
-
+    @Inject
+    EventWeatherDAO eventWeatherDAO;
+    @Inject
+    EventFloodDAO eventFloodDAO;
 	/**
 	 * @param conf the job configuration
 	 */
@@ -57,9 +65,34 @@ public class JobExecutionService implements Managed{
     	if (jobsConfiguration != null && jobsConfiguration.getJobs() != null ) {
     	   for(JobParameter jobParam : jobsConfiguration.getJobs()){
     		LOGGER.debug("Instanciate job : {}", jobParam.toString());
-    		
-        	service.scheduleAtFixedRate(jobFactory.create(aPIServiceFactory.create(client, jobParam.getEventURL(), fireEventDAO)), jobParam.getDelay(), jobParam.getPeriod(), TimeUnit.valueOf(jobParam.getTimeUnit()));
-    	   }
+                switch (jobParam.getEventType()) {
+                   case "Fire":
+                        service.scheduleAtFixedRate(
+                                jobFactory.create(aPIServiceFactory.create(
+                                        client, jobParam.getEventURL(), fireEventDAO)),
+                                jobParam.getDelay(), jobParam.getPeriod(), 
+                                TimeUnit.valueOf(jobParam.getTimeUnit()));
+                        break;
+                   case "Weather":
+                        service.scheduleAtFixedRate(
+                                jobFactory.create(aPIServiceFactory.create(
+                                        client, jobParam.getEventURL(), eventWeatherDAO)),
+                                jobParam.getDelay(), jobParam.getPeriod(), 
+                                TimeUnit.valueOf(jobParam.getTimeUnit()));
+                      break;
+                   case "Flood":
+                        service.scheduleAtFixedRate(
+                                jobFactory.create(aPIServiceFactory.create(
+                                        client, jobParam.getEventURL(), eventFloodDAO)),
+                                jobParam.getDelay(), jobParam.getPeriod(), 
+                                TimeUnit.valueOf(jobParam.getTimeUnit()));
+                      break;
+                   default:
+                     throw new IllegalArgumentException("Unsupported Event type");
+                }
+                
+
+           }
     	}
 
     }

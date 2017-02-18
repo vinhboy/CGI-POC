@@ -10,10 +10,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class JobParameter {
 
+	private String eventType;
 	private String eventURL;
 	private int delay;
 	private int period;
 	private String timeUnit;
+
+	@JsonProperty
+        public String getEventType() {
+           return eventType;
+        }
+
+	@JsonProperty
+        public void setEventType(String eventType) {
+           this.eventType = eventType;
+        }
 
 	
 	/**
@@ -85,7 +96,7 @@ public class JobParameter {
 	 */
 	@Override
 	public String toString() {
-		return "JobParameter [eventURL=" + eventURL + ", delay=" + delay + ", period=" + period + ", timeUnit="
+		return "JobParameter [eventType=" + eventType + ", eventURL=" + eventURL + ", delay=" + delay + ", period=" + period + ", timeUnit="
 				+ timeUnit + "]";
 	}
 	

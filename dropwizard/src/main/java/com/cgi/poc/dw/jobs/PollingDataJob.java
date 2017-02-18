@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cgi.poc.dw.api.service.APICallerService;
+import com.cgi.poc.dw.api.service.impl.EventFloodAPICallerServiceImpl;
 import com.cgi.poc.dw.api.service.impl.EventWeatherAPICallerServiceImpl;
 import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
 import com.google.inject.Inject;
@@ -27,6 +28,10 @@ public class PollingDataJob implements Runnable{
 	}
 	@Inject
 	public PollingDataJob(@Named("weatherService")EventWeatherAPICallerServiceImpl apiCallerService){
+		this.apiCallerService = apiCallerService;
+	}
+	@Inject
+	public PollingDataJob(@Named("floodService")EventFloodAPICallerServiceImpl apiCallerService){
 		this.apiCallerService = apiCallerService;
 	}
 	
