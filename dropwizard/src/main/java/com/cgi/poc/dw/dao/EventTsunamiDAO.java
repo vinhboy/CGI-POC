@@ -6,6 +6,7 @@
 package com.cgi.poc.dw.dao;
 
 import com.cgi.poc.dw.dao.model.EventTsunami;
+import com.google.inject.Inject;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.math.BigDecimal;
  import javax.validation.Validator;
@@ -28,6 +29,7 @@ public class EventTsunamiDAO extends AbstractDAO<EventTsunami> {
     Validator validator;
 
 
+    @Inject
     public EventTsunamiDAO(SessionFactory factory, Validator validator) {
         super(factory);
         this.validator = validator;

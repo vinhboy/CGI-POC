@@ -6,6 +6,7 @@
 package com.cgi.poc.dw.dao;
 
 import com.cgi.poc.dw.dao.model.EventWeather;
+import com.google.inject.Inject;
 import io.dropwizard.hibernate.AbstractDAO;
  import javax.validation.Validator;
 import org.hibernate.Criteria;
@@ -27,6 +28,7 @@ public class EventWeatherDAO extends AbstractDAO<EventWeather> {
     Validator validator;
 
 
+    @Inject
     public EventWeatherDAO(SessionFactory factory, Validator validator) {
         super(factory);
         this.validator = validator;
