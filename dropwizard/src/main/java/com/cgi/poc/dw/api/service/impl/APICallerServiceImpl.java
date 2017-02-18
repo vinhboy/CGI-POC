@@ -85,6 +85,7 @@ public abstract class APICallerServiceImpl implements APICallerService {
      */
     private void parsingEventsResponse(ObjectNode featureJson)   {
            ArrayNode featuresArray = (ArrayNode) featureJson.get("features");
+           LOG.info("Events to save : {}", featuresArray.size());
             for (int i = 0; i < featuresArray.size(); i++) {
                 JsonNode feature = featuresArray.get(i);
                 JsonNode event1 = feature.get("attributes");
