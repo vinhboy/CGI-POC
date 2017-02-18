@@ -107,9 +107,13 @@ swagger:
 scheduler:
   thread: 2
   jobs:    
-     - eventURL: https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query
+     - eventType: Fire
+       eventURL: https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326
+       #the delay to start the job after the server start
        delay: 10
+       #the delay between to running job's
        period: 10
+       #the time unit to define the delay and the period
        timeUnit: SECONDS
 
 twilio:

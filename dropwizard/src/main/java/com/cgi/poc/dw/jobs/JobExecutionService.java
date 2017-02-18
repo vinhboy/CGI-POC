@@ -23,84 +23,90 @@ import io.dropwizard.lifecycle.Managed;
 import javax.ws.rs.InternalServerErrorException;
 
 /**
- * 
+ *
  * @author vincent baylly
  *
  */
-public class JobExecutionService implements Managed{
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(JobExecutionService.class);
+public class JobExecutionService implements Managed {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JobExecutionService.class);
 
     private final ScheduledExecutorService service;
-    
+
     @Inject
     JobFactory jobFactory;
+
     @Inject
     APIServiceFactory aPIServiceFactory;
+
     @Inject
     JobsConfiguration jobsConfiguration;
+
     @Inject
     Client client;
+
     @Inject
     FireEventDAO fireEventDAO;
+
     @Inject
     EventWeatherDAO eventWeatherDAO;
+
     @Inject
     EventFloodDAO eventFloodDAO;
-	/**
-	 * @param conf the job configuration
-	 */
-    @Inject
-	public JobExecutionService(JobsConfiguration jobsConfiguration) {
-		super();
-		this.service = Executors.newScheduledThreadPool(jobsConfiguration.getThread());
-	}
 
-	/**
+    /**
+     * @param conf the job configuration
+     */
+    @Inject
+    public JobExecutionService(JobsConfiguration jobsConfiguration) {
+        super();
+        this.service = Executors.newScheduledThreadPool(jobsConfiguration.getThread());
+    }
+
+    /**
      * start the scheduler for the launch the jobs
      */
     @Override
     public void start() throws Exception {
-    	LOGGER.debug("Starting jobs");
-    	if (jobsConfiguration != null && jobsConfiguration.getJobs() != null ) {
-    	   for(JobParameter jobParam : jobsConfiguration.getJobs()){
-    		LOGGER.debug("Instanciate job : {}", jobParam.toString());
+        LOG.debug("Starting jobs");
+        if (jobsConfiguration != null && jobsConfiguration.getJobs() != null) {
+            for (JobParameter jobParam : jobsConfiguration.getJobs()) {
+                LOG.debug("Instanciate job : {}", jobParam.toString());
                 switch (jobParam.getEventType()) {
-                   case "Fire":
+                    case "Fire":
                         service.scheduleAtFixedRate(
                                 jobFactory.create(aPIServiceFactory.create(
                                         client, jobParam.getEventURL(), fireEventDAO)),
-                                jobParam.getDelay(), jobParam.getPeriod(), 
+                                jobParam.getDelay(), jobParam.getPeriod(),
                                 TimeUnit.valueOf(jobParam.getTimeUnit()));
                         break;
-                   case "Weather":
+                    case "Weather":
                         service.scheduleAtFixedRate(
                                 jobFactory.create(aPIServiceFactory.create(
                                         client, jobParam.getEventURL(), eventWeatherDAO)),
-                                jobParam.getDelay(), jobParam.getPeriod(), 
+                                jobParam.getDelay(), jobParam.getPeriod(),
                                 TimeUnit.valueOf(jobParam.getTimeUnit()));
-                      break;
-                   case "Flood":
+                        break;
+                    case "Flood":
                         service.scheduleAtFixedRate(
                                 jobFactory.create(aPIServiceFactory.create(
                                         client, jobParam.getEventURL(), eventFloodDAO)),
-                                jobParam.getDelay(), jobParam.getPeriod(), 
+                                jobParam.getDelay(), jobParam.getPeriod(),
                                 TimeUnit.valueOf(jobParam.getTimeUnit()));
-                      break;
-                   default:
-                     throw new IllegalArgumentException("Unsupported Event type");
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unsupported Event type");
                 }
-                
 
-           }
-    	}
+            }
+        }
 
     }
 
     @Override
     public void stop() throws Exception {
-    	LOGGER.debug("Shutting down");
+        LOG.debug("Shutting down");
         service.shutdown();
     }
-	
+
 }

@@ -12,13 +12,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
  import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ws.rs.client.Client;
+ import javax.ws.rs.client.Client;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.context.internal.ManagedSessionContext;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -27,7 +26,7 @@ import org.slf4j.LoggerFactory;
  */
 public class EventWeatherAPICallerServiceImpl extends APICallerServiceImpl {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EventWeatherAPICallerServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EventWeatherAPICallerServiceImpl.class);
 
     private EventWeatherDAO eventDAO;
 
@@ -49,7 +48,7 @@ public class EventWeatherAPICallerServiceImpl extends APICallerServiceImpl {
             ManagedSessionContext.bind(session);
             Transaction transaction = session.beginTransaction();
             try {
-                LOGGER.info("Event to save : {}", event.toString());
+                LOG.info("Event to save : {}", event.toString());
                 // Archive users based on last login date
                 ((EventWeatherDAO) eventDAO).update(event);
                 transaction.commit();
@@ -58,13 +57,13 @@ public class EventWeatherAPICallerServiceImpl extends APICallerServiceImpl {
                 throw new RuntimeException(e);
             }
         } catch (IOException ex) {
-            Logger.getLogger(EventWeatherAPICallerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error("Unable to parse the result for the weather event : error: {}", ex.getMessage());
         } finally {
             session.close();
             ManagedSessionContext.unbind(sessionFactory);
         }
 
     }
-;
+
 
 }

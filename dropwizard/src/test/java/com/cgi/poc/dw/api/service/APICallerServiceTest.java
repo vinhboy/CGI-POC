@@ -35,7 +35,11 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import com.cgi.poc.dw.api.service.impl.EventFloodAPICallerServiceImpl;
+import com.cgi.poc.dw.api.service.impl.EventWeatherAPICallerServiceImpl;
 import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
+import com.cgi.poc.dw.dao.EventFloodDAO;
+import com.cgi.poc.dw.dao.EventWeatherDAO;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.util.Duration;
@@ -53,7 +57,9 @@ public class APICallerServiceTest extends IntegrationTest {
 	private Client client;
 
 	private SessionFactory sessionFactory;
-	private FireEventDAO eventDAO;
+	private FireEventDAO fireEventDAO;
+	private EventWeatherDAO eventWeatherDAO;
+	private EventFloodDAO eventFloodDAO;
 	private Validator validator;
 
 	@Before
@@ -73,7 +79,9 @@ public class APICallerServiceTest extends IntegrationTest {
 		sessionFactory.getCurrentSession().beginTransaction();
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
-		eventDAO = new FireEventDAO(sessionFactory, validator);
+		fireEventDAO = new FireEventDAO(sessionFactory, validator);
+		eventWeatherDAO = new EventWeatherDAO(sessionFactory, validator);
+		eventFloodDAO = new EventFloodDAO(sessionFactory, validator);
 	}
 
 	@After
@@ -89,7 +97,7 @@ public class APICallerServiceTest extends IntegrationTest {
 	public void callServiceAPI_Success() {
 
 		FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl(
-				"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query", client, eventDAO,
+				"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, fireEventDAO,
 				sessionFactory);
 		apiCallerService.callServiceAPI();
 
@@ -107,7 +115,7 @@ public class APICallerServiceTest extends IntegrationTest {
 	@Test
 	public void callServiceAPI_ParseException() {
 
-		FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl("http://www.google.com", client, eventDAO,
+		FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl("http://www.google.com", client, fireEventDAO,
 				sessionFactory);
 		apiCallerService.callServiceAPI();
 
@@ -119,13 +127,13 @@ public class APICallerServiceTest extends IntegrationTest {
 		assertThat(loggingEvent.getLevel(), equalTo(Level.ERROR));
 		// Check the message being logged is correct
 		assertThat(loggingEvent.getFormattedMessage(), containsString(
-				"Unable to parse the result for the url event : http://www.google.com/?f=json&where=1%3D1&outFields=*&outSR=4326 error"));
+				"Unable to parse the result for the url event : http://www.google.com error"));
 	}
 
 	@Test
 	public void callServiceAPI_IOException() {
 		FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl(
-				"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query", client, eventDAO,
+				"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, fireEventDAO,
 				sessionFactory);
 		apiCallerService.callServiceAPI();
 	}
@@ -134,7 +142,7 @@ public class APICallerServiceTest extends IntegrationTest {
 	public void callServiceAPI_DAOException() {
 		try {
 			FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl(
-					"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query", client, null,
+					"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, null,
 					sessionFactory);
 			apiCallerService.callServiceAPI();
 			fail("Expected ConflictException");
@@ -147,7 +155,7 @@ public class APICallerServiceTest extends IntegrationTest {
 	public void callServiceAPI_NullPointerException() {
 		try {
 			FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl(
-					"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query", client, eventDAO,
+					"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, fireEventDAO,
 					null);
 			apiCallerService.callServiceAPI();
 			fail("Expected ConflictException");
@@ -155,4 +163,155 @@ public class APICallerServiceTest extends IntegrationTest {
 			LOGGER.info("the null pointer exception catch : {}", e.getMessage());
 		}
 	}
+	@Test
+	public void callWeatherServiceAPI_Success() {
+
+		EventWeatherAPICallerServiceImpl apiCallerService = new EventWeatherAPICallerServiceImpl(
+				"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", 
+                        client, eventWeatherDAO, sessionFactory);
+		apiCallerService.callServiceAPI();
+
+		// Now verify our logging interactions
+		verify(mockAppender, atLeast(1)).doAppend(logCaptor.capture());
+		// Having a genricised captor means we don't need to cast
+		final LoggingEvent loggingEvent = logCaptor.getValue();
+		// Check log level is correct
+		assertThat(loggingEvent.getLevel(), equalTo(Level.INFO));
+		// Check the message being logged is correct
+		assertThat(loggingEvent.getFormattedMessage(), containsString("Event to save"));
+
+	}
+
+	@Test
+	public void callWeatherServiceAPI_ParseException() {
+
+		EventWeatherAPICallerServiceImpl apiCallerService = new EventWeatherAPICallerServiceImpl("http://www.google.com", client, eventWeatherDAO,
+				sessionFactory);
+		apiCallerService.callServiceAPI();
+
+		// Now verify our logging interactions
+		verify(mockAppender, atLeast(1)).doAppend(logCaptor.capture());
+		// Having a genricised captor means we don't need to cast
+		final LoggingEvent loggingEvent = logCaptor.getValue();
+		// Check log level is correct
+		assertThat(loggingEvent.getLevel(), equalTo(Level.ERROR));
+		// Check the message being logged is correct
+		assertThat(loggingEvent.getFormattedMessage(), containsString(
+				"Unable to parse the result for the url event : http://www.google.com error"));
+	}
+
+	@Test
+	public void callWeatherServiceAPI_IOException() {
+		EventWeatherAPICallerServiceImpl apiCallerService = new EventWeatherAPICallerServiceImpl(
+				"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, eventWeatherDAO,
+				sessionFactory);
+		apiCallerService.callServiceAPI();
+	}
+
+	@Test
+	public void callWeatherServiceAPI_DAOException() {
+		try {
+			EventWeatherAPICallerServiceImpl apiCallerService = new EventWeatherAPICallerServiceImpl(
+					"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, null,
+					sessionFactory);
+			apiCallerService.callServiceAPI();
+			fail("Expected ConflictException");
+		} catch (RuntimeException e) {
+			LOGGER.info("the runtime exception catch : {}", e.getMessage());
+		}
+	}
+
+	@Test
+	public void callWeatherServiceAPI_NullPointerException() {
+		try {
+			EventWeatherAPICallerServiceImpl apiCallerService = new EventWeatherAPICallerServiceImpl(
+					"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, eventWeatherDAO,
+					null);
+			apiCallerService.callServiceAPI();
+			fail("Expected ConflictException");
+		} catch (NullPointerException e) {
+			LOGGER.info("the null pointer exception catch : {}", e.getMessage());
+		}
+	}        
+        
+	@Test
+	public void callFloodServiceAPI_Success() {
+
+		EventFloodAPICallerServiceImpl apiCallerService = new EventFloodAPICallerServiceImpl(
+				"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27action%27%20OR%20status%20%3D%20%27minor%27%20OR%20status%20%3D%20%27major%27%20OR%20status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326", 
+                        client, eventFloodDAO, sessionFactory);
+		apiCallerService.callServiceAPI();
+
+		// Now verify our logging interactions
+		verify(mockAppender, atLeast(1)).doAppend(logCaptor.capture());
+		// Having a genricised captor means we don't need to cast
+		final LoggingEvent loggingEvent = logCaptor.getValue();
+		// Check log level is correct
+		assertThat(loggingEvent.getLevel(), equalTo(Level.INFO));
+		// Check the message being logged is correct
+		assertThat(loggingEvent.getFormattedMessage(), containsString("Event to save"));
+
+	}
+
+	@Test
+	public void callFloodServiceAPI_ParseException() {
+
+		EventFloodAPICallerServiceImpl apiCallerService = new EventFloodAPICallerServiceImpl("http://www.google.com", client, eventFloodDAO,
+				sessionFactory);
+		apiCallerService.callServiceAPI();
+
+		// Now verify our logging interactions
+		verify(mockAppender, atLeast(1)).doAppend(logCaptor.capture());
+		// Having a genricised captor means we don't need to cast
+		final LoggingEvent loggingEvent = logCaptor.getValue();
+		// Check log level is correct
+		assertThat(loggingEvent.getLevel(), equalTo(Level.ERROR));
+		// Check the message being logged is correct
+		assertThat(loggingEvent.getFormattedMessage(), containsString(
+				"Unable to parse the result for the url event : http://www.google.com error"));
+	}
+
+	@Test
+	public void callFloodServiceAPI_IOException() {
+		EventFloodAPICallerServiceImpl apiCallerService = new EventFloodAPICallerServiceImpl(
+				"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27action%27%20OR%20status%20%3D%20%27minor%27%20OR%20status%20%3D%20%27major%27%20OR%20status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326", client, eventFloodDAO,
+				sessionFactory);
+		apiCallerService.callServiceAPI();
+	}
+
+	@Test
+	public void callFloodServiceAPI_DAOException() {
+		try {
+			EventFloodAPICallerServiceImpl apiCallerService = new EventFloodAPICallerServiceImpl(
+					"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27action%27%20OR%20status%20%3D%20%27minor%27%20OR%20status%20%3D%20%27major%27%20OR%20status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326", client, null,
+					sessionFactory);
+			apiCallerService.callServiceAPI();
+			fail("Expected ConflictException");
+		} catch (RuntimeException e) {
+			LOGGER.info("the runtime exception catch : {}", e.getMessage());
+		}
+	}
+
+	@Test
+	public void callFloodServiceAPI_NullPointerException() {
+		try {
+			EventFloodAPICallerServiceImpl apiCallerService = new EventFloodAPICallerServiceImpl(
+					"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27action%27%20OR%20status%20%3D%20%27minor%27%20OR%20status%20%3D%20%27major%27%20OR%20status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326", client, eventFloodDAO,
+					null);
+			apiCallerService.callServiceAPI();
+			fail("Expected ConflictException");
+		} catch (NullPointerException e) {
+			LOGGER.info("the null pointer exception catch : {}", e.getMessage());
+		}
+	}        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 }

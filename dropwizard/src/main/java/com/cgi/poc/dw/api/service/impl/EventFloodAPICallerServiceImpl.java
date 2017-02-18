@@ -11,22 +11,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
  import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.context.internal.ManagedSessionContext;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author dawna.floyd
  */
 public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EventFloodAPICallerServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EventFloodAPICallerServiceImpl.class);
 
     private EventFloodDAO eventDAO;
 
@@ -48,7 +46,7 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
             ManagedSessionContext.bind(session);
             Transaction transaction = session.beginTransaction();
             try {
-                LOGGER.info("Event to save : {}", event.toString());
+                LOG.info("Event to save : {}", event.toString());
                 // Archive users based on last login date
                 ((EventFloodDAO) eventDAO).save(event);
                 transaction.commit();
@@ -57,13 +55,13 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
                 throw new RuntimeException(e);
             }
         } catch (IOException ex) {
-            Logger.getLogger(EventFloodAPICallerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error("Unable to parse the result for the flood event : error: {}", ex.getMessage());
         } finally {
             session.close();
             ManagedSessionContext.unbind(sessionFactory);
         }
 
     }
-;
+
 
 }

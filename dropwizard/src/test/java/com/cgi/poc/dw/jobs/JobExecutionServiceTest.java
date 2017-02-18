@@ -24,7 +24,7 @@ public class JobExecutionServiceTest extends IntegrationTest{
 		  assertNotNull(jobsConfiguration);
 		  assertEquals(jobsConfiguration.getThread(), 2);
 		  assertTrue(jobsConfiguration.getJobs().size() > 0);
-		  assertEquals(jobsConfiguration.getJobs().get(0).getEventURL(), "https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query");
+		  assertEquals(jobsConfiguration.getJobs().get(0).getEventURL(), "https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326");
 		  assertEquals(jobsConfiguration.getJobs().get(0).getDelay(), 10);
 		  assertEquals(jobsConfiguration.getJobs().get(0).getPeriod(), 10);
 		  assertEquals(jobsConfiguration.getJobs().get(0).getTimeUnit(), "SECONDS");

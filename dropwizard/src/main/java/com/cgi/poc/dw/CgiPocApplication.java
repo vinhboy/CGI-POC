@@ -188,10 +188,10 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     // authentication
     registerAuthentication(environment, injector, keys);
 
-		/**
-		 * Adding Job Scheduler
-		 */
-		environment.lifecycle().manage(injector.getInstance(JobExecutionService.class));
+    /**
+     * Adding Job Scheduler
+     */
+    environment.lifecycle().manage(injector.getInstance(JobExecutionService.class));
     LOG.debug("Application started");
   }
 
@@ -266,8 +266,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         // keys
         bind(Keys.class).toInstance(keys);
 
-				// scheduler
-        //final Client client2 = new JerseyClientBuilder(env).build("EventsRESTClient");
+	// scheduler
         bind(JobsConfiguration.class).toInstance(conf.getJobsConfiguration());
 
   
@@ -275,11 +274,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bindConstant().annotatedWith(Names.named("eventUrl")).to(200);
         bind(Validator.class).toInstance(env.getValidator());
         bind(JobFactory.class).to(JobFactoryImpl.class).asEagerSingleton();
-         bind(APIServiceFactory.class).to(APIServiceFactoryImpl.class).asEagerSingleton();
-
-
-//        bind(APICallerService.class).to(FireEventAPICallerServiceImpl.class).asEagerSingleton();
-//        bind(APICallerService.class).to(EventWeatherAPICallerServiceImpl.class).asEagerSingleton();
+        bind(APIServiceFactory.class).to(APIServiceFactoryImpl.class).asEagerSingleton();
         bind(JwtReaderService.class).to(JwtReaderServiceImpl.class).asEagerSingleton();
         bind(JwtBuilderService.class).to(JwtBuilderServiceImpl.class).asEagerSingleton();
         bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
@@ -294,18 +289,6 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(EventWeatherAPICallerServiceImpl.class);        
         bind(APICallerService.class).annotatedWith(Names.named("fireService")).to(FireEventAPICallerServiceImpl.class);
         bind(APICallerService.class).annotatedWith(Names.named("weatherService")).to(FireEventAPICallerServiceImpl.class);
- 
-     
-        /*
-        bind(FireEventAPICallerServiceImpl.class);
-        bind(EventWeatherAPICallerServiceImpl.class);
-        bind(EventFloodDAO.class);
-        bind(EventHurricaneDAO.class);
-        bind(EventTsunamiDAO.class);
-        bind(EventVolcanoDAO.class);
-        bind(EventEarthquakeDAO.class);
-  */
-
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)
             .using(conf.getJerseyClientConfiguration())

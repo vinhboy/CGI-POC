@@ -33,7 +33,7 @@ import java.util.logging.Level;
  */
 public abstract class APICallerServiceImpl implements APICallerService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(APICallerServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(APICallerServiceImpl.class);
 
     private Client client;
     private String eventUrl;
@@ -54,11 +54,11 @@ public abstract class APICallerServiceImpl implements APICallerService {
 
         // TODO parameter which event to call
         // parameter to call the right event collector
-        WebTarget webTarget = client.target(eventUrl + "?f=json&where=1%3D1&outFields=*&outSR=4326");
+        WebTarget webTarget = client.target(eventUrl );
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         Response response = invocationBuilder.get();
 
-        LOGGER.debug("json : " + response.getEntity());
+        LOG.debug("json : " + response.getEntity());
 
         // create ObjectMapper instance
         ObjectMapper objectMapper = new ObjectMapper();
@@ -69,7 +69,7 @@ public abstract class APICallerServiceImpl implements APICallerService {
 	    parser.setCodec(objectMapper);
             eventJson = parser.readValueAs(ObjectNode.class);
         } catch (JsonParseException e) {
-            LOGGER.error("Unable to parse the result for the url event : {} error: {}", webTarget.getUri(), e.getMessage());
+            LOG.error("Unable to parse the result for the url event : {} error: {}", webTarget.getUri(), e.getMessage());
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(APICallerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -84,18 +84,13 @@ public abstract class APICallerServiceImpl implements APICallerService {
      * @param featureJson the json string get from the Rest API
      */
     private void parsingEventsResponse(ObjectNode featureJson)   {
-
- 
-            ArrayNode featuresArray = (ArrayNode) featureJson.get("features");
+           ArrayNode featuresArray = (ArrayNode) featureJson.get("features");
             for (int i = 0; i < featuresArray.size(); i++) {
                 JsonNode feature = featuresArray.get(i);
                 JsonNode event1 = feature.get("attributes");
                 JsonNode geoJson = feature.get("geometry");
                 mapAndSave ( event1,geoJson );
-                
-
             }
- 
     }
     abstract void mapAndSave (JsonNode eventJson, JsonNode geoJson);
 }
