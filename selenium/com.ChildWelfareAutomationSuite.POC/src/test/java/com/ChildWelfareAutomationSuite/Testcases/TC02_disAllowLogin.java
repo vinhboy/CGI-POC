@@ -32,8 +32,7 @@ public class TC02_disAllowLogin extends BaseClass {
 	}
 	
 	
-	
-//	//DisAllow Login with Blank Username
+	//	//DisAllow Login with Blank Username
 //	@Test(description = "Enter Blank Username & Verify the Error Mesg")
 //
 //	public void TC02_AllowLogin_2() {

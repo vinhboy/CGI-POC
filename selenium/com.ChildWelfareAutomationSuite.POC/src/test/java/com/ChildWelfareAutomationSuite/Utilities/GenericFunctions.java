@@ -10,7 +10,6 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Reporter;
 
 
-
 public class GenericFunctions {
 
 	public static String CaptureScreenshot(WebDriver driver, String Screenshotname) {

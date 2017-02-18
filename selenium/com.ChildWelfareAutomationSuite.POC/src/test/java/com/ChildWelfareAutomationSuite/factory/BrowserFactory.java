@@ -41,7 +41,7 @@ public class BrowserFactory {
 		// Invoke IE Browser
 		else if (browserName.equalsIgnoreCase("ie")) {
 
-			System.setProperty("webdriver.ie.driver", DataProviderFactory.getConfig().getIEPath());
+			//System.setProperty("webdriver.ie.driver", DataProviderFactory.getConfig().getIEPath());
 			driver = new InternetExplorerDriver();
 		}
 		
