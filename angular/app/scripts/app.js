@@ -41,5 +41,13 @@ cgiWebApp.constant('urls', {
        controller: 'landingController'
     }
     }
-   });
+  }).state('manageProfile', {
+    url: '/manageProfile',
+    views: {
+      'pageContent': {
+        templateUrl: '/views/profile.html',
+        controller: 'ProfileController'
+      }
+    }
+  });
 }]);
