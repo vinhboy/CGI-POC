@@ -21,7 +21,8 @@ describe('ProfileController', function() {
 
     profileController = _$controller_('ProfileController', {
       $scope: $scope,
-      ProfileService: profileService
+      ProfileService: profileService,
+      $state: $state
     });
   }));
 

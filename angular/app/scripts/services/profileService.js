@@ -9,11 +9,19 @@
  * profile service.
  */
 cgiWebApp.service('ProfileService',
-  ['$http', 'urls',
-  function($http, urls) {
+  ['$http', 'urls', '$sessionStorage',
+  function($http, urls, $sessionStorage) {
 
   this.register = function(profile) {
     var endpoint = urls.BASE + '/register';
     return $http.post(endpoint, profile);
+  };
+
+  this.getProfile = function() {
+    var authToken = $sessionStorage.get('jwt');
+    var endpoint = urls.BASE + '/getProfile';
+    return $http.get(endpoint, {
+      headers: { 'Authorization': 'Bearer ' + authToken }
+    });
   };
 }]);
