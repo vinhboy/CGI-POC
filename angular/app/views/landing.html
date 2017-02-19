@@ -26,8 +26,8 @@
           </div>
           <div class="usa-width-two-thirds"  >
              <h5 class="usa-heading-alt">{{item.type}}</h5>
-             <p>{{item.date |  date:'MM-dd-yyyy  hh:mm:ss a'}}</p>
-             <p><span ng-repeat="z in item.zipcodes ">{{z}},</span></p>
+             <span>{{item.date |  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
+             <span><span ng-repeat="z in item.zipcodes ">{{z}}{{$last ? '' : ', '}}</span></span>
           </div>
           <div class="usa-width-one-twelfth"  >
                <img ng-click="loadEventDetails()" class="" src="/uswds-0.14.0/img/alerts/info.png" alt="Logo image" />
