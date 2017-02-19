@@ -33,7 +33,7 @@ public class BaseServiceImpl {
     if (constraintViolations.size() > 0) {
       Set<ConstraintViolation<?>> propagatedViolations
           = new HashSet<ConstraintViolation<?>>(constraintViolations.size());
-      Set<String> classNames = new HashSet<String>();
+      Set<String> classNames = new HashSet<>();
       for (ConstraintViolation<?> violation : constraintViolations) {
         propagatedViolations.add(violation);
         classNames.add(violation.getLeafBean().getClass().getName());

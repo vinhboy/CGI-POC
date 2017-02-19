@@ -5,7 +5,7 @@ import com.cgi.poc.dw.auth.model.Keys;
 import java.security.NoSuchAlgorithmException;
 import org.jose4j.keys.HmacKey;
 
-public class KeyBuilderServiceImpl implements KeyBuilderService {
+public class KeyBuilderServiceImpl {
 
   public Keys createKeys(CgiPocConfiguration configuration) throws NoSuchAlgorithmException {
     Keys keys = new Keys();
