@@ -71,47 +71,17 @@
             compare-to="profile.password" ng-required="isNew()" class="profile-form-input" />
         </div>
 
-        <div ng-class="{ 'usa-input-error': profileForm.phoneAreaCode.$touched &&
-          profileForm.phoneCentralOfficeCode.$touched &&
-          profileForm.phoneLineNumber.$touched && (
-            profileForm.phoneAreaCode.$invalid ||
-            profileForm.phoneCentralOfficeCode.$invalid ||
-            profileForm.phoneLineNumber.$invalid
-        ) }" class="usa-form-group">
-          <label for="phoneAreaCode" class="profile-label"
+        <div ng-class="{ 'usa-input-error': profileForm.phone.$touched && profileForm.phone.$invalid }">
+          <label for="phone" class="profile-label"
             translate="REGISTRATION.LABEL.PHONE"></label>
-          <div ng-messages="profileForm.phoneAreaCode.$error" ng-if="profileForm.phoneAreaCode.$touched &&
-            profileForm.phoneCentralOfficeCode.$touched &&
-            profileForm.phoneLineNumber.$touched">
+          <div ng-messages="profileForm.phone.$error" ng-if="profileForm.phone.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
               translate="REGISTRATION.MESSAGE.INVALID.PHONENUMBERREQUIRED"></span>
             <span ng-message="pattern" class="usa-input-error-message" role="alert"
               translate="REGISTRATION.MESSAGE.INVALID.PHONENUMBERFORMATINVALID"></span>
           </div>
-          <div ng-messages="profileForm.phoneCentralOfficeCode.$error" ng-if="profileForm.phoneAreaCode.$touched &&
-            profileForm.phoneCentralOfficeCode.$touched &&
-            profileForm.phoneLineNumber.$touched">
-            <span ng-message="required" class="usa-input-error-message" role="alert"
-              translate="REGISTRATION.MESSAGE.INVALID.PHONENUMBERREQUIRED"></span>
-            <span ng-message="pattern" class="usa-input-error-message" role="alert"
-              translate="REGISTRATION.MESSAGE.INVALID.PHONENUMBERFORMATINVALID"></span>
-          </div>
-          <div ng-messages="profileForm.phoneLineNumber.$error" ng-if="profileForm.phoneAreaCode.$touched &&
-            profileForm.phoneCentralOfficeCode.$touched &&
-            profileForm.phoneLineNumber.$touched">
-            <span ng-message="required" class="usa-input-error-message" role="alert"
-              translate="REGISTRATION.MESSAGE.INVALID.PHONENUMBERREQUIRED"></span>
-            <span ng-message="pattern" class="usa-input-error-message" role="alert"
-              translate="REGISTRATION.MESSAGE.INVALID.PHONENUMBERFORMATINVALID"></span>
-          </div>
-          <input id="phoneAreaCode" name="phoneAreaCode" type="text" ng-model="profile.phoneNumber.areaCode"
-            class="profile-form-input phone usa-input-inline" ng-pattern="regexPhoneAreaCode" maxlength="3"
-            ng-required="profile.allowNotificationsByLocation" />
-          <input id="phoneCentralOfficeCode" name="phoneCentralOfficeCode" type="text" ng-model="profile.phoneNumber.centralOfficeCode"
-            class="profile-form-input phone usa-input-inline" ng-pattern="regexPhoneCentralOfficeCode" maxlength="3"
-            ng-required="profile.allowNotificationsByLocation" />
-          <input id="phoneLineNumber" name="phoneLineNumber" type="text" ng-model="profile.phoneNumber.lineNumber"
-            class="profile-form-input phoneLong usa-input-inline" ng-pattern="regexPhoneLineNumber" maxlength="4"
+          <input id="phone" name="phone" type="text" ng-model="profile.phone"
+            class="profile-form-input" placeholder="XXX-XXX-XXXX" ng-pattern="regexPhone"
             ng-required="profile.allowNotificationsByLocation" />
         </div>
 
