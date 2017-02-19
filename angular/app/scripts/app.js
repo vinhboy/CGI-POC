@@ -29,12 +29,12 @@ cgiWebApp.constant('urls', {
     url: '/register',
     views:{
       'pageContent':{
-        templateUrl: '/views/register.html',
+        templateUrl: '/views/profile.html',
         controller: 'ProfileController'
     }
     }
   }).state('landing', {
-       url : '/landing', 
+       url : '/landing',
     views:{
       'pageContent':{
        templateUrl: 'views/landing.html',
