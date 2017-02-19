@@ -9,7 +9,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import com.cgi.poc.dw.auth.model.Role;
-import com.cgi.poc.dw.dao.AdminDAO;
+import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.NotificationType;
@@ -39,7 +39,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class AdminServiceUnitTest {
 
   @Mock
-  private AdminDAO adminDAO;
+  private EventNotificationDAO adminDAO;
 
   @Spy
   private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -78,7 +78,7 @@ public class AdminServiceUnitTest {
     eventNotificationZipcodes.add(eventNotificationZipcode2);
 
     eventNotification = new EventNotification();
-    eventNotification.setIsEmergency("y");
+    eventNotification.setType("ADMIN_E");
     eventNotification.setDescription("some description");
     eventNotification.setEventNotificationZipcodes(eventNotificationZipcodes);
   }
@@ -122,7 +122,7 @@ public class AdminServiceUnitTest {
   @Test
   public void publishNotification_InvalidIsEmergencyFlag() {
 
-    eventNotification.setIsEmergency("Yes");
+    eventNotification.setType("ADMIN_E");
     try {
       underTest.publishNotification(user, eventNotification);
       fail("Expected an exception to be thrown");

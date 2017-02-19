@@ -43,7 +43,7 @@ public class AdminResourceIntegrationTest extends IntegrationTest {
     eventNotificationZipcodes.add(eventNotificationZipcode2);
 
     eventNotification = new EventNotification();
-    eventNotification.setIsEmergency("y");
+    eventNotification.setType("ADMIN_E");
     eventNotification.setDescription("some description");
     eventNotification.setEventNotificationZipcodes(eventNotificationZipcodes);
   }
@@ -141,7 +141,7 @@ public class AdminResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidIsEmergencyFlag() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    eventNotification.setIsEmergency("yes");
+    eventNotification.setType("ADMIN_E");
     Client client = new JerseyClientBuilder().build();
     Response response = client.
         target(String.format(url, RULE.getLocalPort())).

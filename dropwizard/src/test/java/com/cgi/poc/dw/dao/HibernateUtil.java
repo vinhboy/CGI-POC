@@ -11,6 +11,7 @@ import com.cgi.poc.dw.dao.model.EventFlood;
 import com.cgi.poc.dw.dao.model.EventTsunami;
 import com.cgi.poc.dw.dao.model.EventVolcano;
 import com.cgi.poc.dw.dao.model.EventHurricane;
+import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventWeather;
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import io.dropwizard.testing.ResourceHelpers;
@@ -71,6 +72,7 @@ public class HibernateUtil {
             configuration.addAnnotatedClass(EventHurricane.class);
             configuration.addAnnotatedClass(EventTsunami.class);
             configuration.addAnnotatedClass(EventVolcano.class);
+            configuration.addAnnotatedClass(EventNotification.class);
 
             sessionFactory = configuration.buildSessionFactory();
             openSession = sessionFactory.openSession();

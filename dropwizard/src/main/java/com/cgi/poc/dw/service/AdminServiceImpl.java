@@ -1,6 +1,6 @@
 package com.cgi.poc.dw.service;
 
-import com.cgi.poc.dw.dao.AdminDAO;
+import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
@@ -19,10 +19,10 @@ public class AdminServiceImpl extends BaseServiceImpl implements AdminService {
 
   private final static Logger LOG = LoggerFactory.getLogger(AdminServiceImpl.class);
 
-  private AdminDAO adminDAO;
+  private EventNotificationDAO adminDAO;
 
   @Inject
-  public AdminServiceImpl(AdminDAO adminDAO, Validator validator) {
+  public AdminServiceImpl(EventNotificationDAO adminDAO, Validator validator) {
     super(validator);
     this.adminDAO = adminDAO;
   }
