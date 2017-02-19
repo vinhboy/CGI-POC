@@ -46,19 +46,20 @@
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.EMAIL' | translate }}" />
         </div>
 
-        <div ng-class="{ 'usa-input-error': profileForm.password.$touched && profileForm.password.$invalid }">
-          <label for="password" class="usa-input-required profile-label"
+        <div ng-class="{ 'usa-input-error': profileForm.password.$touched && !isPasswordValid() ||
+          (profileForm.password.$touched && profileForm.passwordConfirmation.$touched && profileForm.password !== profileForm.passwordConfirmation) }">
+          <label for="password" ng-class="{ 'usa-input-required' : isNew() }" class="profile-label"
             translate="REGISTRATION.LABEL.PASSWORD"></label>
-          <div ng-messages="profileForm.password.$error" ng-if="profileForm.password.$touched">
+          <div ng-messages="profileForm.password.$error" ng-if="profileForm.password.$touched && !isPasswordValid()">
             <span ng-message="required" class="usa-input-error-message" role="alert"
               translate="REGISTRATION.MESSAGE.INVALID.PASSWORDREQUIRED"></span>
             <span ng-message="pattern" class="usa-input-error-message" role="alert"
               translate="REGISTRATION.MESSAGE.INVALID.PASSWORDINVALID"></span>
           </div>
-          <input id="password" name="password" type="password" ng-model="profile.password" ng-required="true" ng-pattern="regexPassword"
+          <input id="password" name="password" type="password" ng-model="profile.password" ng-required="isNew()" ng-pattern="regexPassword"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.PASSWORD' | translate }}" />
 
-          <label for="passwordConfirmation" class="usa-input-required profile-label"
+          <label for="passwordConfirmation" ng-class="{ 'usa-input-required' : isNew() }" class="profile-label"
             translate="REGISTRATION.LABEL.PASSWORD.CONFIRMATION"></label>
           <div ng-messages="profileForm.passwordConfirmation.$error" ng-if="profileForm.passwordConfirmation.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
@@ -67,7 +68,7 @@
               translate="REGISTRATION.MESSAGE.INVALID.PASSWORDNOMATCH"></span>
           </div>
           <input id="passwordConfirmation" name="passwordConfirmation" type="password" ng-model="profile.passwordConfirmation"
-            compare-to="profile.password" ng-required="true" class="profile-form-input" />
+            compare-to="profile.password" ng-required="isNew()" class="profile-form-input" />
         </div>
 
         <div ng-class="{ 'usa-input-error': profileForm.phoneAreaCode.$touched &&
