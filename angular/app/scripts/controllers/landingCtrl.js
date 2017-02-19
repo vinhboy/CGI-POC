@@ -16,6 +16,14 @@ cgiWebApp.controller('landingController',
   ['$scope','$filter','$timeout','EventNotificationService','$window',
   function ($scope,$filter,$timeout,EventNotificationService,$window ) {
   $scope.apiErrors = [];
+      $scope.sourceEvent1 = {type: 'Fire', geometry: { 'x': -10677457.159137897, 'y': 4106537.9944933983 }};
+      $scope.sourceEvent2 = {type: 'Flood', geometry: { 'x':-79.910832999842967, 'y': 37.266943999256185 }};
+      $scope.embeddedLine = 'www.google.com/maps/search/';
+      $scope.embeddedLine = $scope.embeddedLine + $scope.sourceEvent1.geometry.y;
+      $scope.embeddedLine = $scope.embeddedLine +', ';
+      $scope.embeddedLine = $scope.embeddedLine + $scope.sourceEvent1.geometry.x;
+      $scope.embeddedLine = $scope.embeddedLine +'&hl=es;z=14&output=embed';
+
 
     $scope.eventTypes = [
         { name: 'All', id: undefined},
@@ -77,6 +85,7 @@ cgiWebApp.controller('landingController',
        day60Date.setDate(todaysDate.getDate() - 60);
        day90Date.setDate(todaysDate.getDate() - 90);
 
+        
       $scope.model.notifications.push({type: 'Weather', date: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111});
       $scope.model.notifications.push({type: 'Flood', date: day60Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
       $scope.model.notifications.push({type: 'Fire', date: day30Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
@@ -87,8 +96,11 @@ cgiWebApp.controller('landingController',
       $scope.model.notifications.push({type: 'Weather', date: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
       $scope.model.notifications.push({type: 'Flood', date: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
       $scope.model.notifications.push({type: 'Flood', date: day60Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-  
-    }
+     
+
+      
+        
+    };
 
     $scope.initLoad();
 
