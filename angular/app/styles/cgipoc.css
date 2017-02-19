@@ -1,6 +1,13 @@
 .usa-grid {
   background: #edf4f7; }
 
+.event{
+    border: 5px;
+    border-color: black;
+    border-style: double;
+    padding:0px!important;
+}
+
 .centeredForm {
   margin-top: 10%; }
 
@@ -43,6 +50,7 @@
 .contentZone{
     padding-bottom: 10em;
 }
+
 .footerZone {
   position: fixed;
   width: 100%;

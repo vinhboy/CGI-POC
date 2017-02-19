@@ -13,8 +13,9 @@
 'use strict';
 
 cgiWebApp.controller('landingController',
-  ['$scope','$filter','$timeout',
-  function ($scope,$filter,$timeout ) {
+  ['$scope','$filter','$timeout','EventNotificationService','$window',
+  function ($scope,$filter,$timeout,EventNotificationService,$window ) {
+  $scope.apiErrors = [];
 
     $scope.eventTypes = [
         { name: 'All', id: undefined},
@@ -32,15 +33,40 @@ cgiWebApp.controller('landingController',
     };
     $scope.eventTypeFilter=undefined;
     $scope.eventTimeFilter='1';
-     $scope.changeFilters = function(){
+    $scope.changeFilters = function(){
         $scope.model.filterredNotifications = angular.copy( $scope.model.notifications); 
         $scope.model.filterredNotifications  =  $filter('filter')($scope.model.filterredNotifications, {type: $scope.eventTypeFilter}, true);
         $scope.model.filterredNotifications  =   $filter('eventTime')([$scope.model.filterredNotifications, $scope.eventTimeFilter]);
     };
 
-    //TODO confirm the type of user
-
+ 
     $scope.initLoad = function(){
+        EventNotificationService.notifications().then(function(response) {
+            if (response.status === 200) {
+                    $scope.model.notifications = response;
+                    $scope.changeFilters();
+            }
+       }).catch(function(response) {
+                    // omce implemented...this changes to report an error
+                    $scope.fakeData();
+                    $scope.changeFilters();
+       });
+       
+        
+        
+    };
+    
+    $scope.loadEventDetails = function(){
+                    $window.alert("LOAD Events");
+            
+    };
+    $scope.loadMap = function(){
+                    $window.alert("LOAD MAP TBD");
+
+    };
+
+    
+    $scope.fakeData = function(){
       //http request api
       //then, error handle
        var todaysDate = new Date();
@@ -61,10 +87,8 @@ cgiWebApp.controller('landingController',
       $scope.model.notifications.push({type: 'Weather', date: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
       $scope.model.notifications.push({type: 'Flood', date: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
       $scope.model.notifications.push({type: 'Flood', date: day60Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-       $scope.changeFilters();
-
-
-    };
+  
+    }
 
     $scope.initLoad();
 

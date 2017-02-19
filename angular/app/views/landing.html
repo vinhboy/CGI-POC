@@ -13,29 +13,30 @@
 
               </select>
           </div>
-
+          <div class="usa-width-one-third"  >
+           <input id="zipSearch" name="zipSearch" ng-model="zipSearch"
+                       placeholder="search by zip code" maxlength="30" class="form-control " ng-change="changeFilters()" >
+          </div>
       </div>
        
       <div class="usa-width-one-third scrollable-section" >
+      <div class="event usa-grid" ng-repeat="item in model.filterredNotifications track by $index">
+          <div class="usa-width-one-twelfth"  >
+               <img class="" src="/images/logo_mycalerts_header.png" alt="Logo image" />
+          </div>
+          <div class="usa-width-two-thirds"  >
+             <h5 class="usa-heading-alt">{{item.type}}</h5>
+             <p>{{item.date |  date:'MM-dd-yyyy  hh:mm:ss a'}}</p>
+             <p><span ng-repeat="z in item.zipcodes ">{{z}},</span></p>
+          </div>
+          <div class="usa-width-one-twelfth"  >
+               <img ng-click="loadEventDetails()" class="" src="/uswds-0.14.0/img/alerts/info.png" alt="Logo image" />
+               <img ng-click="loadMap()" class="" src="/uswds-0.14.0/img/arrow-right.png" alt="Logo image" />
+          </div>
+      
+      </div>
 
-      <table class="usa-table-borderless">
-
-    <tbody>
-        
-      <tr ng-repeat="item in model.filterredNotifications track by $index">
-
-        <td>
-          {{item.type}}
-          <p>{{item.description}}</p>
-          <p> <span ng-repeat="z in item.zipcodes ">{{z}}&nbsp;</span> </p>
-        </td>
-
-      </tr>
-
-    </tbody>
-  </table>
-
-    </div>
+     </div>
     <div class="usa-width-one-half">
     <p>
       <img  src="https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=1200x800&maptype=roadmap

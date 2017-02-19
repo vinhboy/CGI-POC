@@ -47,7 +47,7 @@ describe('loginController', function() {
       deferred.resolve({ status: 200, data: { autToken: 'token' } });
       $scope.$apply();
 
-      expect($state.go).toHaveBeenCalledWith('landing');
+      expect($state.go).toHaveBeenCalledWith('landing', Object({ role: undefined }) );
     });
 
     it('should save the JWT auth token', function() {
