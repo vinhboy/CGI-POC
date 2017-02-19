@@ -18,35 +18,35 @@ cgiWebApp.constant('urls', {
   $urlRouterProvider.otherwise('login');
 
   $stateProvider.state('login', {
-    url: '/login',
-    views: {
-      'pageContent': {
+    url : '/login',
+    views:{
+      'pageContent':{
         templateUrl: '/views/login.html',
         controller: 'loginController'
-      }
+  }
     }
   }).state('register', {
     url: '/register',
-    views: {
-      'pageContent': {
-        templateUrl: '/views/register.html',
+    views:{
+      'pageContent':{
+        templateUrl: '/views/profile.html',
         controller: 'ProfileController'
-      }
+    }
     }
   }).state('landing', {
-    url: '/landing',
+       url : '/landing',
+    views:{
+      'pageContent':{
+       templateUrl: 'views/landing.html',
+       controller: 'landingController'
+    }
+    }
+  }).state('manageProfile', {
+    url: '/manageProfile',
     views: {
-      'header': {
-        templateUrl: '/views/userHeader.html',
-        controller: 'LandingController'
-      },
       'pageContent': {
-        templateUrl: '/views/landing.html',
-        controller: 'LandingController'
-      },
-      'footer': {
-        templateUrl: '/views/userFooter.html',
-        controller: 'LandingController'
+        templateUrl: '/views/profile.html',
+        controller: 'ProfileController'
       }
     }
   });
