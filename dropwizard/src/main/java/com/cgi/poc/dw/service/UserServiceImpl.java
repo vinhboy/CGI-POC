@@ -24,10 +24,10 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UserRegistrationServiceImpl extends BaseServiceImpl implements
-    UserRegistrationService {
+public class UserServiceImpl extends BaseServiceImpl implements
+    UserService {
 
-  private final static Logger LOG = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
+  private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
   private final UserDao userDao;
 
@@ -46,7 +46,7 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
   
 
   @Inject
-  public UserRegistrationServiceImpl(MapApiConfiguration mapApiConfiguration, UserDao userDao,
+  public UserServiceImpl(MapApiConfiguration mapApiConfiguration, UserDao userDao,
       PasswordHash passwordHash, Validator validator, Client client, EmailService emailService,
       TextMessageService textMessageService) {
     super(validator);
@@ -142,5 +142,21 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
         .replace("REPLACE2", exMsg);
     errRet.addError(generalErrors.getCode(), errorString);
     return errRet;
+  }
+  
+  /**
+   * Set the geo localization coordinates for a user.
+   * 
+   * @param email the user email
+   * @param latitude the geo localization latitude
+   * @param longitude the geo localization longitude
+   * @return response the status response 
+   */
+  public Response setLocalization(User user){
+	  
+	  validate(user, "save", Default.class, PersistValidationGroup.class);			  
+	  userDao.save(user);
+
+	  return Response.ok().build();
   }
 }

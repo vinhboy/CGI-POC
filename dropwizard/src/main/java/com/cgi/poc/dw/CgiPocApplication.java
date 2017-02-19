@@ -21,12 +21,12 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.cgi.poc.dw.api.service.APICallerService;
 import com.cgi.poc.dw.api.service.APIServiceFactory;
 import com.cgi.poc.dw.api.service.impl.APIServiceFactoryImpl;
 import com.cgi.poc.dw.api.service.impl.EventWeatherAPICallerServiceImpl;
 import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
-
 import com.cgi.poc.dw.auth.DBAuthenticator;
 import com.cgi.poc.dw.auth.JwtAuthFilter;
 import com.cgi.poc.dw.auth.UserRoleAuthorizer;
@@ -47,26 +47,20 @@ import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotification;
-
-import com.cgi.poc.dw.rest.resource.LocalizationResource;
-import com.cgi.poc.dw.rest.resource.LoginResource;
-import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
-import com.cgi.poc.dw.service.EmailService;
-import com.cgi.poc.dw.service.EmailServiceImpl;
-import com.cgi.poc.dw.service.LocalizationService;
-import com.cgi.poc.dw.service.LocalizationServiceImpl;
-
 import com.cgi.poc.dw.jobs.JobExecutionService;
 import com.cgi.poc.dw.jobs.JobFactory;
 import com.cgi.poc.dw.jobs.JobFactoryImpl;
-import com.cgi.poc.dw.service.TextMessageService;
-import com.cgi.poc.dw.service.TextMessageServiceImpl;
-import com.cgi.poc.dw.sockets.AlertEndpoint;
-
+import com.cgi.poc.dw.rest.resource.LoginResource;
+import com.cgi.poc.dw.rest.resource.UserResource;
+import com.cgi.poc.dw.service.EmailService;
+import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
-import com.cgi.poc.dw.service.UserRegistrationService;
-import com.cgi.poc.dw.service.UserRegistrationServiceImpl;
+import com.cgi.poc.dw.service.TextMessageService;
+import com.cgi.poc.dw.service.TextMessageServiceImpl;
+import com.cgi.poc.dw.service.UserService;
+import com.cgi.poc.dw.service.UserServiceImpl;
+import com.cgi.poc.dw.sockets.AlertEndpoint;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -77,6 +71,7 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -185,9 +180,8 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     // resource r
     Injector injector = createInjector(configuration, environment, keys);
 
-    registerResource(environment, injector, UserRegistrationResource.class);
+    registerResource(environment, injector, UserResource.class);
     registerResource(environment, injector, LoginResource.class);
-    registerResource(environment, injector, LocalizationResource.class);
     registerResource(environment, injector, CustomConstraintViolationExceptionMapper.class);
     registerResource(environment, injector, CustomSQLConstraintViolationException.class);
 
@@ -287,8 +281,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
-        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
-        bind(LocalizationService.class).to(LocalizationServiceImpl.class).asEagerSingleton();
+        bind(UserService.class).to(UserServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         bind(MailConfiguration.class).toInstance(conf.getMailConfig());
         bind(TwilioApiConfiguration.class).toInstance(conf.getTwilioApiConfiguration());
