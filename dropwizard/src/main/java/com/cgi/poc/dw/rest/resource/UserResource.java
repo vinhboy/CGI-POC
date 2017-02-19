@@ -1,6 +1,7 @@
 package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.rest.model.LocalizationDto;
 import com.cgi.poc.dw.service.UserService;
 import com.cgi.poc.dw.service.UserServiceImpl;
 import com.codahale.metrics.annotation.Timed;
@@ -70,7 +71,11 @@ public class UserResource {
       @ApiImplicitParam(name = "Authorization", required = true, dataType = "string", paramType = "header")
   })
   @Timed(name = "User.save")
-  public Response setLocalization(@Auth User user) {
+  public Response setLocalization(@Auth User user, LocalizationDto localizationDto) {
+	  
+	  user.setGeoLocLatitude(localizationDto.getGeoLocLatitude());
+	  user.setGeoLocLongitude(localizationDto.getGeoLocLongitude());
+	  
       Response response = userService.setLocalization(user);
       if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
                 throw new WebApplicationException(response);
