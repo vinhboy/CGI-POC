@@ -11,15 +11,15 @@ import java.io.Serializable;
  * @author dawna.floyd
  */
 
-public class UserNotificationPK implements Serializable {
+public class UserNotificationTypePK implements Serializable {
 
   protected Long notificationId;
   protected User userId;
 
-  public UserNotificationPK() {
+  public UserNotificationTypePK() {
   }
 
-  public UserNotificationPK(Long notificationId, User userId) {
+  public UserNotificationTypePK(Long notificationId, User userId) {
     this.notificationId = notificationId;
     this.userId = userId;
   }
@@ -34,10 +34,10 @@ public class UserNotificationPK implements Serializable {
   @Override
   public boolean equals(Object object) {
     // TODO: Warning - this method won't work in the case the id fields are not set
-    if (!(object instanceof UserNotificationPK)) {
+    if (!(object instanceof UserNotificationTypePK)) {
       return false;
     }
-    UserNotificationPK other = (UserNotificationPK) object;
+    UserNotificationTypePK other = (UserNotificationTypePK) object;
     if ((this.notificationId == null && other.notificationId != null) || (
         this.notificationId != null && !this.notificationId.equals(other.notificationId))) {
       return false;

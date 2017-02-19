@@ -9,38 +9,46 @@
 'use strict';
 
 cgiWebApp.controller('ProfileController',
-  ['$scope', 'ProfileService', '$state',
-  function ($scope, ProfileService, $state) {
+  ['$scope', 'ProfileService', '$state', '$sessionStorage', 'Authenticator',
+  function ($scope, ProfileService, $state, $sessionStorage, Authenticator) {
 
-  $scope.apiErrors = [];
+  $scope.init = function() {
+    $scope.apiErrors = [];
 
-  $scope.profile = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    passwordConfirmation: '',
-    phoneNumber: {
-      areaCode: '',
-      centralOfficeCode: '',
-      lineNumber: ''
-    },
-    phone: '',
-    zipCode: '',
-    emailNotification: false,
-    pushNotification: false,
-    smsNotification: false,
-    notificationType: [],
-    latitude: 0,
-    longitude: 0,
-    allowNotificationsByLocation: false
+    $scope.profile = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+      phoneNumber: {
+        areaCode: '',
+        centralOfficeCode: '',
+        lineNumber: ''
+      },
+      phone: '',
+      zipCode: '',
+      emailNotification: false,
+      pushNotification: false,
+      smsNotification: false,
+      notificationType: [],
+      latitude: 0,
+      longitude: 0,
+      allowNotificationsByLocation: false
+    };
+
+    if ($scope.isEdit()) {
+      ProfileService.getProfile().then(function(response) {
+        $scope.profile = response.data;
+      });
+    }
+
+    $scope.regexZip = /^\d{5}$/;
+    $scope.regexPassword = /^(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*/;
+    $scope.regexPhoneAreaCode = /^\d{3}$/;
+    $scope.regexPhoneCentralOfficeCode = /^\d{3}$/;
+    $scope.regexPhoneLineNumber = /^\d{4}$/;
   };
-
-  $scope.regexZip = /^\d{5}$/;
-  $scope.regexPassword = /^(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*/;
-  $scope.regexPhoneAreaCode = /^\d{3}$/;
-  $scope.regexPhoneCentralOfficeCode = /^\d{3}$/;
-  $scope.regexPhoneLineNumber = /^\d{4}$/;
 
   $scope.processApiErrors = function(response) {
     $scope.apiErrors = [];
@@ -73,7 +81,7 @@ cgiWebApp.controller('ProfileController',
       $scope.profile.phoneNumber.lineNumber;
   };
 
-  $scope.registerProfile = function() {
+  $scope.process = function(beforeNavFunc){
     $scope.processNotificationTypes();
     $scope.generatePhoneNumber();
 
@@ -89,18 +97,74 @@ cgiWebApp.controller('ProfileController',
       notificationType: $scope.profile.notificationType
     };
 
-    ProfileService.register(toPost).then(function(response) {
-      if (response.status === 200) {
-        $state.go('landing');
+    var toCall;
+    if ($scope.isNew()) {
+      toCall = ProfileService.register;
+    } else {
+      toCall = ProfileService.update;
+      if ($scope.profile.password === '') {
+        toPost.password = undefined;
       }
+    }
+
+    //putting this on scope so I can test
+    $scope.toSend = toPost;
+
+    toCall(toPost).then(function(response) {
+      if (beforeNavFunc) {
+        beforeNavFunc(toPost);
+      }
+      $state.go('landing');
     }).catch(function(response) {
       $scope.processApiErrors(response);
     });
   };
 
+  $scope.registerProfile = function() {
+    var beforeNavFunc = function(toPost) {
+      var credentials = {
+        email: toPost.email,
+        password: toPost.password
+      };
+
+      Authenticator.authenticate(credentials).then(function(response) {
+        if (response.status === 200) {
+          $sessionStorage.put('jwt', response.data.authToken);
+        }
+      }).catch(function(response) {
+        console.log('we should never get this b/c we registered the user first, then turned right around and authenticated with the same info.');
+        console.log(response);
+      });
+    };
+    $scope.process(beforeNavFunc);
+  };
+
+  $scope.updateProfile = function() {
+    $scope.process();
+  };
+
   $scope.someSelected = function() {
     return $scope.profile.emailNotification || $scope.profile.pushNotification || $scope.profile.smsNotification;
   };
+
+  $scope.isNew = function() {
+    return $state.current.name === 'register';
+  };
+
+  $scope.isEdit = function() {
+    return $state.current.name === 'manageProfile';
+  };
+
+  $scope.isPasswordValid = function() {
+    if ($scope.isNew()) {
+      return $scope.profile.password !== '' && $scope.regexPassword.test($scope.profile.password);
+    }
+    else {
+      return $scope.profile.password === '' || $scope.regexPassword.test($scope.profile.password);
+    }
+  };
+
+  $scope.init();
 }]);
 
 cgiWebApp.directive('compareTo', function() {

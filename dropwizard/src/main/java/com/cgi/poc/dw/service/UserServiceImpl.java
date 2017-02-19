@@ -4,7 +4,7 @@ import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
 import com.cgi.poc.dw.util.PersistValidationGroup;
@@ -85,7 +85,7 @@ public class UserServiceImpl extends BaseServiceImpl implements
 
     try {
       validate(user, "save", Default.class, PersistValidationGroup.class);
-      for (UserNotification notificationType : user.getNotificationType()) {
+      for (UserNotificationType notificationType : user.getNotificationType()) {
         notificationType.setUserId(user);
       }
       

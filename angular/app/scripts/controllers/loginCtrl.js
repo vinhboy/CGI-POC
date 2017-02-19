@@ -41,7 +41,7 @@ cgiWebApp.controller('loginController',
     Authenticator.authenticate(credentials).then(function(response) {
       if (response.status === 200) {
         $sessionStorage.put('jwt', response.data.authToken);
-        $state.go('landing');
+        $state.go('landing',{role: response.data.role});
       }
     }).catch(function(){
       $scope.popUp('error', 'LOGIN.MESSAGE.INVALID');

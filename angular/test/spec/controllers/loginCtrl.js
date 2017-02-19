@@ -44,10 +44,11 @@ describe('loginController', function() {
       spyOn($state, 'go');
 
       $scope.submitForm();
-      deferred.resolve({ status: 200, data: { autToken: 'token' } });
+      var response = { status: 200, data: { autToken: 'token', role: 'the role' } };
+      deferred.resolve(response);
       $scope.$apply();
 
-      expect($state.go).toHaveBeenCalledWith('landing');
+      expect($state.go).toHaveBeenCalledWith('landing', { role: response.data.role });
     });
 
     it('should save the JWT auth token', function() {

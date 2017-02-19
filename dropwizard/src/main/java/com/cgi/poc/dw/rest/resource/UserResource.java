@@ -61,7 +61,7 @@ public class UserResource {
   @POST
   @UnitOfWork
   @ApiOperation(value = "User localization",
-      notes = "Allows a user to be localize.")
+      notes = "stores the users current geo location")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "Success"),
       @ApiResponse(code = 500, message = "System Error")

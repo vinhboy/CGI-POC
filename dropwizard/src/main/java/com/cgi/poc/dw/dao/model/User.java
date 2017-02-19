@@ -88,8 +88,7 @@ public class User implements Serializable, Principal {
 
   @Basic(optional = false)
   @NotNull
-  @Size(min = 1, max = 13)
-  @Pattern(regexp = "\\d{5}")
+  @Pattern(regexp = "\\d{5}", message = "is invalid.")
   @Column(name = "zip_code")
   private String zipCode;
   
@@ -124,7 +123,7 @@ public class User implements Serializable, Principal {
   @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, orphanRemoval = true)
   @NotNull
   @Cascade({org.hibernate.annotations.CascadeType.ALL})
-  private Set<UserNotification> notificationType;
+  private Set<UserNotificationType> notificationType;
 
   public User() {
   }
@@ -243,11 +242,11 @@ public class User implements Serializable, Principal {
     this.geoLocLongitude = geoLocLongitude;
   }
 
-  public Set<UserNotification> getNotificationType() {
+  public Set<UserNotificationType> getNotificationType() {
     return notificationType;
   }
 
-  public void setNotificationType(Set<UserNotification> notificationType) {
+  public void setNotificationType(Set<UserNotificationType> notificationType) {
     this.notificationType = notificationType;
   }
 

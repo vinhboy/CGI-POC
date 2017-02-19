@@ -1,1 +1,34 @@
-<h1>Landing page</h1>
+<div class="usa-content">
+  <div class="usa-grid">
+    <div class="usa-width-one-third scrollable-section" >
+
+      <table class="usa-table-borderless">
+
+    <tbody>
+      <tr ng-repeat="item in model.notifications track by $index">
+
+        <td>
+          {{item.type}}
+          <p>{{item.description}}</p>
+          <p> <span ng-repeat="z in item.zipcodes">{{z}}&nbsp;</span> </p>
+        </td>
+
+      </tr>
+
+    </tbody>
+  </table>
+
+    </div>
+    <div class="usa-width-one-half">
+    <p>
+      <img  src="https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=1200x800&maptype=roadmap
+&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318
+&markers=color:red%7Clabel:C%7C40.718217,-73.998284
+&key=AIzaSyBYXRLv8Mnknfx_pOLJW-3PVNP2TIO4oK0" />
+
+    </p>
+    </div>
+  </div>
+
+
+</div>
