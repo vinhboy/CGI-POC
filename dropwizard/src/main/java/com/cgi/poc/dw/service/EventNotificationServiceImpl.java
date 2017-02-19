@@ -7,6 +7,7 @@ import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
 import com.google.inject.Inject;
+import java.util.List;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
@@ -15,17 +16,25 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AdminServiceImpl extends BaseServiceImpl implements AdminService {
+public class EventNotificationServiceImpl extends BaseServiceImpl implements EventNotificationService {
 
-  private final static Logger LOG = LoggerFactory.getLogger(AdminServiceImpl.class);
+  private final static Logger LOG = LoggerFactory.getLogger(EventNotificationServiceImpl.class);
 
-  private EventNotificationDAO adminDAO;
+  private EventNotificationDAO eventNotificationDAO;
 
   @Inject
-  public AdminServiceImpl(EventNotificationDAO adminDAO, Validator validator) {
+  public EventNotificationServiceImpl(EventNotificationDAO eventNotificationDAO, Validator validator) {
     super(validator);
-    this.adminDAO = adminDAO;
+    this.eventNotificationDAO = eventNotificationDAO;
   }
+  @Override
+    public Response retrieveAllNotifications(User user) {
+        List<EventNotification> resultList = eventNotificationDAO.retrieveAll();
+        Response.ResponseBuilder respBuilder = Response.noContent().status(Response.Status.OK);
+        respBuilder.header("X-Total-Count", Integer.valueOf(resultList.size()).toString());
+        return respBuilder.entity(resultList).build();
+
+    }
 
   @Override
   public Response publishNotification(User user, EventNotification eventNotification) {
@@ -37,7 +46,7 @@ public class AdminServiceImpl extends BaseServiceImpl implements AdminService {
         eventNotificationZipcode.setEventNotificationId(eventNotification);
       }
       validate(eventNotification, "eventNotification validation", Default.class);
-      eventNotification = adminDAO.save(eventNotification);
+      eventNotification = eventNotificationDAO.save(eventNotification);
     } catch (ConstraintViolationException exception) {
       throw exception;
     } catch (Exception exception) {

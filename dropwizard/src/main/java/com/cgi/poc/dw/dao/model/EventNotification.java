@@ -63,7 +63,7 @@ public class EventNotification implements Serializable {
     
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2048)
+    @Size(min = 5, max = 2048)
     @Column(name = "description")
     private String description;
     
