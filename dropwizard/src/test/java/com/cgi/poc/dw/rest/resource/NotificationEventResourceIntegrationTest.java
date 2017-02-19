@@ -57,7 +57,7 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
     IntegrationTestHelper.cleanDbState();
   }
   
-  //@Test
+  @Test
   public void publishNotification_Success() throws JSONException {
 
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
@@ -72,7 +72,7 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
     Assert.assertEquals(200, response.getStatus());
   }
 
-  //@Test
+  @Test
   public void noArgument() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
 
@@ -89,7 +89,7 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
     Assert.assertEquals("[\"The request body may not be null\"]", responseJo.optString("errors"));
   }
 
-  //@Test
+  @Test
   public void nullDescription() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
     eventNotification.setDescription(null);
@@ -106,7 +106,7 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
     Assert.assertEquals("[\"description may not be null\"]", responseJo.optString("errors"));
   }
 
-  //@Test
+  @Test
   public void invalidDescription() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
     eventNotification.setDescription("abc");
@@ -124,7 +124,7 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
         responseJo.optString("errors"));
   }
 
-  //@Test
+  @Test
   public void invalidZipcode() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
     eventNotification.getEventNotificationZipcodes().iterator().next().setZipCode("987");
@@ -142,22 +142,28 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
         responseJo.optString("errors"));
   }
 
-  //@Test
-  public void invalidIsEmergencyFlag() throws JSONException {
+  @Test
+  public void retrieveAllNoneExists() throws Exception {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    eventNotification.setType("ADMIN_E");
+    IntegrationTestHelper.deleteAllEventNotfications();
     Client client = new JerseyClientBuilder().build();
     Response response = client.
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotification));
+        get();
 
-    Assert.assertEquals(422, response.getStatus());
-    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
-    Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("errors")));
-    Assert.assertEquals("[\"isEmergency is invalid.\"]", responseJo.optString("errors"));
+        Assert.assertEquals(200, response.getStatus());
+        List<EventNotification> list = response.readEntity(new GenericType<List<EventNotification>>(){});
+        String count = response.getHeaderString("x-total-count");
+        int rows = Integer.decode(count);
+        assertThat(rows).isEqualTo(0);
+        assertThat(list.size()).isEqualTo(0);
+        // re-create the admin user for any other tests
+
+        
   }
+ 
   @Test
   public void retrieveAll() throws Exception {
         EventNotification event = new EventNotification();
@@ -186,24 +192,7 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
         int rows = Integer.decode(count);
         assertThat(rows).isEqualTo(1);
         assertThat(list.size()).isEqualTo(1);
-
-  }
-  //@Test
-  public void retrieveAllNoneExists() throws Exception {
-    String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    Client client = new JerseyClientBuilder().build();
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        get();
-
-        Assert.assertEquals(200, response.getStatus());
-        List<EventNotification> list = response.readEntity(new GenericType<List<EventNotification>>(){});
-        String count = response.getHeaderString("x-total-count");
-        int rows = Integer.decode(count);
-        assertThat(rows).isEqualTo(0);
-        assertThat(list.size()).isEqualTo(0);
+      IntegrationTestHelper.deleteAllEventNotfications();
 
   }
 

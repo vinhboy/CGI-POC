@@ -64,6 +64,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
      */
     @Test
     public void testCRUD() throws Exception {
+        signupAdminUser();
         EventNotification event = new EventNotification();
         User tmpUser = new User();
         tmpUser.setId(Long.valueOf(100));
@@ -76,12 +77,10 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         
      EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();
     eventNotificationZipcode1.setZipCode("92105");
-    eventNotificationZipcode1.setEventNotificationId(event);
     EventNotificationZipcode eventNotificationZipcode2 = new EventNotificationZipcode();
-    eventNotificationZipcode1.setEventNotificationId(event);
     eventNotificationZipcode2.setZipCode("92106");
-      event.addPZipcode(eventNotificationZipcode1);
-      event.addPZipcode(eventNotificationZipcode2);
+      event.addZipcode(eventNotificationZipcode1);
+      event.addZipcode(eventNotificationZipcode2);
         
         String geo  = "\"geometry\": {\n" +
         "    \"x\": -10677457.159137897,\n" +

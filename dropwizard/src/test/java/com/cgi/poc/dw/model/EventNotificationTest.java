@@ -82,7 +82,7 @@ public class EventNotificationTest extends BaseTest {
         
         Set<ConstraintViolation<EventNotification>> validate = validator.validate(testEvent);
         assertThat(validate.isEmpty()).isEqualTo(false);
-        assertThat(validate.size()).isEqualTo(4);
+        assertThat(validate.size()).isEqualTo(3);
         for ( ConstraintViolation violation : validate ) {
                 
               String tmp = ((PathImpl)violation.getPropertyPath())
@@ -141,8 +141,8 @@ public class EventNotificationTest extends BaseTest {
         eventNotificationZipcode1.setEventNotificationId(event);
         EventNotificationZipcode eventNotificationZipcode2 = new EventNotificationZipcode();
         eventNotificationZipcode1.setEventNotificationId(event);
-        event.addPZipcode(eventNotificationZipcode1);
-        event.addPZipcode(eventNotificationZipcode2);
+        event.addZipcode(eventNotificationZipcode1);
+        event.addZipcode(eventNotificationZipcode2);
 
         String geo = "\"geometry\": {\n"
                 + "    \"x\": -10677457.159137897,\n"

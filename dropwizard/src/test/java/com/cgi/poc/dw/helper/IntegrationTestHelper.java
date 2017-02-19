@@ -24,7 +24,24 @@ import org.json.JSONObject;
 import org.junit.Assert;
 
 public class IntegrationTestHelper {
-  public static void addEventNotfication(EventNotification event)
+  public static void deleteAllEventNotfications()
+      throws SQLException {
+    Connection sqlConnection = null;
+    
+    
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      int res = st.executeUpdate("delete from event_notification_zipcode");
+      res = st.executeUpdate("delete from event_notification");
+      sqlConnection.commit();
+    } catch (HibernateException | SQLException ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }   
+   public static void addEventNotfication(EventNotification event)
       throws SQLException {
     Connection sqlConnection = null;
     

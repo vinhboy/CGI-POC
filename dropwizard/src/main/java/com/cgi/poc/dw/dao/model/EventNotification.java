@@ -5,6 +5,7 @@
  */
 package com.cgi.poc.dw.dao.model;
 
+import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class EventNotification implements Serializable {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @Cascade({ CascadeType.SAVE_UPDATE, CascadeType.PERSIST})
   @JsonIgnore
-  @NotNull
+  @NotNull(groups = {PersistValidationGroup.class})
   private User userId;
 
   @OneToMany(mappedBy = "eventNotificationId", fetch = FetchType.EAGER, orphanRemoval = true)
@@ -200,7 +201,7 @@ public class EventNotification implements Serializable {
     this.eventNotificationZipcodes = eventNotificationZipcodes;
   }
   
-  public void addPZipcode(EventNotificationZipcode zipCode) {
+  public void addZipcode(EventNotificationZipcode zipCode) {
      if (zipCode != null) {
         if (this.eventNotificationZipcodes == null) {
             this.eventNotificationZipcodes = new HashSet<EventNotificationZipcode>();          

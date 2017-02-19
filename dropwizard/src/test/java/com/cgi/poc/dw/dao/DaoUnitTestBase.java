@@ -5,6 +5,7 @@
  */
 package com.cgi.poc.dw.dao;
 
+import com.cgi.poc.dw.helper.IntegrationTestHelper;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
@@ -25,6 +26,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.internal.SessionImpl;
 import org.junit.After;
+import org.junit.AfterClass;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 
@@ -40,7 +42,10 @@ public class DaoUnitTestBase {
     HibernateUtil dbUtil;
     Transaction dbTransaction;
     ObjectMapper mapper = new ObjectMapper();
-
+  @AfterClass
+  public static void cleanup() {
+    IntegrationTestHelper.cleanDbState();
+  }
     @Before
     public void setUp() throws Exception {
         dbUtil = HibernateUtil.getInstance();
