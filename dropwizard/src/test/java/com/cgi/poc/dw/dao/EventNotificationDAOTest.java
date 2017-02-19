@@ -70,29 +70,29 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         tmpUser.setId(Long.valueOf(100));
         event.setType("FIRE");
         event.setUrl1("www.msn.com");
-        event.setUrl12("www.cnn.com");
+        event.setUrl2("www.cnn.com");
         event.setUserId(tmpUser);
         event.setDescription("CRUD TEST EVENT");
         event.setCitizensAffected(Integer.valueOf(1000));
-        
-     EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();
-    eventNotificationZipcode1.setZipCode("92105");
-    EventNotificationZipcode eventNotificationZipcode2 = new EventNotificationZipcode();
-    eventNotificationZipcode2.setZipCode("92106");
-      event.addZipcode(eventNotificationZipcode1);
-      event.addZipcode(eventNotificationZipcode2);
-        
+ 
+        EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();
+        eventNotificationZipcode1.setZipCode("92105");
+        EventNotificationZipcode eventNotificationZipcode2 = new EventNotificationZipcode();
+        eventNotificationZipcode2.setZipCode("92106");
+        event.addZipcode(eventNotificationZipcode1);
+        event.addZipcode(eventNotificationZipcode2);
+
         String geo  = "\"geometry\": {\n" +
         "    \"x\": -10677457.159137897,\n" +
         "    \"y\": 4106537.9944933983\n" +
         "  }";
-         event.setGeometry(geo);
+        event.setGeometry(geo);
         EventNotification result = eventDAO.save(event);
          
         assertNotNull(result.getId());
         assertEquals(result.getType(),event.getType());
         assertEquals(result.getUrl1(),event.getUrl1());
-        assertEquals(result.getUrl12(),event.getUrl12());
+        assertEquals(result.getUrl2(),event.getUrl2());
         assertEquals(result.getDescription(),event.getDescription());
         assertEquals(result.getUserId(),event.getUserId());
         assertEquals(result.getCitizensAffected(),event.getCitizensAffected());
@@ -104,7 +104,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         assertEquals(result.getId(),result.getId());
         assertEquals(result.getType(),result.getType());
         assertEquals(result.getUrl1(),result.getUrl1());
-        assertEquals(result.getUrl12(),result.getUrl12());
+        assertEquals(result.getUrl2(),result.getUrl2());
         assertEquals(result.getDescription(),result.getDescription());
         assertEquals(result.getUserId(),result.getUserId());
         assertEquals(result.getCitizensAffected(),result.getCitizensAffected());
@@ -119,54 +119,42 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         List<EventNotification> resultList = eventDAO.retrieveAll( );   
          flush(); // have to do this.. so that the sql is actually executed.
          assertThat(resultList.size()).isEqualTo(0);
-
-    
- 
     }
     @Test
     public void invalidInsert() {
         System.out.println("update");
         EventNotification event = new EventNotification();
-
-           boolean bExceptionCaught = false;
+        boolean bExceptionCaught = false;
         try {
-           EventNotification result = eventDAO.save(event);
-             flush();            
+            EventNotification result = eventDAO.save(event);
+            flush();
         } catch (ConstraintViolationException hibernateException) {
             Set<ConstraintViolation<?>> constraintViolations = hibernateException.getConstraintViolations();
-            for ( ConstraintViolation violation : constraintViolations ) {
-                
-              String tmp = ((PathImpl)violation.getPropertyPath())
-                .getLeafNode().getName();
-              if (tmp.equals("userId")){
-               assertThat(tmp).isEqualTo("userId");
-               assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
-                  
-              }else if (tmp.equals("eventNotificationZipcodes")){
-               assertThat(tmp).isEqualTo("eventNotificationZipcodes");
-               assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
-                  
-              }else if (tmp.equals("type")){
-               assertThat(tmp).isEqualTo("type");
-               assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
-                  
-              }else if (tmp.equals("description")){
-               assertThat(tmp).isEqualTo("description");
-               assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
-                  
-              }
-              else {
-                  fail("not an expected constraint violation");
-              }
+            for (ConstraintViolation violation : constraintViolations) {
+                String tmp = ((PathImpl) violation.getPropertyPath())
+                        .getLeafNode().getName();
+                if (tmp.equals("userId")) {
+                    assertThat(tmp).isEqualTo("userId");
+                    assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
 
+                } else if (tmp.equals("eventNotificationZipcodes")) {
+                    assertThat(tmp).isEqualTo("eventNotificationZipcodes");
+                    assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
+
+                } else if (tmp.equals("type")) {
+                    assertThat(tmp).isEqualTo("type");
+                    assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
+
+                } else if (tmp.equals("description")) {
+                    assertThat(tmp).isEqualTo("description");
+                    assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
+
+                } else {
+                    fail("not an expected constraint violation");
+                }
             }
             bExceptionCaught = true;
-
-        } 
-        
-        
-        assertThat(bExceptionCaught).isEqualTo(true);
-
- 
+        }        
+        assertThat(bExceptionCaught).isEqualTo(true); 
     }
 }

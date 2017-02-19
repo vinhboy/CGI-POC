@@ -5,13 +5,9 @@
  */
 package com.cgi.poc.dw.model;
 
-import com.cgi.poc.dw.dao.model.EventEarthquakePK;
-import com.cgi.poc.dw.dao.model.EventEarthquake;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
-import com.fasterxml.jackson.databind.JsonNode;
-import java.io.File;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import org.junit.BeforeClass;
@@ -19,23 +15,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
-import java.io.FileReader;
-import java.io.IOException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.math.BigDecimal;
-import java.net.URISyntaxException;
-import java.util.Date;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.hibernate.validator.internal.engine.path.PathImpl;
-
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -107,10 +88,7 @@ public class EventNotificationTest extends BaseTest {
               else {
                   fail("not an expected constraint violation");
               }
-
-        }
-
-        
+        }        
     }
   
     @Test
@@ -126,7 +104,7 @@ public class EventNotificationTest extends BaseTest {
              str = str.concat( "01234567890");
         }
         event.setUrl1(str);
-        event.setUrl12(str);
+        event.setUrl2(str);
         event.setUserId(tmpUser);
         //make a 2000+ char field
         // str is already 110 char... so...
@@ -148,12 +126,8 @@ public class EventNotificationTest extends BaseTest {
                 + "    \"x\": -10677457.159137897,\n"
                 + "    \"y\": 4106537.9944933983\n"
                 + "  }";
-        event.setGeometry(geo);
-         
-        Set<ConstraintViolation<EventNotification>> validate = validator.validate(event);
-        
-        assertThat(validate.size()).isEqualTo(6);
-        
-        
+        event.setGeometry(geo);         
+        Set<ConstraintViolation<EventNotification>> validate = validator.validate(event);        
+        assertThat(validate.size()).isEqualTo(6);               
     }
 }

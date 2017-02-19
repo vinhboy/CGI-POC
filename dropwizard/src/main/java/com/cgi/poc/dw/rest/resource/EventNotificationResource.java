@@ -31,7 +31,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 
-@RolesAllowed("ADMIN")
 @Path("/notification")
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "/notification", basePath = "/")
@@ -41,6 +40,7 @@ public class EventNotificationResource {
   EventNotificationService notificationServic;
 
   @POST
+  @RolesAllowed("ADMIN")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Publish an event notification",
@@ -64,11 +64,11 @@ public class EventNotificationResource {
   }
 
   
-    @GET
+  @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Publish an event notification",
-      notes = "Allows the admin to publish event notifications.")
+  @ApiOperation(value = "Retrieve event notifications",
+      notes = "Allows retrieval of event notifications.")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "Success"),
       @ApiResponse(code = 401, message = "Authentication failed."),
@@ -80,14 +80,10 @@ public class EventNotificationResource {
   @UnitOfWork
   @Timed(name = "EventNotification.getNotificationse")
   public Response getNotificationse(@Auth User principal) {
-    Response response =  notificationServic.retrieveAllNotifications(principal);
-    if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
-      throw new WebApplicationException(response);
-    }
-    return response;
-
-    }  
-  
-  
-  
+      Response response = notificationServic.retrieveAllNotifications(principal);
+      if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+          throw new WebApplicationException(response);
+      }
+      return response;
+ }
 }

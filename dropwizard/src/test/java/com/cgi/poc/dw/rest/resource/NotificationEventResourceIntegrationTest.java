@@ -159,9 +159,6 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
         int rows = Integer.decode(count);
         assertThat(rows).isEqualTo(0);
         assertThat(list.size()).isEqualTo(0);
-        // re-create the admin user for any other tests
-
-        
   }
  
   @Test
@@ -172,18 +169,18 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
         tmpUser.setId(Long.valueOf(100));
         event.setType("FIRE");
         event.setUrl1("www.msn.com");
-        event.setUrl12("www.cnn.com");
+        event.setUrl2("www.cnn.com");
         event.setUserId(tmpUser);
         event.setDescription("CRUD TEST EVENT");
-        event.setCitizensAffected(Integer.valueOf(1000));
-        
-    IntegrationTestHelper.addEventNotfication(event);
-    String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    Client client = new JerseyClientBuilder().build();
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
+      event.setCitizensAffected(Integer.valueOf(1000));
+
+      IntegrationTestHelper.addEventNotfication(event);
+      String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
+      Client client = new JerseyClientBuilder().build();
+      Response response = client.
+              target(String.format(url, RULE.getLocalPort())).
+              request().
+              header("Authorization", "Bearer " + authToken).
         get();
 
         Assert.assertEquals(200, response.getStatus());
@@ -192,8 +189,6 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
         int rows = Integer.decode(count);
         assertThat(rows).isEqualTo(1);
         assertThat(list.size()).isEqualTo(1);
-      IntegrationTestHelper.deleteAllEventNotfications();
-
+        IntegrationTestHelper.deleteAllEventNotfications();
   }
-
 }

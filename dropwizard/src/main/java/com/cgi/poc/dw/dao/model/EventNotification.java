@@ -89,7 +89,7 @@ public class EventNotification implements Serializable {
     
     @Size(max = 128)
     @Column(name = "url12")
-    private String url12;
+    private String url2;
     
     @Column(name = "citizensAffected")
     private Integer citizensAffected;
@@ -168,12 +168,12 @@ public class EventNotification implements Serializable {
         this.url1 = url1;
     }
 
-    public String getUrl12() {
-        return url12;
+    public String getUrl2() {
+        return url2;
     }
 
-    public void setUrl12(String url12) {
-        this.url12 = url12;
+    public void setUrl2(String url2) {
+        this.url2 = url2;
     }
 
     public Integer getCitizensAffected() {

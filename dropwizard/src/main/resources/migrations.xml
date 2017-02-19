@@ -353,7 +353,7 @@
           <column name="url1" type="varchar(128)"  />
       </addColumn>
       <addColumn tableName="event_notification">
-          <column name="url12" type="varchar(128)"  />
+          <column name="url2" type="varchar(128)"  />
       </addColumn>
       <addColumn tableName="event_notification">
           <column name="citizensAffected" type="integer" />

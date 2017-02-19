@@ -58,7 +58,7 @@ public class IntegrationTestHelper {
             + " '" + event.getType() + "',"
             + " '" + event.getGeometry() + "',"
             + " '" + event.getUrl1() + "',"
-            + " '" + event.getUrl12() + "',"
+            + " '" + event.getUrl2() + "',"
             + event.getCitizensAffected()+ " )"); 
 
 
