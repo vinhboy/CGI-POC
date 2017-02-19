@@ -47,7 +47,7 @@
         </div>
 
         <div ng-class="{ 'usa-input-error': profileForm.password.$touched && !isPasswordValid() ||
-          (profileForm.password.$touched && profileForm.passwordConfirmation.$touched && profileForm.password !== profileForm.passwordConfirmation) }">
+          (profileForm.password.$touched && profileForm.passwordConfirmation.$touched && profile.password !== profile.passwordConfirmation) }">
           <label for="password" ng-class="{ 'usa-input-required' : isNew() }" class="profile-label"
             translate="REGISTRATION.LABEL.PASSWORD"></label>
           <div ng-messages="profileForm.password.$error" ng-if="profileForm.password.$touched && !isPasswordValid()">
