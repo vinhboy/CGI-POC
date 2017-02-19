@@ -13,15 +13,13 @@
 'use strict';
 
 cgiWebApp.controller('headerController',
-  ['$scope', '$window','$location',
-  function ($scope,$window,$location) {
+  ['$scope', '$sessionStorage', '$state',
+  function ($scope, $sessionStorage, $state) {
     $scope.isLoggedIn = function(){
-      return $window.sessionStorage.getItem('jwt') !== null ;
+      return $sessionStorage.get('jwt') !== null ;
     };
-    
-    $scope.isAuth = function(){
-      return ($location.url() === '/login');
-    };
-    
 
+    $scope.isAuth = function(){
+      return $state.current.name === 'login';
+    };
 }]);
