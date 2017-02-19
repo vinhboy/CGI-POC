@@ -4,27 +4,37 @@ describe('ProfileController', function() {
   var profileController;
   var $scope;
   var profileService;
+  var authenticationService;
   var $state;
+  var $sessionStorage;
   var $q;
   var deferred;
+  var authDeferred;
 
   beforeEach(module('cgi-web-app'));
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _ProfileService_, _$state_, _$q_) {
+  beforeEach(inject(function(_$rootScope_, _$controller_, _ProfileService_, _Authenticator_, _$state_, _$sessionStorage_, _$q_) {
     $q = _$q_;
     $scope = _$rootScope_.$new();
     profileService = _ProfileService_;
+    authenticationService = _Authenticator_;
     $state = _$state_;
+    $sessionStorage = _$sessionStorage_;
 
     deferred = _$q_.defer();
+    authDeferred = _$q_.defer();
+
     spyOn(profileService, 'register').and.returnValue(deferred.promise);
     spyOn(profileService, 'getProfile').and.returnValue(deferred.promise);
     spyOn(profileService, 'update').and.returnValue(deferred.promise);
+    spyOn(authenticationService, 'authenticate').and.returnValue(authDeferred.promise);
 
     profileController = _$controller_('ProfileController', {
       $scope: $scope,
       ProfileService: profileService,
-      $state: $state
+      $state: $state,
+      $sessionStorage: _$sessionStorage_,
+      Authenticator: authenticationService
     });
   }));
 
@@ -183,6 +193,16 @@ describe('ProfileController', function() {
       deferred.reject(response);
       $scope.$apply();
       expect($scope.processApiErrors).toHaveBeenCalledWith(response);
+    });
+
+    it('should get the auth token', function() {
+      spyOn($sessionStorage, 'put');
+      $scope.registerProfile();
+      deferred.resolve({ status: 200, data: {} });
+      authDeferred.resolve({ status: 200, data: { authToken: 'the auth token' } });
+      $scope.$apply();
+      expect(authenticationService.authenticate).toHaveBeenCalled();
+      expect($sessionStorage.put).toHaveBeenCalledWith('jwt', 'the auth token');
     });
   });
 

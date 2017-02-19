@@ -9,8 +9,8 @@
 'use strict';
 
 cgiWebApp.controller('ProfileController',
-  ['$scope', 'ProfileService', '$state',
-  function ($scope, ProfileService, $state) {
+  ['$scope', 'ProfileService', '$state', '$sessionStorage', 'Authenticator',
+  function ($scope, ProfileService, $state, $sessionStorage, Authenticator) {
 
   $scope.init = function() {
     $scope.apiErrors = [];
@@ -81,7 +81,7 @@ cgiWebApp.controller('ProfileController',
       $scope.profile.phoneNumber.lineNumber;
   };
 
-  $scope.process = function(){
+  $scope.process = function(beforeNavFunc){
     $scope.processNotificationTypes();
     $scope.generatePhoneNumber();
 
@@ -111,16 +111,32 @@ cgiWebApp.controller('ProfileController',
     $scope.toSend = toPost;
 
     toCall(toPost).then(function(response) {
-      if (response.status === 200) {
-        $state.go('landing');
+      if (beforeNavFunc) {
+        beforeNavFunc(toPost);
       }
+      $state.go('landing');
     }).catch(function(response) {
       $scope.processApiErrors(response);
     });
   };
 
   $scope.registerProfile = function() {
-    $scope.process();
+    var beforeNavFunc = function(toPost) {
+      var credentials = {
+        email: toPost.email,
+        password: toPost.password
+      };
+
+      Authenticator.authenticate(credentials).then(function(response) {
+        if (response.status === 200) {
+          $sessionStorage.put('jwt', response.data.authToken);
+        }
+      }).catch(function(response) {
+        console.log('we should never get this b/c we registered the user first, then turned right around and authenticated with the same info.');
+        console.log(response);
+      });
+    };
+    $scope.process(beforeNavFunc);
   };
 
   $scope.updateProfile = function() {
