@@ -36,17 +36,25 @@ $sceDelegateProvider.resourceUrlWhitelist([
     url: '/register',
     views:{
       'pageContent':{
-        templateUrl: '/views/register.html',
+        templateUrl: '/views/profile.html',
         controller: 'ProfileController'
     }
     }
   }).state('landing', {
-       url : '/landing', 
+       url : '/landing',
     views:{
       'pageContent':{
        templateUrl: 'views/landing.html',
        controller: 'landingController'
     }
     }
-   });
+  }).state('manageProfile', {
+    url: '/manageProfile',
+    views: {
+      'pageContent': {
+        templateUrl: '/views/profile.html',
+        controller: 'ProfileController'
+      }
+    }
+  });
 }]);
