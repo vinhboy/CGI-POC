@@ -15,6 +15,10 @@ describe('ProfileService', function() {
     $sessionStorage = _$sessionStorage_;
   }));
 
+  beforeEach(function() {
+    spyOn($sessionStorage, 'get').and.returnValue('magical auth token here');
+  });
+
   describe('register', function() {
     it('should post to the expected registration endpoint', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
@@ -41,12 +45,49 @@ describe('ProfileService', function() {
     });
   });
 
-  describe('getProfile', function() {
+  describe('update', function() {
+    it('should post to the expected registration endpoint', function() {
+      var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
+      $httpBackend.expectPUT('http://localhost:8080/profile/update', profile)
+        .respond(200, {});
 
-    beforeEach(function() {
-      spyOn($sessionStorage, 'get').and.returnValue('magical auth token here');
+      profileService.update(profile);
+      $httpBackend.flush();
+
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
     });
 
+    it('should construct the endpoint URL', function() {
+      var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
+      $httpBackend.expectPUT(urls.BASE + '/profile/update', profile)
+        .respond(200, {});
+
+      profileService.update(profile);
+      $httpBackend.flush();
+
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should send the JWT auth token during udpate', function() {
+      var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
+      $httpBackend.expectPUT(urls.BASE + '/profile/update', profile, {
+        'Authorization': 'Bearer magical auth token here',
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json;charset=utf-8'
+      }).respond(200, {});
+
+      profileService.update(profile);
+      $httpBackend.flush();
+
+      expect($sessionStorage.get).toHaveBeenCalledWith('jwt');
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+  });
+
+  describe('getProfile', function() {
     it('should get to the expected endpoint', function() {
       $httpBackend.expectGET('http://localhost:8080/getProfile')
         .respond(200, {});
