@@ -34,15 +34,8 @@
   margin-right: auto; }
 
 .headerZone {
-  background: #003466;
+  background: white; }
 
-}
-.usa-nav-secondary-links a {
-      color:white!important;
-}
-.contentZone{
-    padding-bottom: 10em;
-}
 .footerZone {
   position: fixed;
   width: 100%;
