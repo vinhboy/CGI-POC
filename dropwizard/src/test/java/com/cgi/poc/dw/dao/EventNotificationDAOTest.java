@@ -50,7 +50,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
     public void setUp() throws Exception {
       super.setUp();
         eventDAO = new EventNotificationDAO(getSessionFactory(),validator); 
-        signupAdminUser();
+        //signupAdminUser();
     }
     
     @After
@@ -74,14 +74,14 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         event.setDescription("CRUD TEST EVENT");
         event.setCitizensAffected(Integer.valueOf(1000));
         
-    Set<EventNotificationZipcode> eventNotificationZipcodes = new LinkedHashSet<>();
-    EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();
+     EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();
     eventNotificationZipcode1.setZipCode("92105");
+    eventNotificationZipcode1.setEventNotificationId(event);
     EventNotificationZipcode eventNotificationZipcode2 = new EventNotificationZipcode();
+    eventNotificationZipcode1.setEventNotificationId(event);
     eventNotificationZipcode2.setZipCode("92106");
-    eventNotificationZipcodes.add(eventNotificationZipcode1);
-    eventNotificationZipcodes.add(eventNotificationZipcode2);  
-    event.setEventNotificationZipcodes(eventNotificationZipcodes);
+      event.addPZipcode(eventNotificationZipcode1);
+      event.addPZipcode(eventNotificationZipcode2);
         
         String geo  = "\"geometry\": {\n" +
         "    \"x\": -10677457.159137897,\n" +
@@ -129,9 +129,9 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         System.out.println("update");
         EventNotification event = new EventNotification();
 
-        EventNotification result = eventDAO.save(event);
-        boolean bExceptionCaught = false;
+           boolean bExceptionCaught = false;
         try {
+           EventNotification result = eventDAO.save(event);
              flush();            
         } catch (ConstraintViolationException hibernateException) {
             Set<ConstraintViolation<?>> constraintViolations = hibernateException.getConstraintViolations();
@@ -140,7 +140,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
               String tmp = ((PathImpl)violation.getPropertyPath())
                 .getLeafNode().getName();
               if (tmp.equals("userId")){
-               assertThat(tmp).isEqualTo("uniquefireidentifier");
+               assertThat(tmp).isEqualTo("userId");
                assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
                   
               }else if (tmp.equals("eventNotificationZipcodes")){

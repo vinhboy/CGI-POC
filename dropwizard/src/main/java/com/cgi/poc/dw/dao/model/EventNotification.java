@@ -7,7 +7,9 @@ package com.cgi.poc.dw.dao.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,7 +19,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,6 +32,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  *
@@ -56,6 +58,7 @@ public class EventNotification implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
+    @JsonIgnore
     private Long id;
     
     @Basic(optional = false)
@@ -72,6 +75,7 @@ public class EventNotification implements Serializable {
     
     @Column(name = "generation_date")
     @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp 
     private Date generationDate;
     
     @Size(max = 65535)
@@ -99,7 +103,7 @@ public class EventNotification implements Serializable {
   @OneToMany(mappedBy = "eventNotificationId", fetch = FetchType.EAGER, orphanRemoval = true)
   @NotNull
   @Valid
-  @Cascade({org.hibernate.annotations.CascadeType.ALL})
+  @Cascade({CascadeType.ALL})
   private Set<EventNotificationZipcode> eventNotificationZipcodes;
 
     public EventNotification() {
@@ -194,6 +198,16 @@ public class EventNotification implements Serializable {
   public void setEventNotificationZipcodes(
       Set<EventNotificationZipcode> eventNotificationZipcodes) {
     this.eventNotificationZipcodes = eventNotificationZipcodes;
+  }
+  
+  public void addPZipcode(EventNotificationZipcode zipCode) {
+     if (zipCode != null) {
+        if (this.eventNotificationZipcodes == null) {
+            this.eventNotificationZipcodes = new HashSet<EventNotificationZipcode>();          
+        }
+        this.eventNotificationZipcodes.add(zipCode);
+        zipCode.setEventNotificationId(this);
+     }
   }
   
     @Override
