@@ -3,7 +3,7 @@ package com.cgi.poc.dw.helper;
 import com.cgi.poc.dw.CgiPocConfiguration;
 import com.cgi.poc.dw.dao.HibernateUtil;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
-import com.cgi.poc.dw.rest.resource.UserResourceForRegistrationIntegrationTest;
+import com.cgi.poc.dw.rest.resource.UserResourceTest;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -111,7 +111,7 @@ public class IntegrationTestHelper {
 
       sqlConnection.commit();
     } catch (Exception ex) {
-      Logger.getLogger(UserResourceForRegistrationIntegrationTest.class.getName())
+      Logger.getLogger(UserResourceTest.class.getName())
           .log(Level.SEVERE, null, ex);
     }
 

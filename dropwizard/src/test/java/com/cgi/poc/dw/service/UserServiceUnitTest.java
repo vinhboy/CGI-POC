@@ -47,7 +47,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceForRegistrationUnitTest {
+public class UserServiceUnitTest {
 
   @InjectMocks
   UserServiceImpl underTest;
@@ -359,5 +359,46 @@ public class UserServiceForRegistrationUnitTest {
     assertEquals(new Double(38.5824933), actualUser.getLatitude());
     assertEquals(new Double(-121.4941738), actualUser.getLongitude());
   }
+  
+	@Test
+	public void localizerUser_Success() throws Exception {
+
+		user.setGeoLocLatitude(38.5824933);
+		user.setGeoLocLongitude(-121.4941738);
+
+		Response actual = underTest.setLocalization(user);
+
+		assertEquals(200, actual.getStatus());
+	}
+	
+	@Test
+	public void localizerUser_NOGeoLocalizationValues() throws Exception {
+
+		user.setGeoLocLatitude(null);
+		user.setGeoLocLongitude(null);
+
+	    try {
+	        underTest.setLocalization(user);
+	        fail("Expected an exception to be thrown");
+	      } catch (ConstraintViolationException exception) {
+	        Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+	        for (ConstraintViolation violation : constraintViolations) {
+	          String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+	          String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
+	              .getCanonicalName();
+
+	          if (tmp.equals("geoLocLongitude") && annotation.equals("javax.validation.constraints.NotNull")) {
+	            assertThat(violation.getMessageTemplate())
+	                .isEqualTo("{javax.validation.constraints.NotNull.message}");
+	          } else if (tmp.equals("geoLocLatitude") && annotation
+	              .equals("javax.validation.constraints.NotNull")) {
+	            assertThat(violation.getMessageTemplate())
+	                .isEqualTo("{javax.validation.constraints.NotNull.message}");
+	          } else {
+	            fail("not an expected constraint violation");
+	          }
+	        }
+	      }
+	}
 
 }
