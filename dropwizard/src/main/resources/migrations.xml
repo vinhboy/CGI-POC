@@ -360,14 +360,14 @@
       </addColumn>
   </changeSet>
 
-  	<changeSet id="19" author="Vincent Baylly">
+  	<changeSet id="20" author="Vincent Baylly">
 		<addColumn tableName="user">
-		    <column name="geo_loc_latitude" type="NUMERIC(25,20)" defaultValue="0.0">
+		    <column name="geo_loc_latitude" type="DECIMAL(10, 8)" defaultValue="0.0">
 		    <constraints nullable="true"/>
 		    </column>
 		</addColumn>
 		<addColumn tableName="user">
-		    <column name="geo_loc_longitude" type="NUMERIC(25,20)" defaultValue="0.0">
+		    <column name="geo_loc_longitude" type="DECIMAL(10, 8)" defaultValue="0.0">
 		    <constraints nullable="true"/>
 		    </column>
 		</addColumn>
