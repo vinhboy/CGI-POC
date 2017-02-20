@@ -21,11 +21,6 @@ cgiWebApp.controller('ProfileController',
       email: '',
       password: '',
       passwordConfirmation: '',
-      phoneNumber: {
-        areaCode: '',
-        centralOfficeCode: '',
-        lineNumber: ''
-      },
       phone: '',
       zipCode: '',
       emailNotification: false,
@@ -45,9 +40,7 @@ cgiWebApp.controller('ProfileController',
 
     $scope.regexZip = /^\d{5}$/;
     $scope.regexPassword = /^(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*/;
-    $scope.regexPhoneAreaCode = /^\d{3}$/;
-    $scope.regexPhoneCentralOfficeCode = /^\d{3}$/;
-    $scope.regexPhoneLineNumber = /^\d{4}$/;
+    $scope.regexPhone = /^\d{3}-?\d{3}-?\d{4}$/;
   };
 
   $scope.processApiErrors = function(response) {
@@ -76,9 +69,7 @@ cgiWebApp.controller('ProfileController',
   };
 
   $scope.generatePhoneNumber = function() {
-    $scope.profile.phone = $scope.profile.phoneNumber.areaCode +
-      $scope.profile.phoneNumber.centralOfficeCode +
-      $scope.profile.phoneNumber.lineNumber;
+    $scope.profile.phone = $scope.profile.phone.replace(/-/g, '');
   };
 
   $scope.process = function(beforeNavFunc){

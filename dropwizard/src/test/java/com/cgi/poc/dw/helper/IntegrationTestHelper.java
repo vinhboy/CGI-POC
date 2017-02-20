@@ -2,6 +2,7 @@ package com.cgi.poc.dw.helper;
 
 import com.cgi.poc.dw.CgiPocConfiguration;
 import com.cgi.poc.dw.dao.HibernateUtil;
+import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.rest.resource.UserResourceTest;
 import io.dropwizard.testing.junit.DropwizardAppRule;
@@ -15,6 +16,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.internal.SessionImpl;
 import org.json.JSONException;
@@ -22,7 +24,50 @@ import org.json.JSONObject;
 import org.junit.Assert;
 
 public class IntegrationTestHelper {
+  public static void deleteAllEventNotfications()
+      throws SQLException {
+    Connection sqlConnection = null;
+    
+    
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      int res = st.executeUpdate("delete from event_notification_zipcode");
+      res = st.executeUpdate("delete from event_notification");
+      sqlConnection.commit();
+    } catch (HibernateException | SQLException ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }   
+   public static void addEventNotfication(EventNotification event)
+      throws SQLException {
+    Connection sqlConnection = null;
+    
+    
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      int res = st.executeUpdate("INSERT INTO event_notification (id, description," +
+           "user_id,type,geometry,url1,url2,citizensAffected) VALUES (" 
+            + event.getId() + " ," 
+            + " '" + event.getDescription() + "',"
+            + event.getUserId().getId() + " ," 
+            + " '" + event.getType() + "',"
+            + " '" + event.getGeometry() + "',"
+            + " '" + event.getUrl1() + "',"
+            + " '" + event.getUrl2() + "',"
+            + event.getCitizensAffected()+ " )"); 
 
+
+      sqlConnection.commit();
+    } catch (HibernateException | SQLException ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }
   public static void signupAdminUser()
       throws SQLException {
     Connection sqlConnection = null;

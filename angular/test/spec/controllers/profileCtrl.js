@@ -46,9 +46,6 @@ describe('ProfileController', function() {
       expect($scope.profile.password).toBe('');
       expect($scope.profile.passwordConfirmation).toBe('');
       expect($scope.profile.phone).toBe('');
-      expect($scope.profile.phoneNumber.areaCode).toBe('');
-      expect($scope.profile.phoneNumber.centralOfficeCode).toBe('');
-      expect($scope.profile.phoneNumber.lineNumber).toBe('');
       expect($scope.profile.zipCode).toBe('');
       expect($scope.profile.notificationType.length).toBe(0);
       expect($scope.profile.emailNotification).toBe(false);
@@ -64,9 +61,8 @@ describe('ProfileController', function() {
     it('should have these pattern validations', function() {
       expect('12345').toMatch($scope.regexZip);
       expect('abcABC123').toMatch($scope.regexPassword);
-      expect('123').toMatch($scope.regexPhoneAreaCode);
-      expect('123').toMatch($scope.regexPhoneCentralOfficeCode);
-      expect('1234').toMatch($scope.regexPhoneLineNumber);
+      expect('1234567890').toMatch($scope.regexPhone);
+      expect('123-456-7890').toMatch($scope.regexPhone);
     });
 
     it('should get the current profile from the API if managing profile', function() {
@@ -102,9 +98,7 @@ describe('ProfileController', function() {
     });
 
     it('should construct the phoneNumber', function() {
-      $scope.profile.phoneNumber.areaCode = '313';
-      $scope.profile.phoneNumber.centralOfficeCode = '252';
-      $scope.profile.phoneNumber.lineNumber = '7456';
+      $scope.profile.phone = '313-252-7456';
       spyOn($scope, 'generatePhoneNumber').and.callThrough();
       $scope.updateProfile();
       deferred.resolve({ status: 200, data: {} });
@@ -168,9 +162,7 @@ describe('ProfileController', function() {
     });
 
     it('should construct the phoneNumber', function() {
-      $scope.profile.phoneNumber.areaCode = '313';
-      $scope.profile.phoneNumber.centralOfficeCode = '252';
-      $scope.profile.phoneNumber.lineNumber = '7456';
+      $scope.profile.phone = '313-252-7456';
       spyOn($scope, 'generatePhoneNumber').and.callThrough();
       $scope.registerProfile();
       deferred.resolve({ status: 200, data: {} });
@@ -260,13 +252,7 @@ describe('ProfileController', function() {
 
   describe('generatePhoneNumber', function() {
     it('generates the phone number', function() {
-      $scope.profile = {
-        phoneNumber: {
-          areaCode: '313',
-          centralOfficeCode: '252',
-          lineNumber: '7456'
-        }
-      };
+      $scope.profile.phone = '313-252-7456';
       $scope.generatePhoneNumber();
       expect($scope.profile.phone).toBe('3132527456');
     });
