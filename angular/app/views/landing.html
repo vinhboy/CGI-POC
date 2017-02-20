@@ -1,5 +1,4 @@
 <div class="usa-content">
-  <div class="usa-grid">
       <div class="usa-grid">
           <div class="usa-width-one-third"  >
               <select  id="eventTypeFilter" name="eventTypeFilter"   ng-model="eventTypeFilter"  class="form-control"  
@@ -18,6 +17,7 @@
                        placeholder="search by zip code" maxlength="30" class="form-control " ng-change="changeFilters()" >
           </div>
       </div>
+  <div class="usa-grid">
        
       <div class="usa-width-one-third scrollable-section" >
       <div class="event usa-grid" ng-repeat="item in model.filteredNotifications track by $index">
@@ -27,7 +27,7 @@
           <div class="usa-width-two-thirds"  >
              <h5 class="usa-heading-alt">{{item.type}}</h5>
              <span>{{item.generationDate |  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
-             <span><span ng-repeat="z in item.zipcodes ">{{z}}{{$last ? '' : ', '}}</span></span>
+             <span><span ng-repeat="z  in item.eventNotificationZipcodes ">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
 
              
           </div>
@@ -39,20 +39,20 @@
       </div>
 
      </div>
-      <div ng-show="showMapOrDetails === 'DETAILS'" class="event event-info  usa-width-one-half">
+      <div class="usa-width-one-half scrollable-section" >
+      <div ng-show="showMapOrDetails === 'DETAILS'" class="event event-info">
           <h4>Notification Details</h4>
           <div class=" usa-grid">
           <div class="usa-width-one-twelfth"  >
-               <img ng-click="loadEventDetails(item)" class="" src="/uswds-0.14.0/img/alerts/info.png" alt="Logo image" />
+               <img   src="/uswds-0.14.0/img/alerts/info.png" alt="Logo image" />
           </div>
           <div class="usa-width-one-half"  >
           <h5 class="usa-heading-alt">{{currentSelectedEvent.type}}</h5>
           <span>{{currentSelectedEvent.generationDate |  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
-          <span><span ng-repeat="z in currentSelectedEvent.zipcodes ">{{z}}{{$last ? '' : ', '}}</span></span>
           <h5 class="usa-heading-alt">Sent by</h5>
           <span class="usa-heading-alt">{{currentSelectedEvent.userId.firstName}} {{currentSelectedEvent.userId.lastName}}</span>
           <h5 class="usa-heading-alt">Affected Zip Code</h5>
-          <span><span ng-repeat="z in item.zipcodes ">{{z}}{{$last ? '' : ', '}}</span></span>
+          <span><span ng-repeat="z in currentSelectedEvent.eventNotificationZipcodes ">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
           <h5 class="usa-heading-alt">Message</h5>
           <span class="usa-heading-alt">{{currentSelectedEvent.description}}</span>
           <h5 class="usa-heading-alt">{{currentSelectedEvent.citizensAffected | number}} users notified</h5>
@@ -62,7 +62,7 @@
           </div>
       </div>
      </div>
-    <div ng-show="showMapOrDetails === 'MAP' " class=" map usa-width-one-half">
+    <div ng-show="showMapOrDetails === 'MAP' " class=" map ">
         <p>{{embeddedLine}}</p>
     <p>
       <iframe width="300" height="170" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
@@ -75,6 +75,7 @@
                target="_blank">View larger map</a>
         </small>
     </p>
+    </div>
     </div>
   </div>
 
