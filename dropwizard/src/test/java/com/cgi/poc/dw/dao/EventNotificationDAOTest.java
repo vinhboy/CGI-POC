@@ -111,7 +111,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         assertEquals(result2.getGenerationDate(),result.getGenerationDate());
 
         List<EventNotification> resultList2= eventDAO.retrieveAllForUser(tmpUser);
-        EventNotification result3  = resultList.get(0);    
+        EventNotification result3  = resultList2.get(0);    
         assertEquals(result3.getId(),result.getId());
         assertEquals(result3.getType(),result.getType());
         assertEquals(result3.getUrl1(),result.getUrl1());
@@ -125,7 +125,6 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
     }
     @Test
     public void retriveAllGetsNothing() {
-        System.out.println("update");
         EventNotification event = new EventNotification();
         List<EventNotification> resultList = eventDAO.retrieveAll( );   
          flush(); // have to do this.. so that the sql is actually executed.
@@ -133,17 +132,14 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
     }
     @Test
     public void retriveForUserGetsNothing() {
-        System.out.println("update");
         User tmpUser = new User();
         tmpUser.setId(Long.valueOf(555));
-        EventNotification event = new EventNotification();
         List<EventNotification> resultList = eventDAO.retrieveAllForUser(tmpUser);   
          flush(); // have to do this.. so that the sql is actually executed.
          assertThat(resultList.size()).isEqualTo(0);
     }
     @Test
     public void invalidInsert() {
-        System.out.println("update");
         EventNotification event = new EventNotification();
         boolean bExceptionCaught = false;
         try {

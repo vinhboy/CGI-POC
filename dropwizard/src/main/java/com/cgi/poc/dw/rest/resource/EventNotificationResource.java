@@ -80,8 +80,8 @@ public class EventNotificationResource {
       @ApiImplicitParam(name = "Authorization", required = true, dataType = "string", paramType = "header")
   })
   @UnitOfWork
-  @Timed(name = "EventNotification.getNotificationse")
-  public Response getNotificationse(@Auth User principal) {
+  @Timed(name = "EventNotification.getNotifications")
+  public Response getNotifications(@Auth User principal) {
       Response response = notificationService.retrieveAllNotifications(principal);
       if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
           throw new WebApplicationException(response);
@@ -104,8 +104,8 @@ public class EventNotificationResource {
       @ApiImplicitParam(name = "Authorization", required = true, dataType = "string", paramType = "header")
   })
   @UnitOfWork
-  @Timed(name = "EventNotification.getNotificationse")
-  public Response getNotificationseForUser(@Auth User principal) {
+  @Timed(name = "EventNotification.getNotifications")
+  public Response getNotificationsForUser(@Auth User principal) {
       Response response = notificationService.retrieveNotificationsForUser(principal);
       if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
           throw new WebApplicationException(response);

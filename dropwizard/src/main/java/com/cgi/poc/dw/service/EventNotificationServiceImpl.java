@@ -33,7 +33,6 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements Eve
         Response.ResponseBuilder respBuilder = Response.noContent().status(Response.Status.OK);
         respBuilder.header("X-Total-Count", Integer.valueOf(resultList.size()).toString());
         return respBuilder.entity(resultList).build();
-
     }
 
   @Override
@@ -42,7 +41,6 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements Eve
         Response.ResponseBuilder respBuilder = Response.noContent().status(Response.Status.OK);
         respBuilder.header("X-Total-Count", Integer.valueOf(resultList.size()).toString());
         return respBuilder.entity(resultList).build();
-
     }
 
   @Override
