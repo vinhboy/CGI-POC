@@ -51,7 +51,7 @@ public class IntegrationTestHelper {
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       int res = st.executeUpdate("INSERT INTO event_notification (id, description," +
-           "user_id,type,geometry,url1,url12,citizensAffected) VALUES (" 
+           "user_id,type,geometry,url1,url2,citizensAffected) VALUES (" 
             + event.getId() + " ," 
             + " '" + event.getDescription() + "',"
             + event.getUserId().getId() + " ," 
