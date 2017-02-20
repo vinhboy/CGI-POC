@@ -41,6 +41,11 @@
      </div>
       <div ng-show="showMapOrDetails === 'DETAILS'" class="event event-info  usa-width-one-half">
           <h4>Notification Details</h4>
+          <div class=" usa-grid">
+          <div class="usa-width-one-twelfth"  >
+               <img ng-click="loadEventDetails(item)" class="" src="/uswds-0.14.0/img/alerts/info.png" alt="Logo image" />
+          </div>
+          <div class="usa-width-one-half"  >
           <h5 class="usa-heading-alt">{{currentSelectedEvent.type}}</h5>
           <span>{{currentSelectedEvent.generationDate |  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
           <span><span ng-repeat="z in currentSelectedEvent.zipcodes ">{{z}}{{$last ? '' : ', '}}</span></span>
@@ -54,7 +59,9 @@
           <div class="button_wrapper">
               <button ng-click="showMapOrDetails='MAP'" class="usa-button-big" type="button">RETURN TO MAP</button>
           </div>
+          </div>
       </div>
+     </div>
     <div ng-show="showMapOrDetails === 'MAP' " class=" map usa-width-one-half">
         <p>{{embeddedLine}}</p>
     <p>
