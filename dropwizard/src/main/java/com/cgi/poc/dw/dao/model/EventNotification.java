@@ -49,7 +49,7 @@ import org.hibernate.annotations.UpdateTimestamp;
     @NamedQuery(name = "EventNotification.findByType", query = "SELECT e FROM EventNotification e WHERE e.type = :type"),
     @NamedQuery(name = "EventNotification.findByGenerationDate", query = "SELECT e FROM EventNotification e WHERE e.generationDate = :generationDate"),
     @NamedQuery(name = "EventNotification.findByUrl1", query = "SELECT e FROM EventNotification e WHERE e.url1 = :url1"),
-    @NamedQuery(name = "EventNotification.findByUrl12", query = "SELECT e FROM EventNotification e WHERE e.url12 = :url12"),
+    @NamedQuery(name = "EventNotification.findByUrl2", query = "SELECT e FROM EventNotification e WHERE e.url2 = :url2"),
     @NamedQuery(name = "EventNotification.findByCitizensAffected", query = "SELECT e FROM EventNotification e WHERE e.citizensAffected = :citizensAffected"),
     @NamedQuery(name = "EventNotification.findByUserId", query = "SELECT e FROM EventNotification e WHERE e.userId = :userId")})
 public class EventNotification implements Serializable {
@@ -88,7 +88,7 @@ public class EventNotification implements Serializable {
     private String url1;
     
     @Size(max = 128)
-    @Column(name = "url12")
+    @Column(name = "url2")
     private String url2;
     
     @Column(name = "citizensAffected")
