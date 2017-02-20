@@ -33,6 +33,8 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
@@ -105,6 +107,7 @@ public class EventNotification implements Serializable {
   @NotNull
   @Valid
   @Cascade({CascadeType.ALL})
+  @Fetch(value = FetchMode.SUBSELECT)
   private Set<EventNotificationZipcode> eventNotificationZipcodes;
 
     public EventNotification() {
