@@ -13,10 +13,10 @@
 'use strict';
 
 cgiWebApp.controller('landingController',
-  ['$scope','$filter','$timeout','EventNotificationService','$window',
-  function ($scope,$filter,$timeout,EventNotificationService,$window ) {
+  ['$scope','$filter','$timeout','EventNotificationService' ,
+  function ($scope,$filter,$timeout,EventNotificationService ) {
   $scope.apiErrors = [];
- 
+ $scope.currentSelectedEvent=null;
     $scope.eventTypes = [
         { name: 'All', id: undefined},
         { name: 'Emergency', id: 'ADMIN_E'},
@@ -59,12 +59,15 @@ cgiWebApp.controller('landingController',
         
     };
     
-    $scope.loadEventDetails = function(){
-           // TODO not yet implemented
+    $scope.loadEventDetails = function(selectedEvent){
+           $scope.currentSelectedEvent = selectedEvent;
+           $scope.showMapOrDetails='DETAILS';
             
     };
-    $scope.loadMap = function(){
-           // TODO not yet implemented
+    $scope.loadMap = function(selectedEvent){
+           $scope.currentSelectedEvent = selectedEvent;
+           $scope.showMapOrDetails='MAP';
+           // TODO .. more to do here...
 
     };
 
