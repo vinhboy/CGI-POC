@@ -13,7 +13,7 @@ cgiWebApp.service('EventNotificationService',
   function($http, urls) {
 
   this.notifications = function() {
-    var endpoint = urls.BASE + '/notifications';
+    var endpoint = urls.BASE + '/notification';
     return $http.get(endpoint);
   };
 }]);

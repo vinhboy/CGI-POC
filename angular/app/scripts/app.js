@@ -57,4 +57,14 @@ $sceDelegateProvider.resourceUrlWhitelist([
       }
     }
   });
-}]);
+}])
+.run(['$sessionStorage', '$http',   function ($sessionStorage, $http ) { 
+
+    var authToken = $sessionStorage.get('jwt');
+        // Setup api access token
+        $http.defaults.headers.common['Content-Type'] = 'application/json';
+        $http.defaults.headers.common.Authorization =  'Bearer ' + authToken;
+        //Caching will be set by the nginx, so lets take advantage of that.
+        //$http.defaults.headers.common['Cache-Control'] = 'no-cache';
+    }]);
+

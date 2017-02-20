@@ -27,6 +27,8 @@ cgiWebApp.controller('landingController',
 
     $scope.eventTypes = [
         { name: 'All', id: undefined},
+        { name: 'Emergency', id: 'ADMIN_E'},
+        { name: 'Non-Emervecy', id: 'ADMIN_I'},
         { name: 'Weather', id: 'Weather'},
         { name: 'Flood', id: 'Flood'},
         { name: 'Fire', id: 'Fire'}];
@@ -51,7 +53,11 @@ cgiWebApp.controller('landingController',
     $scope.initLoad = function(){
         EventNotificationService.notifications().then(function(response) {
             if (response.status === 200) {
-                    $scope.model.notifications = response;
+                    $scope.model.notifications = response.data;
+                    // need to conver date string into a proper date.
+                    angular.forEach($scope.model.notifications,function(value){
+                       value.generationDate = Date.parse(value.generationDate); 
+                    });
                     $scope.changeFilters();
             }
        }).catch(function(response) {
@@ -65,11 +71,11 @@ cgiWebApp.controller('landingController',
     };
     
     $scope.loadEventDetails = function(){
-                    $window.alert("LOAD Events");
+                    $window.alert('LOAD Events');
             
     };
     $scope.loadMap = function(){
-                    $window.alert("LOAD MAP TBD");
+                    $window.alert('LOAD MAP TBD');
 
     };
 
@@ -86,16 +92,16 @@ cgiWebApp.controller('landingController',
        day90Date.setDate(todaysDate.getDate() - 90);
 
         
-      $scope.model.notifications.push({type: 'Weather', date: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111});
-      $scope.model.notifications.push({type: 'Flood', date: day60Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-      $scope.model.notifications.push({type: 'Fire', date: day30Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-      $scope.model.notifications.push({type: 'Flood', date: day60Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-      $scope.model.notifications.push({type: 'Flood', date: day30Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-      $scope.model.notifications.push({type: 'Fire', date: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-      $scope.model.notifications.push({type: 'Flood', date: todaysDate, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-      $scope.model.notifications.push({type: 'Weather', date: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-      $scope.model.notifications.push({type: 'Flood', date: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
-      $scope.model.notifications.push({type: 'Flood', date: day60Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Weather', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', generationDate: day60Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Fire', generationDate: day30Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', generationDate: day60Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', generationDate: day30Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Fire', generationDate: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', generationDate: todaysDate, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Weather', generationDate: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', generationDate: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
+      $scope.model.notifications.push({type: 'Flood', generationDate: day60Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
      
 
       

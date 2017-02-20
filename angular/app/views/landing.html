@@ -26,7 +26,7 @@
           </div>
           <div class="usa-width-two-thirds"  >
              <h5 class="usa-heading-alt">{{item.type}}</h5>
-             <span>{{item.date |  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
+             <span>{{item.generationDate |  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
              <span><span ng-repeat="z in item.zipcodes ">{{z}}{{$last ? '' : ', '}}</span></span>
           </div>
           <div class="usa-width-one-twelfth"  >
