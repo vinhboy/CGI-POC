@@ -17,17 +17,23 @@ public class LoginPage {
 	}
 	
 	// Login Page Objects Properties-Object Repository
-	@FindBy(id = "username")
+	@FindBy(id = "email")
 	WebElement Username;
 	@FindBy(id = "password")
 	WebElement password;
-	@FindBy(xpath = "//input[@value='LOGIN']")
+	@FindBy(xpath = "//button[starts-with(@class,'usa-button-primary-alt usa-button-login ng-scope')]")
 	WebElement LoginButton;
-	@FindBy(xpath = "//h3[contains(.,'Success')]")
+	@FindBy(xpath = "//button[contains(.,'RETURN TO MAP')]")
 	WebElement LoginMesg;
 	@FindBy(xpath = "//p[contains(.,'Incorrect username/password combination')]")
 	WebElement InvalidLoginMesg;
-
+	@FindBy(xpath="//span[contains(.,'Email is required')]")
+	WebElement userNameErrText;
+	@FindBy(xpath="//span[contains(.,'Password is required')]")
+	WebElement passwordErrText;
+	@FindBy(xpath="//a[contains(.,'Logout')]")
+	WebElement logout;
+	
 	
 	
 	// Enter Login Details
@@ -37,7 +43,36 @@ public class LoginPage {
 		LoginButton.click();
 		
 	}
+	
+	//Enter Username
+	public void EnterUsername(String username)
+	{
+		Username.sendKeys(username);
+	}
 
+	
+	//Enter Username
+	public void EnterPassword(String Password)
+	{
+		password.sendKeys(Password);
+	}
+
+	//click Submit
+	public void clickLogin()
+	{
+		LoginButton.click();
+		
+		
+	}
+	
+	//click Logout
+	public void clickLogout()
+	{
+		logout.click();
+		
+		
+	}
+	
 	// Verify Error message
 	public String VerifyLoginMesg()
 
@@ -54,6 +89,25 @@ public class LoginPage {
 	{
 		String loginMesg = InvalidLoginMesg.getText();
 		return loginMesg;
+
+	}
+	
+	
+	//Verify the Error message with blan username
+	
+	public String VerifyBlankUsernameErrorText()
+
+	{
+		String sblankUserErrorText = userNameErrText.getText();
+		return sblankUserErrorText;
+
+	}
+	
+	public String VerifyBlankPasswordErrorText()
+
+	{
+		String sblankpassErrorText = passwordErrText.getText();
+		return sblankpassErrorText;
 
 	}
 	
