@@ -97,9 +97,8 @@ public class EventNotification implements Serializable {
     private Integer citizensAffected;
     
   @JoinColumn(name = "user_id", referencedColumnName = "id")
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @Cascade({ CascadeType.SAVE_UPDATE, CascadeType.PERSIST})
-  @JsonIgnore
   @NotNull(groups = {PersistValidationGroup.class})
   private User userId;
 
