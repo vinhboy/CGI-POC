@@ -17,7 +17,7 @@ describe('landingController', function() {
     $state = _$state_;
 
     deferred = _$q_.defer();
-    spyOn(notificationService, 'notifications').and.returnValue(deferred.promise);
+    spyOn(notificationService, 'allNotifications').and.returnValue(deferred.promise);
 
     landingController = _$controller_('landingController', {
       $scope: $scope,
