@@ -49,8 +49,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
     @Before
     public void setUp() throws Exception {
       super.setUp();
-        eventDAO = new EventNotificationDAO(getSessionFactory(),validator); 
-        //signupAdminUser();
+        eventDAO = new EventNotificationDAO(getSessionFactory(),validator);
     }
     
     @After

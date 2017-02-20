@@ -9,29 +9,23 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 
 public class EventNotificationDAO extends AbstractDAO<EventNotification> {
+
     Validator validator;
 
-  @Inject
-  public EventNotificationDAO(SessionFactory factory, Validator validator) {
+    @Inject
+    public EventNotificationDAO(SessionFactory factory, Validator validator) {
         super(factory);
         this.validator = validator;
-
     }
 
-  public EventNotification save(EventNotification eventNotification) {
-    eventNotification = this.persist(eventNotification);
-    return eventNotification;
-  }
-  
-  
-      public List<EventNotification>  retrieveAll() {
+    public EventNotification save(EventNotification eventNotification) {
+        eventNotification = this.persist(eventNotification);
+        return eventNotification;
+    }
 
+    public List<EventNotification> retrieveAll() {
         Criteria criteria = this.criteria();
-
-        List<EventNotification> resultList =  criteria.list();
-         
+        List<EventNotification> resultList = criteria.list();
         return resultList;
     }
-  
-
 }

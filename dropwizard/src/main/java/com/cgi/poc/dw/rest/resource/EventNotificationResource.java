@@ -37,7 +37,7 @@ import javax.ws.rs.core.HttpHeaders;
 public class EventNotificationResource {
   
   @Inject
-  EventNotificationService notificationServic;
+  EventNotificationService notificationService;
 
   @POST
   @RolesAllowed("ADMIN")
@@ -56,7 +56,7 @@ public class EventNotificationResource {
   @UnitOfWork
   @Timed(name = "EventNotification.publishNotification")
   public Response publishNotification(@Auth User principal, @NotNull @Valid EventNotification eventNotification) {
-    Response response =  notificationServic.publishNotification(principal, eventNotification);
+    Response response =  notificationService.publishNotification(principal, eventNotification);
     if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
       throw new WebApplicationException(response);
     }
@@ -80,7 +80,7 @@ public class EventNotificationResource {
   @UnitOfWork
   @Timed(name = "EventNotification.getNotificationse")
   public Response getNotificationse(@Auth User principal) {
-      Response response = notificationServic.retrieveAllNotifications(principal);
+      Response response = notificationService.retrieveAllNotifications(principal);
       if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
           throw new WebApplicationException(response);
       }
