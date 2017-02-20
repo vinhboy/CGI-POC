@@ -34,7 +34,7 @@ cgiWebApp.controller('landingController',
       notifications: []
     };
     $scope.eventTypeFilter=undefined;
-    $scope.eventTimeFilter='1';
+    $scope.eventTimeFilter=30;
     $scope.changeFilters = function(){
         $scope.model.filteredNotifications = angular.copy( $scope.model.notifications); 
         $scope.model.filteredNotifications  =  $filter('filter')($scope.model.filteredNotifications, {type: $scope.eventTypeFilter}, true);
@@ -60,11 +60,11 @@ cgiWebApp.controller('landingController',
     };
     
     $scope.loadEventDetails = function(){
-                    $window.alert('LOAD Events');
+           // TODO not yet implemented
             
     };
     $scope.loadMap = function(){
-                    $window.alert('LOAD MAP TBD');
+           // TODO not yet implemented
 
     };
 
