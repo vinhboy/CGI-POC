@@ -5,8 +5,28 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.cgi.poc.dw.auth.model.Role;
-import com.cgi.poc.dw.dao.HibernateUtil;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotificationType;
@@ -18,30 +38,6 @@ import com.cgi.poc.dw.util.GeneralErrors;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.hibernate.SessionFactory;
-import org.hibernate.internal.SessionImpl;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
@@ -61,6 +57,11 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     tstUser.setRole(Role.RESIDENT.toString());
     tstUser.setPhone("1234567890");
     tstUser.setZipCode("98765");
+    tstUser.setCity("Sacramento");
+    tstUser.setState("California");
+    tstUser.setRequiredStreet("required street");
+    tstUser.setOptionalStreet("optional street");
+    tstUser.setAllowPhoneLocalization(false);
     tstUser.setLatitude(0.0);
     tstUser.setLongitude(0.0);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));

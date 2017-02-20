@@ -75,7 +75,8 @@ public class UserRegistrationServiceUnitTest {
 
   private User user;
 
-  @Before
+  @SuppressWarnings("unchecked")
+	@Before
   public void createUser() throws IOException {
     user = new User();
     user.setEmail("success@gmail.com");
@@ -85,6 +86,11 @@ public class UserRegistrationServiceUnitTest {
     user.setRole(Role.RESIDENT.name());
     user.setPhone("1234567890");
     user.setZipCode("98765");
+    user.setCity("Sacramento");
+    user.setState("California");
+    user.setRequiredStreet("required street");
+    user.setOptionalStreet("optional street");
+    user.setAllowPhoneLocalization(false);
     user.setLatitude(0.0);
     user.setLongitude(0.0);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
@@ -132,7 +138,7 @@ public class UserRegistrationServiceUnitTest {
       fail("Expected an exception to be thrown");
     } catch (ConstraintViolationException exception) {
       Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-      for (ConstraintViolation violation : constraintViolations) {
+      for (ConstraintViolation<?> violation : constraintViolations) {
         String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
         String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
             .getCanonicalName();
@@ -163,7 +169,7 @@ public class UserRegistrationServiceUnitTest {
       fail("Expected an exception to be thrown");
     } catch (ConstraintViolationException exception) {
       Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-      for (ConstraintViolation violation : constraintViolations) {
+      for (ConstraintViolation<?> violation : constraintViolations) {
         String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
         String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
             .getCanonicalName();
@@ -188,7 +194,7 @@ public class UserRegistrationServiceUnitTest {
       fail("Expected an exception to be thrown");
     } catch (ConstraintViolationException exception) {
       Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-      for (ConstraintViolation violation : constraintViolations) {
+      for (ConstraintViolation<?> violation : constraintViolations) {
         String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
         String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
             .getCanonicalName();
@@ -213,7 +219,7 @@ public class UserRegistrationServiceUnitTest {
       fail("Expected an exception to be thrown");
     } catch (ConstraintViolationException exception) {
       Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-      for (ConstraintViolation violation : constraintViolations) {
+      for (ConstraintViolation<?> violation : constraintViolations) {
         String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
         String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
             .getCanonicalName();
@@ -238,7 +244,7 @@ public class UserRegistrationServiceUnitTest {
       fail("Expected an exception to be thrown");
     } catch (ConstraintViolationException exception) {
       Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-      for (ConstraintViolation violation : constraintViolations) {
+      for (ConstraintViolation<?> violation : constraintViolations) {
         String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
         String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
             .getCanonicalName();
