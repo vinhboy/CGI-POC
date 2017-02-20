@@ -41,6 +41,16 @@ cgiWebApp.controller('landingController',
         $scope.model.filteredNotifications  =   $filter('eventTime')([$scope.model.filteredNotifications, $scope.eventTimeFilter]);
     };
 
+   $scope.processApiErrors = function(response) {
+    $scope.apiErrors = [];
+    if (response.data && response.data.errors) {
+      for (var i = 0; i < response.data.errors.length; i++) {
+        if (response.data.errors[i].message) {
+          $scope.apiErrors.push(response.data.errors[i].message);
+        }
+      }
+    }
+   };
  
     $scope.initLoad = function(){
         EventNotificationService.allNotifications().then(function(response) {
@@ -52,7 +62,8 @@ cgiWebApp.controller('landingController',
                     $scope.changeFilters();
         }).catch(function(response) {
                     // omce implemented...this changes to report an error
-                    
+                        $scope.processApiErrors(response);
+  
        });
        
         
