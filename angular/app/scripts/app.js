@@ -66,11 +66,4 @@ $sceDelegateProvider.resourceUrlWhitelist([
         $http.defaults.headers.common.Authorization =  'Bearer ' + authToken;
         //Caching will be set by the nginx, so lets take advantage of that.
         //$http.defaults.headers.common['Cache-Control'] = 'no-cache';
-    }]);
-
-
-//get geo localization
-//TODO verify if the user is sign in and if he accept the geoloclization
-navigator.geolocation.getCurrentPosition(function(position) {
-    
-}
+}]);

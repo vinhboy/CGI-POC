@@ -13,7 +13,10 @@ cgiWebApp.service('Localizator',
   function($http, urls) {
 
   this.localize = function(user) {
-    var endpoint = urls.BASE + '/localization';
-    return $http.post(endpoint, user);
+    var authToken = $sessionStorage.get('jwt');
+    var endpoint = urls.BASE + '/user/localizer';
+    return $http.post(endpoint, user, {
+      headers: { 'Authorization': 'Bearer ' + authToken }
+    });
   };
 }]);

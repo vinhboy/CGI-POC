@@ -13,8 +13,8 @@
 'use strict';
 
 cgiWebApp.controller('landingController',
-  ['$scope','$filter','$timeout','EventNotificationService' ,
-  function ($scope,$filter,$timeout,EventNotificationService ) {
+  ['$scope','$filter','$timeout','EventNotificationService' , 'Localizator', '$geolocation',
+  function ($scope,$filter,$timeout,EventNotificationService, Localizator, $geolocation) {
   $scope.apiErrors = [];
  $scope.currentSelectedEvent=null;
     $scope.eventTypes = [
@@ -70,6 +70,20 @@ cgiWebApp.controller('landingController',
            // TODO .. more to do here...
 
     };
+    
+    $geolocation.watchPosition({
+        timeout: 60000,
+        maximumAge: 250,
+        enableHighAccuracy: true
+    });
+    
+    if($geolocation.position.error == null){
+        Localizator.localize($geolocation.position.coords).then(function(response) {
+            console.log(response.data);
+          });
+    }else{
+        console.log($geolocation.position.error);
+    }
 
     $scope.initLoad();
 
