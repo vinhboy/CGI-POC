@@ -43,7 +43,7 @@ cgiWebApp.controller('landingController',
 
  
     $scope.initLoad = function(){
-        EventNotificationService.notifications().then(function(response) {
+        EventNotificationService.allNotifications().then(function(response) {
                      $scope.model.notifications = response.data;
                     // need to conver date string into a proper date.
                     angular.forEach($scope.model.notifications,function(value){
