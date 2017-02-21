@@ -37,7 +37,7 @@
 	</head>
 	<body data-ng-app="cgi-web-app" ng-controller="bodyController">
 		<div ng-controller="websocketController"></div>
-
+                <script src='//maps.googleapis.com/maps/api/js?v=3.27&key=AIzaSyA0YKcUvlXoG1KY7_Vv2YCYei_UZAPUQ1w'></script>
 		<!-- build:js(.) scripts/vendor.js -->
 		<!-- bower:js -->
 		<script src="bower_components/angular/angular.js"></script>
@@ -48,6 +48,14 @@
 		<script src="bower_components/angular-websocket/dist/angular-websocket.js"></script>
 		<script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
 		<script src="bower_components/angular-sessionstorage/angular-sessionstorage.js"></script>
+		<script src="bower_components/angular-simple-logger/dist/angular-simple-logger.js"></script>
+		<script src="bower_components/lodash/lodash.js"></script>
+		<script src="bower_components/markerclustererplus/src/markerclusterer.js"></script>
+		<script src="bower_components/google-maps-utility-library-v3-markerwithlabel/dist/markerwithlabel.js"></script>
+		<script src="bower_components/google-maps-utility-library-v3-infobox/dist/infobox.js"></script>
+		<script src="bower_components/google-maps-utility-library-v3-keydragzoom/dist/keydragzoom.js"></script>
+		<script src="bower_components/js-rich-marker/src/richmarker.js"></script>
+		<script src="bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
 		<!-- endbower -->
 		<!-- endbuild -->
 
@@ -67,11 +75,12 @@
 		<script src="/scripts/controllers/headerController.js"></script>
 		<script src="/scripts/controllers/footerController.js"></script>
 		<script src="/scripts/controllers/eventTimeFilter.js"></script>
+		<script src="/scripts/controllers/eventController.js"></script>
 		<!-- endbuild -->
 		<div class="headerZone">
                     <div data-ui-view data-name="header">
      <ng-include src="'views/userHeader.html'" ng-controller="headerController"></ng-include>
- 
+
                     </div>
     </div>
     <div class="contentZone">

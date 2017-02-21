@@ -6,15 +6,16 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
-
 
 // Initializing Browser Class
 public class BrowserFactory {
@@ -41,22 +42,23 @@ public class BrowserFactory {
 		// Invoke IE Browser
 		else if (browserName.equalsIgnoreCase("ie")) {
 
-			//System.setProperty("webdriver.ie.driver", DataProviderFactory.getConfig().getIEPath());
+			// System.setProperty("webdriver.ie.driver",
+			// DataProviderFactory.getConfig().getIEPath());
 			driver = new InternetExplorerDriver();
 		}
-		
+
 		// Invoke Safari Browser
 		else if (browserName.equalsIgnoreCase("safari")) {
 
-			//System.setProperty("webdriver.ie.driver", DataProviderFactory.getConfig().getIEPath());
+			// System.setProperty("webdriver.ie.driver",
+			// DataProviderFactory.getConfig().getIEPath());
 			driver = new SafariDriver();
 		}
-
 
 		// Maximize the Window and wait for until the page load form 10 seconds
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-	
+
 		return driver;
 	}
 
@@ -64,28 +66,25 @@ public class BrowserFactory {
 	public static void closeBrowser(WebDriver ldriver) {
 		ldriver.quit();
 	}
-	
-	
-	public static void  isTextPresent(String textval,String reportmesg)
-	{
+
+	public static void isTextPresent(String textval, String reportmesg) {
 		if (driver.getPageSource().contains(textval) == true) {
 			Assert.assertTrue(true, reportmesg);
 		} else {
 			Assert.assertTrue(false, reportmesg);
 		}
-		
+
 	}
-	
-	public static void  isTextNotPresent(String textval,String reportmesg)
-	{
+
+	public static void isTextNotPresent(String textval, String reportmesg) {
 		if (driver.getPageSource().contains(textval) == true) {
 			Assert.assertFalse(false, reportmesg);
 		} else {
 			Assert.assertFalse(true, reportmesg);
 		}
-		
+
 	}
-	
+
 	public static void impliciteWait(int timeInsec) {
 		Reporter.log("waiting for page to load...");
 		try {
@@ -96,31 +95,42 @@ public class BrowserFactory {
 			Assert.assertTrue(false, "Timeout for page load request after " + timeInsec + " second");
 		}
 	}
-	
+
 	public static void switchToTab() {
-		  //Switching between tabs using CTRL + tab keys.
-		  driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL +"\t");
-		  //Switch to current selected tab's content.
-		  driver.switchTo().defaultContent(); 
-		  
-		 }
-	
+		// Switching between tabs using CTRL + tab keys.
+		driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "\t");
+		// Switch to current selected tab's content.
+		driver.switchTo().defaultContent();
+
+	}
+
 	public static void openNewTab()
 
 	{
-		 driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL +"t");
-		 driver.get(DataProviderFactory.getConfig().getApplicationUrl());
-		 //Call switchToTab() method to switch to 1st tab
-		  switchToTab(); 
+		driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "t");
+		driver.get(DataProviderFactory.getConfig().getApplicationUrl());
+		// Call switchToTab() method to switch to 1st tab
+		switchToTab();
 
 	}
-	
-	public static String waitFor()   {
+
+	public static String waitFor() {
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			return "Failed - unable to load the page";
 		}
 		return "Pass";
 	}
+
+	public static void HoverAndClick(WebDriver driver, WebElement elementToHover, WebElement elementToClick) {
+		Actions action = new Actions(driver);
+		action.moveToElement(elementToHover).click(elementToClick).build().perform();
+	}
+
+	public static void clickBackButton()
+	{
+		driver.navigate().back();
+	}
+	
 }

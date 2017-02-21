@@ -59,11 +59,20 @@ body{
     padding-bottom: 10em;
     z-index:-1;
 }
+.angular-google-map-container { 
+    height: 400px; 
+}
+#map {
+        height: 100%;
+      }
 .event{
     border: 5px;
     border-color: black;
     border-style: double;
     padding:0px!important;
+}
+.active{
+  border-color: blue;
 }
 .footerZone{
     width:100%;
@@ -103,6 +112,9 @@ input.phoneLong{
 .zipCodeText{
     float:right;
     width:80%;
+}
+.notificationMessageInfo{
+	float:right;
 }
 .emailAddressText{
 }

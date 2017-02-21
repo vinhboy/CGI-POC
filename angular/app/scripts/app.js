@@ -1,17 +1,23 @@
 'use strict';
 
-var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages' ]);
+var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages','uiGmapgoogle-maps' ]);
 
 cgiWebApp.constant('urls', {
   // have to be change depending of the environment
   BASE: 'http://localhost:8080',
   WS_BASE: 'ws://localhost:8080'
-}).config([ '$translateProvider', '$urlRouterProvider', '$stateProvider','$sceDelegateProvider', function($translateProvider, $urlRouterProvider, $stateProvider,$sceDelegateProvider) {
+})
+.config([ '$translateProvider', '$urlRouterProvider', '$stateProvider','$sceDelegateProvider', 
+    function($translateProvider, $urlRouterProvider, $stateProvider,$sceDelegateProvider ) {
+   
+
 $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
     'self',
     // Allow loading from our assets domain.  Notice the difference between * and **.
     'https://maps.google.com/**'
+    
+    
   ]);
 
 
@@ -56,8 +62,17 @@ $sceDelegateProvider.resourceUrlWhitelist([
         controller: 'ProfileController'
       }
     }
+  }).state('publish', {
+    url: '/publish',
+    views: {
+      'pageContent': {
+        templateUrl: '/views/publish.html',
+        controller: 'eventController'
+      }
+    }
   });
 }])
+
 .run(['$sessionStorage', '$http', '$rootScope', '$location','$state', function ($sessionStorage, $http, $rootScope, $location, $state ) { 
 
         var authToken = $sessionStorage.get('jwt');
@@ -82,4 +97,3 @@ $sceDelegateProvider.resourceUrlWhitelist([
             $state.go('login');
         }
     }]);
-
