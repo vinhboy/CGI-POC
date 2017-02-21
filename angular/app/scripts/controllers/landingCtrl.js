@@ -25,7 +25,7 @@ cgiWebApp.controller('landingController',
     $scope.eventTypes = [
         { name: 'All', id: undefined},
         { name: 'Emergency', id: 'ADMIN_E'},
-        { name: 'Non-Emervecy', id: 'ADMIN_I'},
+        { name: 'Non-Emergency', id: 'ADMIN_I'},
         { name: 'Weather', id: 'Weather'},
         { name: 'Flood', id: 'Flood'},
         { name: 'Fire', id: 'Fire'}];
