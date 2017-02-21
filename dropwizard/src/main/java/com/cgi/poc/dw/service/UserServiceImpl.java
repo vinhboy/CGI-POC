@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -57,7 +59,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	}
 
 	public Response registerUser(User user) {
-		Response response;
 		// Defaulting the user to RESIDENT
 		user.setRole("RESIDENT");
 
@@ -70,56 +71,48 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
 			return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
 		}
-		response = createPasswordHash(user);
-
-		if (response == Response.ok().build()) {
-			setUserGeoCoordinates(user);
-
-			response = saveUser(user, false);
-		}
-		return response == Response.ok().build() ? Response.ok().entity(user).build() : response;
-	}
-
-	private Response saveUser(User user, boolean registered) {
-		boolean userIsRegistered = registered;
-		Response response;
 		try {
-			validate(user, "save", Default.class, PersistValidationGroup.class);
-			for (UserNotificationType notificationType : user.getNotificationType()) {
-				notificationType.setUserId(user);
-			}
+			createPasswordHash(user);
+		} catch (Exception exception) {
+			LOG.error("Unable to create a password hash.", exception);
+			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
+			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		}
+		setUserGeoCoordinates(user);
 
-			userDao.save(user);
-			if (!userIsRegistered) {
-				// Future TODO enhancement: make the subject and email body configurable
-				emailService.send(null, Arrays.asList(user.getEmail()), "Registration confirmation",
-						"Hello there, thank you for registering.");
-				textMessageService.send(user.getPhone(), "MyCAlerts: Thank you for registering.");
-			}
-			response = Response.ok().build();
+		try {
+			saveUser(user, false);
 		} catch (ConstraintViolationException exception) {
 			throw exception;
 		} catch (Exception exception) {
 			LOG.error("Unable to save a user.", exception);
 			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
 		}
-		return response;
+
+		return Response.ok().entity(user).build();
 	}
 
-	private Response createPasswordHash(User user) {
-		String hash = null;
-		Response response = null;
-		try {
-			hash = passwordHash.createHash(user.getPassword());
-			user.setPassword(hash);
-			response = Response.ok().build();
-		} catch (Exception exception) {
-			LOG.error("Unable to create a password hash.", exception);
-			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+	private void saveUser(User user, boolean registered) {
+		boolean userIsRegistered = registered;
+		validate(user, "save", Default.class, PersistValidationGroup.class);
+		for (UserNotificationType notificationType : user.getNotificationType()) {
+			notificationType.setUserId(user);
 		}
-		return response;
+
+		userDao.save(user);
+		if (!userIsRegistered) {
+			// Future TODO enhancement: make the subject and email body configurable
+			emailService.send(null, Arrays.asList(user.getEmail()), "Registration confirmation",
+					"Hello there, thank you for registering.");
+			textMessageService.send(user.getPhone(), "MyCAlerts: Thank you for registering.");
+		}
+	}
+
+	private void createPasswordHash(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		String hash = null;
+		hash = passwordHash.createHash(user.getPassword());
+		user.setPassword(hash);
 	}
 
 	// invoke Google Maps API to retrieve latitude and longitude by zipCode
@@ -165,16 +158,29 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @return response
 	 */
 	public Response updateUser(User currentUser) {
-		Response response;
 		validate(currentUser, "rest", RestValidationGroup.class, Default.class);
 
-		response = createPasswordHash(currentUser);
+		try {
+			createPasswordHash(currentUser);
+		} catch (Exception exception) {
+			LOG.error("Unable to create a password hash.", exception);
+			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
+			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		}
 
-		if (response == Response.ok().build()) {
+	
 			setUserGeoCoordinates(currentUser);
 
-			response = saveUser(currentUser, true);
-		}
-		return response == Response.ok().build() ? Response.ok().entity(currentUser).build() : response;
+			try {
+				saveUser(currentUser, true);
+			} catch (ConstraintViolationException exception) {
+				throw exception;
+			} catch (Exception exception) {
+				LOG.error("Unable to save a user.", exception);
+				ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
+				return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+			}
+		
+		return Response.ok().entity(currentUser).build();
 	}
 }

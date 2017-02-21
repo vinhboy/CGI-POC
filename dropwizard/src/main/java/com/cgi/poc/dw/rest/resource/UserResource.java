@@ -21,6 +21,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +59,7 @@ public class UserResource {
 	@Timed(name = "User.save")
 	public Response updateProfile(@Auth User user, @NotNull User modifiedUser) {
 		//If user password is empty keep same password.
-		if(modifiedUser.getPassword().isEmpty()){
+		if(StringUtils.isBlank(modifiedUser.getPassword())){
 			modifiedUser.setPassword(user.getPassword());
 		}
 		modifiedUser.setId(user.getId());
