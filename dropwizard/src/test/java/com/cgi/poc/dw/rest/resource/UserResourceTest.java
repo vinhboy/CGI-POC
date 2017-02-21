@@ -353,7 +353,7 @@ public class UserResourceTest extends IntegrationTest {
 				target(String.format(url_localizer, RULE.getLocalPort())).
 				request().
 				header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken).
-				post(Entity.json(null));
+				put(Entity.json(null));
 		Assert.assertEquals(422, response.getStatus());
 
 		String output = response.readEntity(String.class);
@@ -376,7 +376,7 @@ public class UserResourceTest extends IntegrationTest {
 				target(String.format(url_localizer, RULE.getLocalPort())).
 				request().
 				header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken).
-				post(Entity.json(null));
+				put(Entity.json(null));
 		Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
 		ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
 		for (Error error : errorInfo.getErrors()) {
@@ -402,7 +402,7 @@ public class UserResourceTest extends IntegrationTest {
 				target(String.format(url_localizer, RULE.getLocalPort())).
 				request().
 				header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken).
-				post(Entity.json(null));
+				put(Entity.json(null));
 		Assert.assertEquals(200, response.getStatus());
 
 	}

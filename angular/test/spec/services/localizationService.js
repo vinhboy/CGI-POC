@@ -17,7 +17,7 @@ describe('Localizator', function() {
   describe('localizer', function() {
     it('should post to the expected localize endpoint', function() {
       var coords = {geoloclatitude : 53.00, geoloclongitude : -121.00};
-      $httpBackend.expectPOST('http://localhost:8080/user/localizer', credentials)
+      $httpBackend.expectPUT('http://localhost:8080/user/geoLocation', credentials)
         .respond(200, {});
 
       LocalizeService.localize(coords);
@@ -29,7 +29,7 @@ describe('Localizator', function() {
 
     it('should construct the endpoint URL', function() {
       var coords = {geoloclatitude : 53.00, geoloclongitude : -121.00};
-      $httpBackend.expectPOST(urls.BASE + '/user/localizer', credentials)
+      $httpBackend.expectPUT(urls.BASE + '/user/geoLocation', credentials)
         .respond(200, {});
 
       LocalizeService.localize(coords);
