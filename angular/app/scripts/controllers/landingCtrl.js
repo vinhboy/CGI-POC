@@ -22,6 +22,7 @@ cgiWebApp.controller('landingController',
   $scope.googleMaps = undefined;
   $scope.showMapOrDetails='MAP';
   $scope.activeItem = {item: -1};
+  $scope.role = $sessionStorage.get('role');
 
   $scope.currentSelectedEvent=null;
     $scope.eventTypes = [
@@ -66,24 +67,39 @@ cgiWebApp.controller('landingController',
       }
     }
    };
+    $scope.convertApiData = function(data){
+        $scope.model.notifications = data ;
+        // need to convert date string into a proper date.
+        angular.forEach($scope.model.notifications,function(value){
+           value.generationDate = Date.parse(value.generationDate); 
+           if (value.geometry !== '' && value.geometry!==null && 
+               value.geometry!== undefined){
+                value.geometry = JSON.parse(value.geometry);
+           }
+        });
+        $scope.changeFilters();
+        
+        
+    };
  
     $scope.initLoad = function(){
-        EventNotificationService.allNotifications().then(function(response) {
-                     $scope.model.notifications = response.data;
-                    // need to conver date string into a proper date.
-                    angular.forEach($scope.model.notifications,function(value){
-                       value.generationDate = Date.parse(value.generationDate); 
-                       if (value.geometry !== '' && value.geometry!==null && 
-                           value.geometry!== undefined){
-                            value.geometry = JSON.parse(value.geometry);
-                       }
-                    });
-                    $scope.changeFilters();
-        }).catch(function(response) {
+        if ($scope.role === 'ADMIN'){
+             EventNotificationService.allNotifications().then(function(response) {
+                 $scope.convertApiData(response.data);
+             }).catch(function(response) {
+                        $scope.processApiErrors(response);
+  
+             });
+        } else {
+             EventNotificationService.userNotifications().then(function(response) {
+                 $scope.convertApiData(response.data);
+             }).catch(function(response) {
                     // omce implemented...this changes to report an error
                         $scope.processApiErrors(response);
   
-       });
+             });
+            
+        }
 
         
     };
