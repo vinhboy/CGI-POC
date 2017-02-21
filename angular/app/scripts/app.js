@@ -76,10 +76,5 @@ $sceDelegateProvider.resourceUrlWhitelist([
             }
         });
         
-        $rootScope.logout = function() {
-            console.log('remove token');
-            $sessionStorage.remove('jwt');
-            $state.go('login');
-        }
     }]);
 
