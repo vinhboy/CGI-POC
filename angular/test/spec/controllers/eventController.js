@@ -164,12 +164,14 @@ describe('eventController', function() {
 
   describe('generateZipCodes', function() {
     it('generates the zip codes by splitting them', function() {
-      $scope.notification.zipCodes = '12345, 23456, 34567';
+      $scope.notification.zipCodes = '12345    , 23456, 34567,69483  ,   39383';
       $scope.generateZipCodes();
-      expect($scope.notification.zipCodesSplit.length).toBe(3);
+      expect($scope.notification.zipCodesSplit.length).toBe(5);
       expect($scope.notification.zipCodesSplit[0]).toBe('12345');
       expect($scope.notification.zipCodesSplit[1]).toBe('23456');
       expect($scope.notification.zipCodesSplit[2]).toBe('34567');
+      expect($scope.notification.zipCodesSplit[3]).toBe('69483');
+      expect($scope.notification.zipCodesSplit[4]).toBe('39383');
     });
   });
 });
