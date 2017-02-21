@@ -154,7 +154,7 @@ public class UserServiceImpl extends BaseServiceImpl implements
    */
   public Response setLocalization(User user){
 	  
-	  validate(user, "save", Default.class, PersistValidationGroup.class);			  
+	  validate(user, "save localization", Default.class, PersistValidationGroup.class);			  
 	  userDao.save(user);
 
 	  return Response.ok().build();

@@ -2,23 +2,23 @@ package com.cgi.poc.dw.rest.model;
 
 public class LocalizationDto {
 	
-	private Double geoLocLatitude;
+	private Double latitude;
 	
-	private Double geoLocLongitude;
+	private Double longitude;
 
-	public Double getGeoLocLatitude() {
-		return geoLocLatitude;
+	public Double getLatitude() {
+		return latitude;
 	}
 
-	public void setGeoLocLatitude(Double geoLocLatitude) {
-		this.geoLocLatitude = geoLocLatitude;
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
 	}
 
-	public Double getGeoLocLongitude() {
-		return geoLocLongitude;
+	public Double getLongitude() {
+		return longitude;
 	}
 
-	public void setGeoLocLongitude(Double geoLocLongitude) {
-		this.geoLocLongitude = geoLocLongitude;
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
 	}
 }

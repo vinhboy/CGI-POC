@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -341,8 +342,10 @@ public class UserResourceTest extends IntegrationTest {
   }
   
   @Test
-  public void setLocalization_noArgument() throws JsonParseException, JsonMappingException, IOException {
+  public void setLocalization_noArgument() throws JsonParseException, JsonMappingException, IOException, SQLException {
 		
+	  IntegrationTestHelper.signupResidentUser();
+	  
 		String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "residentpw", RULE);
 
 		Client client = new JerseyClientBuilder().build();
@@ -362,8 +365,10 @@ public class UserResourceTest extends IntegrationTest {
 	}
 
 	@Test
-	public void setLocalization_noGeoLocValue(){
-
+	public void setLocalization_noGeoLocValue() throws SQLException{
+		
+		IntegrationTestHelper.signupResidentUser();
+		
 		String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "residentpw", RULE);
 		
 		Client client = new JerseyClientBuilder().build();
@@ -386,8 +391,10 @@ public class UserResourceTest extends IntegrationTest {
 	}
 
 	@Test
-	public void setLocalization_Success(){
-
+	public void setLocalization_Success() throws SQLException{
+		
+		IntegrationTestHelper.signupResidentUser();
+		
 		String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "residentpw", RULE);
 
 		Client client = new JerseyClientBuilder().build();

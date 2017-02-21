@@ -58,7 +58,7 @@ public class LoginServiceImpl extends BaseServiceImpl implements LoginService {
         throw new InternalServerErrorException("Unable to issue authToken.");
       }
       AccessTokenDto accessTokenDto = new AccessTokenDto(authToken,
-          Role.valueOf(retUser.getRole()));
+          Role.valueOf(retUser.getRole()), retUser);
       return Response.ok().entity(accessTokenDto).build();
     } else {
       LOG.warn("Invalid password.");
