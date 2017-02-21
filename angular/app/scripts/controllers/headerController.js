@@ -13,8 +13,8 @@
 'use strict';
 
 cgiWebApp.controller('headerController',
-  ['$scope', '$sessionStorage', '$state',
-  function ($scope, $sessionStorage, $state) {
+  ['$scope', '$sessionStorage', '$state','$http',
+  function ($scope, $sessionStorage, $state,$http) {
     $scope.isLoggedIn = function(){
       return $sessionStorage.get('jwt') !== null ;
     };
@@ -26,6 +26,8 @@ cgiWebApp.controller('headerController',
     $scope.logout = function(){       
         $sessionStorage.remove('role');
         $sessionStorage.remove('jwt');    
+        $http.defaults.headers.common.Authorization =  'Bearer ';
+        
     };
     
 }]);

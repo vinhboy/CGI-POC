@@ -12,6 +12,53 @@ describe('EventSerivce', function() {
     urls = _urls_;
     $httpBackend = _$httpBackend_;
   }));
+  describe('userNotifications', function() {
+    it('should post to the expected publish endpoint', function() {
+      $httpBackend.expectGET('http://localhost:8080/notification/user')
+        .respond(200, {});
+
+      eventNotificationService.userNotifications();
+      $httpBackend.flush();
+
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should construct the endpoint URL', function() {
+       $httpBackend.expectGET(urls.BASE + '/notification/user' )
+        .respond(200, {});
+
+      eventNotificationService.userNotifications();
+      $httpBackend.flush();
+
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+  });
+  describe('allNotifications', function() {
+    it('should post to the expected publish endpoint', function() {
+      $httpBackend.expectGET('http://localhost:8080/notification/admin')
+        .respond(200, {});
+
+      eventNotificationService.allNotifications();
+      $httpBackend.flush();
+
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should construct the endpoint URL', function() {
+       $httpBackend.expectGET(urls.BASE + '/notification/admin' )
+        .respond(200, {});
+
+      eventNotificationService.allNotifications();
+      $httpBackend.flush();
+
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+  });
+
 
   describe('publish', function() {
     it('should post to the expected publish endpoint', function() {
