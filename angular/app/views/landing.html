@@ -21,7 +21,7 @@
        
       <div class="usa-width-one-third scrollable-section" >
       <div class="event usa-grid" ng-repeat="item in model.filteredNotifications track by $index" 
-           ng-class="{'active' : activeItem.item == $index}" ng-click="activeItem.item = $index" >
+           ng-class="{'active' : activeItem.item === $index}" ng-click="loadMap(item);activeItem.item = $index" >
           <div class="usa-width-one-twelfth"  >
                <img class="" src="/images/logo_mycalerts_header.png" alt="Logo image" />
           </div>
