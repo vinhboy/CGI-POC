@@ -47,10 +47,10 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserRegistrationServiceUnitTest {
+public class UserServiceUnitTest {
 
   @InjectMocks
-  UserRegistrationServiceImpl underTest;
+  UserServiceImpl underTest;
 
   @Mock
   private UserDao userDao;

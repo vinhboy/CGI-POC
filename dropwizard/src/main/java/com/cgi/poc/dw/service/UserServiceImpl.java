@@ -28,9 +28,9 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UserRegistrationServiceImpl extends BaseServiceImpl implements UserRegistrationService {
+public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
-	private final static Logger LOG = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	private final UserDao userDao;
 
@@ -48,7 +48,7 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements User
 	private static final String ADDRESS = "address";
 
 	@Inject
-	public UserRegistrationServiceImpl(MapApiConfiguration mapApiConfiguration, UserDao userDao,
+	public UserServiceImpl(MapApiConfiguration mapApiConfiguration, UserDao userDao,
 			PasswordHash passwordHash, Validator validator, Client client, EmailService emailService,
 			TextMessageService textMessageService) {
 		super(validator);

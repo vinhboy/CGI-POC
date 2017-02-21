@@ -1,8 +1,8 @@
 package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.service.UserRegistrationService;
-import com.cgi.poc.dw.service.UserRegistrationServiceImpl;
+import com.cgi.poc.dw.service.UserService;
+import com.cgi.poc.dw.service.UserServiceImpl;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 
@@ -28,12 +28,12 @@ import org.slf4j.LoggerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Api(value = "/profile", basePath = "/")
-public class UserRegistrationResource {
+public class UserResource {
 
-  private final static Logger LOG = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
+  private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
   @Inject
-  UserRegistrationService userRegistrationService;
+  UserService userService;
 
   @POST
   @UnitOfWork
@@ -45,7 +45,7 @@ public class UserRegistrationResource {
   })
   @Timed(name = "User.save")
   public Response signup(@NotNull User user) {
-      Response response = userRegistrationService.registerUser(user);
+      Response response = userService.registerUser(user);
       if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
                 throw new WebApplicationException(response);
       }
@@ -62,7 +62,7 @@ public class UserRegistrationResource {
   })
   @Timed(name = "User.save")
   public Response updateProfile(@Auth User user, @NotNull User userDto) {
-      Response response = userRegistrationService.updateUser(userDto);
+      Response response = userService.updateUser(userDto);
       if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
                 throw new WebApplicationException(response);
       }
