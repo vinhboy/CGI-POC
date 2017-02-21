@@ -294,5 +294,70 @@
        <modifyDataType columnName="comments" newDataType="VARCHAR(4000)" tableName="event_tsunami"/>
        <modifyDataType columnName="second" newDataType="NUMERIC(4,2)" tableName="event_tsunami"/>
     </changeSet>
+  
+  <changeSet id="17" author="Valon Sejdini">
+    <createTable tableName="event_notification">
+      <column name="id"  type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="isEmergency" type="ENUM('y', 'n')">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="varchar(2048)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="user_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="user_id"
+      baseTableName="event_notification"
+      constraintName="fk_user_id"
+      referencedTableName="user"
+      referencedColumnNames="id"/>
+  </changeSet>
+
+  <changeSet id="18" author="Valon Sejdini">
+    <createTable tableName="event_notification_zipcode">
+      <column name="id"  type="bigint" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="zip_code" type="varchar(13)" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="event_notification_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="event_notification_id"
+      baseTableName="event_notification_zipcode"
+      constraintName="fk_event_notification_id"
+      referencedTableName="event_notification"
+      referencedColumnNames="id"/>
+  </changeSet>
+  <changeSet id="19" author="Danwa Floyd">
+      <dropColumn  columnName="isEmergency" tableName="event_notification"/>
+      <addColumn tableName="event_notification">
+          <column name="type" type="VARCHAR(10)">
+              <constraints nullable="false"/>
+          </column>
+
+      </addColumn>
+      <addColumn tableName="event_notification">
+          <column name="generation_date" type="timestamp" defaultValueComputed="${now}" />
+      </addColumn>
+      <addColumn tableName="event_notification">
+          <column name="geometry" type="text"  />
+      </addColumn>
+      <addColumn tableName="event_notification">
+          <column name="url1" type="varchar(128)"  />
+      </addColumn>
+      <addColumn tableName="event_notification">
+          <column name="url2" type="varchar(128)"  />
+      </addColumn>
+      <addColumn tableName="event_notification">
+          <column name="citizensAffected" type="integer" />
+      </addColumn>
+  </changeSet>
 
 </databaseChangeLog>

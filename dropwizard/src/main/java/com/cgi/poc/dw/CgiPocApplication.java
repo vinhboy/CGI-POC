@@ -1,5 +1,10 @@
 package com.cgi.poc.dw;
 
+import com.cgi.poc.dw.api.service.APICallerService;
+import com.cgi.poc.dw.api.service.APIServiceFactory;
+import com.cgi.poc.dw.api.service.impl.APIServiceFactoryImpl;
+import com.cgi.poc.dw.api.service.impl.EventWeatherAPICallerServiceImpl;
+import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
 import com.cgi.poc.dw.auth.DBAuthenticator;
 import com.cgi.poc.dw.auth.JwtAuthFilter;
 import com.cgi.poc.dw.auth.UserRoleAuthorizer;
@@ -14,12 +19,18 @@ import com.cgi.poc.dw.auth.service.PasswordHashImpl;
 import com.cgi.poc.dw.dao.model.EventEarthquake;
 import com.cgi.poc.dw.dao.model.EventFlood;
 import com.cgi.poc.dw.dao.model.EventHurricane;
+import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.EventTsunami;
 import com.cgi.poc.dw.dao.model.EventVolcano;
 import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.dao.model.UserNotificationType;
+import com.cgi.poc.dw.rest.resource.EventNotificationResource;
+import com.cgi.poc.dw.jobs.JobExecutionService;
+import com.cgi.poc.dw.jobs.JobFactory;
+import com.cgi.poc.dw.jobs.JobFactoryImpl;
 import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.rest.resource.LoginResource;
@@ -27,10 +38,14 @@ import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
 import com.cgi.poc.dw.service.TextMessageService;
 import com.cgi.poc.dw.service.TextMessageServiceImpl;
 import com.cgi.poc.dw.sockets.AlertEndpoint;
+import com.cgi.poc.dw.service.EventNotificationServiceImpl;
+import com.cgi.poc.dw.service.EmailService;
+import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
 import com.cgi.poc.dw.service.UserRegistrationService;
 import com.cgi.poc.dw.service.UserRegistrationServiceImpl;
+import com.cgi.poc.dw.sockets.AlertEndpoint;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -40,6 +55,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -73,6 +89,7 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.cgi.poc.dw.service.EventNotificationService;
 
 /**
  * Main Dropwizard Application class.
@@ -82,9 +99,10 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
   private final static Logger LOG = LoggerFactory.getLogger(CgiPocApplication.class);
 
   private final HibernateBundle<CgiPocConfiguration> hibernateBundle
-            = new HibernateBundle<CgiPocConfiguration>(User.class,UserNotification.class,
-            FireEvent.class, EventEarthquake.class, EventWeather.class,EventFlood.class,
-            EventHurricane.class, EventTsunami.class,EventVolcano.class ) {
+      = new HibernateBundle<CgiPocConfiguration>(User.class, UserNotificationType.class,
+      FireEvent.class, EventEarthquake.class, EventWeather.class, EventFlood.class,
+      EventHurricane.class, EventTsunami.class, EventVolcano.class, EventNotification.class,
+      EventNotificationZipcode.class) {
     @Override
     public DataSourceFactory getDataSourceFactory(CgiPocConfiguration configuration) {
       return configuration.getDataSourceFactory();
@@ -163,10 +181,9 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
 
     Keys keys = new KeyBuilderServiceImpl().createKeys(configuration);
 
-    // guice injectorctor = createInjector(configuration, environment, keys);
-    // resource r
     Injector injector = createInjector(configuration, environment, keys);
 
+    registerResource(environment, injector, EventNotificationResource.class);
     registerResource(environment, injector, UserRegistrationResource.class);
     registerResource(environment, injector, LoginResource.class);
     registerResource(environment, injector, CustomConstraintViolationExceptionMapper.class);
@@ -179,6 +196,10 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     // authentication
     registerAuthentication(environment, injector, keys);
 
+    /**
+     * Adding Job Scheduler
+     */
+    environment.lifecycle().manage(injector.getInstance(JobExecutionService.class));
     LOG.debug("Application started");
   }
 
@@ -252,20 +273,28 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
       protected void configure() {
         // keys
         bind(Keys.class).toInstance(keys);
-
-        // services
+	// scheduler
+        bind(JobsConfiguration.class).toInstance(conf.getJobsConfiguration());
+        bindConstant().annotatedWith(Names.named("eventUrl")).to(200);
         bind(Validator.class).toInstance(env.getValidator());
+        bind(JobFactory.class).to(JobFactoryImpl.class).asEagerSingleton();
+        bind(APIServiceFactory.class).to(APIServiceFactoryImpl.class).asEagerSingleton();
         bind(JwtReaderService.class).to(JwtReaderServiceImpl.class).asEagerSingleton();
         bind(JwtBuilderService.class).to(JwtBuilderServiceImpl.class).asEagerSingleton();
         bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
-        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class).asEagerSingleton();
+        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class)
+            .asEagerSingleton();
+        bind(EventNotificationService.class).to(EventNotificationServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         bind(MailConfiguration.class).toInstance(conf.getMailConfig());
         bind(TwilioApiConfiguration.class).toInstance(conf.getTwilioApiConfiguration());
-
+        bind(FireEventAPICallerServiceImpl.class);
+        bind(EventWeatherAPICallerServiceImpl.class);        
+        bind(APICallerService.class).annotatedWith(Names.named("fireService")).to(FireEventAPICallerServiceImpl.class);
+        bind(APICallerService.class).annotatedWith(Names.named("weatherService")).to(FireEventAPICallerServiceImpl.class);
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)
             .using(conf.getJerseyClientConfiguration())
@@ -283,7 +312,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
             hibernateBundle.run(conf, env);
             return hibernateBundle.getSessionFactory();
           } catch (Exception e) {
-                LOG.error("Unable to run hibernatebundle");
+            LOG.error("Unable to run hibernatebundle");
           }
         } else {
           return sf;

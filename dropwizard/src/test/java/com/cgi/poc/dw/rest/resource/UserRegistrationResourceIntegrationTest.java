@@ -9,8 +9,9 @@ import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.HibernateUtil;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.helper.IntegrationTest;
+import com.cgi.poc.dw.helper.IntegrationTestHelper;
 import com.cgi.poc.dw.util.Error;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
@@ -37,6 +38,7 @@ import org.hibernate.internal.SessionImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,8 +63,8 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     tstUser.setZipCode("98765");
     tstUser.setLatitude(0.0);
     tstUser.setLongitude(0.0);
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
+    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
+    Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     tstUser.setNotificationType(notificationType);
 
@@ -70,23 +72,17 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
         ServerSetup.PROTOCOL_SMTP));
     smtpServer.start();
   }
-
+  
   @After
   public void exit() {
     if (smtpServer != null) {
       smtpServer.stop();
     }
-    try {
-      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
-      Connection sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
-      Statement st = sqlConnection.createStatement();
-      int res = st.executeUpdate("delete from user_notification");
-      res = st.executeUpdate("delete from user");
-      sqlConnection.commit();
-    } catch (Exception ex) {
-      Logger.getLogger(UserRegistrationResourceIntegrationTest.class.getName())
-          .log(Level.SEVERE, null, ex);
-    }
+  }
+
+  @AfterClass
+  public static void cleanup() {
+    IntegrationTestHelper.cleanDbState();
   }
 
   @Test
@@ -104,8 +100,8 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     Client client = new JerseyClientBuilder().build();
     tstUser.setEmail(null);
 
-    UserNotification selNot = new UserNotification(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotification> notificationType = new HashSet<>();
+    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
+    Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     tstUser.setNotificationType(notificationType);
 
@@ -309,10 +305,10 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
       assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
       // The data provided in the API call is invalid. Message: <XXXXX>
       // where XXX is the message associated to the validation
-      String partString = "zipCode  must match \"\\d{5}\"";
+      String partString = "zipCode  is invalid.";
       String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
           .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+      assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
     }
   }
   

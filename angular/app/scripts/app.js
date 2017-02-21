@@ -2,13 +2,18 @@
 
 var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages' ]);
 
-var HOST = 'localhost';
-
 cgiWebApp.constant('urls', {
   // have to be change depending of the environment
-  BASE: 'http://' + HOST + ':8080',
-  HOSTNAME: HOST
-}).config([ '$translateProvider', '$urlRouterProvider', '$stateProvider', function($translateProvider, $urlRouterProvider, $stateProvider) {
+  BASE: 'http://localhost:8080',
+  WS_BASE: 'ws://localhost:8080'
+}).config([ '$translateProvider', '$urlRouterProvider', '$stateProvider','$sceDelegateProvider', function($translateProvider, $urlRouterProvider, $stateProvider,$sceDelegateProvider) {
+$sceDelegateProvider.resourceUrlWhitelist([
+    // Allow same origin resource loads.
+    'self',
+    // Allow loading from our assets domain.  Notice the difference between * and **.
+    'https://maps.google.com/**'
+  ]);
+
 
   $translateProvider.useStaticFilesLoader({
     prefix : 'language/locale-', // path to translations files
@@ -22,56 +27,44 @@ cgiWebApp.constant('urls', {
   $stateProvider.state('login', {
     url : '/login',
     views:{
-      //'header': {
-      //},
       'pageContent':{
         templateUrl: '/views/login.html',
         controller: 'loginController'
-      }/*,
-      'footer':{
-      }*/
   }
-  }).state('registration', {
-    url : '/registration',
-    views:{
-      //'header': {
-      //},
-      'pageContent':{
-        templateUrl: '/views/registration.html',
-        controller: 'registrationCtrl'
-      }/*,
-      'footer':{
-      }*/
     }
-  // controller: 'signupController'
-  }).state('profile', {
-    url : '/profile',
+  }).state('register', {
+    url: '/register',
     views:{
-      'header': {
-        templateUrl: 'views/userHeader.html',
-        controller: 'profileController'
-      },
       'pageContent':{
-        templateUrl: 'views/userProfile.html',
-        controller: 'profileController'
-      },
-      'footer':{
-        templateUrl: 'views/userFooter.html'
+        templateUrl: '/views/profile.html',
+        controller: 'ProfileController'
+    }
+    }
+  }).state('landing', {
+       url : '/landing',
+    views:{
+      'pageContent':{
+       templateUrl: 'views/landing.html',
+       controller: 'landingController'
+    }
+    }
+  }).state('manageProfile', {
+    url: '/manageProfile',
+    views: {
+      'pageContent': {
+        templateUrl: '/views/profile.html',
+        controller: 'ProfileController'
       }
     }
-    //controller : 'customizationCtrl'
-  }).state('restricted', {
-    url : '/restricted',
-    views:{
-      //'header': {
-      //},
-      'pageContent':{
-        templateUrl: 'views/restricted.html',
-        controller: 'loginController'
-      }/*,
-      'footer':{
-      }*/
-    }
-    // controller: 'RestrictedController'
   });
-}]);
+}])
+.run(['$sessionStorage', '$http',   function ($sessionStorage, $http ) { 
+
+    var authToken = $sessionStorage.get('jwt');
+        // Setup api access token
+        $http.defaults.headers.common['Content-Type'] = 'application/json';
+        $http.defaults.headers.common.Authorization =  'Bearer ' + authToken;
+        //Caching will be set by the nginx, so lets take advantage of that.
+        //$http.defaults.headers.common['Cache-Control'] = 'no-cache';
+    }]);
+

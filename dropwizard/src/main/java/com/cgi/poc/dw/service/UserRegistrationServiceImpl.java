@@ -4,7 +4,7 @@ import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotification;
+import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
 import com.cgi.poc.dw.util.PersistValidationGroup;
@@ -85,7 +85,7 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
 
     try {
       validate(user, "save", Default.class, PersistValidationGroup.class);
-      for (UserNotification notificationType : user.getNotificationType()) {
+      for (UserNotificationType notificationType : user.getNotificationType()) {
         notificationType.setUserId(user);
       }
       
@@ -134,8 +134,12 @@ public class UserRegistrationServiceImpl extends BaseServiceImpl implements
   private ErrorInfo getInternalErrorInfo(Exception exception, GeneralErrors generalErrors) {
     ErrorInfo errRet = new ErrorInfo();
     String message = generalErrors.getMessage();
+    String exMsg = "";
+    if (exception.getMessage() != null){
+        exMsg  = exception.getMessage();
+    }
     String errorString = message.replace("REPLACE1", exception.getClass().getCanonicalName())
-        .replace("REPLACE2", exception.getMessage());
+        .replace("REPLACE2", exMsg);
     errRet.addError(generalErrors.getCode(), errorString);
     return errRet;
   }

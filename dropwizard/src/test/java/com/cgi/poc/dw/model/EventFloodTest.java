@@ -142,10 +142,8 @@ public class EventFloodTest extends BaseTest {
          assertEquals(tst.getWaterbody(),event.get("waterbody").asText());
          assertEquals(tst.getObstime(),event.get("obstime").asText());
          assertEquals(tst.getObjectid().longValue(),event.get("objectid").asLong());
-         // have to hard code this.. b/c the source if event is weird... 
-         assertEquals(tst.getLatitude().setScale(20), new BigDecimal("3.1996666999999999" ).setScale(20));
-         // have to hard code this.. b/c the source if event is weird... 
-         assertEquals(tst.getLongitude().setScale(20), new BigDecimal("-8.3279167000000001").setScale(20));
+         assertEquals(tst.getLatitude().setScale(20), BigDecimal.valueOf( event.get("latitude").asDouble()).setScale(20));
+         assertEquals(tst.getLongitude().setScale(20), BigDecimal.valueOf( event.get("longitude").asDouble()).setScale(20));
          assertEquals(tst.getState(),event.get("state").asText());
          assertEquals(tst.getIdpSource(),event.get("idp_source").asText());
          assertEquals(tst.getIdpSubset(),event.get("idp_subset").asText());

@@ -7,6 +7,7 @@ package com.cgi.poc.dw.dao;
 
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.slf4j.Logger;
 import javax.validation.Validator;
@@ -35,6 +36,7 @@ public class FireEventDAO extends AbstractDAO<FireEvent> {
             .put("notificationId", "notificationId")
             .build();
 
+    @Inject
     public FireEventDAO(SessionFactory factory, Validator validator) {
         super(factory);
         this.validator = validator;
