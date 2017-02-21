@@ -41,7 +41,6 @@ public class UserResource {
   @Inject
   UserService userService;
   
-  @Path("/register")
   @POST
   @UnitOfWork
   @ApiOperation(value = "User profile registration",
@@ -60,7 +59,7 @@ public class UserResource {
   }
   
   @RolesAllowed("RESIDENT")
-  @Path("/localizer")
+  @Path("/geoLocation")
   @POST
   @UnitOfWork
   @ApiOperation(value = "User localization",

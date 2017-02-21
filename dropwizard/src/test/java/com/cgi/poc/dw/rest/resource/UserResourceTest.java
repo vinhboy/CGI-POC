@@ -48,9 +48,9 @@ import com.icegreen.greenmail.util.ServerSetup;
 
 public class UserResourceTest extends IntegrationTest {
 
-  private static final String url_register = "http://localhost:%d/user/register";
+  private static final String url_register = "http://localhost:%d/user";
   
-  private static final String url_localizer = "http://localhost:%d/user/localizer";
+  private static final String url_localizer = "http://localhost:%d/user/geoLocation";
 
   private User tstUser;
 

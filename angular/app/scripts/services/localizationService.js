@@ -14,8 +14,8 @@ cgiWebApp.service('Localizator',
 
   this.localize = function(user) {
     var authToken = $sessionStorage.get('jwt');
-    var endpoint = urls.BASE + '/user/localizer';
-    return $http.post(endpoint, user, {
+    var endpoint = urls.BASE + '/user/geoLocation';
+    return $http.patch(endpoint, user, {
       headers: { 'Authorization': 'Bearer ' + authToken }
     });
   };
