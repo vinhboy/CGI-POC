@@ -56,7 +56,7 @@
           <span><span ng-repeat="z in currentSelectedEvent.eventNotificationZipcodes ">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
           <h5 class="usa-heading-alt">Message</h5>
           <span class="usa-heading-alt">{{currentSelectedEvent.description}}</span>
-          <h5 class="usa-heading-alt">{{currentSelectedEvent.citizensAffected | number}} users notified</h5>
+          <h5 ng-show="role==='ADMIN'" class="usa-heading-alt">{{currentSelectedEvent.citizensAffected | number}} users notified</h5>
           <div class="button_wrapper">
               <button ng-click="loadMap(currentSelectedEvent) " class="usa-button-big" type="button">RETURN TO MAP</button>
           </div>
