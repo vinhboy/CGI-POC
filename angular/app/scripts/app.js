@@ -58,13 +58,28 @@ $sceDelegateProvider.resourceUrlWhitelist([
     }
   });
 }])
-.run(['$sessionStorage', '$http',   function ($sessionStorage, $http ) { 
+.run(['$sessionStorage', '$http', '$rootScope', '$location','$state', function ($sessionStorage, $http, $rootScope, $location, $state ) { 
 
-    var authToken = $sessionStorage.get('jwt');
+        var authToken = $sessionStorage.get('jwt');
         // Setup api access token
         $http.defaults.headers.common['Content-Type'] = 'application/json';
         $http.defaults.headers.common.Authorization =  'Bearer ' + authToken;
         //Caching will be set by the nginx, so lets take advantage of that.
         //$http.defaults.headers.common['Cache-Control'] = 'no-cache';
+        
+        // redirect to login page if not logged in and trying to access a restricted page
+        $rootScope.$on('$locationChangeStart', function (event, next, current) {
+            var publicPages = ['/login'];
+            var restrictedPage = publicPages.indexOf($location.path()) === -1;
+            if (restrictedPage && !$sessionStorage.get('jwt')) {
+                $location.path('/login');
+            }
+        });
+        
+        $rootScope.logout = function() {
+            console.log('remove token');
+            $sessionStorage.remove('jwt');
+            $state.go('login');
+        }
     }]);
 

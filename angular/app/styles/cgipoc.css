@@ -34,13 +34,20 @@
   margin-right: auto; }
 
 .headerZone {
-  background: #003466; }
+  background: #003466;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1; }
 
 .usa-nav-secondary-links a {
   color: white !important; }
 
 .contentZone {
-  padding-bottom: 10em; }
+  margin-top: 5em;
+  padding-bottom: 10em;
+  z-index: -1; }
 
 .event {
   border: 5px;
@@ -49,7 +56,6 @@
   padding: 0px !important; }
 
 .footerZone {
-  position: fixed;
   width: 100%;
   bottom: 0; }
 

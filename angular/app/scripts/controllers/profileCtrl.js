@@ -175,3 +175,9 @@ cgiWebApp.directive('compareTo', function() {
     }
   };
 });
+
+cgiWebApp.directive('focus', function () {
+    return function (scope, element, attrs) {
+             element[0].focus();
+    }
+  });

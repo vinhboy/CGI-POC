@@ -48,8 +48,4 @@ cgiWebApp.controller('loginController',
     });
   };
 
-  $scope.logout = function() {
-    $sessionStorage.remove('jwt');
-    $state.go('login');
-  };
 }]);
