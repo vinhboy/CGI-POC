@@ -70,7 +70,6 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   	tstUser.setState("California");
   	tstUser.setRequiredStreet("required street");
   	tstUser.setOptionalStreet("optional street");
-  	tstUser.setAllowPhoneLocalization(false);
   	tstUser.setLatitude(38.5824933);
   	tstUser.setLongitude(-121.4941738);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));

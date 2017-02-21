@@ -30,42 +30,50 @@ import org.slf4j.LoggerFactory;
 @Api(value = "/profile", basePath = "/")
 public class UserResource {
 
-  private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
-  @Inject
-  UserService userService;
+	@Inject
+	UserService userService;
 
-  @POST
-  @UnitOfWork
-  @ApiOperation(value = "User profile registration",
-      notes = "Allows a user to register.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "Success"),
-      @ApiResponse(code = 500, message = "System Error")
-  })
-  @Timed(name = "User.save")
-  public Response signup(@NotNull User user) {
-      Response response = userService.registerUser(user);
-      if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
-                throw new WebApplicationException(response);
-      }
-    return response;
-  }
-  
-  @PUT
-  @UnitOfWork
-  @ApiOperation(value = "User profile update",
-      notes = "Allows a user to update.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "Success"),
-      @ApiResponse(code = 500, message = "System Error")
-  })
-  @Timed(name = "User.save")
-  public Response updateProfile(@Auth User user, @NotNull User userDto) {
-      Response response = userService.updateUser(userDto);
-      if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
-                throw new WebApplicationException(response);
-      }
-    return response;
-  }  
+	@POST
+	@UnitOfWork
+	@ApiOperation(value = "User profile registration", notes = "Allows a user to register.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
+			@ApiResponse(code = 500, message = "System Error") })
+	@Timed(name = "User.save")
+	public Response signup(@NotNull User user) {
+		Response response = userService.registerUser(user);
+		if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+			throw new WebApplicationException(response);
+		}
+		return response;
+	}
+
+	@PUT
+	@UnitOfWork
+	@ApiOperation(value = "User profile update", notes = "Allows a user to update.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
+			@ApiResponse(code = 500, message = "System Error") })
+	@Timed(name = "User.save")
+	public Response updateProfile(@Auth User user, @NotNull User userDto) {
+		//If user password is empty keep same password.
+		if(userDto.getPassword() != ""){
+			user.setPassword(userDto.getPassword());
+		}
+		user.setFirstName(userDto.getFirstName());
+		user.setLastName(userDto.getLastName());
+		user.setPhone(userDto.getPhone());
+		user.setZipCode(userDto.getZipCode());
+		user.setRequiredStreet(userDto.getRequiredStreet());
+		user.setOptionalStreet(userDto.getOptionalStreet());
+		user.setCity(userDto.getCity());
+		user.setState(userDto.getState());
+		user.setNotificationType(userDto.getNotificationType());
+		
+		Response response = userService.updateUser(user);
+		if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+			throw new WebApplicationException(response);
+		}
+		return response;
+	}
 }

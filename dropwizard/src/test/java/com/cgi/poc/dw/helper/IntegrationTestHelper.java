@@ -109,7 +109,7 @@ public class IntegrationTestHelper {
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, allowPhoneLocalization, role, latitude, longitude)\n"
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, role, latitude, longitude)\n"
               + "VALUES ( 100,\n"
               + "'john',\n"
               + "'doe',\n"
@@ -121,7 +121,6 @@ public class IntegrationTestHelper {
               + "'Sacramento',\n"
               + "'California',\n"
               + "'95814',\n"
-              + "false,\n"
               + "'RESIDENT',\n"
               + "38.5824933,\n"
               + "-121.4941738\n"

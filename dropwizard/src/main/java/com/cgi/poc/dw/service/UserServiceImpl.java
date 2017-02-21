@@ -7,15 +7,12 @@ import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
-import com.cgi.poc.dw.util.PasswordValidationGroup;
 import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.cgi.poc.dw.util.RestValidationGroup;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -150,28 +147,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @param modifiedUser
 	 * @return response
 	 */
-	public Response updateUser(User modifiedUser) {
-
-		// If password field was left empty, validates password before trying to hash.
-		if (modifiedUser.getPassword() != "") {
-			validate(modifiedUser, "rest", PasswordValidationGroup.class);
-		}
-		User currentUser = userDao.findUserByEmail(modifiedUser.getEmail());
-		if (currentUser != null) {
-			try {
-				currentUser = updateCurrentFields(modifiedUser, currentUser);
-			} catch (Exception exception) {
-				LOG.error("Unable to create a password hash.", exception);
-				ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-				return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-			}
-		} else {
-			ErrorInfo errRet = new ErrorInfo();
-			String errorString = GeneralErrors.INVALID_INPUT.getMessage().replace("REPLACE", "user not found");
-			errRet.addError(GeneralErrors.INVALID_INPUT.getCode(), errorString);
-			return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
-		}
-
+	public Response updateUser(User currentUser) {
 		validate(currentUser, "rest", RestValidationGroup.class, Default.class);
 
 		String hash = null;
@@ -202,58 +178,5 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
 		}
 		return Response.ok().entity(currentUser).build();
-	}
-
-	/**
-	 * Checks and updates fields that have been changed
-	 * 
-	 * @param modifiedUser
-	 * @param currentUser
-	 * @return updatedUser
-	 * @throws InvalidKeySpecException
-	 * @throws NoSuchAlgorithmException
-	 */
-	private User updateCurrentFields(User modifiedUser, User currentUser)
-			throws NoSuchAlgorithmException, InvalidKeySpecException {
-		User updatedUser = currentUser;
-		if (!modifiedUser.getFirstName().equals(currentUser.getFirstName())) {
-			updatedUser.setFirstName(modifiedUser.getFirstName());
-		}
-		if (!modifiedUser.getLastName().equals(currentUser.getLastName())) {
-			updatedUser.setLastName(modifiedUser.getLastName());
-		}
-		if (modifiedUser.getPassword() != "") {
-			if (!passwordHash.createHash(modifiedUser.getPassword()).equals(currentUser.getPassword())) {
-				updatedUser.setPassword(modifiedUser.getPassword());
-			}
-		}
-		if (modifiedUser.getPhone() != "" && !modifiedUser.getPhone().equals(currentUser.getPhone())) {
-			updatedUser.setPhone(modifiedUser.getPhone());
-		}
-		if (modifiedUser.getRequiredStreet() != ""
-				&& !modifiedUser.getRequiredStreet().equals(currentUser.getRequiredStreet())) {
-			updatedUser.setRequiredStreet(modifiedUser.getRequiredStreet());
-		}
-		if (modifiedUser.getOptionalStreet() != ""
-				&& !modifiedUser.getOptionalStreet().equals(currentUser.getOptionalStreet())) {
-			updatedUser.setOptionalStreet(modifiedUser.getOptionalStreet());
-		}
-		if (modifiedUser.getCity() != "" && !modifiedUser.getCity().equals(currentUser.getCity())) {
-			updatedUser.setCity(modifiedUser.getCity());
-		}
-		if (modifiedUser.getState() != "" && !modifiedUser.getState().equals(currentUser.getState())) {
-			updatedUser.setState(modifiedUser.getState());
-		}
-		if (modifiedUser.getZipCode() != "" && !modifiedUser.getZipCode().equals(currentUser.getZipCode())) {
-			updatedUser.setZipCode(modifiedUser.getZipCode());
-		}
-		if (modifiedUser.getState() != "" && !modifiedUser.equals(currentUser.getState())) {
-			updatedUser.setState(modifiedUser.getState());
-		}
-		if (modifiedUser.isAllowPhoneLocalization() != currentUser.isAllowPhoneLocalization()) {
-			updatedUser.setAllowPhoneLocalization(modifiedUser.isAllowPhoneLocalization());
-		}
-
-		return updatedUser;
 	}
 }

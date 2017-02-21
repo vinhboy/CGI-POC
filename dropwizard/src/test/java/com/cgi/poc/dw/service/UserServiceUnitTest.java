@@ -91,7 +91,6 @@ public class UserServiceUnitTest {
     user.setState("California");
     user.setRequiredStreet("required street");
     user.setOptionalStreet("optional street");
-    user.setAllowPhoneLocalization(false);
     user.setLatitude(0.0);
     user.setLongitude(0.0);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
@@ -110,7 +109,6 @@ public class UserServiceUnitTest {
 		user1.setState("California");
 		user1.setRequiredStreet("required street");
 		user1.setOptionalStreet("optional street");
-		user1.setAllowPhoneLocalization(false);
 		user1.setLatitude(38.5824933);
 		user1.setLongitude(-121.4941738);
 		UserNotificationType selNot1 = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));

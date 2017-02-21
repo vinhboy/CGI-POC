@@ -28,7 +28,6 @@ import org.hibernate.annotations.Cascade;
 
 import com.cgi.poc.dw.util.LoginValidationGroup;
 import com.cgi.poc.dw.util.PasswordType;
-import com.cgi.poc.dw.util.PasswordValidationGroup;
 import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.cgi.poc.dw.util.RestValidationGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -80,7 +79,7 @@ public class User implements Serializable, Principal {
 	@Size(min = 2, max = 500, message = "must be at least 2 characters in length.")
 	@Column(name = "password")
 	@PasswordType(message = "must be greater that 2 character, contain no whitespace, and have at least one number and one letter.", groups = {
-			RestValidationGroup.class, LoginValidationGroup.class, PasswordValidationGroup.class })
+			RestValidationGroup.class, LoginValidationGroup.class })
 	private String password;
 
 	// if the field contains phone or fax number consider using this annotation to
@@ -122,11 +121,6 @@ public class User implements Serializable, Principal {
 
 	@Basic(optional = false)
 	@NotNull
-	@Column(name = "allowPhoneLocalization")
-	private boolean allowPhoneLocalization;
-
-	@Basic(optional = false)
-	@NotNull
 	@Size(min = 1, max = 8)
 	@Column(name = "role")
 	@JsonIgnore
@@ -160,7 +154,7 @@ public class User implements Serializable, Principal {
 
 	public User(Long id, String firstName, String lastName, String email, String password, String phone,
 			String requiredStreet, String optionalStreet, String city, String state, String zipCode,
-			boolean allowPhoneLocalization, String role, double latitude, double longitude) {
+			String role, double latitude, double longitude) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -172,7 +166,6 @@ public class User implements Serializable, Principal {
 		this.city = city;
 		this.state = state;
 		this.zipCode = zipCode;
-		this.allowPhoneLocalization = allowPhoneLocalization;
 		this.role = role;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -296,14 +289,6 @@ public class User implements Serializable, Principal {
 
 	public void setState(String state) {
 		this.state = state;
-	}
-
-	public boolean isAllowPhoneLocalization() {
-		return allowPhoneLocalization;
-	}
-
-	public void setAllowPhoneLocalization(boolean allowPhoneLocalization) {
-		this.allowPhoneLocalization = allowPhoneLocalization;
 	}
 
 	@Override
