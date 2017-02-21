@@ -67,7 +67,7 @@ cgiWebApp.controller('landingController',
    };
     $scope.convertApiData = function(data){
         $scope.model.notifications = data ;
-        // need to conver date string into a proper date.
+        // need to convert date string into a proper date.
         angular.forEach($scope.model.notifications,function(value){
            value.generationDate = Date.parse(value.generationDate); 
            if (value.geometry !== '' && value.geometry!==null && 
@@ -85,7 +85,6 @@ cgiWebApp.controller('landingController',
              EventNotificationService.allNotifications().then(function(response) {
                  $scope.convertApiData(response.data);
              }).catch(function(response) {
-                    // omce implemented...this changes to report an error
                         $scope.processApiErrors(response);
   
              });
