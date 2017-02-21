@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Api(value = "/use", basePath = "/")
+@Api(value = "/user", basePath = "/")
 public class UserResource {
 
 	private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
