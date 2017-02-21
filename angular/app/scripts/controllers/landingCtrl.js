@@ -13,14 +13,22 @@
 'use strict';
 
 cgiWebApp.controller('landingController',
-  ['$scope','$filter','$timeout','EventNotificationService' , 'Localizator', '$geolocation',
-  function ($scope,$filter,$timeout,EventNotificationService, Localizator, $geolocation) {
+
+  ['$scope','$filter','$timeout','EventNotificationService','uiGmapGoogleMapApi' , 'Localizator', '$geolocation',
+  function ($scope,$filter,$timeout,EventNotificationService, uiGmapGoogleMapApi, Localizator, $geolocation) {
+    
   $scope.apiErrors = [];
- $scope.currentSelectedEvent=null;
+  $scope.map = undefined;
+  $scope.googleMaps = undefined;
+  $scope.showMapOrDetails='MAP';
+  $scope.activeItem = {item: -1};
+  $scope.role = $sessionStorage.get('role');
+
+  $scope.currentSelectedEvent=null;
     $scope.eventTypes = [
         { name: 'All', id: undefined},
         { name: 'Emergency', id: 'ADMIN_E'},
-        { name: 'Non-Emervecy', id: 'ADMIN_I'},
+        { name: 'Non-Emergency', id: 'ADMIN_I'},
         { name: 'Weather', id: 'Weather'},
         { name: 'Flood', id: 'Flood'},
         { name: 'Fire', id: 'Fire'}];
@@ -39,8 +47,16 @@ cgiWebApp.controller('landingController',
         $scope.model.filteredNotifications = angular.copy( $scope.model.notifications); 
         $scope.model.filteredNotifications  =  $filter('filter')($scope.model.filteredNotifications, {type: $scope.eventTypeFilter}, true);
         $scope.model.filteredNotifications  =   $filter('eventTime')([$scope.model.filteredNotifications, $scope.eventTimeFilter]);
-    };
+        $scope.currentSelectedEvent = $scope.model.filteredNotifications[0];
 
+                $scope.loadMap($scope.model.filteredNotifications[0]);
+
+    };
+   uiGmapGoogleMapApi.then(function(maps) {
+          $scope.maps =maps;
+ 
+   }); 
+ 
    $scope.processApiErrors = function(response) {
     $scope.apiErrors = [];
     if (response.data && response.data.errors) {
@@ -51,22 +67,40 @@ cgiWebApp.controller('landingController',
       }
     }
    };
+    $scope.convertApiData = function(data){
+        $scope.model.notifications = data ;
+        // need to convert date string into a proper date.
+        angular.forEach($scope.model.notifications,function(value){
+           value.generationDate = Date.parse(value.generationDate); 
+           if (value.geometry !== '' && value.geometry!==null && 
+               value.geometry!== undefined){
+                value.geometry = JSON.parse(value.geometry);
+           }
+        });
+        $scope.changeFilters();
+        
+        
+    };
  
     $scope.initLoad = function(){
-        EventNotificationService.allNotifications().then(function(response) {
-                     $scope.model.notifications = response.data;
-                    // need to conver date string into a proper date.
-                    angular.forEach($scope.model.notifications,function(value){
-                       value.generationDate = Date.parse(value.generationDate); 
-                    });
-                    $scope.changeFilters();
-        }).catch(function(response) {
+        if ($scope.role === 'ADMIN'){
+             EventNotificationService.allNotifications().then(function(response) {
+                 $scope.convertApiData(response.data);
+             }).catch(function(response) {
+                        $scope.processApiErrors(response);
+  
+             });
+        } else {
+             EventNotificationService.userNotifications().then(function(response) {
+                 $scope.convertApiData(response.data);
+             }).catch(function(response) {
                     // omce implemented...this changes to report an error
                         $scope.processApiErrors(response);
   
-       });
-       
-        
+             });
+            
+        }
+
         
     };
     
@@ -75,11 +109,58 @@ cgiWebApp.controller('landingController',
            $scope.showMapOrDetails='DETAILS';
             
     };
-    $scope.loadMap = function(selectedEvent){
-           $scope.currentSelectedEvent = selectedEvent;
-           $scope.showMapOrDetails='MAP';
-           // TODO .. more to do here...
+    
+    $scope.mapLoadASimplePoint = function (xValue, yValue) {        
+                    // just a map point
+                    var myLatLng = {lat: yValue, lng: xValue};
+                    $scope.map.setCenter({lat: myLatLng.lat, lng: myLatLng.lng});
+                    $scope.mapMarker = new $scope.maps.Marker({
+                        position: myLatLng,
+                        map: $scope.map
+                    });
+    };
+    $scope.mapLoadFromRings = function (listOfRings) {
+        var coordPoints = [];
+        angular.forEach(listOfRings, function (ring) {
+            angular.forEach(ring, function (ringEntry) {
+                var singlePoint = {};
+                singlePoint.lat = ringEntry[1];
+                singlePoint.lng = ringEntry[0];
+                coordPoints.push(singlePoint);
+            });
+        });
+        /// take the first one in the list so we set the area of the map
+        $scope.map.setCenter({lat: coordPoints[0].lat, lng: coordPoints[0].lng});
 
+        // Construct the polygon.
+        var ring = new $scope.maps.Polygon({
+            paths: coordPoints,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35
+        });
+        ring.setMap($scope.map);        
+    };
+    $scope.mapLoadFromForZipCodes = function (listOfZips) {
+                     var geocoder = new $scope.maps.Geocoder();
+                    var markers = [];
+                    var bounds = new $scope.maps.LatLngBounds();
+                    angular.forEach(listOfZips, function (zipCode) {
+                        geocoder.geocode({'address': zipCode.zipCode}, function (results, status) {
+                            if (status === 'OK') {
+                                $scope.map.setCenter(results[0].geometry.location);
+                                var marker = new $scope.maps.Marker({
+                                    map: $scope.map,
+                                    position: results[0].geometry.location
+                                });
+                                bounds.extend(results[0].geometry.location);
+                                markers.push(marker);
+                            }
+                        });
+                    });
+                    $scope.map.fitBounds(bounds);      
     };
     
     //get the localization of the user and save it in his profile
@@ -112,6 +193,30 @@ cgiWebApp.controller('landingController',
         }
     };
 
+    
+    $scope.loadMap = function (selectedEvent) {
+        $scope.currentSelectedEvent = selectedEvent;
+        $scope.showMapOrDetails = 'MAP';
+        // the 2 variables above hide/show the map.
+        // because of the way google mas renders, we need to make sure
+        //that the map is set up AFTER the UI render. So we 
+        // have this timeout whic forces the render to complete first.
+        $timeout(function () {
+            var ele = angular.element(document.querySelector('#map'));
+            var mapIngfo = {center: {lat: -34.397, lng: 150.644}, zoom: 8};
+            $scope.map = new $scope.maps.Map(ele[0], mapIngfo);
+            if ($scope.currentSelectedEvent !== undefined) {
+                if ($scope.currentSelectedEvent.geometry.rings !== undefined) {
+                     $scope.mapLoadFromRings($scope.currentSelectedEvent.geometry.rings);
+                } else if (selectedEvent.geometry.y !== undefined && selectedEvent.geometry.x !== undefined &&
+                        selectedEvent.geometry.y !== '' && selectedEvent.geometry.x !== '') {
+                    $scope.mapLoadASimplePoint(selectedEvent.geometry.x ,selectedEvent.geometry.y  );
+                } else if (selectedEvent.eventNotificationZipcodes.length > 0) {
+                    $scope.mapLoadFromForZipCodes(selectedEvent.eventNotificationZipcodes);
+                }
+            }
+        }, 0, false);
+    };
     $scope.initLoad();
     
     $scope.saveLocalization();

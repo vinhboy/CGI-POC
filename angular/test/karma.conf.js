@@ -21,6 +21,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'http://maps.googleapis.com/maps/api/js?sensor=false&language=en',
       // bower:js
       'bower_components/angular/angular.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
@@ -31,8 +32,17 @@ module.exports = function(config) {
       'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
       'bower_components/angular-sessionstorage/angular-sessionstorage.js',
       'bower_components/ngGeolocation/ngGeolocation.js',
+      'bower_components/angular-simple-logger/dist/angular-simple-logger.js',
+      'bower_components/lodash/lodash.js',
+      'bower_components/markerclustererplus/src/markerclusterer.js',
+      'bower_components/google-maps-utility-library-v3-markerwithlabel/dist/markerwithlabel.js',
+      'bower_components/google-maps-utility-library-v3-infobox/dist/infobox.js',
+      'bower_components/google-maps-utility-library-v3-keydragzoom/dist/keydragzoom.js',
+      'bower_components/js-rich-marker/src/richmarker.js',
+      'bower_components/angular-google-maps/dist/angular-google-maps.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
+
       "app/scripts/**/*.js",
       "test/mock/**/*.js",
       "test/spec/**/*.js"

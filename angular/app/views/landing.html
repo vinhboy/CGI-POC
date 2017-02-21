@@ -20,7 +20,8 @@
   <div class="usa-grid">
        
       <div class="usa-width-one-third scrollable-section" >
-      <div class="event usa-grid" ng-repeat="item in model.filteredNotifications track by $index">
+      <div class="event usa-grid" ng-repeat="item in model.filteredNotifications track by $index" 
+           ng-class="{'active' : activeItem.item === $index}" ng-click="loadMap(item);activeItem.item = $index" >
           <div class="usa-width-one-twelfth"  >
                <img class="" src="/images/logo_mycalerts_header.png" alt="Logo image" />
           </div>
@@ -55,27 +56,19 @@
           <span><span ng-repeat="z in currentSelectedEvent.eventNotificationZipcodes ">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
           <h5 class="usa-heading-alt">Message</h5>
           <span class="usa-heading-alt">{{currentSelectedEvent.description}}</span>
-          <h5 class="usa-heading-alt">{{currentSelectedEvent.citizensAffected | number}} users notified</h5>
+          <h5 ng-show="role==='ADMIN'" class="usa-heading-alt">{{currentSelectedEvent.citizensAffected | number}} users notified</h5>
           <div class="button_wrapper">
-              <button ng-click="showMapOrDetails='MAP'" class="usa-button-big" type="button">RETURN TO MAP</button>
+              <button ng-click="loadMap(currentSelectedEvent) " class="usa-button-big" type="button">RETURN TO MAP</button>
           </div>
           </div>
       </div>
      </div>
-    <div ng-show="showMapOrDetails === 'MAP' " class=" map ">
-        <p>{{embeddedLine}}</p>
-    <p>
-      <iframe width="300" height="170" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
-          src="{{embeddedLine}}">
-                  
-      </iframe>
-        <br />
-        <small>
-            <a href="https://maps.google.com/maps?q='+data.lat+','+data.lon+'&hl=es;z=14&amp;output=embed" style="color:#0000FF;text-align:left" 
-               target="_blank">View larger map</a>
-        </small>
-    </p>
-    </div>
+      <div   ng-show="showMapOrDetails === 'MAP'  && currentSelectedEvent!== undefined"  class="map">
+        <div id="map" style="width: 500px; height: 500px; position: absolute;">
+                 <div id="map-canvas"></div>
+        </div>
+     </div>
+     </div>
     </div>
   </div>
 
