@@ -42,11 +42,20 @@
 .contentZone {
   padding-bottom: 10em; }
 
+.angular-google-map-container {
+  height: 400px; }
+
+#map {
+  height: 100%; }
+
 .event {
   border: 5px;
   border-color: black;
   border-style: double;
   padding: 0px !important; }
+
+.active {
+  border-color: blue; }
 
 .footerZone {
   position: fixed;
@@ -87,6 +96,9 @@ input.phoneLong {
 .zipCodeText {
   float: right;
   width: 80%; }
+
+.notificationMessageInfo {
+  float: right; }
 
 input.zipCode {
   display: inline-block;

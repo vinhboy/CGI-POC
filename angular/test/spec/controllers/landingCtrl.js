@@ -10,7 +10,7 @@ describe('landingController', function() {
   var $geolocation;
 
   beforeEach(module('cgi-web-app'));
-    beforeEach(inject(function(_$rootScope_, _$controller_, _EventNotificationService_, _$state_, _$q_, _$geolocation_) {
+    beforeEach(inject(function(_$rootScope_, _$controller_, _EventNotificationService_, _$state_, _$q_,_uiGmapGoogleMapApi_, _$geolocation_) {
 
     $q = _$q_;
     $scope = _$rootScope_.$new();
@@ -20,6 +20,7 @@ describe('landingController', function() {
 
     deferred = _$q_.defer();
     spyOn(notificationService, 'allNotifications').and.returnValue(deferred.promise);
+
 
     landingController = _$controller_('landingController', {
       $scope: $scope,
