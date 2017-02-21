@@ -24,10 +24,10 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/profile")
+@Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Api(value = "/profile", basePath = "/")
+@Api(value = "/use", basePath = "/")
 public class UserResource {
 
 	private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -55,22 +55,15 @@ public class UserResource {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 500, message = "System Error") })
 	@Timed(name = "User.save")
-	public Response updateProfile(@Auth User user, @NotNull User userDto) {
+	public Response updateProfile(@Auth User user, @NotNull User modifiedUser) {
 		//If user password is empty keep same password.
-		if(!userDto.getPassword().isEmpty()){
-			user.setPassword(userDto.getPassword());
+		if(modifiedUser.getPassword().isEmpty()){
+			modifiedUser.setPassword(user.getPassword());
 		}
-		user.setFirstName(userDto.getFirstName());
-		user.setLastName(userDto.getLastName());
-		user.setPhone(userDto.getPhone());
-		user.setZipCode(userDto.getZipCode());
-		user.setRequiredStreet(userDto.getRequiredStreet());
-		user.setOptionalStreet(userDto.getOptionalStreet());
-		user.setCity(userDto.getCity());
-		user.setState(userDto.getState());
-		user.setNotificationType(userDto.getNotificationType());
+		modifiedUser.setId(user.getId());
+		modifiedUser.setRole(user.getRole());
 		
-		Response response = userService.updateUser(user);
+		Response response = userService.updateUser(modifiedUser);
 		if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
 			throw new WebApplicationException(response);
 		}

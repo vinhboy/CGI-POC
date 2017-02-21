@@ -381,11 +381,6 @@
             <constraints nullable="true"/>
             </column>
         </addColumn>
-        <addColumn tableName="user">
-            <column name="allowPhoneLocalization" type="BOOLEAN" >
-            <constraints nullable="false"/>
-            </column>
-        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

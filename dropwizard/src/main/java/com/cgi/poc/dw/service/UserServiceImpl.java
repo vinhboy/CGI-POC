@@ -45,9 +45,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private static final String ADDRESS = "address";
 
 	@Inject
-	public UserServiceImpl(MapApiConfiguration mapApiConfiguration, UserDao userDao,
-			PasswordHash passwordHash, Validator validator, Client client, EmailService emailService,
-			TextMessageService textMessageService) {
+	public UserServiceImpl(MapApiConfiguration mapApiConfiguration, UserDao userDao, PasswordHash passwordHash,
+			Validator validator, Client client, EmailService emailService, TextMessageService textMessageService) {
 		super(validator);
 		this.userDao = userDao;
 		this.passwordHash = passwordHash;
@@ -58,6 +57,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	}
 
 	public Response registerUser(User user) {
+		Response response;
 		// Defaulting the user to RESIDENT
 		user.setRole("RESIDENT");
 
@@ -70,18 +70,19 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
 			return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
 		}
-		String hash = null;
-		try {
-			hash = passwordHash.createHash(user.getPassword());
-			user.setPassword(hash);
-		} catch (Exception exception) {
-			LOG.error("Unable to create a password hash.", exception);
-			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		response = createPasswordHash(user);
+
+		if (response == Response.ok().build()) {
+			setUserGeoCoordinates(user);
+
+			response = saveUser(user, false);
 		}
+		return response == Response.ok().build() ? Response.ok().entity(user).build() : response;
+	}
 
-		setUserGeoCoordinates(user);
-
+	private Response saveUser(User user, boolean registered) {
+		boolean userIsRegistered = registered;
+		Response response;
 		try {
 			validate(user, "save", Default.class, PersistValidationGroup.class);
 			for (UserNotificationType notificationType : user.getNotificationType()) {
@@ -89,20 +90,36 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			}
 
 			userDao.save(user);
-
-			// Future TODO enhancement: make the subject and email body configurable
-			emailService.send(null, Arrays.asList(user.getEmail()), "Registration confirmation",
-					"Hello there, thank you for registering.");
-			textMessageService.send(user.getPhone(), "MyCAlerts: Thank you for registering.");
-
+			if (!userIsRegistered) {
+				// Future TODO enhancement: make the subject and email body configurable
+				emailService.send(null, Arrays.asList(user.getEmail()), "Registration confirmation",
+						"Hello there, thank you for registering.");
+				textMessageService.send(user.getPhone(), "MyCAlerts: Thank you for registering.");
+			}
+			response = Response.ok().build();
 		} catch (ConstraintViolationException exception) {
 			throw exception;
 		} catch (Exception exception) {
 			LOG.error("Unable to save a user.", exception);
 			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
 		}
-		return Response.ok().entity(user).build();
+		return response;
+	}
+
+	private Response createPasswordHash(User user) {
+		String hash = null;
+		Response response = null;
+		try {
+			hash = passwordHash.createHash(user.getPassword());
+			user.setPassword(hash);
+			response = Response.ok().build();
+		} catch (Exception exception) {
+			LOG.error("Unable to create a password hash.", exception);
+			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		}
+		return response;
 	}
 
 	// invoke Google Maps API to retrieve latitude and longitude by zipCode
@@ -148,35 +165,16 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @return response
 	 */
 	public Response updateUser(User currentUser) {
+		Response response;
 		validate(currentUser, "rest", RestValidationGroup.class, Default.class);
 
-		String hash = null;
-		try {
-			hash = passwordHash.createHash(currentUser.getPassword());
-			currentUser.setPassword(hash);
-		} catch (Exception exception) {
-			LOG.error("Unable to create a password hash.", exception);
-			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		response = createPasswordHash(currentUser);
+
+		if (response == Response.ok().build()) {
+			setUserGeoCoordinates(currentUser);
+
+			response = saveUser(currentUser, true);
 		}
-
-		setUserGeoCoordinates(currentUser);
-
-		try {
-			validate(currentUser, "save", Default.class, PersistValidationGroup.class);
-			for (UserNotificationType notificationType : currentUser.getNotificationType()) {
-				notificationType.setUserId(currentUser);
-			}
-
-			userDao.save(currentUser);
-
-		} catch (ConstraintViolationException exception) {
-			throw exception;
-		} catch (Exception exception) {
-			LOG.error("Unable to update a user.", exception);
-			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-		}
-		return Response.ok().entity(currentUser).build();
+		return response == Response.ok().build() ? Response.ok().entity(currentUser).build() : response;
 	}
 }
