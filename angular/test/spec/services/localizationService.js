@@ -16,11 +16,11 @@ describe('Localizator', function() {
 
   describe('localizer', function() {
     it('should post to the expected localize endpoint', function() {
-      var user = { username: 'user', password: 'pw' , geoloclatitude : 53.00, geoloclongitude : -121.00};
+      var coords = {geoloclatitude : 53.00, geoloclongitude : -121.00};
       $httpBackend.expectPOST('http://localhost:8080/user/localizer', credentials)
         .respond(200, {});
 
-      LocalizeService.localize(user);
+      LocalizeService.localize(coords);
       $httpBackend.flush();
 
       $httpBackend.verifyNoOutstandingExpectation();
@@ -28,11 +28,11 @@ describe('Localizator', function() {
     });
 
     it('should construct the endpoint URL', function() {
-      var user = { email: 'user@example.com', password: 'pw', name: 'jonny depp'  , geoloclatitude : 53.00, geoloclongitude : -121.00};
+      var coords = {geoloclatitude : 53.00, geoloclongitude : -121.00};
       $httpBackend.expectPOST(urls.BASE + '/user/localizer', credentials)
         .respond(200, {});
 
-      LocalizeService.localize(user);
+      LocalizeService.localize(coords);
       $httpBackend.flush();
 
       $httpBackend.verifyNoOutstandingExpectation();

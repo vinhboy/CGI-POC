@@ -7,14 +7,16 @@ describe('landingController', function() {
   var $state;
   var $q;
   var deferred;
+  var $geolocation;
 
   beforeEach(module('cgi-web-app'));
-    beforeEach(inject(function(_$rootScope_, _$controller_, _EventNotificationService_, _$state_, _$q_) {
+    beforeEach(inject(function(_$rootScope_, _$controller_, _EventNotificationService_, _$state_, _$q_, _$geolocation_) {
 
     $q = _$q_;
     $scope = _$rootScope_.$new();
     notificationService = _EventNotificationService_;
     $state = _$state_;
+    $geolocation = _$geolocation_;
 
     deferred = _$q_.defer();
     spyOn(notificationService, 'allNotifications').and.returnValue(deferred.promise);
@@ -98,7 +100,23 @@ describe('landingController', function() {
       expect($scope.currentSelectedEvent).toBe(selectedEvent);
       expect($scope.showMapOrDetails).toBe('MAP');
  });
-
+ 
+ it('call the geo localization', function() {
+     
+     var position = {
+                "coords" : {
+                    "latitude": "36.149674",
+                    "longitude": "-86.813347"
+                }
+             };
+     
+     spyOn($geolocation, 'watchPosition').and.returnValue(position);
+     
+     $scope.saveLocalization();
+     
+     expect($scope.coords).toBe("36.149674, -86.813347");
+     expect($scope.error).toBeNull();
+ });
     
   
 });
