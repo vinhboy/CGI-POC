@@ -57,7 +57,7 @@ public class UserResource {
 	@Timed(name = "User.save")
 	public Response updateProfile(@Auth User user, @NotNull User userDto) {
 		//If user password is empty keep same password.
-		if(userDto.getPassword() != ""){
+		if(!userDto.getPassword().isEmpty()){
 			user.setPassword(userDto.getPassword());
 		}
 		user.setFirstName(userDto.getFirstName());
