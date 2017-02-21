@@ -42,7 +42,6 @@ public abstract class BaseClass {
 		report.flush();
 
 	}
-
 	@AfterMethod
 	// Take the Screenshot for the failures and exit the Testcase & close Browser
 	public void tearDown(ITestResult result) {

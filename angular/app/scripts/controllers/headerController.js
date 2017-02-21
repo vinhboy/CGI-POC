@@ -18,8 +18,14 @@ cgiWebApp.controller('headerController',
     $scope.isLoggedIn = function(){
       return $sessionStorage.get('jwt') !== null ;
     };
-
-    $scope.isAuth = function(){
-      return $state.current.name === 'login';
+    $scope.isAdminUser = function(){
+      return $sessionStorage.get('role') === 'ADMIN';
     };
+
+    
+    $scope.logout = function(){       
+        $sessionStorage.remove('role');
+        $sessionStorage.remove('jwt');    
+    };
+    
 }]);
