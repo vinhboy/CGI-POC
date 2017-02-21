@@ -5,6 +5,7 @@
     <classes>
       <class name="com.ChildWelfareAutomationSuite.Testcases.TC01_LoginFlow"/>
       <class name="com.ChildWelfareAutomationSuite.Testcases.TC02_disAllowLogin"/>
+      <class name="com.ChildWelfareAutomationSuite.Testcases.TC01_UserProfile_AllowRegistration"/>
     </classes>
   </test> <!-- SmokeSuite -->
 </suite> <!-- Sprint1 -->
