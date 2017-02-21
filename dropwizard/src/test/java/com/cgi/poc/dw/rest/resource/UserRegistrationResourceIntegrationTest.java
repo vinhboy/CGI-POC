@@ -5,6 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +27,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cgi.poc.dw.auth.model.Role;
@@ -41,29 +45,34 @@ import com.icegreen.greenmail.util.ServerSetup;
 
 public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
-  private static final String url = "http://localhost:%d/register";
+  private static final String url = "http://localhost:%d/profile";
 
   private User tstUser;
 
   private GreenMail smtpServer;
   
+  @BeforeClass
+  public static void createUser() throws SQLException {
+    IntegrationTestHelper.signupResidentUser();
+  }
+  
   @Before
-  public void createUser() {
-    tstUser = new User();
-    tstUser.setEmail("sampleuser@cgi.com");
-    tstUser.setPassword("test123");
-    tstUser.setFirstName("john");
-    tstUser.setLastName("smith");
-    tstUser.setRole(Role.RESIDENT.toString());
-    tstUser.setPhone("1234567890");
-    tstUser.setZipCode("98765");
-    tstUser.setCity("Sacramento");
-    tstUser.setState("California");
-    tstUser.setRequiredStreet("required street");
-    tstUser.setOptionalStreet("optional street");
-    tstUser.setAllowPhoneLocalization(false);
-    tstUser.setLatitude(0.0);
-    tstUser.setLongitude(0.0);
+  public void initUser() {
+  	tstUser = new User();
+  	tstUser.setEmail("resident@cgi.com");
+  	tstUser.setPassword("!QAZ1qaz");
+  	tstUser.setFirstName("john");
+  	tstUser.setLastName("doe");
+  	tstUser.setRole(Role.RESIDENT.name());
+  	tstUser.setPhone("1234567890");
+  	tstUser.setZipCode("95814");
+  	tstUser.setCity("Sacramento");
+  	tstUser.setState("California");
+  	tstUser.setRequiredStreet("required street");
+  	tstUser.setOptionalStreet("optional street");
+  	tstUser.setAllowPhoneLocalization(false);
+  	tstUser.setLatitude(38.5824933);
+  	tstUser.setLongitude(-121.4941738);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
     Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
@@ -202,6 +211,39 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
   }
 
+  public void invalidPasswordTooShortUpdate() {
+    Client client = new JerseyClientBuilder().build();
+    tstUser.setPassword("a");
+
+    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+    Response response = client.
+        target(String.format(url, RULE.getLocalPort())).
+        request().
+        header("Authorization", "Bearer " + authToken).
+        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+
+    assertNotNull(response);
+
+    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+    // this should fail 2 validations.. size and pwd validity
+    // this test is specific to validity.. 
+    boolean bValidErr = false;
+    for (Error error : errorInfo.getErrors()) {
+      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
+      // The data provided in the API call is invalid. Message: <XXXXX>
+      // where XXX is the message associated to the validation
+      String partString = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
+      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
+          .replace("REPLACE", partString);
+      if (error.getMessage().equals(expectedErrorString)) {
+        bValidErr = true;
+      }
+    }
+    assertThat(bValidErr).isEqualTo(true);
+
+  }
+  
   @Test
   public void invalidPasswordContainsWhiteSpace() {
     Client client = new JerseyClientBuilder().build();
@@ -211,6 +253,32 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
+    assertNotNull(response);
+    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+    for (Error error : errorInfo.getErrors()) {
+      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
+      // The data provided in the API call is invalid. Message: <XXXXX>
+      // where XXX is the message associated to the validation
+      String partString = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
+      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
+          .replace("REPLACE", partString);
+      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+    }
+
+  }
+  
+  @Test
+  public void invalidPasswordContainsWhiteSpaceUpdate() {
+    Client client = new JerseyClientBuilder().build();
+    tstUser.setPassword("abcd abcd");
+
+    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+    Response response = client.
+        target(String.format(url, RULE.getLocalPort())).
+        request().
+        header("Authorization", "Bearer " + authToken).
+        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     assertNotNull(response);
     Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
@@ -248,6 +316,31 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
       assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
   }
+  
+  @Test
+  public void invalidPasswordNoAlphabeticalCharactersUpdate() {
+    Client client = new JerseyClientBuilder().build();
+    tstUser.setPassword("123");
+
+    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+    Response response = client.
+        target(String.format(url, RULE.getLocalPort())).
+        request().
+        header("Authorization", "Bearer " + authToken).
+        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+    assertNotNull(response);
+    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+    for (Error error : errorInfo.getErrors()) {
+      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
+      // The data provided in the API call is invalid. Message: <XXXXX>
+      // where XXX is the message associated to the validation
+      String partString = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
+      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
+          .replace("REPLACE", partString);
+      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+    }
+  }
 
   @Test
   public void signupSuccess() throws MessagingException {
@@ -268,6 +361,19 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     }
     assertEquals("random_mail12@gmail.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
   }
+  
+  @Test
+  public void updateSuccess() throws MessagingException {
+    Client client = new JerseyClientBuilder().build();
+    tstUser.setFirstName("Jane");
+    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+    Response response = client.
+        target(String.format(url, RULE.getLocalPort())).
+        request().
+        header("Authorization", "Bearer " + authToken).
+        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+    Assert.assertEquals(200, response.getStatus());
+  }
 
   @Test
   public void invalidPhoneNumber() throws JSONException {
@@ -277,6 +383,30 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+    for (Error error : errorInfo.getErrors()) {
+      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
+      // The data provided in the API call is invalid. Message: <XXXXX>
+      // where XXX is the message associated to the validation
+      String partString = "phone  size must be between 10 and 10";
+      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
+          .replace("REPLACE", partString);
+      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+    }
+  }
+
+  @Test
+  public void invalidPhoneNumberUpdate() throws JSONException, NoSuchAlgorithmException, InvalidKeySpecException {
+  	Client client = new JerseyClientBuilder().build();
+    tstUser.setPhone("44343");
+    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+    Response response = client.
+        target(String.format(url, RULE.getLocalPort())).
+        request().
+        header("Authorization", "Bearer " + authToken).
+        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+    
     Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
     for (Error error : errorInfo.getErrors()) {
@@ -312,14 +442,36 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
       assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
     }
   }
+  @Test
+  public void invalidZipCodeUpdate() throws JSONException {
+    Client client = new JerseyClientBuilder().build();
+    tstUser.setZipCode("983");
+
+    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+    Response response = client.
+        target(String.format(url, RULE.getLocalPort())).
+        request().
+        header("Authorization", "Bearer " + authToken).
+        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+    assertNotNull(response);
+    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+    for (Error error : errorInfo.getErrors()) {
+      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
+      // The data provided in the API call is invalid. Message: <XXXXX>
+      // where XXX is the message associated to the validation
+      String partString = "zipCode  is invalid.";
+      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
+          .replace("REPLACE", partString);
+      assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
+    }
+  }
   
   @Test
   public void signupUserAlreadyExist() {
     Client client = new JerseyClientBuilder().build();
-    tstUser.setEmail("alreadyexists@gmail.com");
+    tstUser.setEmail("resident@cgi.com");
     
-    Response response1 = client.target(String.format(url, RULE.getLocalPort())).request()
-        .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     assertNotNull(response);
@@ -332,7 +484,6 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
       String expectedErrorString = GeneralErrors.DUPLICATE_ENTRY.getMessage()
           .replace("REPLACE", "email");
 
-      String tmp = error.getMessage();
       assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
   }

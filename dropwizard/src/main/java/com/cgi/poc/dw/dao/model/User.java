@@ -80,7 +80,7 @@ public class User implements Serializable, Principal {
 	@Size(min = 2, max = 500, message = "must be at least 2 characters in length.")
 	@Column(name = "password")
 	@PasswordType(message = "must be greater that 2 character, contain no whitespace, and have at least one number and one letter.", groups = {
-			RestValidationGroup.class, LoginValidationGroup.class, PasswordValidationGroup.class})
+			RestValidationGroup.class, LoginValidationGroup.class, PasswordValidationGroup.class })
 	private String password;
 
 	// if the field contains phone or fax number consider using this annotation to
