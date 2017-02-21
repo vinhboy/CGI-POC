@@ -96,13 +96,11 @@ public class User implements Serializable, Principal {
 	@Basic(optional = false)
 	@NotNull
 	@Size(min = 4, max = 250, message = "must be a valid street name")
-	@Column(name = "requiredStreet")
+	@Column(name = "address")
 	private String requiredStreet;
 
-	@Basic(optional = false)
-	@NotNull
-	@Size(min = 4, max = 250, message = "must be a valid street name")
-	@Column(name = "optionalStreet")
+	@Basic(optional = true)
+	@Column(name = "address_additional_info")
 	private String optionalStreet;
 
 	@Basic(optional = false)

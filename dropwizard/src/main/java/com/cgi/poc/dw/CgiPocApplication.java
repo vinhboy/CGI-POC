@@ -34,15 +34,15 @@ import com.cgi.poc.dw.jobs.JobFactoryImpl;
 import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.rest.resource.LoginResource;
-import com.cgi.poc.dw.rest.resource.UserRegistrationResource;
+import com.cgi.poc.dw.rest.resource.UserResource;
 import com.cgi.poc.dw.service.TextMessageService;
 import com.cgi.poc.dw.service.TextMessageServiceImpl;
 import com.cgi.poc.dw.sockets.AlertEndpoint;
 import com.cgi.poc.dw.service.EventNotificationServiceImpl;
 import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
-import com.cgi.poc.dw.service.UserRegistrationService;
-import com.cgi.poc.dw.service.UserRegistrationServiceImpl;
+import com.cgi.poc.dw.service.UserService;
+import com.cgi.poc.dw.service.UserServiceImpl;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -181,7 +181,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     Injector injector = createInjector(configuration, environment, keys);
 
     registerResource(environment, injector, EventNotificationResource.class);
-    registerResource(environment, injector, UserRegistrationResource.class);
+    registerResource(environment, injector, UserResource.class);
     registerResource(environment, injector, LoginResource.class);
     registerResource(environment, injector, CustomConstraintViolationExceptionMapper.class);
     registerResource(environment, injector, CustomSQLConstraintViolationException.class);
@@ -282,7 +282,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
-        bind(UserRegistrationService.class).to(UserRegistrationServiceImpl.class)
+        bind(UserService.class).to(UserServiceImpl.class)
             .asEagerSingleton();
         bind(EventNotificationService.class).to(EventNotificationServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());

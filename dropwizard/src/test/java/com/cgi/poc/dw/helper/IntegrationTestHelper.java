@@ -4,7 +4,7 @@ import com.cgi.poc.dw.CgiPocConfiguration;
 import com.cgi.poc.dw.dao.HibernateUtil;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
-import com.cgi.poc.dw.rest.resource.UserRegistrationResourceIntegrationTest;
+import com.cgi.poc.dw.rest.resource.UserResourceIntegrationTest;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -109,7 +109,7 @@ public class IntegrationTestHelper {
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, requiredStreet, optionalStreet, city, state, zip_code, allowPhoneLocalization, role, latitude, longitude)\n"
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, allowPhoneLocalization, role, latitude, longitude)\n"
               + "VALUES ( 100,\n"
               + "'john',\n"
               + "'doe',\n"
@@ -166,7 +166,7 @@ public class IntegrationTestHelper {
 
       sqlConnection.commit();
     } catch (Exception ex) {
-      Logger.getLogger(UserRegistrationResourceIntegrationTest.class.getName())
+      Logger.getLogger(UserResourceIntegrationTest.class.getName())
           .log(Level.SEVERE, null, ex);
     }
 
