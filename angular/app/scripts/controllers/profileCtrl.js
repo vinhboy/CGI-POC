@@ -81,11 +81,18 @@ cgiWebApp.controller('ProfileController',
     $scope.profile.phone = $scope.profile.phone.replace(/-/g, '');
   };
 
-  $scope.process = function(beforeNavFunc){
+  // this is meant to null out any empty strings, be careful with false/0
+  $scope.processForNull = function(toSend, property) {
+    if(!toSend[property]) {
+      toSend[property] = null;
+    }
+  };
+
+  $scope.process = function(beforeNavFunc) {
     $scope.processNotificationTypes();
     $scope.generatePhoneNumber();
 
-    var toPost = {
+    var toSend = {
       email: $scope.profile.email,
       password: $scope.profile.password,
       firstName: $scope.profile.firstName,
@@ -99,8 +106,16 @@ cgiWebApp.controller('ProfileController',
       notificationType: $scope.profile.notificationType
     };
 
+    $scope.processForNull(toSend, 'firstName');
+    $scope.processForNull(toSend, 'lastName');
+    $scope.processForNull(toSend, 'phone');
+    $scope.processForNull(toSend, 'address1');
+    $scope.processForNull(toSend, 'address2');
+    $scope.processForNull(toSend, 'city');
+    $scope.processForNull(toSend, 'state');
+
     //putting this on scope so I can test
-    $scope.toSend = toPost;
+    $scope.toSend = toSend;
 
     var toCall;
     if ($scope.isNew()) {
@@ -108,13 +123,13 @@ cgiWebApp.controller('ProfileController',
     } else {
       toCall = ProfileService.update;
       if ($scope.profile.password === '') {
-        toPost.password = undefined;
+        toSend.password = undefined;
       }
     }
 
-    toCall(toPost).then(function() {
+    toCall(toSend).then(function() {
       if (beforeNavFunc) {
-        beforeNavFunc(toPost);
+        beforeNavFunc(toSend);
       }
       $state.go('landing');
     }).catch(function(response) {
@@ -123,10 +138,10 @@ cgiWebApp.controller('ProfileController',
   };
 
   $scope.registerProfile = function() {
-    var beforeNavFunc = function(toPost) {
+    var beforeNavFunc = function(toSend) {
       var credentials = {
-        email: toPost.email,
-        password: toPost.password
+        email: toSend.email,
+        password: toSend.password
       };
 
       Authenticator.authenticate(credentials).then(function(response) {

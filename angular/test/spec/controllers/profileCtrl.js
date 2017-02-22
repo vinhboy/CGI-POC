@@ -134,7 +134,7 @@ describe('ProfileController', function() {
       expect($scope.toSend.password).toBeUndefined();
     });
 
-    it('should use provided value for password value if it is not populated', function() {
+    it('should use provided value for password value if it is populated', function() {
       $scope.profile.password = 'abcABC123';
       $scope.updateProfile();
       deferred.resolve({ status: 200, data: {} });
@@ -198,6 +198,20 @@ describe('ProfileController', function() {
       $scope.$apply();
       expect(authenticationService.authenticate).toHaveBeenCalled();
       expect($sessionStorage.put).toHaveBeenCalledWith('jwt', 'the auth token');
+    });
+
+    it('should process these optional fields for null', function() {
+      spyOn($scope, 'processForNull');
+      $scope.registerProfile();
+      deferred.resolve({ status: 200, data: {} });
+      $scope.$apply();
+      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'firstName');
+      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'lastName');
+      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'phone');
+      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'address1');
+      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'address2');
+      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'city');
+      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'state');
     });
   });
 
@@ -367,6 +381,20 @@ describe('ProfileController', function() {
       $state.current.name = 'register';
       $scope.profile.password = 'abcABC123';
       expect($scope.isPasswordValid()).toBe(true);
+    });
+  });
+
+  describe('processForNull', function() {
+    it('should null out any falsey value', function() {
+      var obj = { something: '' };
+      $scope.processForNull(obj, 'something');
+      expect(obj.something).toBeNull();
+    });
+
+    it('should NOT null out any populated string', function() {
+      var obj = { something: 'not empty' };
+      $scope.processForNull(obj, 'something');
+      expect(obj.something).not.toBeNull();
     });
   });
 });
