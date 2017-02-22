@@ -72,28 +72,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
 			return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
 		}
-		
-		Response response = null;
-		try {
-			createPasswordHash(user);
-			setUserGeoCoordinates(user);
-			saveUser(user, false);
-			response = Response.ok().entity(user).build();
-		} catch (NoSuchAlgorithmException noAlgorithmException) {
-			LOG.error("Unable to create a password hash.", noAlgorithmException);
-			ErrorInfo errRet = getInternalErrorInfo(noAlgorithmException, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-		} catch (InvalidKeySpecException invalidKeyException) {
-			LOG.error("Unable to create a password hash.", invalidKeyException);
-			ErrorInfo errRet = getInternalErrorInfo(invalidKeyException, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-		} catch (Exception exception) {
-			LOG.error("Unable to save a user.", exception);
-			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-		}
 
-		return response;
+		return processForSave(user, false);
 	}
 
 	private void saveUser(User user, boolean registered) {
@@ -155,13 +135,16 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 */
 	public Response updateUser(User currentUser) {
 		validate(currentUser, "rest", RestValidationGroup.class, Default.class);
-		
+		return processForSave(currentUser, true);
+	}
+	
+	private Response processForSave(User user, boolean registered){
 		Response response = null;
 		try {
-			createPasswordHash(currentUser);
-			setUserGeoCoordinates(currentUser);
-			saveUser(currentUser, true);
-			response = Response.ok().entity(currentUser).build();
+			createPasswordHash(user);
+			setUserGeoCoordinates(user);
+			saveUser(user, registered);
+			response = Response.ok().entity(user).build();
 		} catch (NoSuchAlgorithmException noAlgorithmException) {
 			LOG.error("Unable to create a password hash.", noAlgorithmException);
 			ErrorInfo errRet = getInternalErrorInfo(noAlgorithmException, GeneralErrors.UNKNOWN_EXCEPTION);
@@ -175,7 +158,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
 			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
 		}
-
 		return response;
 	}
+	
 }
