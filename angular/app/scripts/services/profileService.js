@@ -13,7 +13,7 @@ cgiWebApp.service('ProfileService',
   function($http, urls, $sessionStorage) {
 
   this.register = function(profile) {
-    var endpoint = urls.BASE + '/register';
+    var endpoint = urls.BASE + '/profile';
     return $http.post(endpoint, profile);
   };
 

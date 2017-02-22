@@ -22,7 +22,7 @@ describe('ProfileService', function() {
   describe('register', function() {
     it('should post to the expected registration endpoint', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPOST('http://localhost:8080/register', profile)
+      $httpBackend.expectPOST('http://localhost:8080/profile', profile)
         .respond(200, {});
 
       profileService.register(profile);
@@ -34,7 +34,7 @@ describe('ProfileService', function() {
 
     it('should construct the endpoint URL', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPOST(urls.BASE + '/register', profile)
+      $httpBackend.expectPOST(urls.BASE + '/profile', profile)
         .respond(200, {});
 
       profileService.register(profile);

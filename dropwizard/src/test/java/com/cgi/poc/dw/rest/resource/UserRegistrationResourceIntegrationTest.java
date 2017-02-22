@@ -49,7 +49,7 @@ import org.junit.Test;
 
 public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
 
-  private static final String url = "http://localhost:%d/register";
+  private static final String url = "http://localhost:%d/profile";
 
   private User tstUser;
 
