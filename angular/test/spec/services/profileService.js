@@ -22,7 +22,7 @@ describe('ProfileService', function() {
   describe('register', function() {
     it('should post to the expected registration endpoint', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPOST('http://localhost:8080/profile', profile)
+      $httpBackend.expectPOST('http://localhost:8080/user', profile)
         .respond(200, {});
 
       profileService.register(profile);
@@ -34,7 +34,7 @@ describe('ProfileService', function() {
 
     it('should construct the endpoint URL', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPOST(urls.BASE + '/profile', profile)
+      $httpBackend.expectPOST(urls.BASE + '/user', profile)
         .respond(200, {});
 
       profileService.register(profile);
@@ -48,7 +48,7 @@ describe('ProfileService', function() {
   describe('update', function() {
     it('should post to the expected registration endpoint', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPUT('http://localhost:8080/profile', profile)
+      $httpBackend.expectPUT('http://localhost:8080/user', profile)
         .respond(200, {});
 
       profileService.update(profile);
@@ -60,7 +60,7 @@ describe('ProfileService', function() {
 
     it('should construct the endpoint URL', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPUT(urls.BASE + '/profile', profile)
+      $httpBackend.expectPUT(urls.BASE + '/user', profile)
         .respond(200, {});
 
       profileService.update(profile);
@@ -72,7 +72,7 @@ describe('ProfileService', function() {
 
     it('should send the JWT auth token during udpate', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPUT(urls.BASE + '/profile', profile, {
+      $httpBackend.expectPUT(urls.BASE + '/user', profile, {
         'Authorization': 'Bearer magical auth token here',
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json;charset=utf-8'

@@ -261,7 +261,7 @@
             <column name="descrpt" type="varchar(160)" />
             <column name="last_modified" type="timestamp" defaultValueComputed="${now}"/>
             <column name="notification_id" type="integer" />
- 
+
         </createTable>
     </changeSet>
     <changeSet id="12" author="Dawna Floyd">
@@ -272,7 +272,7 @@
 
     </changeSet>
     <changeSet id="13" author="Dawna Floyd">
-    <comment> change from json to text data data. Json data type seems to be loosing precision in x/y coordinates</comment> 
+    <comment> change from json to text data data. Json data type seems to be loosing precision in x/y coordinates</comment>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_fire"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_weather"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_flood"/>
@@ -280,7 +280,7 @@
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_earthquake"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_tsunami"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_volcano"/>
-    
+
     </changeSet>
     <changeSet id="14" author="Dawna Floyd">
     <modifyDataType columnName="firecause" newDataType="VARCHAR(15)" tableName="event_fire"/>
@@ -294,7 +294,7 @@
        <modifyDataType columnName="comments" newDataType="VARCHAR(4000)" tableName="event_tsunami"/>
        <modifyDataType columnName="second" newDataType="NUMERIC(4,2)" tableName="event_tsunami"/>
     </changeSet>
-  
+
   <changeSet id="17" author="Valon Sejdini">
     <createTable tableName="event_notification">
       <column name="id"  type="bigint" autoIncrement="true">

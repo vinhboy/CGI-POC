@@ -13,13 +13,13 @@ cgiWebApp.service('ProfileService',
   function($http, urls, $sessionStorage) {
 
   this.register = function(profile) {
-    var endpoint = urls.BASE + '/profile';
+    var endpoint = urls.BASE + '/user';
     return $http.post(endpoint, profile);
   };
 
   this.update = function(profile) {
     var authToken = $sessionStorage.get('jwt');
-    var endpoint = urls.BASE + '/profile';
+    var endpoint = urls.BASE + '/user';
     return $http.put(endpoint, profile, {
       headers: { 'Authorization': 'Bearer ' + authToken }
     });
@@ -27,7 +27,7 @@ cgiWebApp.service('ProfileService',
 
   this.getProfile = function() {
     var authToken = $sessionStorage.get('jwt');
-    var endpoint = urls.BASE + '/profile';
+    var endpoint = urls.BASE + '/user';
     return $http.get(endpoint, {
       headers: { 'Authorization': 'Bearer ' + authToken }
     });
