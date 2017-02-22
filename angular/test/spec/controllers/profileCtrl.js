@@ -46,6 +46,10 @@ describe('ProfileController', function() {
       expect($scope.profile.password).toBe('');
       expect($scope.profile.passwordConfirmation).toBe('');
       expect($scope.profile.phone).toBe('');
+      expect($scope.profile.address1).toBe('');
+      expect($scope.profile.address2).toBe('');
+      expect($scope.profile.city).toBe('');
+      expect($scope.profile.state).toBe('');
       expect($scope.profile.zipCode).toBe('');
       expect($scope.profile.notificationType.length).toBe(0);
       expect($scope.profile.emailNotification).toBe(false);
