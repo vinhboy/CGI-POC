@@ -142,10 +142,10 @@ describe('ProfileController', function() {
 
   describe('registerProfile', function() {
     beforeEach(function () {
-      $state.current.name = 'register';
+      $state.current.name = 'user';
     });
 
-    it('should call the ProfileService.register', function() {
+    it('should call the ProfileService.user', function() {
       $scope.registerProfile();
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
@@ -317,13 +317,13 @@ describe('ProfileController', function() {
 
   describe('isPasswordValid', function() {
     it('should be invalid if new and empty', function() {
-      $state.current.name = 'register';
+      $state.current.name = 'user';
       $scope.profile.password = '';
       expect($scope.isPasswordValid()).toBe(false);
     });
 
     it('should be invalid if new, populated, and does not meet pattern', function() {
-      $state.current.name = 'register';
+      $state.current.name = 'user';
       $scope.profile.password = 'a';
       expect($scope.isPasswordValid()).toBe(false);
     });
@@ -341,7 +341,7 @@ describe('ProfileController', function() {
     });
 
     it('should be valid if new, populated and meets pattern', function() {
-      $state.current.name = 'register';
+      $state.current.name = 'user';
       $scope.profile.password = 'abcABC123';
       expect($scope.isPasswordValid()).toBe(true);
     });
