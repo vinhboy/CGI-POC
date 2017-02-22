@@ -119,6 +119,10 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setRole(Role.RESIDENT.name());
     user.setPhone("1234567890");
     user.setZipCode("98765");
+    user.setCity("Sacramento");
+    user.setState("California");
+    user.setRequiredStreet("required street");
+  	user.setOptionalStreet("optional street");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
@@ -126,7 +130,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     notificationType.add(selNot);
     user.setNotificationType(notificationType);
 
-    client.target(String.format("http://localhost:%d/register", RULE.getLocalPort())).request()
+    client.target(String.format("http://localhost:%d/user", RULE.getLocalPort())).request()
         .post(Entity.json(user));
     // login user
     LoginUserDto loginUserDto = new LoginUserDto();
@@ -152,6 +156,10 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setRole(Role.RESIDENT.name());
     user.setPhone("1234567890");
     user.setZipCode("98765");
+    user.setCity("Sacramento");
+    user.setState("California");
+    user.setRequiredStreet("required street");
+  	user.setOptionalStreet("optional street");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));

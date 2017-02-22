@@ -38,6 +38,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -353,20 +354,7 @@ public class UserServiceUnitTest {
 
     doThrow(new ProcessingException("Processing failed.")).when(mockBuilder).get(String.class);
 
-    try {
-      underTest.registerUser(user);
-      fail("Expected an exception to be thrown");
-    } catch (WebApplicationException exception) {
-      assertEquals(500, exception.getResponse().getStatus());
-      ErrorInfo errorInfo = (ErrorInfo) exception.getResponse().getEntity();
-      String actualMessage = errorInfo.getErrors().get(0).getMessage();
-      String actualCode = errorInfo.getErrors().get(0).getCode();
-
-      assertEquals("ERR1", actualCode);
-      assertEquals(
-          "An Unknown exception has occured. Type: <javax.ws.rs.ProcessingException>. Message: <Processing failed.>",
-          actualMessage);
-    }
+    Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), underTest.registerUser(user).getStatus());
   }
 
   @Test
@@ -482,20 +470,7 @@ public class UserServiceUnitTest {
 		doThrow(new ProcessingException("Processing failed.")).when(mockBuilder).get(String.class);
 		when(userDao.findUserByEmail(user1.getEmail())).thenReturn(user1);
 
-		try {
-			underTest.updateUser(user1);
-			fail("Expected an exception to be thrown");
-		} catch (WebApplicationException exception) {
-			assertEquals(500, exception.getResponse().getStatus());
-			ErrorInfo errorInfo = (ErrorInfo) exception.getResponse().getEntity();
-			String actualMessage = errorInfo.getErrors().get(0).getMessage();
-			String actualCode = errorInfo.getErrors().get(0).getCode();
-
-			assertEquals("ERR1", actualCode);
-			assertEquals(
-					"An Unknown exception has occured. Type: <javax.ws.rs.ProcessingException>. Message: <Processing failed.>",
-					actualMessage);
-		}
+    Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), underTest.registerUser(user).getStatus());
 	}
 
 	@Test

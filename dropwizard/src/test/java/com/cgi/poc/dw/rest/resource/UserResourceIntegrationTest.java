@@ -45,7 +45,7 @@ import com.icegreen.greenmail.util.ServerSetup;
 
 public class UserResourceIntegrationTest extends IntegrationTest {
 
-  private static final String url = "http://localhost:%d/profile";
+  private static final String url = "http://localhost:%d/user";
 
   private User tstUser;
 
