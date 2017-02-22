@@ -359,5 +359,30 @@
           <column name="citizensAffected" type="integer" />
       </addColumn>
   </changeSet>
+    <changeSet id="20" author="Charles Jekal">
+        <addColumn tableName="user">
+            <column name="address1" type="VARCHAR(255)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="address2" type="VARCHAR(255)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="city" type="VARCHAR(255)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="state" type="VARCHAR(2)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <dropNotNullConstraint tableName="user" columnName="first_name" columnDataType="VARCHAR(65)" />
+        <dropNotNullConstraint tableName="user" columnName="last_name" columnDataType="VARCHAR(65)" />
+        <dropNotNullConstraint tableName="user" columnName="phone" columnDataType="VARCHAR(20)" />
+    </changeSet>
 
 </databaseChangeLog>

@@ -18,6 +18,10 @@ import com.cgi.poc.dw.util.GeneralErrors;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
+
+import java.io.File;
+import java.io.FileReader;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.HashSet;
@@ -50,7 +54,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
   private User tstUser;
 
   private GreenMail smtpServer;
-  
+
   @Before
   public void createUser() {
     tstUser = new User();
@@ -72,7 +76,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
         ServerSetup.PROTOCOL_SMTP));
     smtpServer.start();
   }
-  
+
   @After
   public void exit() {
     if (smtpServer != null) {
@@ -148,7 +152,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     Client client = new JerseyClientBuilder().build();
     tstUser.setEmail("nopass@gmail.com");
     tstUser.setPassword(null);
-    
+
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
@@ -184,7 +188,7 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
     Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
     // this should fail 2 validations.. size and pwd validity
-    // this test is specific to validity.. 
+    // this test is specific to validity..
     boolean bValidErr = false;
     for (Error error : errorInfo.getErrors()) {
       assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
@@ -311,12 +315,12 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
       assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
     }
   }
-  
+
   @Test
   public void signupUserAlreadyExist() {
     Client client = new JerseyClientBuilder().build();
     tstUser.setEmail("alreadyexists@gmail.com");
-    
+
     Response response1 = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
@@ -334,5 +338,20 @@ public class UserRegistrationResourceIntegrationTest extends IntegrationTest {
       String tmp = error.getMessage();
       assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
+  }
+
+  @Test
+  public void someFieldsAreNullable() throws JSONException, URISyntaxException {
+    tstUser.setFirstName(null);
+    tstUser.setLastName(null);
+    tstUser.setPhone(null);
+    tstUser.setAddress1(null);
+    tstUser.setAddress2(null);
+    tstUser.setCity(null);
+    tstUser.setState(null);
+    Client client = new JerseyClientBuilder().build();
+    Response response = client.target(String.format(url, RULE.getLocalPort())).request()
+        .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+    Assert.assertEquals(200, response.getStatus());
   }
 }

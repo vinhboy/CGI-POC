@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,15 +47,13 @@ public class User implements Serializable, Principal {
   @JsonIgnore
   private Long id;
 
-  @Basic(optional = false)
-  @NotNull()
-  @Size(min = 1, max = 65)
+  @Nullable
+  @Size(max = 65)
   @Column(name = "first_name")
   private String firstName;
 
-  @Basic(optional = false)
-  @NotNull
-  @Size(min = 1, max = 65)
+  @Nullable
+  @Size(max = 65)
   @Column(name = "last_name")
   private String lastName;
 
@@ -80,8 +79,7 @@ public class User implements Serializable, Principal {
 
   //if the field contains phone or fax number consider using this annotation to enforce field validation
   //@Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")
-  @Basic(optional = false)
-  @NotNull
+  @Nullable
   @Size(min = 10, max = 10)
   @Column(name = "phone")
   private String phone;
@@ -112,6 +110,26 @@ public class User implements Serializable, Principal {
   @JsonIgnore
   private Double longitude;
 
+  @Nullable
+  @Size(max = 255)
+  @Column(name = "address1")
+  private String address1;
+
+  @Nullable
+  @Size(max = 255)
+  @Column(name = "address2")
+  private String address2;
+
+  @Nullable
+  @Size(max = 255)
+  @Column(name = "city")
+  private String city;
+
+  @Nullable
+  @Size(min = 2, max = 2)
+  @Column(name = "state")
+  private String state;
+
   @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, orphanRemoval = true)
   @NotNull
   @Cascade({org.hibernate.annotations.CascadeType.ALL})
@@ -125,7 +143,8 @@ public class User implements Serializable, Principal {
   }
 
   public User(Long id, String firstName, String lastName, String email, String password,
-      String phone, String zipCode, String role, double latitude, double longitude) {
+      String phone, String zipCode, String role, double latitude, double longitude, String address1,
+      String address2, String city, String state) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -136,6 +155,10 @@ public class User implements Serializable, Principal {
     this.role = role;
     this.latitude = latitude;
     this.longitude = longitude;
+    this.address1 = address1;
+    this.address2 = address2;
+    this.city = city;
+    this.state = state;
   }
 
   public Long getId() {
@@ -261,4 +284,39 @@ public class User implements Serializable, Principal {
     return email;
   }
 
+  @Nullable
+  public String getAddress1() {
+    return address1;
+  }
+
+  public void setAddress1(@Nullable String address1) {
+    this.address1 = address1;
+  }
+
+  @Nullable
+  public String getAddress2() {
+    return address2;
+  }
+
+  public void setAddress2(@Nullable String address2) {
+    this.address2 = address2;
+  }
+
+  @Nullable
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(@Nullable String city) {
+    this.city = city;
+  }
+
+  @Nullable
+  public String getState() {
+    return state;
+  }
+
+  public void setState(@Nullable String state) {
+    this.state = state;
+  }
 }
