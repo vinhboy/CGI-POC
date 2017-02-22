@@ -9,17 +9,18 @@ import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
 import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.cgi.poc.dw.util.RestValidationGroup;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -61,7 +62,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public Response registerUser(User user) {
 		// Defaulting the user to RESIDENT
 		user.setRole("RESIDENT");
-
+		
 		validate(user, "rest", RestValidationGroup.class, Default.class);
 		// check if the email already exists.
 		User findUserByEmail = userDao.findUserByEmail(user.getEmail());
@@ -71,26 +72,28 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
 			return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
 		}
+		
+		Response response = null;
 		try {
 			createPasswordHash(user);
-		} catch (Exception exception) {
-			LOG.error("Unable to create a password hash.", exception);
-			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-		}
-		setUserGeoCoordinates(user);
-
-		try {
+			setUserGeoCoordinates(user);
 			saveUser(user, false);
-		} catch (ConstraintViolationException exception) {
-			throw exception;
+			response = Response.ok().entity(user).build();
+		} catch (NoSuchAlgorithmException noAlgorithmException) {
+			LOG.error("Unable to create a password hash.", noAlgorithmException);
+			ErrorInfo errRet = getInternalErrorInfo(noAlgorithmException, GeneralErrors.UNKNOWN_EXCEPTION);
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		} catch (InvalidKeySpecException invalidKeyException) {
+			LOG.error("Unable to create a password hash.", invalidKeyException);
+			ErrorInfo errRet = getInternalErrorInfo(invalidKeyException, GeneralErrors.UNKNOWN_EXCEPTION);
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
 		} catch (Exception exception) {
 			LOG.error("Unable to save a user.", exception);
 			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
 		}
 
-		return Response.ok().entity(user).build();
+		return response;
 	}
 
 	private void saveUser(User user, boolean registered) {
@@ -116,8 +119,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	}
 
 	// invoke Google Maps API to retrieve latitude and longitude by zipCode
-	private void setUserGeoCoordinates(User user) {
-		try {
+	private void setUserGeoCoordinates(User user) throws JsonParseException, JsonMappingException, IOException {
 			String response = client.target(mapApiConfiguration.getApiURL()).queryParam(ADDRESS, user.getZipCode())
 					.request(MediaType.APPLICATION_JSON).get(String.class);
 
@@ -130,12 +132,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 				user.setLatitude(0.0);
 				user.setLongitude(0.0);
 			}
-		} catch (Exception exception) {
-			LOG.error("Unable to make maps api call.", exception);
-			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			throw new WebApplicationException(
-					Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build());
-		}
 	}
 
 	private ErrorInfo getInternalErrorInfo(Exception exception, GeneralErrors generalErrors) {
@@ -159,28 +155,27 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 */
 	public Response updateUser(User currentUser) {
 		validate(currentUser, "rest", RestValidationGroup.class, Default.class);
-
+		
+		Response response = null;
 		try {
 			createPasswordHash(currentUser);
+			setUserGeoCoordinates(currentUser);
+			saveUser(currentUser, true);
+			response = Response.ok().entity(currentUser).build();
+		} catch (NoSuchAlgorithmException noAlgorithmException) {
+			LOG.error("Unable to create a password hash.", noAlgorithmException);
+			ErrorInfo errRet = getInternalErrorInfo(noAlgorithmException, GeneralErrors.UNKNOWN_EXCEPTION);
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		} catch (InvalidKeySpecException invalidKeyException) {
+			LOG.error("Unable to create a password hash.", invalidKeyException);
+			ErrorInfo errRet = getInternalErrorInfo(invalidKeyException, GeneralErrors.UNKNOWN_EXCEPTION);
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
 		} catch (Exception exception) {
-			LOG.error("Unable to create a password hash.", exception);
+			LOG.error("Unable to save a user.", exception);
 			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-			return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
 		}
 
-	
-			setUserGeoCoordinates(currentUser);
-
-			try {
-				saveUser(currentUser, true);
-			} catch (ConstraintViolationException exception) {
-				throw exception;
-			} catch (Exception exception) {
-				LOG.error("Unable to save a user.", exception);
-				ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
-				return Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-			}
-		
-		return Response.ok().entity(currentUser).build();
+		return response;
 	}
 }

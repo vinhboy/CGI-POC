@@ -35,7 +35,7 @@ public class UserResource {
 	private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Inject
-	UserService userService;
+	private UserService userService;
 
 	@POST
 	@UnitOfWork
