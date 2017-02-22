@@ -47,6 +47,10 @@ describe('ProfileController', function() {
       expect($scope.profile.passwordConfirmation).toBe('');
       expect($scope.profile.phone).toBe('');
       expect($scope.profile.zipCode).toBe('');
+      expect($scope.profile.city).toBe('Sacramento');
+      expect($scope.profile.state).toBe('California');
+      expect($scope.profile.requiredStreet).toBe('This is a required street');
+      expect($scope.profile.optionalStreet).toBe('This is an optional street');
       expect($scope.profile.notificationType.length).toBe(0);
       expect($scope.profile.emailNotification).toBe(false);
       expect($scope.profile.pushNotification).toBe(false);
