@@ -42,10 +42,23 @@ describe('headerController', function() {
       expect($scope.isAdminUser()).toBe(false);
     });
     it('false if seesion value is not ADMIN or not set', function() {
-      spyOn($sessionStorage, 'get').and.returnValue("RESIDENT");
+      spyOn($sessionStorage, 'get').and.returnValue('RESIDENT');
       expect($scope.isAdminUser()).toBe(false);
     });
   });
 
- 
+  describe('logout', function() {
+    it('should clear the session', function() {
+      spyOn($sessionStorage, 'remove');
+      $scope.logout();
+      expect($sessionStorage.remove).toHaveBeenCalledWith('role');
+      expect($sessionStorage.remove).toHaveBeenCalledWith('jwt');
+    });
+
+    it('should redirect to login', function() {
+      spyOn($state, 'go');
+      $scope.logout();
+      expect($state.go).toHaveBeenCalledWith('login');
+    });
+  });
 });

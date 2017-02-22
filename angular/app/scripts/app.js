@@ -7,17 +7,17 @@ cgiWebApp.constant('urls', {
   BASE: 'http://localhost:8080',
   WS_BASE: 'ws://localhost:8080'
 })
-.config([ '$translateProvider', '$urlRouterProvider', '$stateProvider','$sceDelegateProvider', 
+.config([ '$translateProvider', '$urlRouterProvider', '$stateProvider','$sceDelegateProvider',
     function($translateProvider, $urlRouterProvider, $stateProvider,$sceDelegateProvider ) {
-   
+
 
 $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
     'self',
     // Allow loading from our assets domain.  Notice the difference between * and **.
     'https://maps.google.com/**'
-    
-    
+
+
   ]);
 
 
@@ -73,7 +73,7 @@ $sceDelegateProvider.resourceUrlWhitelist([
   });
 }])
 
-.run(['$sessionStorage', '$http', '$rootScope', '$location','$state', function ($sessionStorage, $http, $rootScope, $location, $state ) { 
+.run(['$sessionStorage', '$http', '$rootScope', '$location', function ($sessionStorage, $http, $rootScope, $location) {
 
         var authToken = $sessionStorage.get('jwt');
         // Setup api access token
@@ -81,14 +81,14 @@ $sceDelegateProvider.resourceUrlWhitelist([
         $http.defaults.headers.common.Authorization =  'Bearer ' + authToken;
         //Caching will be set by the nginx, so lets take advantage of that.
         //$http.defaults.headers.common['Cache-Control'] = 'no-cache';
-        
+
         // redirect to login page if not logged in and trying to access a restricted page
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
+        $rootScope.$on('$locationChangeStart', function (event, next, current) { // jshint ignore:line
             var publicPages = ['/login'];
             var restrictedPage = publicPages.indexOf($location.path()) === -1;
             if (restrictedPage && !$sessionStorage.get('jwt')) {
                 $location.path('/login');
             }
         });
-        
+
     }]);
