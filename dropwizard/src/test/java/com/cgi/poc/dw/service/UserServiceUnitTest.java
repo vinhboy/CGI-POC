@@ -354,7 +354,17 @@ public class UserServiceUnitTest {
 
     doThrow(new ProcessingException("Processing failed.")).when(mockBuilder).get(String.class);
 
-    Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), underTest.registerUser(user).getStatus());
+    Response response = underTest.registerUser(user);
+
+    Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = (ErrorInfo) response.getEntity();
+    String actualMessage = errorInfo.getErrors().get(0).getMessage();
+    String actualCode = errorInfo.getErrors().get(0).getCode();
+
+    assertEquals("ERR1", actualCode);
+    assertEquals(
+        "An Unknown exception has occured. Type: <javax.ws.rs.ProcessingException>. Message: <Processing failed.>",
+        actualMessage);
   }
 
   @Test
@@ -469,8 +479,17 @@ public class UserServiceUnitTest {
 
 		doThrow(new ProcessingException("Processing failed.")).when(mockBuilder).get(String.class);
 		when(userDao.findUserByEmail(user1.getEmail())).thenReturn(user1);
+		Response response = underTest.registerUser(user);
 
-    Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), underTest.registerUser(user).getStatus());
+    Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = (ErrorInfo) response.getEntity();
+    String actualMessage = errorInfo.getErrors().get(0).getMessage();
+    String actualCode = errorInfo.getErrors().get(0).getCode();
+
+    assertEquals("ERR1", actualCode);
+    assertEquals(
+        "An Unknown exception has occured. Type: <javax.ws.rs.ProcessingException>. Message: <Processing failed.>",
+        actualMessage);
 	}
 
 	@Test
