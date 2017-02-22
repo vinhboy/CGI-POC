@@ -49,7 +49,7 @@ cgiWebApp.controller('ProfileController',
         $anchorScroll();
       for (var i = 0; i < response.data.errors.length; i++) {
         if (response.data.errors[i].message) {
-          $scope.apiErrors.push(response.data.errors[i].message);
+          $rootScope.apiErrors.push(response.data.errors[i].message);
         }
       }
     }
@@ -84,6 +84,9 @@ cgiWebApp.controller('ProfileController',
       lastName: $scope.profile.lastName,
       phone: $scope.profile.phone,
       zipCode: $scope.profile.zipCode,
+      city: 'city',
+      state:'state',
+      requiredStreet:'required street',
       latitude: 0,
       longitude: 0,
       notificationType: $scope.profile.notificationType
@@ -156,7 +159,14 @@ cgiWebApp.controller('ProfileController',
     }
   };
 
+  window.addEventListener("keyup", function(e){ 
+      if(e.keyCode == 27) 
+          $state.go('login'); 
+      }, false);
+  
+  
   $scope.init();
+  
 }]);
 
 cgiWebApp.directive('compareTo', function() {
@@ -176,3 +186,4 @@ cgiWebApp.directive('compareTo', function() {
     }
   };
 });
+

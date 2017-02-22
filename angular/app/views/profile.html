@@ -35,7 +35,7 @@
         <div ng-class="{ 'usa-input-error': profileForm.email.$touched && profileForm.email.$invalid }">
           <label for="email" class="usa-input-required profile-label"
             translate="REGISTRATION.LABEL.EMAIL"></label>
-          <div class="emailAddressText" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
+          
           <div ng-messages="profileForm.email.$error" ng-if="profileForm.email.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
               translate="REGISTRATION.MESSAGE.INVALID.EMAILREQUIRED"></span>
@@ -44,8 +44,9 @@
           </div>
           <input id="email" name="email" type="email" ng-model="profile.email" ng-required="true"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.EMAIL' | translate }}" />
+            <div class="emailAddressText" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
         </div>
-
+        
         <div ng-class="{ 'usa-input-error': profileForm.password.$touched && !isPasswordValid() ||
           (profileForm.password.$touched && profileForm.passwordConfirmation.$touched && profile.password !== profile.passwordConfirmation) }">
           <label for="password" ng-class="{ 'usa-input-required' : isNew() }" class="profile-label"
@@ -71,8 +72,8 @@
             compare-to="profile.password" ng-required="isNew()" class="profile-form-input" />
         </div>
 
-        <div ng-class="{ 'usa-input-error': profileForm.phone.$touched && profileForm.phone.$invalid }">
-          <label for="phone" class="profile-label"
+        <div ng-class="{ 'usa-input-error': profileForm.phone.$touched && profileForm.phone.$invalid }"> 
+        <label for="phone" class="profile-label"
             translate="REGISTRATION.LABEL.PHONE"></label>
           <div ng-messages="profileForm.phone.$error" ng-if="profileForm.phone.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
@@ -83,6 +84,7 @@
           <input id="phone" name="phone" type="text" ng-model="profile.phone"
             class="profile-form-input" placeholder="XXX-XXX-XXXX" ng-pattern="regexPhone"
             ng-required="profile.allowNotificationsByLocation" />
+            <div translate="REGISTRATION.LABEL.PHONE.INFO"></div>
         </div>
 
         <div ng-class="{ 'usa-input-error': profileForm.zipCode.$touched && profileForm.zipCode.$invalid }">
@@ -96,7 +98,8 @@
           </div>
           <input id="zipCode" name="zipCode" type="text" ng-model="profile.zipCode" ng-required="true"
             ng-pattern="regexZip" class="profile-form-input zipCode" placeholder="XXXXX" maxlength="5" />
-          <div class="zipCodeText" translate="REGISTRATION.LABEL.ZIPCODE.INFO"></div>
+            
+            <div translate="REGISTRATION.LABEL.ZIPCODE.INFO"></div>
         </div>
 
         <div class="profile-form-input-notification-by-location">
