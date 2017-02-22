@@ -66,6 +66,7 @@ import com.cgi.poc.dw.service.TextMessageServiceImpl;
 import com.cgi.poc.dw.service.UserService;
 import com.cgi.poc.dw.service.UserServiceImpl;
 import com.cgi.poc.dw.sockets.AlertEndpoint;
+
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -286,7 +287,8 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
-        bind(UserService.class).to(UserServiceImpl.class).asEagerSingleton();
+        bind(UserService.class).to(UserServiceImpl.class)
+            .asEagerSingleton();
         bind(EventNotificationService.class).to(EventNotificationServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         bind(MailConfiguration.class).toInstance(conf.getMailConfig());

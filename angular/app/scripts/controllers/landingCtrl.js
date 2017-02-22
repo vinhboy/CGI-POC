@@ -48,8 +48,8 @@ cgiWebApp.controller('landingController',
         $scope.model.filteredNotifications  =  $filter('filter')($scope.model.filteredNotifications, {type: $scope.eventTypeFilter}, true);
         $scope.model.filteredNotifications  =   $filter('eventTime')([$scope.model.filteredNotifications, $scope.eventTimeFilter]);
         $scope.currentSelectedEvent = $scope.model.filteredNotifications[0];
-
-                $scope.loadMap($scope.model.filteredNotifications[0]);
+        $scope.activeItem.item = 0;
+        $scope.loadMap($scope.model.filteredNotifications[0]);
 
     };
    uiGmapGoogleMapApi.then(function(maps) {
@@ -104,10 +104,13 @@ cgiWebApp.controller('landingController',
         
     };
     
-    $scope.loadEventDetails = function(selectedEvent){
-           $scope.currentSelectedEvent = selectedEvent;
-           $scope.showMapOrDetails='DETAILS';
-            
+    $scope.loadEventDetails = function(selectedEvent, event){
+       $scope.currentSelectedEvent = selectedEvent;
+       $scope.showMapOrDetails='DETAILS';
+       if(event){
+         event.stopPropagation();
+         event.preventDefault();
+       }            
     };
     
     $scope.mapLoadASimplePoint = function (xValue, yValue) {        

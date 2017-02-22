@@ -8,4 +8,6 @@ public interface UserService {
   Response registerUser(User userDto);
   
   Response setLocalization(User user);
+
+  Response updateUser(User userDto);
 }

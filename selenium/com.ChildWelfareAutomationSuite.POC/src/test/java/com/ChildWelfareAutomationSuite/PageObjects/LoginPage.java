@@ -23,7 +23,7 @@ public class LoginPage {
 	WebElement password;
 	@FindBy(xpath = "//button[starts-with(@class,'usa-button-primary-alt usa-button-login ng-scope')]")
 	WebElement LoginButton;
-	@FindBy(xpath = "//button[contains(.,'RETURN TO MAP')]")
+	@FindBy(xpath = "//a[@ui-sref='manageProfile']")
 	WebElement LoginMesg;
 	@FindBy(xpath = "//p[contains(.,'Incorrect username/password combination')]")
 	WebElement InvalidLoginMesg;

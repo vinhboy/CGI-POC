@@ -8,6 +8,7 @@ import java.util.List;
 import javax.validation.Validator;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 public class EventNotificationDAO extends AbstractDAO<EventNotification> {
@@ -27,13 +28,14 @@ public class EventNotificationDAO extends AbstractDAO<EventNotification> {
 
     public List<EventNotification> retrieveAll() {
         Criteria criteria = this.criteria();
+        criteria.addOrder(Order.desc("generationDate"));
         List<EventNotification> resultList = criteria.list();
         return resultList;
     }
     public List<EventNotification> retrieveAllForUser(User user) {
         Criteria criteria = this.criteria();
         criteria.add(Restrictions.eq("userId.id", user.getId()));
-
+        criteria.addOrder(Order.desc("generationDate"));
         List<EventNotification> resultList = criteria.list();
         return resultList;
     }
