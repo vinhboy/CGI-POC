@@ -43,8 +43,13 @@ import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
 import com.cgi.poc.dw.service.UserService;
 import com.cgi.poc.dw.service.UserServiceImpl;
+import com.cgi.poc.dw.util.BadRequestExceptionMapper;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
+import com.cgi.poc.dw.util.InternalServerExceptionMapper;
+import com.cgi.poc.dw.util.JsonMappingExceptionMapper;
+import com.cgi.poc.dw.util.NotFoundExceptionMapper;
+import com.cgi.poc.dw.util.RuntimeExceptionMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
@@ -185,6 +190,12 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     registerResource(environment, injector, LoginResource.class);
     registerResource(environment, injector, CustomConstraintViolationExceptionMapper.class);
     registerResource(environment, injector, CustomSQLConstraintViolationException.class);
+    registerResource(environment, injector, BadRequestExceptionMapper.class);
+    registerResource(environment, injector, NotFoundExceptionMapper.class);
+    registerResource(environment, injector, InternalServerExceptionMapper.class);
+    registerResource(environment, injector, JsonMappingExceptionMapper.class);
+    registerResource(environment, injector, RuntimeExceptionMapper.class);
+
 
     environment.jersey().property(ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
 
@@ -278,7 +289,6 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(APIServiceFactory.class).to(APIServiceFactoryImpl.class).asEagerSingleton();
         bind(JwtReaderService.class).to(JwtReaderServiceImpl.class).asEagerSingleton();
         bind(JwtBuilderService.class).to(JwtBuilderServiceImpl.class).asEagerSingleton();
-        bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
