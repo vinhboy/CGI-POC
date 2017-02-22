@@ -106,6 +106,9 @@ input.phoneLong {
 .notificationMessageInfo {
   float: right; }
 
+.additional-input-info {
+  font-size: 13px; }
+
 input.zipCode {
   display: inline-block;
   width: 7rem; }

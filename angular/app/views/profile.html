@@ -35,7 +35,6 @@
         <div ng-class="{ 'usa-input-error': profileForm.email.$touched && profileForm.email.$invalid }">
           <label for="email" class="usa-input-required profile-label"
             translate="REGISTRATION.LABEL.EMAIL"></label>
-          <div class="emailAddressText" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
           <div ng-messages="profileForm.email.$error" ng-if="profileForm.email.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
               translate="REGISTRATION.MESSAGE.INVALID.EMAILREQUIRED"></span>
@@ -44,6 +43,7 @@
           </div>
           <input id="email" name="email" type="email" ng-model="profile.email" ng-required="true"
             class="profile-form-input" placeholder="{{ 'REGISTRATION.LABEL.EMAIL' | translate }}" />
+          <div class="additional-input-info" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
         </div>
 
         <div ng-class="{ 'usa-input-error': profileForm.password.$touched && !isPasswordValid() ||
@@ -83,6 +83,7 @@
           <input id="phone" name="phone" type="text" ng-model="profile.phone"
             class="profile-form-input" placeholder="XXX-XXX-XXXX" ng-pattern="regexPhone"
             ng-required="profile.allowNotificationsByLocation" />
+          <div class="additional-input-info" translate="REGISTRATION.LABEL.PHONE.INFO"></div>
         </div>
 
         <div ng-class="{ 'usa-input-error': profileForm.zipCode.$touched && profileForm.zipCode.$invalid }">
@@ -96,20 +97,13 @@
           </div>
           <input id="zipCode" name="zipCode" type="text" ng-model="profile.zipCode" ng-required="true"
             ng-pattern="regexZip" class="profile-form-input zipCode" placeholder="XXXXX" maxlength="5" />
-          <div class="zipCodeText" translate="REGISTRATION.LABEL.ZIPCODE.INFO"></div>
+          <div class="additional-input-info" translate="REGISTRATION.LABEL.ZIPCODE.INFO"></div>
         </div>
 
-        <div class="profile-form-input-notification-by-location">
-          <input id="allowNotificationsByLocation" type="checkbox" name="allowNotificationsByLocation" value="1"
-            ng-model="profile.allowNotificationsByLocation">
-          <label for="allowNotificationsByLocation" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.PHONE"></label>
-        </div>
-
-        <br />
         <div>
-          <h5>
+          <h3 class="profile-label">
             <span class="usa-input-required notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.OPTIONS"></span>
-          </h5>
+          </h3>
           <hr />
         </div>
 

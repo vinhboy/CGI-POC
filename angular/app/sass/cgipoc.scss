@@ -42,12 +42,12 @@ body{
     margin-right:auto;
 }
 
-.headerZone {   
+.headerZone {
     background: #003466;
     width:100%;
-    position:fixed; 
+    position:fixed;
     top:0;
-    left:0; 
+    left:0;
     z-index:1;
 
 }
@@ -59,8 +59,8 @@ body{
     padding-bottom: 10em;
     z-index:-1;
 }
-.angular-google-map-container { 
-    height: 400px; 
+.angular-google-map-container {
+    height: 400px;
 }
 #map {
         height: 100%;
@@ -116,7 +116,8 @@ input.phoneLong{
 .notificationMessageInfo{
 	float:right;
 }
-.emailAddressText{
+.additional-input-info{
+	font-size: 13px;
 }
 input.zipCode{
     display:inline-block;
