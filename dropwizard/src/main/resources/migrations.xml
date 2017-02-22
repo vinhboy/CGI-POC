@@ -359,5 +359,28 @@
           <column name="citizensAffected" type="integer" />
       </addColumn>
   </changeSet>
+  
+  <changeSet id="20" author="Felix R. Pelletier">
+        <addColumn tableName="user">
+            <column name="city" type="VARCHAR(50)" >
+            <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="state" type="VARCHAR(15)" >
+            <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="address" type="VARCHAR(250)" >
+            <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="address_additional_info" type="VARCHAR(250)" >
+            <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
