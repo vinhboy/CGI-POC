@@ -302,6 +302,26 @@ describe('ProfileController', function() {
       $scope.processApiErrors(response);
       expect($scope.apiErrors.length).toBe(0);
     });
+
+    it('should construct the apiErrors for unauthorized', function() {
+      var response = {
+        status: 401,
+        statusText: 'Unauthorized',
+        data: 'Credentials are required to access this resource.'
+      };
+      $scope.processApiErrors(response);
+      expect($scope.apiErrors[0]).toBe('Credentials are required to access this resource.');
+    });
+
+    it('should default to generic error message', function() {
+      var response = {
+        status: -1,
+        statusText: '',
+        data: null
+      };
+      $scope.processApiErrors(response);
+      expect($scope.apiErrors[0]).toBe('Server error occurred. Please try again later.');
+    });
   });
 
   describe('isNew', function() {

@@ -30,9 +30,7 @@ cgiWebApp.controller('ProfileController',
       emailNotification: false,
       pushNotification: false,
       smsNotification: false,
-      notificationType: [],
-      latitude: 0,
-      longitude: 0,
+      notificationType: []
     };
 
     if ($scope.isEdit()) {
@@ -49,12 +47,19 @@ cgiWebApp.controller('ProfileController',
   $scope.processApiErrors = function(response) {
     $scope.apiErrors = [];
     if (response.data && response.data.errors) {
-        $anchorScroll();
       for (var i = 0; i < response.data.errors.length; i++) {
         if (response.data.errors[i].message) {
           $scope.apiErrors.push(response.data.errors[i].message);
         }
       }
+    } else if (response.status === 401 && response.data) {
+      $scope.apiErrors.push(response.data);
+    } else {
+      $scope.apiErrors.push('Server error occurred. Please try again later.');
+    }
+
+    if ($scope.apiErrors.length > 0) {
+      $anchorScroll();
     }
   };
 
@@ -86,11 +91,16 @@ cgiWebApp.controller('ProfileController',
       firstName: $scope.profile.firstName,
       lastName: $scope.profile.lastName,
       phone: $scope.profile.phone,
+      address1: $scope.profile.address1,
+      address2: $scope.profile.address2,
+      city: $scope.profile.city,
+      state: $scope.profile.state,
       zipCode: $scope.profile.zipCode,
-      latitude: 0,
-      longitude: 0,
       notificationType: $scope.profile.notificationType
     };
+
+    //putting this on scope so I can test
+    $scope.toSend = toPost;
 
     var toCall;
     if ($scope.isNew()) {
@@ -101,9 +111,6 @@ cgiWebApp.controller('ProfileController',
         toPost.password = undefined;
       }
     }
-
-    //putting this on scope so I can test
-    $scope.toSend = toPost;
 
     toCall(toPost).then(function() {
       if (beforeNavFunc) {
