@@ -19,7 +19,7 @@ cgiWebApp.service('ProfileService',
 
   this.update = function(profile) {
     var authToken = $sessionStorage.get('jwt');
-    var endpoint = urls.BASE + '/profile/update';
+    var endpoint = urls.BASE + '/profile';
     return $http.put(endpoint, profile, {
       headers: { 'Authorization': 'Bearer ' + authToken }
     });

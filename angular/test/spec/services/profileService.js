@@ -48,7 +48,7 @@ describe('ProfileService', function() {
   describe('update', function() {
     it('should post to the expected registration endpoint', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPUT('http://localhost:8080/profile/update', profile)
+      $httpBackend.expectPUT('http://localhost:8080/profile', profile)
         .respond(200, {});
 
       profileService.update(profile);
@@ -60,7 +60,7 @@ describe('ProfileService', function() {
 
     it('should construct the endpoint URL', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPUT(urls.BASE + '/profile/update', profile)
+      $httpBackend.expectPUT(urls.BASE + '/profile', profile)
         .respond(200, {});
 
       profileService.update(profile);
@@ -72,7 +72,7 @@ describe('ProfileService', function() {
 
     it('should send the JWT auth token during udpate', function() {
       var profile = { email: 'user@example.com', password: 'pw', name: 'jonny depp' };
-      $httpBackend.expectPUT(urls.BASE + '/profile/update', profile, {
+      $httpBackend.expectPUT(urls.BASE + '/profile', profile, {
         'Authorization': 'Bearer magical auth token here',
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json;charset=utf-8'
