@@ -31,16 +31,34 @@ describe('headerController', function() {
       expect($scope.isLoggedIn()).toBe(false);
     });
   });
-
-  describe('isAuth', function() {
-    it('should be considered isAuth if in the login state', function() {
-      $state.current.name = 'login';
-      expect($scope.isAuth()).toBe(true);
+  describe('isAdminUser', function() {
+    it('true if seesion value is ADMIN ', function() {
+      spyOn($sessionStorage, 'get').and.returnValue('ADMIN');
+      expect($scope.isAdminUser()).toBe(true);
     });
 
-    it('should be not be considered isAuth if not in the login state', function() {
-      $state.current.name = 'somethingElse';
-      expect($scope.isAuth()).toBe(false);
+    it('false if seesion value is not ADMIN or not set', function() {
+      spyOn($sessionStorage, 'get').and.returnValue(null);
+      expect($scope.isAdminUser()).toBe(false);
+    });
+    it('false if seesion value is not ADMIN or not set', function() {
+      spyOn($sessionStorage, 'get').and.returnValue('RESIDENT');
+      expect($scope.isAdminUser()).toBe(false);
+    });
+  });
+
+  describe('logout', function() {
+    it('should clear the session', function() {
+      spyOn($sessionStorage, 'remove');
+      $scope.logout();
+      expect($sessionStorage.remove).toHaveBeenCalledWith('role');
+      expect($sessionStorage.remove).toHaveBeenCalledWith('jwt');
+    });
+
+    it('should redirect to login', function() {
+      spyOn($state, 'go');
+      $scope.logout();
+      expect($state.go).toHaveBeenCalledWith('login');
     });
   });
 });

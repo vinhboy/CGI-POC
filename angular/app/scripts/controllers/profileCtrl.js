@@ -9,8 +9,8 @@
 'use strict';
 
 cgiWebApp.controller('ProfileController',
-  ['$scope', 'ProfileService', '$state', '$sessionStorage', 'Authenticator', '$anchorScroll', '$location',
-  function ($scope, ProfileService, $state, $sessionStorage, Authenticator,$anchorScroll, $location) {
+  ['$scope', 'ProfileService', '$state', '$sessionStorage', 'Authenticator', '$anchorScroll',
+  function ($scope, ProfileService, $state, $sessionStorage, Authenticator,$anchorScroll) {
 
   $scope.init = function() {
     $scope.apiErrors = [];
@@ -84,9 +84,10 @@ cgiWebApp.controller('ProfileController',
       lastName: $scope.profile.lastName,
       phone: $scope.profile.phone,
       zipCode: $scope.profile.zipCode,
-      city: 'city',
-      state:'state',
-      requiredStreet:'required street',
+      city: 'Sacramento',
+      state: 'California',
+      requiredStreet:'This is a required street',
+      optionalStreet:'This is an optional street',
       latitude: 0,
       longitude: 0,
       notificationType: $scope.profile.notificationType

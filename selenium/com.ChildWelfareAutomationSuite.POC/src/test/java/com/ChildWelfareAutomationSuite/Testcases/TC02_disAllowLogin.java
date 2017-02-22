@@ -127,7 +127,7 @@ public void TC02_DisallowLogin_4() {
 		//Capture the Text of Login Message of Hitting Login Button
 		String verifyMesg = login.VerifyLoginMesg();
 		//Verify Success Message of Login
-		Assert.assertTrue(verifyMesg.contains("RETURN TO MAP"));
+		Assert.assertTrue(verifyMesg.contains("Manage Profile"));
 		login.clickLogout();
 		BrowserFactory.clickBackButton();
 		//Assert.assert(verifyMesg.contains("RETURN TO MAP"));

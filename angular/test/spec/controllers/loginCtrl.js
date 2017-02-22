@@ -48,7 +48,7 @@ describe('loginController', function() {
       deferred.resolve(response);
       $scope.$apply();
 
-      expect($state.go).toHaveBeenCalledWith('landing', { role: response.data.role });
+      expect($state.go).toHaveBeenCalledWith('landing');
     });
 
     it('should save the JWT auth token', function() {
@@ -69,20 +69,6 @@ describe('loginController', function() {
       $scope.$apply();
 
       expect($scope.popUp).toHaveBeenCalledWith('error', 'LOGIN.MESSAGE.INVALID');
-    });
-  });
-
-  describe('logout', function() {
-    it('should clear the session', function() {
-      spyOn($sessionStorage, 'remove');
-      $scope.logout();
-      expect($sessionStorage.remove).toHaveBeenCalledWith('jwt');
-    });
-
-    it('should redirect to login', function() {
-      spyOn($state, 'go');
-      $scope.logout();
-      expect($state.go).toHaveBeenCalledWith('login');
     });
   });
 });

@@ -9,7 +9,7 @@ describe('landingController', function() {
   var deferred;
 
   beforeEach(module('cgi-web-app'));
-    beforeEach(inject(function(_$rootScope_, _$controller_, _EventNotificationService_, _$state_, _$q_,_uiGmapGoogleMapApi_) {
+    beforeEach(inject(function(_$rootScope_, _$controller_, _EventNotificationService_, _$state_, _$q_) {
 
     $q = _$q_;
     $scope = _$rootScope_.$new();
@@ -18,6 +18,7 @@ describe('landingController', function() {
 
     deferred = _$q_.defer();
     spyOn(notificationService, 'allNotifications').and.returnValue(deferred.promise);
+    spyOn(notificationService, 'userNotifications').and.returnValue(deferred.promise);
 
 
     landingController = _$controller_('landingController', {
@@ -100,6 +101,42 @@ describe('landingController', function() {
       expect($scope.showMapOrDetails).toBe('MAP');
  });
 
+ it('converts inbound data strings to objects', function() {
+    var apiData = [
+  {
+    description: 'Severe Thunderstorm Warning',
+    type: 'Weather',
+    generationDate: '2017-02-19T20:36:37.000+0000',
+    geometry: '{\"x\":-81.36500307953563,\"y\":27.776949558089495}',
+    url1: 'http://forecast.weather.gov/product.php?site=EWX&issuedby=EWX&product=SVR',
+    url2: 'www.cnn.com',
+    citizensAffected: 500,
+    userId: {
+      firstName: 'Dawna',
+      lastName: 'Floyd',
+      email: 'me@me.com',
+      password: '0d78e8a655575f3aa49dab465349cd96e5773c507020ebe92ab05f:e3352e3a7cf37fcb885088a67979bd63792ed089bd830629d5acc9',
+      phone: '2183309196',
+      zipCode: '56401',
+      notificationType: [
+        {
+          notificationId: 1
+        }
+      ]
+    },
+    eventNotificationZipcodes: []
+  }];
+     var expectDate = Date.parse('2017-02-19T20:36:37.000+0000');   
+     var geometryObj = {
+         x:-81.36500307953563,
+         y: 27.776949558089495
+     };
+     $scope.convertApiData(apiData);
+
+      expect($scope.model.notifications.length).toBe(1);
+      expect($scope.model.notifications[0].geometry).toEqual(geometryObj);
+      expect($scope.model.notifications[0].generationDate).toEqual(expectDate);
+ });
     
   
 });
