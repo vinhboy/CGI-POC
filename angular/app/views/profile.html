@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  <form class="usa-form-large" name="profileForm" ng-submit="registerProfile()">
+  <form class="usa-form-large" name="profileForm" ng-submit="registerProfile()" novalidate>
     <fieldset>
       <div class="registrationFormDiv">
         <h3 class="profile-label" translate="REGISTRATION.LABEL.TITLE"></h3>
@@ -131,7 +131,7 @@
           </li>
         </ul>
 
-        <div ng-messages="profileForm.notification.$error" ng-show="submitted && profileForm.notification.$invalid">
+        <div ng-messages="profileForm.notification.$error" ng-show="profileForm.$submitted && profileForm.notification.$invalid">
           <span class="usa-input-error-message" role="alert" ng-message="required"
             translate="REGISTRATION.MESSAGE.INVALID.CHECKBOXREQUIRED"></span>
         </div>
