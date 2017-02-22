@@ -9,8 +9,8 @@
  * geo localization setter service.
  */
 cgiWebApp.service('Localizator',
-  ['$http', 'urls',
-  function($http, urls) {
+  ['$http', 'urls', '$sessionStorage',
+  function($http, urls, $sessionStorage) {
 
   this.localize = function(user) {
     var authToken = $sessionStorage.get('jwt');

@@ -14,8 +14,8 @@
 
 cgiWebApp.controller('landingController',
 
-  ['$scope','$filter','$timeout','EventNotificationService','uiGmapGoogleMapApi' , 'Localizator', '$geolocation',
-  function ($scope,$filter,$timeout,EventNotificationService, uiGmapGoogleMapApi, Localizator, $geolocation) {
+  ['$scope','$filter','$timeout','EventNotificationService','uiGmapGoogleMapApi' , 'Localizator', '$geolocation', '$sessionStorage',
+  function ($scope,$filter,$timeout,EventNotificationService, uiGmapGoogleMapApi, Localizator, $geolocation, $sessionStorage) {
     
   $scope.apiErrors = [];
   $scope.map = undefined;
@@ -165,31 +165,25 @@ cgiWebApp.controller('landingController',
     
     //get the localization of the user and save it in his profile
     $scope.saveLocalization = function(){
-        
-        var user = $sessionsStorage.get("user");
-        //TODO add a condition to verify if the user allow Phone localization
-        //when it will be added in the database
-        //conditions : && user.allowPhoneLocalization
-        if(user != null){
+
+        if($scope.isLoggedIn()){
             $geolocation.watchPosition({
                 timeout: 60000,
                 maximumAge: 250,
                 enableHighAccuracy: true
             });
-        
-            if($geolocation.position.error == null){
-                Localizator.localize($geolocation.position.coords).then(function(response) {
-                    console.log(response.data);
-                    user = response.data.user;
-                    user.geoLocLatitude = position.coords.latitude;
-                    user.geoLocLongitude = position.coords;
-                    $scope.coords = position.coords;
-                    $sessionsStorage.put("user", user);
-                  });
-            }else{
-                console.log($geolocation.position.error);
+            
+            $scope.coords = $geolocation.position.coords;
+            
+//            if($geolocation.position.error == null){
+//                $scope.coords = $geolocation.position.coords;
+//                Localizator.localize($scope.coords).then(function(response) {
+//                    console.log(response.data);
+//                  });
+//            }else{
+//                console.log($geolocation.position.error);
                 $scope.error = $geolocation.position.error;
-            }
+//            }
         }
     };
 

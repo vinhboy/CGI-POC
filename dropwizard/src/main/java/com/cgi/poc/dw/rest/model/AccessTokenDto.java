@@ -8,15 +8,13 @@ public class AccessTokenDto {
 
   private String authToken;
   private Role role = Role.RESIDENT;
-  private User user;
 
   public AccessTokenDto() {
   }
 
-  public AccessTokenDto(String authToken, Role role, User user) {
+  public AccessTokenDto(String authToken, Role role) {
     this.authToken = authToken;
     this.role = role;
-    this.user = user;
   }
 
   public String getAuthToken() {
@@ -35,11 +33,4 @@ public class AccessTokenDto {
     this.role = role;
   }
 
-  public User getUser() {
-	return user;
-  }
-
-  public void setUser(User user) {
-	this.user = user;
-  }
 }

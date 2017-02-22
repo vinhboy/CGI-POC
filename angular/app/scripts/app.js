@@ -1,6 +1,6 @@
 'use strict';
 
-var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages','uiGmapgoogle-maps' ]);
+var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages','uiGmapgoogle-maps', 'ngGeolocation' ]);
 
 cgiWebApp.constant('urls', {
   // have to be change depending of the environment
@@ -72,7 +72,7 @@ $sceDelegateProvider.resourceUrlWhitelist([
     }
   });
 }])
-.run(['$sessionStorage', '$http',   function ($sessionStorage, $http ) {
+.run(['$sessionStorage', '$http', '$rootScope',   function ($sessionStorage, $http, $rootScope ) {
 
     var authToken = $sessionStorage.get('jwt');
         // Setup api access token
@@ -80,4 +80,8 @@ $sceDelegateProvider.resourceUrlWhitelist([
         $http.defaults.headers.common.Authorization =  'Bearer ' + authToken;
         //Caching will be set by the nginx, so lets take advantage of that.
         //$http.defaults.headers.common['Cache-Control'] = 'no-cache';
+        
+        $rootScope.isLoggedIn = function(){
+            return $sessionStorage.get('jwt') !== null ;
+          };
 }]);

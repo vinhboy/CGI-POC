@@ -1,23 +1,24 @@
 'use strict';
 
 describe('Localizator', function() {
-  var authenticationService;
   var $httpBackend;
   var urls;
   var LocalizeService;
+  var $sessionStorage;
 
   beforeEach(module('cgi-web-app'));
 
-  beforeEach(inject(function(_Localizator_, _urls_, _$httpBackend_) {
+  beforeEach(inject(function(_Localizator_, _urls_, _$httpBackend_, _$sessionStorage_) {
     LocalizeService = _Localizator_;
     urls = _urls_;
     $httpBackend = _$httpBackend_;
+    $sessionStorage = _$sessionStorage_;
   }));
 
   describe('localizer', function() {
     it('should post to the expected localize endpoint', function() {
       var coords = {geoloclatitude : 53.00, geoloclongitude : -121.00};
-      $httpBackend.expectPUT('http://localhost:8080/user/geoLocation', credentials)
+      $httpBackend.expectPUT('http://localhost:8080/user/geoLocation', coords)
         .respond(200, {});
 
       LocalizeService.localize(coords);
@@ -29,7 +30,7 @@ describe('Localizator', function() {
 
     it('should construct the endpoint URL', function() {
       var coords = {geoloclatitude : 53.00, geoloclongitude : -121.00};
-      $httpBackend.expectPUT(urls.BASE + '/user/geoLocation', credentials)
+      $httpBackend.expectPUT(urls.BASE + '/user/geoLocation', coords)
         .respond(200, {});
 
       LocalizeService.localize(coords);

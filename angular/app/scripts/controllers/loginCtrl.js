@@ -41,7 +41,6 @@ cgiWebApp.controller('loginController',
     Authenticator.authenticate(credentials).then(function(response) {
       if (response.status === 200) {
         $sessionStorage.put('jwt', response.data.authToken);
-        $sessionStorage.put('user', response.data.user);
         $sessionStorage.put('role', response.data.role);
         
         $http.defaults.headers.common['Content-Type'] = 'application/json';
@@ -56,7 +55,6 @@ cgiWebApp.controller('loginController',
 
   $scope.logout = function() {
     $sessionStorage.remove('jwt');
-    $sessionStorage.remove('user');
     $state.go('login');
   };
 }]);

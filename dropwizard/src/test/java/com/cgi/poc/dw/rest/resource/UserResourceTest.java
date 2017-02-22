@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,13 +34,10 @@ import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
+import com.cgi.poc.dw.rest.model.LocalizationDto;
 import com.cgi.poc.dw.util.Error;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.GeneralErrors;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
@@ -340,55 +336,6 @@ public class UserResourceTest extends IntegrationTest {
       assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
   }
-  
-  @Test
-  public void setLocalization_noArgument() throws JsonParseException, JsonMappingException, IOException, SQLException {
-		
-	  IntegrationTestHelper.signupResidentUser();
-	  
-		String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "residentpw", RULE);
-
-		Client client = new JerseyClientBuilder().build();
-		Response response = client.
-				target(String.format(url_localizer, RULE.getLocalPort())).
-				request().
-				header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken).
-				put(Entity.json(null));
-		Assert.assertEquals(422, response.getStatus());
-
-		String output = response.readEntity(String.class);
-
-		final ObjectNode node = new ObjectMapper().readValue(output, ObjectNode.class);
-
-		Assert.assertTrue(!StringUtils.isBlank(node.path("errors").asText()));
-		Assert.assertEquals("[\"The request body may not be null\"]", node.path("errors").asText());
-	}
-
-	@Test
-	public void setLocalization_noGeoLocValue() throws SQLException{
-		
-		IntegrationTestHelper.signupResidentUser();
-		
-		String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "residentpw", RULE);
-		
-		Client client = new JerseyClientBuilder().build();
-		Response response = client.
-				target(String.format(url_localizer, RULE.getLocalPort())).
-				request().
-				header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken).
-				put(Entity.json(null));
-		Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-		ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-		for (Error error : errorInfo.getErrors()) {
-			assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-			// The data provided in the API call is invalid. Message: <XXXXX>
-			// where XXX is the message associated to the validation
-			String partString = "geolocalization may not be null";
-			String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage().replace("REPLACE", partString);
-			assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-		}
-
-	}
 
 	@Test
 	public void setLocalization_Success() throws SQLException{
@@ -396,13 +343,17 @@ public class UserResourceTest extends IntegrationTest {
 		IntegrationTestHelper.signupResidentUser();
 		
 		String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "residentpw", RULE);
-
+		
+		LocalizationDto localizationDto = new LocalizationDto();
+		localizationDto.setLatitude(0.0);
+		localizationDto.setLongitude(0.0);
+		
 		Client client = new JerseyClientBuilder().build();
 		Response response = client.
 				target(String.format(url_localizer, RULE.getLocalPort())).
 				request().
 				header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken).
-				put(Entity.json(null));
+				put(Entity.json(localizationDto));
 		Assert.assertEquals(200, response.getStatus());
 
 	}

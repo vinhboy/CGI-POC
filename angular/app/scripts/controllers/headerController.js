@@ -15,9 +15,7 @@
 cgiWebApp.controller('headerController',
   ['$scope', '$sessionStorage', '$state','$http',
   function ($scope, $sessionStorage, $state,$http) {
-    $scope.isLoggedIn = function(){
-      return $sessionStorage.get('jwt') !== null ;
-    };
+
     $scope.isAdminUser = function(){
       return $sessionStorage.get('role') === 'ADMIN';
     };

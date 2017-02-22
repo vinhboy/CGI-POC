@@ -22,11 +22,16 @@ describe('landingController', function() {
     deferred = _$q_.defer();
     spyOn(notificationService, 'allNotifications').and.returnValue(deferred.promise);
     spyOn(notificationService, 'userNotifications').and.returnValue(deferred.promise);
-
-
+    
+    $geolocation.position = { coords: { latitude: 36.149674, longitude: -86.813347 } };
+    
+    spyOn($geolocation, 'watchPosition');
+    spyOn($scope, 'isLoggedIn').and.returnValue(true);
+    
     landingController = _$controller_('landingController', {
       $scope: $scope,
-      ProfileService: notificationService
+      ProfileService: notificationService,
+      $geolocation : $geolocation
     });
   }));
   it('initializes the apiErrors', function() {
@@ -106,19 +111,11 @@ describe('landingController', function() {
  
  it('call the geo localization', function() {
      
-     var position = {
-                "coords" : {
-                    "latitude": "36.149674",
-                    "longitude": "-86.813347"
-                }
-             };
-     
-     spyOn($geolocation, 'watchPosition').and.returnValue(position);
-     
      $scope.saveLocalization();
      
-     expect($scope.coords).toBe("36.149674, -86.813347");
-     expect($scope.error).toBeNull();
+     expect($scope.coords.latitude).toBe(36.149674);
+     expect($scope.coords.longitude).toBe(-86.813347 );
+     expect($scope.error).toBe(undefined);
  });
 
  it('converts inbound data strings to objects', function() {
@@ -158,3 +155,4 @@ describe('landingController', function() {
       expect($scope.model.notifications[0].generationDate).toEqual(expectDate);
 
  });
+});

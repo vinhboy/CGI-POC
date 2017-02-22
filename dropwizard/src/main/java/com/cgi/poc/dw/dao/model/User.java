@@ -112,11 +112,9 @@ public class User implements Serializable, Principal {
   @JsonIgnore
   private Double longitude;
   
-  @NotNull(groups = { PersistValidationGroup.class })
   @Column(name = "geo_loc_latitude")
   private Double geoLocLatitude;
 
-  @NotNull(groups = { PersistValidationGroup.class })
   @Column(name = "geo_loc_longitude")
   private Double geoLocLongitude;
 
