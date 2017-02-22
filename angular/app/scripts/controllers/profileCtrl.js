@@ -9,8 +9,8 @@
 'use strict';
 
 cgiWebApp.controller('ProfileController',
-  ['$scope', 'ProfileService', '$state', '$sessionStorage', 'Authenticator', '$anchorScroll', '$location',
-  function ($scope, ProfileService, $state, $sessionStorage, Authenticator,$anchorScroll, $location) {
+  ['$scope', 'ProfileService', '$state', '$sessionStorage', 'Authenticator', '$anchorScroll',
+  function ($scope, ProfileService, $state, $sessionStorage, Authenticator,$anchorScroll) {
 
   $scope.init = function() {
     $scope.apiErrors = [];

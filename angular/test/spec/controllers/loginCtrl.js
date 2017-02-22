@@ -71,18 +71,4 @@ describe('loginController', function() {
       expect($scope.popUp).toHaveBeenCalledWith('error', 'LOGIN.MESSAGE.INVALID');
     });
   });
-
-  describe('logout', function() {
-    it('should clear the session', function() {
-      spyOn($sessionStorage, 'remove');
-      $scope.logout();
-      expect($sessionStorage.remove).toHaveBeenCalledWith('jwt');
-    });
-
-    it('should redirect to login', function() {
-      spyOn($state, 'go');
-      $scope.logout();
-      expect($state.go).toHaveBeenCalledWith('login');
-    });
-  });
 });
