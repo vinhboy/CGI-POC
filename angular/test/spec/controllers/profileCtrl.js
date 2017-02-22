@@ -51,7 +51,6 @@ describe('ProfileController', function() {
       expect($scope.profile.emailNotification).toBe(false);
       expect($scope.profile.pushNotification).toBe(false);
       expect($scope.profile.smsNotification).toBe(false);
-      expect($scope.profile.allowNotificationsByLocation).toBe(false);
     });
 
     it('initializes the apiErrors', function() {

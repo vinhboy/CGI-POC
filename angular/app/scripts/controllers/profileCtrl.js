@@ -29,7 +29,6 @@ cgiWebApp.controller('ProfileController',
       notificationType: [],
       latitude: 0,
       longitude: 0,
-      allowNotificationsByLocation: false
     };
 
     if ($scope.isEdit()) {
