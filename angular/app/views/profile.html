@@ -72,7 +72,7 @@
         </div>
 
         <div ng-class="{ 'usa-input-error': profileForm.phone.$touched && profileForm.phone.$invalid }">
-          <label for="phone"
+          <label for="phone" ng-class="{ 'usa-input-required': profile.smsNotification }"
             translate="REGISTRATION.LABEL.PHONE"></label>
           <div ng-messages="profileForm.phone.$error" ng-if="profileForm.phone.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
