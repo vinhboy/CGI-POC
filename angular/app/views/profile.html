@@ -212,7 +212,7 @@
 
         <div>
           <button type="button" class="cancel-button usa-width-one-half usa-button-gray"
-            translate="REGISTRATION.BUTTON.CANCEL" ui-sref="login"></button>
+            translate="REGISTRATION.BUTTON.CANCEL" ng-click="goBack()"></button>
           <button type="submit" class="usa-width-one-half usa-button-primary"
             translate="REGISTRATION.BUTTON.SAVE" ng-disabled="!profileForm.$dirty"></button>
         </div>

@@ -366,4 +366,20 @@ describe('ProfileController', function() {
       expect(obj.something).not.toBe('');
     });
   });
+
+  describe('goBack', function() {
+    it('should go back to login page for new registers', function() {
+      $state.current.name = 'register';
+      spyOn($state, 'go');
+      $scope.goBack();
+      expect($state.go).toHaveBeenCalledWith('login');
+    });
+
+    it('should go back to landing page for editing users', function() {
+      $state.current.name = 'manageProfile';
+      spyOn($state, 'go');
+      $scope.goBack();
+      expect($state.go).toHaveBeenCalledWith('landing');
+    });
+  });
 });

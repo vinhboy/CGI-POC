@@ -182,6 +182,15 @@ cgiWebApp.controller('ProfileController',
     }
   };
 
+  $scope.goBack = function() {
+    if ($scope.isNew()) {
+      $state.go('login');
+    }
+    else {
+      $state.go('landing');
+    }
+  };
+
   $scope.init();
 }]);
 
