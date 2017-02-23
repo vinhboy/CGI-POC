@@ -9,9 +9,12 @@ import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotificationType;
+import com.cgi.poc.dw.rest.model.EventNotificationDto;
 import com.google.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import javax.ws.rs.core.Response;
@@ -62,9 +65,12 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
   }
 
   @Override
-  public Response publishNotification(EventNotification eventNotification) {
+  public Response publishNotification(User adminUser, EventNotificationDto eventNotificationDto) {
+
+    EventNotification eventNotification = convertToEntity(adminUser, eventNotificationDto);
+
     validate(eventNotification, "eventNotification validation", Default.class);
-    eventNotification = eventNotificationDAO.save(eventNotification);
+    eventNotificationDAO.save(eventNotification);
 
     List<GeoCoordinates> geoCoordinates = new ArrayList<>();
     for (EventNotificationZipcode zipcode : eventNotification.getEventNotificationZipcodes()) {
@@ -103,5 +109,25 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
     }
 
     return Response.ok().entity(eventNotification).build();
+  }
+
+  private EventNotification convertToEntity(User adminUser, EventNotificationDto eventNotificationDto) {
+    EventNotification eventNotification = new EventNotification();
+    eventNotification.setUserId(adminUser);
+    eventNotification.setDescription(eventNotificationDto.getDescription());
+    eventNotification.setType(eventNotificationDto.getType());
+    
+    Set<EventNotificationZipcode> eventNotificationZipcodes = new HashSet<>();
+    for (String zipcode : eventNotificationDto.getZipCodes()) {
+      EventNotificationZipcode eventNotificationZipcode = new EventNotificationZipcode();
+      eventNotificationZipcode.setZipCode(zipcode);
+      eventNotificationZipcode.setEventNotificationId(eventNotification);
+
+      eventNotificationZipcodes.add(eventNotificationZipcode);
+    }
+    eventNotification.setEventNotificationZipcodes(eventNotificationZipcodes);
+    
+    
+    return eventNotification;
   }
 }

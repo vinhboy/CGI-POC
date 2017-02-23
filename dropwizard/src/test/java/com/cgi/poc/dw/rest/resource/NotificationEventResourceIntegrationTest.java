@@ -5,6 +5,8 @@ import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
+import com.cgi.poc.dw.rest.model.EventNotificationDto;
+import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
@@ -29,7 +31,8 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
 
   private static final String url = "http://localhost:%d/notification";
 
-  private EventNotification eventNotification;
+  private EventNotificationDto eventNotificationDto;
+
 
   @BeforeClass
   public static void createAdminUser() throws SQLException {
@@ -38,18 +41,10 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
 
   @Before
   public void createEventNotification() throws IOException {
-    Set<EventNotificationZipcode> eventNotificationZipcodes = new LinkedHashSet<>();
-    EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();
-    eventNotificationZipcode1.setZipCode("92105");
-    EventNotificationZipcode eventNotificationZipcode2 = new EventNotificationZipcode();
-    eventNotificationZipcode2.setZipCode("92106");
-    eventNotificationZipcodes.add(eventNotificationZipcode1);
-    eventNotificationZipcodes.add(eventNotificationZipcode2);
-
-    eventNotification = new EventNotification();
-    eventNotification.setType("ADMIN_E");
-    eventNotification.setDescription("some description");
-    eventNotification.setEventNotificationZipcodes(eventNotificationZipcodes);
+    eventNotificationDto = new EventNotificationDto();
+    eventNotificationDto.setType("ADMIN_E");
+    eventNotificationDto.setDescription("some description");
+    eventNotificationDto.setZipCodes(Sets.newHashSet("92105", "92106"));
   }
 
   @AfterClass
@@ -67,7 +62,7 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotification));
+        post(Entity.json(eventNotificationDto));
 
     Assert.assertEquals(200, response.getStatus());
   }
@@ -92,13 +87,13 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
   @Test
   public void nullDescription() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    eventNotification.setDescription(null);
+    eventNotificationDto.setDescription(null);
     Client client = new JerseyClientBuilder().build();
     Response response = client.
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotification));
+        post(Entity.json(eventNotificationDto));
 
     Assert.assertEquals(422, response.getStatus());
     JSONObject responseJo = new JSONObject(response.readEntity(String.class));
@@ -109,13 +104,13 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidDescription() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    eventNotification.setDescription("abc");
+    eventNotificationDto.setDescription("abc");
     Client client = new JerseyClientBuilder().build();
     Response response = client.
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotification));
+        post(Entity.json(eventNotificationDto));
 
     Assert.assertEquals(422, response.getStatus());
     JSONObject responseJo = new JSONObject(response.readEntity(String.class));
@@ -127,18 +122,18 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidZipcode() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    eventNotification.getEventNotificationZipcodes().iterator().next().setZipCode("987");
+    eventNotificationDto.getZipCodes().add("987");
     Client client = new JerseyClientBuilder().build();
     Response response = client.
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotification));
+        post(Entity.json(eventNotificationDto));
 
     Assert.assertEquals(422, response.getStatus());
     JSONObject responseJo = new JSONObject(response.readEntity(String.class));
     Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("errors")));
-    Assert.assertEquals("[\"eventNotificationZipcodes[].zipCode is invalid.\"]",
+    Assert.assertEquals("[\"zipCodes invalid zipcode found.\"]",
         responseJo.optString("errors"));
   }
 

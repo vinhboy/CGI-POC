@@ -22,6 +22,8 @@ import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotificationType;
+import com.cgi.poc.dw.rest.model.EventNotificationDto;
+import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -68,6 +70,8 @@ public class EventNotificationServiceUnitTest {
 
   private User user;
 
+  private EventNotificationDto eventNotificationDto;
+
   private EventNotification eventNotification;
 
   @Before
@@ -102,6 +106,11 @@ public class EventNotificationServiceUnitTest {
     eventNotification.setEventNotificationZipcodes(eventNotificationZipcodes);
     eventNotification.setUserId(user);
 
+    eventNotificationDto = new EventNotificationDto();
+    eventNotificationDto.setType("ADMIN_E");
+    eventNotificationDto.setDescription("some description");
+    eventNotificationDto.setZipCodes(Sets.newHashSet("92105", "92106"));
+    
     doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
     when(textMessageService.send(anyString(), anyString())).thenReturn(true);
   }
@@ -122,7 +131,7 @@ public class EventNotificationServiceUnitTest {
     when(userDao.getGeoWithinRadius(anyList(), eq(radius))).thenReturn(affectedUsers);
     when(eventNotificationDAO.save(eq(eventNotification))).thenReturn(eventNotification);
     when(mapsApiService.getGeoCoordinatesByZipCode(anyString())).thenReturn(geoCoordinates);
-    Response actual = underTest.publishNotification(eventNotification);
+    Response actual = underTest.publishNotification(user, eventNotificationDto);
 
     assertEquals(200, actual.getStatus());
     assertEquals(eventNotification, actual.getEntity());
@@ -135,9 +144,9 @@ public class EventNotificationServiceUnitTest {
   @Test
   public void publishNotification_InvalidZipCode() {
 
-    eventNotification.getEventNotificationZipcodes().iterator().next().setZipCode("998");
+    eventNotificationDto.getZipCodes().add("987");
     try {
-      underTest.publishNotification(eventNotification);
+      Response actual = underTest.publishNotification(user, eventNotificationDto);
       fail("Expected an exception to be thrown");
 
     } catch (ConstraintViolationException exception) {
@@ -160,9 +169,9 @@ public class EventNotificationServiceUnitTest {
   @Test
   public void publishNotification_InvalidDescription() {
 
-    eventNotification.setDescription("abc");
+    eventNotificationDto.setDescription("abc");
     try {
-      underTest.publishNotification(eventNotification);
+      Response actual = underTest.publishNotification(user, eventNotificationDto);
       fail("Expected an exception to be thrown");
 
     } catch (ConstraintViolationException exception) {

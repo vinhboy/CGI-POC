@@ -1,8 +1,7 @@
 package com.cgi.poc.dw.rest.resource;
 
-import com.cgi.poc.dw.dao.model.EventNotification;
-import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.rest.model.EventNotificationDto;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 import io.dropwizard.auth.Auth;
@@ -13,6 +12,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.HashSet;
+import java.util.Set;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -50,15 +51,10 @@ public class EventNotificationResource {
   })
   @UnitOfWork
   @Timed(name = "EventNotification.publishNotification")
-  public Response publishNotification(@Auth User principal, @NotNull @Valid EventNotification eventNotification) {
-    //add remaining dependencies to eventNotification entity
-    eventNotification.setUserId(principal);
-    for (EventNotificationZipcode eventNotificationZipcode : eventNotification
-        .getEventNotificationZipcodes()) {
-      eventNotificationZipcode.setEventNotificationId(eventNotification);
-    }
+  public Response publishNotification(@Auth User principal, @NotNull @Valid EventNotificationDto eventNotificationDto) {
     
-    Response response =  notificationService.publishNotification(eventNotification);
+    
+    Response response =  notificationService.publishNotification(principal, eventNotificationDto);
     if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
       throw new WebApplicationException(response);
     }
