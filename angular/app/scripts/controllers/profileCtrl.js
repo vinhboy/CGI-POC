@@ -159,12 +159,13 @@ cgiWebApp.controller('ProfileController',
       return $scope.profile.password === '' || $scope.regexPassword.test($scope.profile.password);
     }
   };
-
-  window.addEventListener('keyup', function(e){ 
-      if(e.keyCode === 27){ 
+  
+  $scope.keyCallback= function($event) {
+      $scope.keyCode = $event.which;
+      if($scope.keyCode === 27){ 
           $state.go('login');
       }
-  }, false);
+    };
   
   
   $scope.init();

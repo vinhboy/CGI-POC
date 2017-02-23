@@ -15,7 +15,7 @@
   "LOGIN.MESSAGE.SIGNUP" : "Don't have an account?",
   "LOGIN.MESSAGE.SIGNUP.LINK" :"Create one now",
   "LOGIN.BUTTON.SUBMIT" : "LOGIN",
-  "REGISTRATION.LABEL.TITLE" : "You Infromation",
+  "REGISTRATION.LABEL.TITLE" : "Your Information",
   "REGISTRATION.LABEL.FIRSTNAME" : "First Name",
   "REGISTRATION.LABEL.LASTNAME" : "Last Name",
   "REGISTRATION.LABEL.EMAIL" : "Email Address",
