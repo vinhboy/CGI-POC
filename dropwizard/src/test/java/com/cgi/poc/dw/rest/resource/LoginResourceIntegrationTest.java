@@ -7,9 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import com.cgi.poc.dw.auth.model.Role;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.util.ErrorInfo;
@@ -122,11 +120,8 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setCity("Sacramento");
     user.setState("CA");
     user.setAddress1("required street");
-  	user.setAddress2("optional street");
-    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    user.setNotificationType(notificationType);
+    user.setAddress2("optional street");
+    user.setEmailNotification(true);
 
     Response newUserResponse = client.target(String.format("http://localhost:%d/user", RULE.getLocalPort())).request()
         .post(Entity.json(user));
@@ -162,10 +157,8 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
   	user.setAddress2("optional street");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
-    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    user.setNotificationType(notificationType);
+    user.setSmsNotification(true);
+
 
     client.target(String.format("http://localhost:%d/profile", RULE.getLocalPort())).request()
         .post(Entity.json(user));

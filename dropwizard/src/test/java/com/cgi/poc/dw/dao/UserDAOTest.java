@@ -2,9 +2,7 @@ package com.cgi.poc.dw.dao;
 
 import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.auth.model.Role;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.junit.Assert.assertEquals;
 
@@ -77,43 +76,43 @@ public class UserDAOTest extends DaoUnitTestBase{
     userDao.save(user);
 
     User retrievedUser = userDao.findUserByEmail(user.getEmail());
-    List<Long> retrievedNotificationTypes = mapToOrdinals(retrievedUser.getNotificationType());
-    assertEquals(Long.valueOf(NotificationType.SMS.ordinal()), retrievedNotificationTypes.get(0));
+    assertThat(retrievedUser.getSmsNotification()).isEqualTo(true);
 
-    retrievedUser.addNotificationType(NotificationType.PUSH);
+    retrievedUser.setPushNotification(true);
     userDao.save(retrievedUser);
 
     retrievedUser = userDao.findUserByEmail(user.getEmail());
-    retrievedNotificationTypes = mapToOrdinals(retrievedUser.getNotificationType());
-    assertEquals(2, retrievedNotificationTypes.size());
-    assertEquals(Long.valueOf(NotificationType.SMS.ordinal()), retrievedNotificationTypes.get(0));
-    assertEquals(Long.valueOf(NotificationType.PUSH.ordinal()), retrievedNotificationTypes.get(1));
+    assertThat(retrievedUser.getEmailNotification()).isEqualTo(true);
+    assertThat(retrievedUser.getPushNotification()).isEqualTo(true);
 
-    retrievedUser.addNotificationType(NotificationType.EMAIL);
+
+    retrievedUser.setEmailNotification(true);
     userDao.save(retrievedUser);
 
     retrievedUser = userDao.findUserByEmail(user.getEmail());
-    retrievedNotificationTypes = mapToOrdinals(retrievedUser.getNotificationType());
-    assertEquals(3, retrievedNotificationTypes.size());
-    assertEquals(Long.valueOf(NotificationType.EMAIL.ordinal()), retrievedNotificationTypes.get(0));
-    assertEquals(Long.valueOf(NotificationType.SMS.ordinal()), retrievedNotificationTypes.get(1));
-    assertEquals(Long.valueOf(NotificationType.PUSH.ordinal()), retrievedNotificationTypes.get(2));
+    assertThat(retrievedUser.getEmailNotification()).isEqualTo(true);
+    assertThat(retrievedUser.getPushNotification()).isEqualTo(true);
+    assertThat(retrievedUser.getEmailNotification()).isEqualTo(true);
 
-    retrievedUser.getNotificationType().removeIf(unt -> unt.getNotificationId() == Long.valueOf(NotificationType.SMS.ordinal()));
+    
+    retrievedUser.setSmsNotification(false);
     userDao.save(retrievedUser);
 
     retrievedUser = userDao.findUserByEmail(user.getEmail());
-    retrievedNotificationTypes = mapToOrdinals(retrievedUser.getNotificationType());
-    assertEquals(2, retrievedNotificationTypes.size());
-    assertEquals(Long.valueOf(NotificationType.EMAIL.ordinal()), retrievedNotificationTypes.get(0));
-    assertEquals(Long.valueOf(NotificationType.PUSH.ordinal()), retrievedNotificationTypes.get(1));
+    assertThat(retrievedUser.getEmailNotification()).isEqualTo(false);
+    assertThat(retrievedUser.getPushNotification()).isEqualTo(true);
+    assertThat(retrievedUser.getEmailNotification()).isEqualTo(true);
 
-    retrievedUser.getNotificationType().clear();
+    retrievedUser.setPushNotification(false);
+    retrievedUser.setEmailNotification(false);
+    retrievedUser.setSmsNotification(false);
     userDao.save(retrievedUser);
 
     retrievedUser = userDao.findUserByEmail(user.getEmail());
-    retrievedNotificationTypes = mapToOrdinals(retrievedUser.getNotificationType());
-    assertEquals(0, retrievedNotificationTypes.size());
+    assertThat(retrievedUser.getEmailNotification()).isEqualTo(false);
+    assertThat(retrievedUser.getPushNotification()).isEqualTo(false);
+    assertThat(retrievedUser.getEmailNotification()).isEqualTo(false);
+
   }
 
   private User createUser() {
@@ -132,13 +131,9 @@ public class UserDAOTest extends DaoUnitTestBase{
     user.setAddress2("optional street");
     user.setLatitude(10.5);
     user.setLongitude(20.0);
-
-    user.addNotificationType(NotificationType.SMS);
+    user.setSmsNotification(true);
 
     return user;
   }
 
-  private List<Long> mapToOrdinals(Set<UserNotificationType> set) {
-    return set.stream().map(unt -> unt.getNotificationId()).sorted().collect(Collectors.toList());
-  }
 }
