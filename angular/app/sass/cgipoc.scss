@@ -56,20 +56,84 @@ body{
 }
 .contentZone{
     margin-top:5em;
-    padding-bottom: 10em;
+    padding-bottom: 2em;
     z-index:-1;
 }
-.angular-google-map-container { 
-    height: 400px; 
+.usa-grid{
+          background: white;
 }
-#map {
-        height: 100%;
-      }
+.scrollable-section{
+         overflow-y : scroll;
+             height: inherit;
+             border: solid;
+             table {
+                 margin-top: 1em;
+             }
+
+}
+.data-ui-view{
+    padding:5em;
+    padding-bottom: 5em;
+}
+.mapArea {
+ height: 100%;
+ position: relative;
+ width:100%;
+}
+.event-list-container{
+    height: inherit;
+    height: 500px;
+
+}
+.event-details-container{
+        border:solid;
+    height: 500px;
+    .usa-heading-alt{
+         border-bottom: solid;
+          margin-right: 2em;
+         margin-left: 2em;
+    }
+    .button_wrapper{
+        padding-left: 6em;
+    }
+    td{
+        border:0;
+    }
+
+}
+.event-details{
+    height:350px;
+    .event-icons {
+         text-align: left;
+         vertical-align: top;
+         width:10px;
+    }
+    .button_wrapper{
+        vertical-align: bottom;
+    }
+    
+}
 .event{
-    border: 5px;
-    border-color: black;
-    border-style: double;
-    padding:0px!important;
+    border-style: solid;
+    margin:5px;
+    table {
+        margin: 0;
+    }
+    .event-logo{
+        width:4em;
+    }
+    .event-icons{
+        padding-left:.25em;
+        padding-right:.25em;
+    }
+    td {
+    
+        padding : 0;
+    }
+    h5 {
+        margin-top: 2px;
+    }
+
 }
 .active{
   border-color: blue;

@@ -1,72 +1,83 @@
 <div class="usa-content">
-      <div class="usa-grid">
-          <div class="usa-width-one-third"  >
-              <select  id="eventTypeFilter" name="eventTypeFilter"   ng-model="eventTypeFilter"  class="form-control"  
-                       ng-options="eventType.id as eventType.name  for eventType in  eventTypes" ng-change="changeFilters()" >
+    <div class="usa-grid-full ">
+        <h3 class="usa-heading">Event Notifications</h3>
+        <form ng-show="role === 'ADMIN'" class="usa-form">
+            <label for="options">Find events by</label>
+            <select  id="eventTypeFilter" name="eventTypeFilter"   ng-model="eventTypeFilter"  class="form-control"  
+                     ng-options="eventType.id as eventType.name  for eventType in  eventTypes" ng-change="changeFilters()" >
 
-              </select>
-          </div>
-          <div class="usa-width-one-third"  >
-              <select  id="eventTimeFilter" name="eventTimeFilter"   ng-model="eventTimeFilter"  class="form-control"  
-                       ng-options="eventTime.id as eventTime.name  for eventTime in  eventTimeFrames" ng-change="changeFilters()" >
+            </select>
+            <select  id="eventTimeFilter" name="eventTimeFilter"   ng-model="eventTimeFilter"  class="form-control"  
+                     ng-options="eventTime.id as eventTime.name  for eventTime in  eventTimeFrames" ng-change="changeFilters()" >
 
-              </select>
-          </div>
-      </div>
-  <div class="usa-grid">
-       
-      <div class="usa-width-one-third scrollable-section" >
-      <div class="event usa-grid" ng-repeat="item in model.filteredNotifications track by $index" 
-           ng-class="{'active' : activeItem.item === $index}" ng-click="loadMap(item);activeItem.item = $index" >
-          <div class="usa-width-one-twelfth"  >
-               <img class="" src="/images/logo_mycalerts_header.png" alt="Logo image" />
-          </div>
-          <div class="usa-width-two-thirds"  >
-             <h5 class="usa-heading-alt">{{item.type}}</h5>
-             <span>{{item.generationDate |  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
-             <span><span ng-repeat="z  in item.eventNotificationZipcodes ">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
-
-             
-          </div>
-          <div class="usa-width-one-twelfth"  >
-               <img ng-click="loadEventDetails(item, $event)" class="" src="/uswds-0.14.0/img/alerts/info.png" alt="Logo image" />
-               <img ng-click="loadMap(item)" class="" src="/uswds-0.14.0/img/arrow-right.png" alt="Logo image" />
-          </div>
-      
-      </div>
-
-     </div>
-      <div class="usa-width-one-half scrollable-section" >
-      <div ng-show="showMapOrDetails === 'DETAILS'" class="event event-info">
-          <h4>Notification Details</h4>
-          <div class=" usa-grid">
-          <div class="usa-width-one-twelfth"  >
-               <img   src="/uswds-0.14.0/img/alerts/info.png" alt="Logo image" />
-          </div>
-          <div class="usa-width-one-half"  >
-          <h5 class="usa-heading-alt">{{currentSelectedEvent.type}}</h5>
-          <span>{{currentSelectedEvent.generationDate |  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
-          <h5 class="usa-heading-alt">Sent by</h5>
-          <span class="usa-heading-alt">{{currentSelectedEvent.userId.firstName}} {{currentSelectedEvent.userId.lastName}}</span>
-          <h5 class="usa-heading-alt">Affected Zip Code</h5>
-          <span><span ng-repeat="z in currentSelectedEvent.eventNotificationZipcodes ">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
-          <h5 class="usa-heading-alt">Message</h5>
-          <span class="usa-heading-alt">{{currentSelectedEvent.description}}</span>
-          <h5 ng-show="role==='ADMIN'" class="usa-heading-alt">{{currentSelectedEvent.citizensAffected | number}} users notified</h5>
-          <div class="button_wrapper">
-              <button ng-click="loadMap(currentSelectedEvent) " class="usa-button-big" type="button">RETURN TO MAP</button>
-          </div>
-          </div>
-      </div>
-     </div>
-      <div   ng-show="showMapOrDetails === 'MAP'  && currentSelectedEvent!== undefined"  class="map">
-        <div id="map" style="width: 500px; height: 500px; position: absolute;">
-                 <div id="map-canvas"></div>
-        </div>
-     </div>
-     </div>
+            </select>
+        </form>
     </div>
-  </div>
+    <div class="event-list-container usa-grid-full ">
+        <div class="usa-width-one-third scrollable-section" > 
+            <div class="event" ng-repeat="item in model.filteredNotifications track by $index" ng-class="{'active' : activeItem.item === $index}" > 
+                <table class="usa-table-borderless">
+                    <tr   ng-click="loadMap(item);activeItem.item = $index">
+                        <td class="event-logo">
+                            <img height="30" width="40" class="" src="/images/logo_mycalerts_header.png" alt="Logo image" />`
+                        </td>
+                        <td>
+                            <h5 class="usa-heading-alt">{{item.type}}</h5>
+                            <span>{{item.generationDate|  date:'MM-dd-yyyy&nbsp&nbsphh:mm:ss a'}}</span>
+                            <span><span ng-repeat="z  in item.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
+                        </td>
+                        <td class="event-icons">
+                            <div class="fa-fw icon "><a ng-click="loadEventDetails(item, $event)"><i  class="fa fa-info-circle" ></i></a> </div>
+                            <div  class="fa-fw icon "><a  ng-click="loadMap(item)"><i  class="fa fa-map-marker"   > </i></a></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="usa-width-two-thirds" >
+            <div   ng-show="showMapOrDetails === 'MAP' && currentSelectedEvent !== undefined"  class="event-details-container">
+                <div class="mapArea" id="map" >
+                    <div id="map-canvas"></div>
+                </div>
+            </div>
+            <div ng-show="showMapOrDetails === 'DETAILS'" class="event-details-container">
+                <h4 class="usa-heading-alt">Notification Details</h4>
+                <div class="event-details usa-grid">
+                    <div class="usa-width-one-whole "  >
+                        <table class="usa-table-borderless">
+                            <tr>
+                                <td class="event-icons"><a><i  class="fa fa-5x fa-info-circle" ></i></a> </td>
+                                <td>
+                                    <h5 class="usa-heading">{{currentSelectedEvent.type}}</h5>
+                                    <span>{{currentSelectedEvent.generationDate|  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
+                                    <h5 >Sent by</h5>
+                                    <span >{{currentSelectedEvent.userId.firstName}} {{currentSelectedEvent.userId.lastName}}</span>
+                                    <h5 >Affected Zip Code</h5>
+                                    <span><span ng-repeat="z in currentSelectedEvent.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
+                                    <h5 >Message</h5>
+                                    <span >{{currentSelectedEvent.description}}</span>
+                                    <h5 ng-show="role === 'ADMIN'"  >{{currentSelectedEvent.citizensAffected| number}} users notified</h5>
 
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                    </div>
+                </div>
+                <div class=" usa-grid">
+                    <div class="usa-width-one-whole"  >
+                        <div class="button_wrapper">
+                            <button ng-click="loadMap(currentSelectedEvent)" class="usa-button-big" type="button">RETURN TO MAP</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 </div>
+
+
