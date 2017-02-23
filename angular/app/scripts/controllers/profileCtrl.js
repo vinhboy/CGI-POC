@@ -36,6 +36,19 @@ cgiWebApp.controller('ProfileController',
     if ($scope.isEdit()) {
       ProfileService.getProfile().then(function(response) {
         $scope.profile = response.data;
+        for(var i = 0; i < response.data.notificationType.length; i++) {
+          switch(response.data.notificationType[i].notificationId) {
+            case 1:
+              $scope.profile.emailNotification = true;
+              break;
+            case 2:
+              $scope.profile.smsNotification = true;
+              break;
+            case 3:
+              $scope.profile.pushNotification = true;
+              break;
+          }
+        }
       });
     }
 

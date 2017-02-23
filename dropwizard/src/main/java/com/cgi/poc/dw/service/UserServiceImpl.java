@@ -59,6 +59,13 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		this.textMessageService = textMessageService;
 	}
 
+	@Override
+	public Response retrieveUser(User user) {
+		Response.ResponseBuilder respBuilder = Response.noContent().status(Response.Status.OK);
+		user.setPassword("");
+		return respBuilder.entity(user).build();
+	}
+
 	public Response registerUser(User user) {
 		// Defaulting the user to RESIDENT
 		user.setRole("RESIDENT");

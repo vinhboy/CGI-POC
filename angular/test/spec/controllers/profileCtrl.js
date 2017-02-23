@@ -70,12 +70,29 @@ describe('ProfileController', function() {
 
     it('should get the current profile from the API if managing profile', function() {
       $state.current.name = 'manageProfile';
-      var retrievedProfile = {};
+      var retrievedProfile = { notificationType: [] };
       $scope.init();
       deferred.resolve({ data: retrievedProfile });
       $scope.$apply();
       expect(profileService.getProfile).toHaveBeenCalled();
       expect($scope.profile).toBe(retrievedProfile);
+    });
+
+    it('should parse the current profile notification types if managing profile', function() {
+      $state.current.name = 'manageProfile';
+      var retrievedProfile = {
+        notificationType: [
+          { notificationId: 1 },
+          { notificationId: 2 },
+          { notificationId: 3 }
+        ]
+      };
+      $scope.init();
+      deferred.resolve({ data: retrievedProfile });
+      $scope.$apply();
+      expect($scope.profile.emailNotification).toBe(true);
+      expect($scope.profile.pushNotification).toBe(true);
+      expect($scope.profile.smsNotification).toBe(true);
     });
   });
 

@@ -123,15 +123,15 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setState("CA");
     user.setAddress1("required street");
   	user.setAddress2("optional street");
-    user.setLatitude(0.0);
-    user.setLongitude(0.0);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
     Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     user.setNotificationType(notificationType);
 
-    client.target(String.format("http://localhost:%d/user", RULE.getLocalPort())).request()
+    Response newUserResponse = client.target(String.format("http://localhost:%d/user", RULE.getLocalPort())).request()
         .post(Entity.json(user));
+    Assert.assertEquals(200, newUserResponse.getStatus());
+
     // login user
     LoginUserDto loginUserDto = new LoginUserDto();
     loginUserDto.setEmail("success@gmail.com");

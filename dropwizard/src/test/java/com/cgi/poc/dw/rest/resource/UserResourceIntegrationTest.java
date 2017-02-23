@@ -493,4 +493,52 @@ public class UserResourceIntegrationTest extends IntegrationTest {
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     Assert.assertEquals(200, response.getStatus());
   }
+
+  @Test
+  public void getsUser() throws SQLException, JSONException {
+    IntegrationTestHelper.signupAdminUser();
+    String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
+
+    Client client = new JerseyClientBuilder().build();
+    Response response = client.
+            target(String.format(url, RULE.getLocalPort())).
+            request().
+            header("Authorization", "Bearer " + authToken).
+            get();
+
+    Assert.assertEquals(200, response.getStatus());
+    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
+    Assert.assertEquals("95814", responseJo.optString("zipCode"));
+  }
+
+  @Test
+  public void getsUserDoesNotReturnPassword() throws SQLException, JSONException {
+    IntegrationTestHelper.signupAdminUser();
+    String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
+
+    Client client = new JerseyClientBuilder().build();
+    Response response = client.
+            target(String.format(url, RULE.getLocalPort())).
+            request().
+            header("Authorization", "Bearer " + authToken).
+            get();
+
+    Assert.assertEquals(200, response.getStatus());
+    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
+    Assert.assertEquals("", responseJo.optString("password"));
+  }
+
+  @Test
+  public void getsUserFailsAuthorization() throws SQLException, JSONException {
+    IntegrationTestHelper.signupAdminUser();
+
+    Client client = new JerseyClientBuilder().build();
+    Response response = client.
+            target(String.format(url, RULE.getLocalPort())).
+            request().
+            header("Authorization", "Bearer " + "fakeTokenHere").
+            get();
+
+    Assert.assertEquals(401, response.getStatus());
+  }
 }

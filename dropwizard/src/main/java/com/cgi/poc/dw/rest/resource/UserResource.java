@@ -13,12 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -36,6 +31,20 @@ public class UserResource {
 
 	@Inject
 	private UserService userService;
+
+	@GET
+	@UnitOfWork
+	@ApiOperation(value = "Retrieve user profile registration", notes = "Allows a user to retrieve registration information.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
+			@ApiResponse(code = 500, message = "System Error") })
+	@Timed(name = "User.get")
+	public Response retrieve(@Auth User user) {
+		Response response = userService.retrieveUser(user);
+		if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+			throw new WebApplicationException(response);
+		}
+		return response;
+	}
 
 	@POST
 	@UnitOfWork
