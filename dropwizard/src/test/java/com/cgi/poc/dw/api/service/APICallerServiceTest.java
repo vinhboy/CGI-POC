@@ -7,6 +7,10 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
+import com.cgi.poc.dw.dao.EventNotificationDAO;
+import com.cgi.poc.dw.dao.UserDao;
+import com.cgi.poc.dw.service.EmailService;
+import com.cgi.poc.dw.service.TextMessageService;
 import java.util.Random;
 
 import javax.validation.Validation;
@@ -26,7 +30,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cgi.poc.dw.api.service.impl.APICallerServiceImpl;
 import com.cgi.poc.dw.dao.FireEventDAO;
 import com.cgi.poc.dw.dao.HibernateUtil;
 import com.cgi.poc.dw.helper.IntegrationTest;
@@ -51,7 +54,19 @@ public class APICallerServiceTest extends IntegrationTest {
 	private Appender<ILoggingEvent> mockAppender;
 	@Captor
 	private ArgumentCaptor<LoggingEvent> logCaptor;
-	
+
+	@Mock
+	private TextMessageService textMessageService;
+
+	@Mock
+	private EmailService emailService;
+
+	@Mock
+	private UserDao userDao;
+
+	@Mock
+	private EventNotificationDAO eventNotificationDAO;
+
 	private Logger LOGGER = LoggerFactory.getLogger(APICallerServiceTest.class);
 
 	private Client client;
@@ -98,7 +113,7 @@ public class APICallerServiceTest extends IntegrationTest {
 
 		FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl(
 				"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, fireEventDAO,
-				sessionFactory);
+				sessionFactory, textMessageService, emailService, userDao, eventNotificationDAO);
 		apiCallerService.callServiceAPI();
 
 		// Now verify our logging interactions
@@ -106,18 +121,18 @@ public class APICallerServiceTest extends IntegrationTest {
 		// Having a genricised captor means we don't need to cast
 		final LoggingEvent loggingEvent = logCaptor.getValue();
 		// Check log level is correct
-		assertThat(loggingEvent.getLevel(), equalTo(Level.INFO));
+		assertThat(loggingEvent.getLevel(), equalTo(Level.DEBUG));
 		// Check the message being logged is correct
-                if (!loggingEvent.getFormattedMessage().contains("Events to save : 0")){
-		   assertThat(loggingEvent.getFormattedMessage(), containsString("Event to save"));
-                }
+		if (!loggingEvent.getFormattedMessage().contains("Event")){
+		   assertThat(loggingEvent.getFormattedMessage(), containsString("Event"));
+		}
 	}
 
 	@Test
 	public void callServiceAPI_ParseException() {
 
 		FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl("http://www.google.com", client, fireEventDAO,
-				sessionFactory);
+				sessionFactory, textMessageService, emailService, userDao, eventNotificationDAO);
 		apiCallerService.callServiceAPI();
 
 		// Now verify our logging interactions
@@ -135,11 +150,33 @@ public class APICallerServiceTest extends IntegrationTest {
 	public void callServiceAPI_IOException() {
 		FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl(
 				"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, fireEventDAO,
-				sessionFactory);
+				sessionFactory, textMessageService, emailService, userDao, eventNotificationDAO);
 		apiCallerService.callServiceAPI();
 	}
 
+	@Test
+	public void callServiceAPI_DAOException() {
+		try {
+			FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl(
+					"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, null,
+					sessionFactory, textMessageService, emailService, userDao, eventNotificationDAO);
+			apiCallerService.callServiceAPI();
 
+			final LoggingEvent loggingEvent = logCaptor.getValue();
+			assertThat(loggingEvent.getLevel(), equalTo(Level.ERROR));
+		} catch (RuntimeException e) {
+			LOGGER.info("the runtime exception catch : {}", e.getMessage());
+		}
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void callServiceAPI_NullPointerException() {
+		FireEventAPICallerServiceImpl apiCallerService = new FireEventAPICallerServiceImpl(
+				"https://wildfire.cr.usgs.gov/arcgis/rest/services/geomac_dyn/MapServer/0/query?f=json&where=1%3D1&outFields=*&outSR=4326", client, fireEventDAO,
+				null, textMessageService, emailService, userDao, eventNotificationDAO);
+		apiCallerService.callServiceAPI();
+		fail("Expected ConflictException");
+	}
 
 	@Test
 	public void callWeatherServiceAPI_Success() {
@@ -191,7 +228,7 @@ public class APICallerServiceTest extends IntegrationTest {
 	public void callFloodServiceAPI_Success() {
 
 		EventFloodAPICallerServiceImpl apiCallerService = new EventFloodAPICallerServiceImpl(
-				"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326", 
+				"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326",
                         client, eventFloodDAO, sessionFactory);
 		apiCallerService.callServiceAPI();
 
@@ -228,21 +265,9 @@ public class APICallerServiceTest extends IntegrationTest {
 	@Test
 	public void callFloodServiceAPI_IOException() {
 		EventFloodAPICallerServiceImpl apiCallerService = new EventFloodAPICallerServiceImpl(
-				"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326", 
+				"https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326",
                         client, eventFloodDAO, sessionFactory);
 		apiCallerService.callServiceAPI();
 	}
 
-
- 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
 }
