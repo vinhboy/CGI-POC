@@ -159,8 +159,17 @@ cgiWebApp.controller('ProfileController',
       return $scope.profile.password === '' || $scope.regexPassword.test($scope.profile.password);
     }
   };
-
+  
+  $scope.keyCallback= function($event) {
+      $scope.keyCode = $event.which;
+      if($scope.keyCode === 27){ 
+          $state.go('login');
+      }
+    };
+  
+  
   $scope.init();
+  
 }]);
 
 cgiWebApp.directive('compareTo', function() {
@@ -180,3 +189,4 @@ cgiWebApp.directive('compareTo', function() {
     }
   };
 });
+
