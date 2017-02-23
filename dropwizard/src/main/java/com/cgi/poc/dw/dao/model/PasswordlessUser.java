@@ -21,8 +21,8 @@ public class PasswordlessUser extends User {
 
   public PasswordlessUser(Long id, String firstName, String lastName, String email,
                           String phone, String zipCode, String role, double latitude, double longitude, String address1,
-                          String address2, String city, String state) {
-    super(id, firstName, lastName, email, null, phone, zipCode, role, latitude, longitude, address1, address2, city, state);
+                          String address2, String city, String state, Boolean emailNotification, Boolean pushNotification, Boolean smsNotification) {
+    super(id, firstName, lastName, email, null, phone, zipCode, role, latitude, longitude, address1, address2, city, state, emailNotification, pushNotification, smsNotification);
   }
 
   @Override

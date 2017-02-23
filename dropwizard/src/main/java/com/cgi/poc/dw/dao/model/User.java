@@ -182,7 +182,7 @@ public class User implements Serializable, Principal {
 
   public User(Long id, String firstName, String lastName, String email, String password,
       String phone, String zipCode, String role, double latitude, double longitude, String address1,
-      String address2, String city, String state) {
+      String address2, String city, String state, Boolean emailNotification, Boolean pushNotification, Boolean smsNotification) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -197,6 +197,9 @@ public class User implements Serializable, Principal {
     this.address2 = address2;
     this.city = city;
     this.state = state;
+    this.emailNotification = emailNotification;
+    this.pushNotification = pushNotification;
+    this.smsNotification = smsNotification;
   }
 
     public Long getId() {
