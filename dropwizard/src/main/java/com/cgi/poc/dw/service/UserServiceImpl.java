@@ -3,6 +3,7 @@ package com.cgi.poc.dw.service;
 import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
+import com.cgi.poc.dw.dao.model.PasswordlessUser;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.util.ErrorInfo;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
@@ -25,6 +27,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,9 +65,21 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	@Override
 	public Response retrieveUser(User user) {
-		Response.ResponseBuilder respBuilder = Response.noContent().status(Response.Status.OK);
-		user.setPassword("");
-		return respBuilder.entity(user).build();
+		Response response = null;
+		try {
+			PasswordlessUser passwordlessUser = new PasswordlessUser();
+			passwordlessUser.copyFrom(user);
+			response = Response.ok().entity(passwordlessUser).build();
+		} catch (IllegalAccessException e) {
+			LOG.error("Unable to map User to PasswordlessUser", e);
+			ErrorInfo errRet = getInternalErrorInfo(e, GeneralErrors.UNKNOWN_EXCEPTION);
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		} catch (InvocationTargetException e) {
+			LOG.error("Invocation target exception.", e);
+			ErrorInfo errRet = getInternalErrorInfo(e, GeneralErrors.UNKNOWN_EXCEPTION);
+			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		}
+		return response;
 	}
 
 	public Response registerUser(User user) {
