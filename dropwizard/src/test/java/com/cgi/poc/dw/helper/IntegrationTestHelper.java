@@ -4,7 +4,7 @@ import com.cgi.poc.dw.CgiPocConfiguration;
 import com.cgi.poc.dw.dao.HibernateUtil;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
-import com.cgi.poc.dw.rest.resource.UserRegistrationResourceIntegrationTest;
+import com.cgi.poc.dw.rest.resource.UserResourceIntegrationTest;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -33,8 +33,8 @@ public class IntegrationTestHelper {
       SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
-      int res = st.executeUpdate("delete from event_notification_zipcode");
-      res = st.executeUpdate("delete from event_notification");
+      st.executeUpdate("delete from event_notification_zipcode");
+      st.executeUpdate("delete from event_notification");
       sqlConnection.commit();
     } catch (HibernateException | SQLException ex) {
       sqlConnection.rollback();
@@ -50,7 +50,7 @@ public class IntegrationTestHelper {
       SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
-      int res = st.executeUpdate("INSERT INTO event_notification (id, description," +
+      st.executeUpdate("INSERT INTO event_notification (id, description," +
            "user_id,type,geometry,url1,url2,citizensAffected) VALUES (" 
             + event.getId() + " ," 
             + " '" + event.getDescription() + "',"
@@ -75,14 +75,18 @@ public class IntegrationTestHelper {
       SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
-      int res = st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, zip_code, role, latitude, longitude)\n"
+      st.executeUpdate(
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, role, latitude, longitude)\n"
               + "VALUES ( 100,\n"
               + "'john',\n"
               + "'smith',\n"
               + "'admin100@cgi.com',\n"
               + "'518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af',\n"
               + "'1234567890',\n"
+              + "'required street',\n"
+              + "'optional street',\n"
+              + "'Sacramento',\n"
+              + "'California',\n"
               + "'95814',\n"
               + "'ADMIN',\n"
               + "38.5824933,\n"
@@ -96,6 +100,38 @@ public class IntegrationTestHelper {
     }
   }
 
+  public static void signupResidentUser()
+      throws SQLException {
+    Connection sqlConnection = null;
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      st.executeUpdate(
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, role, latitude, longitude)\n"
+              + "VALUES ( 100,\n"
+              + "'john',\n"
+              + "'doe',\n"
+              + "'resident@cgi.com',\n"
+              + "'9e5f3dd72fbd5f309131364baf42b446f570629f4a809390be533f:1db93c4885d4bf980e92286d74da720dc298fdc1a29c89cf9c67ce',\n"
+              + "'1234567890',\n"
+              + "'required street',\n"
+              + "'optional street',\n"
+              + "'Sacramento',\n"
+              + "'California',\n"
+              + "'95814',\n"
+              + "'RESIDENT',\n"
+              + "38.5824933,\n"
+              + "-121.4941738\n"
+              + ")");
+
+      sqlConnection.commit();
+    } catch (Exception ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }
+  
   public static String getAuthToken(String email, String password,
       DropwizardAppRule<CgiPocConfiguration> RULE) {
     Client client = new JerseyClientBuilder().build();
@@ -121,14 +157,14 @@ public class IntegrationTestHelper {
       SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
       Connection sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
-      int res = st.executeUpdate("delete from event_notification_zipcode");
-      res = st.executeUpdate("delete from event_notification");
-      res = st.executeUpdate("delete from user_notification");
-      res = st.executeUpdate("delete from user");
+      st.executeUpdate("delete from event_notification_zipcode");
+      st.executeUpdate("delete from event_notification");
+      st.executeUpdate("delete from user_notification");
+      st.executeUpdate("delete from user");
 
       sqlConnection.commit();
     } catch (Exception ex) {
-      Logger.getLogger(UserRegistrationResourceIntegrationTest.class.getName())
+      Logger.getLogger(UserResourceIntegrationTest.class.getName())
           .log(Level.SEVERE, null, ex);
     }
 
