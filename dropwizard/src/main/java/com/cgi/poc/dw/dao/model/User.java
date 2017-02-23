@@ -32,6 +32,7 @@ import com.cgi.poc.dw.util.PasswordType;
 import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.cgi.poc.dw.util.RestValidationGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;
 /**
  *
  * @author dawna.floyd
@@ -163,13 +164,13 @@ public class User implements Serializable, Principal {
   @ApiModelProperty(value = "States should be the two letter abbreviations")
   private String state;
 
-    @Column(name = "email_notification,")
+    @Column(name = "email_notification")
     private Boolean emailNotification;
 
-    @Column(name = "push_notification,")
+    @Column(name = "push_notification")
     private Boolean pushNotification;
 
-    @Column(name = "sms_notification,")
+    @Column(name = "sms_notification")
     private Boolean smsNotification;
 
     public User() {

@@ -82,7 +82,7 @@ public class UserDAOTest extends DaoUnitTestBase{
     userDao.save(retrievedUser);
 
     retrievedUser = userDao.findUserByEmail(user.getEmail());
-    assertThat(retrievedUser.getEmailNotification()).isEqualTo(true);
+    assertThat(retrievedUser.getSmsNotification()).isEqualTo(true);
     assertThat(retrievedUser.getPushNotification()).isEqualTo(true);
 
 
@@ -90,7 +90,7 @@ public class UserDAOTest extends DaoUnitTestBase{
     userDao.save(retrievedUser);
 
     retrievedUser = userDao.findUserByEmail(user.getEmail());
-    assertThat(retrievedUser.getEmailNotification()).isEqualTo(true);
+    assertThat(retrievedUser.getSmsNotification()).isEqualTo(true);
     assertThat(retrievedUser.getPushNotification()).isEqualTo(true);
     assertThat(retrievedUser.getEmailNotification()).isEqualTo(true);
 
@@ -99,7 +99,7 @@ public class UserDAOTest extends DaoUnitTestBase{
     userDao.save(retrievedUser);
 
     retrievedUser = userDao.findUserByEmail(user.getEmail());
-    assertThat(retrievedUser.getEmailNotification()).isEqualTo(false);
+    assertThat(retrievedUser.getSmsNotification()).isEqualTo(false);
     assertThat(retrievedUser.getPushNotification()).isEqualTo(true);
     assertThat(retrievedUser.getEmailNotification()).isEqualTo(true);
 
@@ -109,7 +109,7 @@ public class UserDAOTest extends DaoUnitTestBase{
     userDao.save(retrievedUser);
 
     retrievedUser = userDao.findUserByEmail(user.getEmail());
-    assertThat(retrievedUser.getEmailNotification()).isEqualTo(false);
+    assertThat(retrievedUser.getSmsNotification()).isEqualTo(false);
     assertThat(retrievedUser.getPushNotification()).isEqualTo(false);
     assertThat(retrievedUser.getEmailNotification()).isEqualTo(false);
 

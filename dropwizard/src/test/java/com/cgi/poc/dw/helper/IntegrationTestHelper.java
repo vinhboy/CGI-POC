@@ -159,7 +159,6 @@ public class IntegrationTestHelper {
       Statement st = sqlConnection.createStatement();
       st.executeUpdate("delete from event_notification_zipcode");
       st.executeUpdate("delete from event_notification");
-      st.executeUpdate("delete from user_notification");
       st.executeUpdate("delete from user");
 
       sqlConnection.commit();
