@@ -90,112 +90,114 @@ describe('ProfileController', function() {
     });
   });
 
-  describe('updateProfile', function() {
-    beforeEach(function () {
-      $state.current.name = 'manageProfile';
+  describe('saveProfile', function() {
+    describe('updating profile', function() {
+      beforeEach(function () {
+        $state.current.name = 'manageProfile';
+      });
+
+      it('should call the ProfileService.update', function() {
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect(profileService.update).toHaveBeenCalledWith($scope.toSend);
+      });
+
+      it('should construct the phoneNumber', function() {
+        $scope.profile.phone = '313-252-7456';
+        spyOn($scope, 'generatePhoneNumber').and.callThrough();
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.generatePhoneNumber).toHaveBeenCalled();
+      });
+
+      it('should redirect if successful', function() {
+        spyOn($state, 'go');
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($state.go).toHaveBeenCalledWith('landing');
+      });
+
+      it('should construct apiErrors if failed', function() {
+        spyOn($scope, 'processApiErrors');
+        $scope.saveProfile();
+        var response = { status: 404, data: {} };
+        deferred.reject(response);
+        $scope.$apply();
+        expect($scope.processApiErrors).toHaveBeenCalledWith(response);
+      });
+
+      it('should use blank for password value if it is not populated', function() {
+        $scope.profile.password = '';
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.toSend.password).toBe('');
+      });
+
+      it('should use provided value for password value if it is populated', function() {
+        $scope.profile.password = 'abcABC123';
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.toSend.password).toBe('abcABC123');
+      });
     });
 
-    it('should call the ProfileService.update', function() {
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect(profileService.update).toHaveBeenCalledWith($scope.toSend);
-    });
+    describe('registering new profile', function() {
+      beforeEach(function () {
+        $state.current.name = 'register';
+      });
 
-    it('should construct the phoneNumber', function() {
-      $scope.profile.phone = '313-252-7456';
-      spyOn($scope, 'generatePhoneNumber').and.callThrough();
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.generatePhoneNumber).toHaveBeenCalled();
-    });
+      it('should call the ProfileService.register', function() {
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect(profileService.register).toHaveBeenCalledWith($scope.toSend);
+      });
 
-    it('should redirect if successful', function() {
-      spyOn($state, 'go');
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('landing');
-    });
+      it('should construct the phoneNumber', function() {
+        $scope.profile.phone = '313-252-7456';
+        spyOn($scope, 'generatePhoneNumber').and.callThrough();
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.generatePhoneNumber).toHaveBeenCalled();
+      });
 
-    it('should construct apiErrors if failed', function() {
-      spyOn($scope, 'processApiErrors');
-      $scope.updateProfile();
-      var response = { status: 404, data: {} };
-      deferred.reject(response);
-      $scope.$apply();
-      expect($scope.processApiErrors).toHaveBeenCalledWith(response);
-    });
+      it('should redirect if successful', function() {
+        spyOn($state, 'go');
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        authDeferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($state.go).toHaveBeenCalledWith('landing');
+      });
 
-    it('should use undefined for password value if it is not populated', function() {
-      $scope.profile.password = '';
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.toSend.password).toBeUndefined();
-    });
+      it('should construct apiErrors if failed', function() {
+        spyOn($scope, 'processApiErrors');
+        $scope.saveProfile();
+        var response = { status: 404, data: {} };
+        deferred.reject(response);
+        $scope.$apply();
+        expect($scope.processApiErrors).toHaveBeenCalledWith(response);
+      });
 
-    it('should use provided value for password value if it is populated', function() {
-      $scope.profile.password = 'abcABC123';
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.toSend.password).toBe('abcABC123');
-    });
-  });
-
-  describe('registerProfile', function() {
-    beforeEach(function () {
-      $state.current.name = 'register';
-    });
-
-    it('should call the ProfileService.register', function() {
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect(profileService.register).toHaveBeenCalledWith($scope.toSend);
-    });
-
-    it('should construct the phoneNumber', function() {
-      $scope.profile.phone = '313-252-7456';
-      spyOn($scope, 'generatePhoneNumber').and.callThrough();
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.generatePhoneNumber).toHaveBeenCalled();
-    });
-
-    it('should redirect if successful', function() {
-      spyOn($state, 'go');
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      authDeferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('landing');
-    });
-
-    it('should construct apiErrors if failed', function() {
-      spyOn($scope, 'processApiErrors');
-      $scope.registerProfile();
-      var response = { status: 404, data: {} };
-      deferred.reject(response);
-      $scope.$apply();
-      expect($scope.processApiErrors).toHaveBeenCalledWith(response);
-    });
-
-    it('should process these optional fields for null', function() {
-      spyOn($scope, 'processForNull');
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'firstName');
-      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'lastName');
-      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'phone');
-      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'address1');
-      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'address2');
-      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'city');
-      expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'state');
+      it('should process these optional fields for null', function() {
+        spyOn($scope, 'processForNull');
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'firstName');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'lastName');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'phone');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'address1');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'address2');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'city');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'state');
+      });
     });
   });
 
@@ -379,6 +381,14 @@ describe('ProfileController', function() {
       $state.current.name = 'manageProfile';
       spyOn($state, 'go');
       $scope.goBack();
+      expect($state.go).toHaveBeenCalledWith('landing');
+    });
+  });
+
+  describe('proceedForward', function() {
+    it('should go to the landing page', function() {
+      spyOn($state, 'go');
+      $scope.proceedForward();
       expect($state.go).toHaveBeenCalledWith('landing');
     });
   });

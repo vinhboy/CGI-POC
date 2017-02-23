@@ -127,38 +127,38 @@ cgiWebApp.controller('ProfileController',
     } else {
       toCall = ProfileService.update;
       if ($scope.profile.password === '') {
-        toSend.password = undefined;
+        toSend.password = '';
       }
     }
 
     toCall(toSend).then(function() {
       if (beforeNavPromise) {
         beforeNavPromise(toSend).then(function() {
-          $state.go('landing');
+          $scope.proceedForward('landing');
         });
       }
       else {
-        $state.go('landing');
+        $scope.proceedForward('landing');
       }
     }).catch(function(response) {
       $scope.processApiErrors(response);
     });
   };
 
-  $scope.registerProfile = function() {
-    var beforeNavPromise = function(toSend) {
-      var credentials = {
-        email: toSend.email,
-        password: toSend.password
+  $scope.saveProfile = function() {
+    if ($scope.isNew()) {
+      var beforeNavPromise = function(toSend) {
+        var credentials = {
+          email: toSend.email,
+          password: toSend.password
+        };
+
+        return Authenticator.authenticate(credentials);
       };
-
-      return Authenticator.authenticate(credentials);
-    };
-    $scope.process(beforeNavPromise);
-  };
-
-  $scope.updateProfile = function() {
-    $scope.process();
+      $scope.process(beforeNavPromise);
+    } else {
+      $scope.process();
+    }
   };
 
   $scope.someSelected = function() {
@@ -189,6 +189,10 @@ cgiWebApp.controller('ProfileController',
     else {
       $state.go('landing');
     }
+  };
+
+  $scope.proceedForward = function() {
+    $state.go('landing');
   };
 
   $scope.init();
