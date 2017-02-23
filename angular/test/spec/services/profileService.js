@@ -89,7 +89,7 @@ describe('ProfileService', function() {
 
   describe('getProfile', function() {
     it('should get to the expected endpoint', function() {
-      $httpBackend.expectGET('http://localhost:8080/profile')
+      $httpBackend.expectGET('http://localhost:8080/user')
         .respond(200, {});
 
       profileService.getProfile();
@@ -100,7 +100,7 @@ describe('ProfileService', function() {
     });
 
     it('should construct the endpoint URL', function() {
-      $httpBackend.expectGET(urls.BASE + '/profile')
+      $httpBackend.expectGET(urls.BASE + '/user')
         .respond(200, {});
 
       profileService.getProfile();
@@ -111,7 +111,7 @@ describe('ProfileService', function() {
     });
 
     it('should send the JWT auth token during the GET', function() {
-      $httpBackend.expectGET(urls.BASE + '/profile', {
+      $httpBackend.expectGET(urls.BASE + '/user', {
         'Authorization': 'Bearer magical auth token here',
         'Accept': 'application/json, text/plain, */*'
       }).respond(200, {});

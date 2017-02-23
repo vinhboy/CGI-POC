@@ -60,8 +60,8 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   	tstUser.setZipCode("95814");
   	tstUser.setCity("Sacramento");
   	tstUser.setState("California");
-  	tstUser.setRequiredStreet("required street");
-  	tstUser.setOptionalStreet("optional street");
+  	tstUser.setAddress1("required street");
+  	tstUser.setAddress2("optional street");
   	tstUser.setLatitude(38.5824933);
   	tstUser.setLongitude(-121.4941738);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));

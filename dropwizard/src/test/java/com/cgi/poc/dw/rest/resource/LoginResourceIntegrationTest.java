@@ -121,8 +121,8 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setZipCode("98765");
     user.setCity("Sacramento");
     user.setState("California");
-    user.setRequiredStreet("required street");
-  	user.setOptionalStreet("optional street");
+    user.setAddress1("required street");
+  	user.setAddress2("optional street");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
@@ -158,8 +158,8 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setZipCode("98765");
     user.setCity("Sacramento");
     user.setState("California");
-    user.setRequiredStreet("required street");
-  	user.setOptionalStreet("optional street");
+    user.setAddress1("required street");
+  	user.setAddress2("optional street");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
     UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
