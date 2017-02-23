@@ -6,8 +6,8 @@ import java.util.Properties;
 
 // Load & Read the Configuration File
 public class ConfigDataProvider {
-	Properties pro;
-
+	 Properties pro;
+	 String browserType;
 	public ConfigDataProvider() {
 		File src = new File("./Configuration/config.properties");
 
@@ -40,6 +40,14 @@ public class ConfigDataProvider {
 		return chromepath;
 	}
 
+	// Get the Chrome Path
+		public  String getBrowserType() {
+			 browserType = pro.getProperty("browser");
+			return browserType;
+		}
+
+	
+	
 	// Get the Application URL
 	public String getApplicationUrl() {
 		String url = pro.getProperty("url");
