@@ -52,7 +52,7 @@
                                     <span>{{currentSelectedEvent.generationDate|  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
                                     <h5 >Sent by</h5>
                                     <span >{{currentSelectedEvent.userId.firstName}} {{currentSelectedEvent.userId.lastName}}</span>
-                                    <h5 >Affected Zip Code</h5>
+                                    <h5 >Affected Zip Codes</h5>
                                     <span><span ng-repeat="z in currentSelectedEvent.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
                                     <h5 >Message</h5>
                                     <span >{{currentSelectedEvent.description}}</span>
