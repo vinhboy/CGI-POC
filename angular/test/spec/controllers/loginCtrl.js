@@ -51,16 +51,6 @@ describe('loginController', function() {
       expect($state.go).toHaveBeenCalledWith('landing');
     });
 
-    it('should save the JWT auth token', function() {
-      spyOn($sessionStorage, 'put');
-
-      $scope.submitForm();
-      deferred.resolve({ status: 200, data: { authToken: 'the jwt auth token' } });
-      $scope.$apply();
-
-      expect($sessionStorage.put).toHaveBeenCalledWith('jwt', 'the jwt auth token');
-    });
-
     it('should set the error message on unauthorized', function() {
       spyOn($scope, 'popUp');
 

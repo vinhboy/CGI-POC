@@ -117,6 +117,7 @@ cgiWebApp.controller('ProfileController',
       if (beforeNavFunc) {
         beforeNavFunc(toSend);
       }
+    }).then(function() {
       $state.go('landing');
     }).catch(function(response) {
       $scope.processApiErrors(response);
@@ -130,11 +131,7 @@ cgiWebApp.controller('ProfileController',
         password: toSend.password
       };
 
-      Authenticator.authenticate(credentials).then(function(response) {
-        if (response.status === 200) {
-          $sessionStorage.put('jwt', response.data.authToken);
-        }
-      }).catch(function(response) {
+      Authenticator.authenticate(credentials).catch(function(response) {
         console.log('we should never get this b/c we registered the user first, then turned right around and authenticated with the same info.');
         console.log(response);
       });

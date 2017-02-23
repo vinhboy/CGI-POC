@@ -171,16 +171,6 @@ describe('ProfileController', function() {
       expect($scope.processApiErrors).toHaveBeenCalledWith(response);
     });
 
-    it('should get the auth token', function() {
-      spyOn($sessionStorage, 'put');
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      authDeferred.resolve({ status: 200, data: { authToken: 'the auth token' } });
-      $scope.$apply();
-      expect(authenticationService.authenticate).toHaveBeenCalled();
-      expect($sessionStorage.put).toHaveBeenCalledWith('jwt', 'the auth token');
-    });
-
     it('should process these optional fields for null', function() {
       spyOn($scope, 'processForNull');
       $scope.registerProfile();
