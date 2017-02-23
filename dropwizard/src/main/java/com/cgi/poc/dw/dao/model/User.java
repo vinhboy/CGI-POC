@@ -7,6 +7,7 @@ package com.cgi.poc.dw.dao.model;
 
 import java.io.Serializable;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -336,5 +337,13 @@ public class User implements Serializable, Principal {
 
   public void setState(@Nullable String state) {
     this.state = state;
+  }
+
+  public void addNotificationType(NotificationType notificationTypeValue) {
+    if (getNotificationType() == null){
+      setNotificationType(new HashSet<>());
+    }
+    UserNotificationType userNotificationType = new UserNotificationType(Long.valueOf(notificationTypeValue.ordinal()));
+    getNotificationType().add(userNotificationType);
   }
 }

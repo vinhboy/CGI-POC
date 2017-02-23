@@ -133,12 +133,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		return errRet;
 	}
 
-	/**
-	 * Updates and saves modified user info to the database
-	 *
-	 * @param modifiedUser
-	 * @return response
-	 */
 	public Response updateUser(User currentUser) {
 		validate(currentUser, "rest", RestValidationGroup.class, Default.class);
 		return processForSave(currentUser, true);
