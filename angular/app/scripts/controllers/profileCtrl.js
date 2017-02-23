@@ -35,6 +35,14 @@ cgiWebApp.controller('ProfileController',
     if ($scope.isEdit()) {
       ProfileService.getProfile().then(function(response) {
         $scope.profile = response.data;
+
+        $scope.processForEmptyString($scope.profile, 'firstName');
+        $scope.processForEmptyString($scope.profile, 'lastName');
+        $scope.processForEmptyString($scope.profile, 'phone');
+        $scope.processForEmptyString($scope.profile, 'address1');
+        $scope.processForEmptyString($scope.profile, 'address2');
+        $scope.processForEmptyString($scope.profile, 'city');
+        $scope.processForEmptyString($scope.profile, 'state');
       });
     }
 
@@ -70,6 +78,13 @@ cgiWebApp.controller('ProfileController',
   $scope.processForNull = function(toSend, property) {
     if(!toSend[property]) {
       toSend[property] = null;
+    }
+  };
+
+  // this is meant to set empty strings for nulls, be careful with non-strings
+  $scope.processForEmptyString = function(retrievedProfile, property) {
+    if(retrievedProfile[property] === null) {
+      retrievedProfile[property] = '';
     }
   };
 

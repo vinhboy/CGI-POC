@@ -73,6 +73,21 @@ describe('ProfileController', function() {
       expect(profileService.getProfile).toHaveBeenCalled();
       expect($scope.profile).toBe(retrievedProfile);
     });
+
+    it('should process these optional fields for empty string', function() {
+      $state.current.name = 'manageProfile';
+      spyOn($scope, 'processForEmptyString');
+      $scope.init();
+      deferred.resolve({ status: 200, data: {} });
+      $scope.$apply();
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'firstName');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'lastName');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'phone');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'address1');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'address2');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'city');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'state');
+    });
   });
 
   describe('updateProfile', function() {
@@ -335,6 +350,20 @@ describe('ProfileController', function() {
       var obj = { something: 'not empty' };
       $scope.processForNull(obj, 'something');
       expect(obj.something).not.toBeNull();
+    });
+  });
+
+  describe('processForEmptyString', function() {
+    it('should assign empty string for nulls', function() {
+      var obj = { something: null };
+      $scope.processForEmptyString(obj, 'something');
+      expect(obj.something).toBe('');
+    });
+
+    it('should NOT null out any populated string', function() {
+      var obj = { something: 'not empty' };
+      $scope.processForEmptyString(obj, 'something');
+      expect(obj.something).not.toBe('');
     });
   });
 });
