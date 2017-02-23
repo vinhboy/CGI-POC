@@ -90,7 +90,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		User findUserByEmail = userDao.findUserByEmail(user.getEmail());
 		if (findUserByEmail != null) {
 			ErrorInfo errRet = new ErrorInfo();
-			String errorString = GeneralErrors.DUPLICATE_ENTRY.getMessage().replace("REPLACE", "email");
+			String errorString = "A profile already exists for that email address. Please register using a different email.";
 			errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
 			return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
 		}
