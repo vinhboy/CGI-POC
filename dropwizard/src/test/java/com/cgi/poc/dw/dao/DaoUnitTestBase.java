@@ -102,7 +102,7 @@ public class DaoUnitTestBase {
        sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       int res = st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, role, latitude, longitude)\n"
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude)\n"
               + "VALUES ( 100,\n"
               + "'john',\n"
               + "'smith',\n"
