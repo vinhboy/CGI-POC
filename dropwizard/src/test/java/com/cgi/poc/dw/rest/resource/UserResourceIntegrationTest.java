@@ -59,7 +59,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   	tstUser.setPhone("1234567890");
   	tstUser.setZipCode("95814");
   	tstUser.setCity("Sacramento");
-  	tstUser.setState("California");
+  	tstUser.setState("CA");
   	tstUser.setAddress1("required street");
   	tstUser.setAddress2("optional street");
   	tstUser.setLatitude(38.5824933);

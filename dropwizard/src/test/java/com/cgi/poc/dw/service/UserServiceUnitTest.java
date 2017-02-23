@@ -89,7 +89,7 @@ public class UserServiceUnitTest {
     user.setPhone("1234567890");
     user.setZipCode("98765");
     user.setCity("Sacramento");
-    user.setState("California");
+    user.setState("CA");
     user.setAddress1("required street");
     user.setAddress2("optional street");
     user.setLatitude(0.0);
@@ -107,7 +107,7 @@ public class UserServiceUnitTest {
 		user1.setPhone("1234567890");
 		user1.setZipCode("95814");
 		user1.setCity("Sacramento");
-		user1.setState("California");
+		user1.setState("CA");
 		user1.setAddress1("required street");
 		user1.setAddress2("optional street");
 		user1.setLatitude(38.5824933);

@@ -131,6 +131,7 @@ public class User implements Serializable, Principal {
   @Nullable
   @Size(min = 2, max = 2)
   @Column(name = "state")
+  @ApiModelProperty(value = "States should be the two letter abbreviations")
   private String state;
 
   @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, orphanRemoval = true)

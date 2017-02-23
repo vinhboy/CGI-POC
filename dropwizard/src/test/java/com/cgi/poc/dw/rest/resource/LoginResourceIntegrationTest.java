@@ -120,7 +120,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setPhone("1234567890");
     user.setZipCode("98765");
     user.setCity("Sacramento");
-    user.setState("California");
+    user.setState("CA");
     user.setAddress1("required street");
   	user.setAddress2("optional street");
     user.setLatitude(0.0);
@@ -157,7 +157,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setPhone("1234567890");
     user.setZipCode("98765");
     user.setCity("Sacramento");
-    user.setState("California");
+    user.setState("CA");
     user.setAddress1("required street");
   	user.setAddress2("optional street");
     user.setLatitude(0.0);
