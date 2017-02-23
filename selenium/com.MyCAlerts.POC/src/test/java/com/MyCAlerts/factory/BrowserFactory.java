@@ -1,4 +1,4 @@
-package com.MyCAAlerts.factory;
+package com.MyCAlerts.factory;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;

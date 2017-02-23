@@ -1,4 +1,4 @@
-package com.MyCAAlerts.Utilities;
+package com.MyCAlerts.Utilities;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,9 +13,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Reporter;
 
-import com.MyCAAlerts.BaseClass.BaseClass;
-import com.MyCAAlerts.factory.BrowserFactory;
-import com.MyCAAlerts.factory.DataProviderFactory;
+import com.MyCAlerts.BaseClass.BaseClass;
+import com.MyCAlerts.factory.BrowserFactory;
+import com.MyCAlerts.factory.DataProviderFactory;
 
 
 public class GenericFunctions {

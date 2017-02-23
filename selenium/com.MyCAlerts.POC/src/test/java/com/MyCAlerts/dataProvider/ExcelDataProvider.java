@@ -1,4 +1,4 @@
-package com.MyCAAlerts.dataProvider;
+package com.MyCAlerts.dataProvider;
 
 import java.io.File;
 import java.io.FileInputStream;

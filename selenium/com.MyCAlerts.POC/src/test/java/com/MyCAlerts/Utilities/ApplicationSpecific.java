@@ -1,4 +1,4 @@
-package com.MyCAAlerts.Utilities;
+package com.MyCAlerts.Utilities;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -11,7 +11,7 @@ import org.testng.Assert;
 import org.testng.Reporter;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import com.MyCAAlerts.Utilities.GenericFunctions;
+import com.MyCAlerts.Utilities.GenericFunctions;
 public class ApplicationSpecific {
 	static WebDriver driver;
 	 //Wait Method used to wait for the page to load until the

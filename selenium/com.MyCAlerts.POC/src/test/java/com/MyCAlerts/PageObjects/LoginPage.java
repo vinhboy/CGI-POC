@@ -1,11 +1,11 @@
-package com.MyCAAlerts.PageObjects;
+package com.MyCAlerts.PageObjects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-import com.MyCAAlerts.factory.BrowserFactory;
+import com.MyCAlerts.factory.BrowserFactory;
 
 
 public class LoginPage {

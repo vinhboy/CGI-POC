@@ -1,4 +1,4 @@
-package com.MyCAAlerts.PageObjects;
+package com.MyCAlerts.PageObjects;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Reporter;
 
-import com.MyCAAlerts.factory.BrowserFactory;
+import com.MyCAlerts.factory.BrowserFactory;
 
 public class UserProfile {
 	WebDriver driver;

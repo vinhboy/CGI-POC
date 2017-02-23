@@ -1,4 +1,4 @@
-package com.MyCAAlerts.BaseClass;
+package com.MyCAlerts.BaseClass;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
@@ -9,12 +9,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 
-import com.MyCAAlerts.Utilities.GenericFunctions;
+import com.MyCAlerts.Utilities.GenericFunctions;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import com.MyCAAlerts.factory.BrowserFactory;
-import com.MyCAAlerts.factory.DataProviderFactory;
+import com.MyCAlerts.factory.BrowserFactory;
+import com.MyCAlerts.factory.DataProviderFactory;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
@@ -25,12 +25,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 
-import com.MyCAAlerts.Utilities.GenericFunctions;
+import com.MyCAlerts.Utilities.GenericFunctions;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import com.MyCAAlerts.factory.BrowserFactory;
-import com.MyCAAlerts.factory.DataProviderFactory;
+import com.MyCAlerts.factory.BrowserFactory;
+import com.MyCAlerts.factory.DataProviderFactory;
 
 public abstract class BaseClass {
 	public static WebDriver driver;

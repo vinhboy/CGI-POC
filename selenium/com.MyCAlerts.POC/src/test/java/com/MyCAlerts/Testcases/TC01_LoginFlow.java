@@ -1,14 +1,14 @@
-package com.MyCAAlerts.Testcases;
+package com.MyCAlerts.Testcases;
 
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.MyCAAlerts.BaseClass.BaseClass;
-import com.MyCAAlerts.PageObjects.LoginPage;
-import com.MyCAAlerts.Utilities.GenericFunctions;
-import com.MyCAAlerts.factory.BrowserFactory;
-import com.MyCAAlerts.factory.DataProviderFactory;
+import com.MyCAlerts.BaseClass.BaseClass;
+import com.MyCAlerts.PageObjects.LoginPage;
+import com.MyCAlerts.Utilities.GenericFunctions;
+import com.MyCAlerts.factory.BrowserFactory;
+import com.MyCAlerts.factory.DataProviderFactory;
 import com.relevantcodes.extentreports.LogStatus;
 
 public class TC01_LoginFlow extends BaseClass {

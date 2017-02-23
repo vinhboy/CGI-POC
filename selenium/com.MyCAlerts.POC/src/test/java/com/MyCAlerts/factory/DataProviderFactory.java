@@ -1,7 +1,7 @@
-package com.MyCAAlerts.factory;
+package com.MyCAlerts.factory;
 
-import com.MyCAAlerts.dataProvider.ConfigDataProvider;
-import com.MyCAAlerts.dataProvider.ExcelDataProvider;
+import com.MyCAlerts.dataProvider.ConfigDataProvider;
+import com.MyCAlerts.dataProvider.ExcelDataProvider;
 
 public class DataProviderFactory {
 

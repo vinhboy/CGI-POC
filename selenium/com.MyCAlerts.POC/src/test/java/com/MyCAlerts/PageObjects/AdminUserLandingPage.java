@@ -1,4 +1,4 @@
-package com.MyCAAlerts.PageObjects;
+package com.MyCAlerts.PageObjects;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
-import com.MyCAAlerts.factory.BrowserFactory;
+import com.MyCAlerts.factory.BrowserFactory;
 
 
 public class AdminUserLandingPage {
