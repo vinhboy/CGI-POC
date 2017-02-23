@@ -464,10 +464,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
     for (Error error : errorInfo.getErrors()) {
       assertThat(error.getCode()).isEqualTo(GeneralErrors.DUPLICATE_ENTRY.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String expectedErrorString = GeneralErrors.DUPLICATE_ENTRY.getMessage()
-          .replace("REPLACE", "email");
+      String expectedErrorString = "A profile already exists for that email address. Please register using a different email.";
 
       assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
@@ -475,6 +472,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
   @Test
   public void someFieldsAreNullable() throws JSONException, URISyntaxException {
+    tstUser.setEmail("nullsok@gmail.com");
     tstUser.setFirstName(null);
     tstUser.setLastName(null);
     tstUser.setPhone(null);
