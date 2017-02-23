@@ -15,7 +15,6 @@ import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import io.dropwizard.testing.ResourceHelpers;
 import java.io.File;
@@ -69,7 +68,6 @@ public class HibernateUtil {
             configuration.setProperty("hibernate.current_session_context_class", "thread");
 
             configuration.addAnnotatedClass(User.class);
-            configuration.addAnnotatedClass(UserNotificationType.class);
             configuration.addAnnotatedClass(FireEvent.class);
             configuration.addAnnotatedClass(EventEarthquake.class);
             configuration.addAnnotatedClass(EventWeather.class);

@@ -1,9 +1,7 @@
 package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.auth.model.Role;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
 import com.cgi.poc.dw.util.Error;
@@ -64,10 +62,8 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   	tstUser.setAddress2("optional street");
   	tstUser.setLatitude(38.5824933);
   	tstUser.setLongitude(-121.4941738);
-    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
+        tstUser.setEmailNotification(true);
+
 
     smtpServer = new GreenMail(new ServerSetup(3025, "127.0.0.1",
         ServerSetup.PROTOCOL_SMTP));
@@ -101,10 +97,8 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Client client = new JerseyClientBuilder().build();
     tstUser.setEmail(null);
 
-    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
+    tstUser.setEmailNotification(true);
+
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(tstUser));

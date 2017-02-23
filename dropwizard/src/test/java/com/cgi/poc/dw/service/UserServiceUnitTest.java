@@ -15,9 +15,7 @@ import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -94,10 +92,8 @@ public class UserServiceUnitTest {
     user.setAddress2("optional street");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
-    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    user.setNotificationType(notificationType);
+    user.setSmsNotification(true);
+
     user1 = new User();
 		user1.setEmail("resident@cgi.com");
 		user1.setPassword("!QAZ1qaz");
@@ -112,10 +108,8 @@ public class UserServiceUnitTest {
 		user1.setAddress2("optional street");
 		user1.setLatitude(38.5824933);
 		user1.setLongitude(-121.4941738);
-		UserNotificationType selNot1 = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
-		Set<UserNotificationType> notificationType1 = new HashSet<>();
-		notificationType.add(selNot1);
-		user1.setNotificationType(notificationType1);
+                user1.setSmsNotification(true);
+
 
     JsonNode jsonRespone = new ObjectMapper()
         .readTree(getClass().getResource("/google_api_geocode_response.json"));

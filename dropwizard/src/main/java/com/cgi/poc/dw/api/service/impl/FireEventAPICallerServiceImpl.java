@@ -12,9 +12,7 @@ import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.FireEvent;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.TextMessageService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -121,15 +119,13 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
                     eventNotificationDAO.save(eventNotification);
 
                     for (User user : users) {
-                        for (UserNotificationType userNotification : user.getNotificationType()){
-                            if(userNotification.getNotificationId() == NotificationType.SMS.ordinal()){
-                                textMessageService.send(user.getPhone(), eventNotification.getDescription());
-                            }else if(userNotification.getNotificationId() == NotificationType.EMAIL.ordinal()){
-                                emailService.send(null, Arrays.asList(user.getEmail()), "Emergency alert from MyCAlerts: Fire near " + event.getIncidentname(),
+                        if (user.getSmsNotification()) {
+                            textMessageService.send(user.getPhone(), eventNotification.getDescription());
+                        } else if (user.getEmailNotification()) {
+                            emailService.send(null, Arrays.asList(user.getEmail()), "Emergency alert from MyCAlerts: Fire near " + event.getIncidentname(),
                                     eventNotification.getDescription());
-                            }
                         }
-                    }
+                     }
                 }
             }else{
                 LOG.debug("Event last modified not changed");

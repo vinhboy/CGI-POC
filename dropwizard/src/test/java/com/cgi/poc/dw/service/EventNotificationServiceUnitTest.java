@@ -12,9 +12,7 @@ import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.util.ErrorInfo;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,11 +70,8 @@ public class EventNotificationServiceUnitTest {
     user.setZipCode("98765");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
-    UserNotificationType selNot = new UserNotificationType(
-        Long.valueOf(NotificationType.SMS.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    user.setNotificationType(notificationType);
+    user.setSmsNotification(true);
+
 
     Set<EventNotificationZipcode> eventNotificationZipcodes = new LinkedHashSet<>();
     EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();

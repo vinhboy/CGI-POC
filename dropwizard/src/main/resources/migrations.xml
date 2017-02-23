@@ -384,5 +384,23 @@
         <dropNotNullConstraint tableName="user" columnName="last_name" columnDataType="VARCHAR(65)" />
         <dropNotNullConstraint tableName="user" columnName="phone" columnDataType="VARCHAR(20)" />
     </changeSet>
+    <changeSet id="21" author="Dawna Floyd">
+        <addColumn tableName="user">
+            <column name="email_notification" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="push_notification" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="sms_notification" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <dropTable  tableName="user_notification"/>
+    </changeSet>
 
 </databaseChangeLog>
