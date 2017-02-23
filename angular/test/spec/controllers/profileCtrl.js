@@ -6,20 +6,18 @@ describe('ProfileController', function() {
   var profileService;
   var authenticationService;
   var $state;
-  var $sessionStorage;
   var $q;
   var deferred;
   var authDeferred;
 
   beforeEach(module('cgi-web-app'));
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _ProfileService_, _Authenticator_, _$state_, _$sessionStorage_, _$q_) {
+  beforeEach(inject(function(_$rootScope_, _$controller_, _ProfileService_, _Authenticator_, _$state_, _$q_) {
     $q = _$q_;
     $scope = _$rootScope_.$new();
     profileService = _ProfileService_;
     authenticationService = _Authenticator_;
     $state = _$state_;
-    $sessionStorage = _$sessionStorage_;
 
     deferred = _$q_.defer();
     authDeferred = _$q_.defer();
@@ -33,7 +31,6 @@ describe('ProfileController', function() {
       $scope: $scope,
       ProfileService: profileService,
       $state: $state,
-      $sessionStorage: _$sessionStorage_,
       Authenticator: authenticationService
     });
   }));

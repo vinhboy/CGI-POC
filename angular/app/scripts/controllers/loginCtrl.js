@@ -9,8 +9,8 @@
 'use strict';
 
 cgiWebApp.controller('loginController',
-  ['$scope', 'Authenticator', '$sessionStorage', '$state','$http',
-  function ($scope, Authenticator, $sessionStorage, $state,$http) {
+  ['$scope', 'Authenticator', '$state',
+  function ($scope, Authenticator, $state) {
 
   $scope.user = {
     email: '',
