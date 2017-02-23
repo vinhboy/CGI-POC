@@ -176,17 +176,15 @@ cgiWebApp.controller('landingController',
                 enableHighAccuracy: true
             });
             
-            $scope.coords = $geolocation.position.coords;
-            
-//            if($geolocation.position.error == null){
-//                $scope.coords = $geolocation.position.coords;
-//                Localizator.localize($scope.coords).then(function(response) {
-//                    console.log(response.data);
-//                  });
-//            }else{
-//                console.log($geolocation.position.error);
+            if($geolocation.position.error === undefined || $geolocation.position.error === null){
+                $scope.coords = $geolocation.position.coords;
+                Localizator.localize($scope.coords).then(function(response) {
+                    console.log(response.data);
+                  });
+            }else{
+                console.log($geolocation.position.error);
                 $scope.error = $geolocation.position.error;
-//            }
+            }
         }
     };
 

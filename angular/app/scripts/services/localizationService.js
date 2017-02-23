@@ -12,10 +12,10 @@ cgiWebApp.service('Localizator',
   ['$http', 'urls', '$sessionStorage',
   function($http, urls, $sessionStorage) {
 
-  this.localize = function(user) {
+  this.localize = function(coords) {
     var authToken = $sessionStorage.get('jwt');
     var endpoint = urls.BASE + '/user/geoLocation';
-    return $http.put(endpoint, user, {
+    return $http.put(endpoint, coords, {
       headers: { 'Authorization': 'Bearer ' + authToken }
     });
   };
