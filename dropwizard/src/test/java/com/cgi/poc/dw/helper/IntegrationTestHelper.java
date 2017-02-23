@@ -77,7 +77,7 @@ public class IntegrationTestHelper {
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
           "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude)\n"
-              + "VALUES ( 100,\n"
+              + "select 100,\n"
               + "'john',\n"
               + "'smith',\n"
               + "'admin100@cgi.com',\n"
@@ -91,7 +91,7 @@ public class IntegrationTestHelper {
               + "'ADMIN',\n"
               + "38.5824933,\n"
               + "-121.4941738\n"
-              + ")");
+              + "where not exists (select * from user where id = 100)");
 
       sqlConnection.commit();
     } catch (Exception ex) {
@@ -109,7 +109,7 @@ public class IntegrationTestHelper {
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
           "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude)\n"
-              + "VALUES ( 100,\n"
+              + "select 200,\n"
               + "'john',\n"
               + "'doe',\n"
               + "'resident@cgi.com',\n"
@@ -123,7 +123,7 @@ public class IntegrationTestHelper {
               + "'RESIDENT',\n"
               + "38.5824933,\n"
               + "-121.4941738\n"
-              + ")");
+              + "where not exists (select * from user where id = 200)");
 
       sqlConnection.commit();
     } catch (Exception ex) {
