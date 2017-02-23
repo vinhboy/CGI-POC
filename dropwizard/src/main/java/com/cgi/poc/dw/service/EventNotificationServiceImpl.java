@@ -22,7 +22,7 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
     EventNotificationService {
 
   private final static Logger LOG = LoggerFactory.getLogger(EventNotificationServiceImpl.class);
-  
+
   private UserDao userDao;
 
   private EventNotificationDAO eventNotificationDAO;
@@ -46,58 +46,62 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
   }
 
   @Override
-    public Response retrieveAllNotifications(User user) {
-        List<EventNotification> resultList = eventNotificationDAO.retrieveAll();
-        Response.ResponseBuilder respBuilder = Response.noContent().status(Response.Status.OK);
-        respBuilder.header("X-Total-Count", Integer.valueOf(resultList.size()).toString());
-        return respBuilder.entity(resultList).build();
-    }
+  public Response retrieveAllNotifications(User user) {
+    List<EventNotification> resultList = eventNotificationDAO.retrieveAll();
+    Response.ResponseBuilder respBuilder = Response.noContent().status(Response.Status.OK);
+    respBuilder.header("X-Total-Count", Integer.valueOf(resultList.size()).toString());
+    return respBuilder.entity(resultList).build();
+  }
 
   @Override
-    public Response retrieveNotificationsForUser(User user) {
-        List<EventNotification> resultList = eventNotificationDAO.retrieveAllForUser(user);
-        Response.ResponseBuilder respBuilder = Response.noContent().status(Response.Status.OK);
-        respBuilder.header("X-Total-Count", Integer.valueOf(resultList.size()).toString());
-        return respBuilder.entity(resultList).build();
-    }
+  public Response retrieveNotificationsForUser(User user) {
+    List<EventNotification> resultList = eventNotificationDAO.retrieveAllForUser(user);
+    Response.ResponseBuilder respBuilder = Response.noContent().status(Response.Status.OK);
+    respBuilder.header("X-Total-Count", Integer.valueOf(resultList.size()).toString());
+    return respBuilder.entity(resultList).build();
+  }
 
   @Override
   public Response publishNotification(EventNotification eventNotification) {
-      validate(eventNotification, "eventNotification validation", Default.class);
-      eventNotification = eventNotificationDAO.save(eventNotification);
+    validate(eventNotification, "eventNotification validation", Default.class);
+    eventNotification = eventNotificationDAO.save(eventNotification);
 
-      List<GeoCoordinates> geoCoordinates = new ArrayList<>();
-      for (EventNotificationZipcode zipcode : eventNotification.getEventNotificationZipcodes()) {
-        geoCoordinates.add(mapsApiService.getGeoCoordinatesByZipCode(zipcode.getZipCode()));
-      }
+    List<GeoCoordinates> geoCoordinates = new ArrayList<>();
+    for (EventNotificationZipcode zipcode : eventNotification.getEventNotificationZipcodes()) {
+      geoCoordinates.add(mapsApiService.getGeoCoordinatesByZipCode(zipcode.getZipCode()));
+    }
 
-      List<User> affectedUsers = userDao.getGeoWithinRadius(geoCoordinates, 50.00);
+    List<User> affectedUsers = userDao.getGeoWithinRadius(geoCoordinates, 50.00);
 
-      List<String> emailAddresses = new ArrayList<>(); //for email notification
-      List<String> phoneNumbers = new ArrayList<>(); //for sms notification
+    List<String> emailAddresses = new ArrayList<>(); //subscribed users by email
+    List<String> phoneNumbers = new ArrayList<>(); //subscribed users by sms
 
-      for (User affectedUser : affectedUsers) {
-        for (UserNotificationType notificationType : affectedUser.getNotificationType()) {
-          if (notificationType.getNotificationId() == NotificationType.EMAIL.ordinal()) {
-            emailAddresses.add(affectedUser.getEmail());
-          } else if (notificationType.getNotificationId() == NotificationType.SMS.ordinal()) {
-            phoneNumbers.add(affectedUser.getPhone());
-          }
+    for (User affectedUser : affectedUsers) {
+      for (UserNotificationType notificationType : affectedUser.getNotificationType()) {
+        if (notificationType.getNotificationId() == NotificationType.EMAIL.ordinal()) {
+          emailAddresses.add(affectedUser.getEmail());
+        } else if (notificationType.getNotificationId() == NotificationType.SMS.ordinal()) {
+          phoneNumbers.add(affectedUser.getPhone());
         }
       }
+    }
 
-      if (emailAddresses.size() > 0) {
-        String subject = "ADMIN_E".equals(eventNotification.getType()) ? "Emergency notification"
-            : "Non-emergency notification";
-        emailService.send(null, emailAddresses, subject, eventNotification.getDescription());
-      }
+    if (emailAddresses.size() > 0) {
+      String subject = "ADMIN_E".equals(eventNotification.getType()) ? "Emergency notification"
+          : "Non-emergency notification";
+      LOG.info("Admin: {} sending {} to: {}", eventNotification.getUserId().getEmail(), subject,
+          emailAddresses.toString());
+      emailService.send(null, emailAddresses, subject, eventNotification.getDescription());
+    }
 
-      if (phoneNumbers.size() > 0) {
-        for (String phoneNumber : phoneNumbers) {
-          textMessageService.send(phoneNumber, eventNotification.getDescription());
-        }
+    if (phoneNumbers.size() > 0) {
+      LOG.info("Admin: {} sending SMS to: {}", eventNotification.getUserId().getEmail(),
+          phoneNumbers.toString());
+      for (String phoneNumber : phoneNumbers) {
+        textMessageService.send(phoneNumber, eventNotification.getDescription());
       }
-    
-      return Response.ok().entity(eventNotification).build();
+    }
+
+    return Response.ok().entity(eventNotification).build();
   }
 }
