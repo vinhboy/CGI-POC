@@ -29,26 +29,12 @@ cgiWebApp.controller('ProfileController',
       zipCode: '',
       emailNotification: false,
       pushNotification: false,
-      smsNotification: false,
-      notificationType: []
+      smsNotification: false
     };
 
     if ($scope.isEdit()) {
       ProfileService.getProfile().then(function(response) {
         $scope.profile = response.data;
-        for(var i = 0; i < response.data.notificationType.length; i++) {
-          switch(response.data.notificationType[i].notificationId) {
-            case 1:
-              $scope.profile.emailNotification = true;
-              break;
-            case 2:
-              $scope.profile.smsNotification = true;
-              break;
-            case 3:
-              $scope.profile.pushNotification = true;
-              break;
-          }
-        }
       });
     }
 
@@ -76,20 +62,6 @@ cgiWebApp.controller('ProfileController',
     }
   };
 
-  $scope.processNotificationTypes = function() {
-    var notificationTypes = [];
-    if ($scope.profile.emailNotification) {
-      notificationTypes.push({ notificationId: 1 });
-    }
-    if ($scope.profile.smsNotification) {
-      notificationTypes.push({ notificationId: 2 });
-    }
-    if ($scope.profile.pushNotification) {
-      notificationTypes.push({ notificationId: 3 });
-    }
-    $scope.profile.notificationType = notificationTypes;
-  };
-
   $scope.generatePhoneNumber = function() {
     $scope.profile.phone = $scope.profile.phone.replace(/-/g, '');
   };
@@ -102,7 +74,6 @@ cgiWebApp.controller('ProfileController',
   };
 
   $scope.process = function(beforeNavFunc) {
-    $scope.processNotificationTypes();
     $scope.generatePhoneNumber();
 
     var toSend = {
@@ -116,7 +87,9 @@ cgiWebApp.controller('ProfileController',
       city: $scope.profile.city,
       state: $scope.profile.state,
       zipCode: $scope.profile.zipCode,
-      notificationType: $scope.profile.notificationType
+      emailNotification: $scope.profile.emailNotification,
+      pushNotification: $scope.profile.pushNotification,
+      smsNotification: $scope.profile.smsNotification
     };
 
     $scope.processForNull(toSend, 'firstName');

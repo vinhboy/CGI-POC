@@ -38,7 +38,7 @@ describe('landingController', function() {
        day30Date.setDate(todaysDate.getDate() - 31);
        day60Date.setDate(todaysDate.getDate() - 61);
        day90Date.setDate(todaysDate.getDate() - 91);
-       
+
       $scope.model.notifications.push({type: 'Weather', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111});
       $scope.model.notifications.push({type: 'Flood', generationDate: todaysDate, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
       $scope.model.notifications.push({type: 'Fire', generationDate: day30Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
@@ -50,12 +50,12 @@ describe('landingController', function() {
       $scope.model.notifications.push({type: 'Weather', generationDate: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
       $scope.model.notifications.push({type: 'Flood', generationDate: day90Date, zipcodes: ['99999','94545-444'], description: 'Urgent message', citizensAffected: 111});
 
-     
+
     $scope.changeFilters();
- 
+
     expect($scope.model.notifications.length).toBe(10);
     expect($scope.model.filteredNotifications.length).toBe(2);
-    
+
     $scope.eventTypeFilter='Weather';
     $scope.eventTimeFilter=30;
     $scope.changeFilters();
@@ -70,18 +70,18 @@ describe('landingController', function() {
     $scope.eventTypeFilter=undefined;
     $scope.eventTimeFilter=365;
     $scope.changeFilters();
-    expect($scope.model.filteredNotifications.length).toBe(10);      
+    expect($scope.model.filteredNotifications.length).toBe(10);
 
     $scope.eventTypeFilter=undefined;
     $scope.eventTimeFilter=60;
     $scope.changeFilters();
-    expect($scope.model.filteredNotifications.length).toBe(4);      
-      
+    expect($scope.model.filteredNotifications.length).toBe(4);
+
     $scope.eventTypeFilter=undefined;
     $scope.eventTimeFilter=90;
     $scope.changeFilters();
-    expect($scope.model.filteredNotifications.length).toBe(7);      
-      
+    expect($scope.model.filteredNotifications.length).toBe(7);
+
   });
   it('set the current select event and the showMapOrDetails', function() {
     var todaysDate = new Date();
@@ -118,15 +118,13 @@ describe('landingController', function() {
       password: '0d78e8a655575f3aa49dab465349cd96e5773c507020ebe92ab05f:e3352e3a7cf37fcb885088a67979bd63792ed089bd830629d5acc9',
       phone: '2183309196',
       zipCode: '56401',
-      notificationType: [
-        {
-          notificationId: 1
-        }
-      ]
+      emailNotification: false,
+      pushNotification: false,
+      smsNotification: false
     },
     eventNotificationZipcodes: []
   }];
-     var expectDate = Date.parse('2017-02-19T20:36:37.000+0000');   
+     var expectDate = Date.parse('2017-02-19T20:36:37.000+0000');
      var geometryObj = {
          x:-81.36500307953563,
          y: 27.776949558089495
@@ -137,6 +135,6 @@ describe('landingController', function() {
       expect($scope.model.notifications[0].geometry).toEqual(geometryObj);
       expect($scope.model.notifications[0].generationDate).toEqual(expectDate);
  });
-    
-  
+
+
 });

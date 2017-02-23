@@ -51,7 +51,6 @@ describe('ProfileController', function() {
       expect($scope.profile.city).toBe('');
       expect($scope.profile.state).toBe('');
       expect($scope.profile.zipCode).toBe('');
-      expect($scope.profile.notificationType.length).toBe(0);
       expect($scope.profile.emailNotification).toBe(false);
       expect($scope.profile.pushNotification).toBe(false);
       expect($scope.profile.smsNotification).toBe(false);
@@ -70,29 +69,12 @@ describe('ProfileController', function() {
 
     it('should get the current profile from the API if managing profile', function() {
       $state.current.name = 'manageProfile';
-      var retrievedProfile = { notificationType: [] };
+      var retrievedProfile = {};
       $scope.init();
       deferred.resolve({ data: retrievedProfile });
       $scope.$apply();
       expect(profileService.getProfile).toHaveBeenCalled();
       expect($scope.profile).toBe(retrievedProfile);
-    });
-
-    it('should parse the current profile notification types if managing profile', function() {
-      $state.current.name = 'manageProfile';
-      var retrievedProfile = {
-        notificationType: [
-          { notificationId: 1 },
-          { notificationId: 2 },
-          { notificationId: 3 }
-        ]
-      };
-      $scope.init();
-      deferred.resolve({ data: retrievedProfile });
-      $scope.$apply();
-      expect($scope.profile.emailNotification).toBe(true);
-      expect($scope.profile.pushNotification).toBe(true);
-      expect($scope.profile.smsNotification).toBe(true);
     });
   });
 
@@ -106,15 +88,6 @@ describe('ProfileController', function() {
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
       expect(profileService.update).toHaveBeenCalledWith($scope.toSend);
-    });
-
-    it('should transform the notificationTypes', function() {
-      $scope.profile.smsNotification = true;
-      spyOn($scope, 'processNotificationTypes').and.callThrough();
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.processNotificationTypes).toHaveBeenCalled();
     });
 
     it('should construct the phoneNumber', function() {
@@ -170,15 +143,6 @@ describe('ProfileController', function() {
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
       expect(profileService.register).toHaveBeenCalledWith($scope.toSend);
-    });
-
-    it('should transform the notificationTypes', function() {
-      $scope.profile.smsNotification = true;
-      spyOn($scope, 'processNotificationTypes').and.callThrough();
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.processNotificationTypes).toHaveBeenCalled();
     });
 
     it('should construct the phoneNumber', function() {
@@ -252,35 +216,6 @@ describe('ProfileController', function() {
       $scope.profile.pushNotification = false;
       $scope.profile.smsNotification = true;
       expect($scope.someSelected()).toBe(true);
-    });
-  });
-
-  describe('processNotificationTypes', function() {
-    it('notificationType should be empty if nothing is checked', function() {
-      $scope.profile.emailNotification = false; // id: 1
-      $scope.profile.pushNotification = false; // id: 3
-      $scope.profile.smsNotification = false; // id: 2
-      $scope.processNotificationTypes();
-      expect($scope.profile.notificationType.length).toBe(0);
-    });
-
-    it('notificationType should include everything if everything is checked', function() {
-      $scope.profile.emailNotification = true; // id: 1
-      $scope.profile.pushNotification = true; // id: 3
-      $scope.profile.smsNotification = true; // id: 2
-      $scope.processNotificationTypes();
-      expect($scope.profile.notificationType[0].notificationId).toBe(1);
-      expect($scope.profile.notificationType[1].notificationId).toBe(2);
-      expect($scope.profile.notificationType[2].notificationId).toBe(3);
-    });
-
-    it('notificationType should only include checked', function() {
-      $scope.profile.emailNotification = true; // id: 1
-      $scope.profile.pushNotification = false; // id: 3
-      $scope.profile.smsNotification = true; // id: 2
-      $scope.processNotificationTypes();
-      expect($scope.profile.notificationType[0].notificationId).toBe(1);
-      expect($scope.profile.notificationType[1].notificationId).toBe(2);
     });
   });
 
