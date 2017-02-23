@@ -494,9 +494,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 	@Test
 	public void setLocalization_Success() throws SQLException{
 		
-		IntegrationTestHelper.signupResidentUser();
-		
-		String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "residentpw", RULE);
+		String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
 		
 		LocalizationDto localizationDto = new LocalizationDto();
 		localizationDto.setLatitude(0.0);
