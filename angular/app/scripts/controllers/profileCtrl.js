@@ -49,7 +49,7 @@ cgiWebApp.controller('ProfileController',
         $anchorScroll();
       for (var i = 0; i < response.data.errors.length; i++) {
         if (response.data.errors[i].message) {
-          $rootScope.apiErrors.push(response.data.errors[i].message);
+          $scope.apiErrors.push(response.data.errors[i].message);
         }
       }
     }
@@ -160,10 +160,11 @@ cgiWebApp.controller('ProfileController',
     }
   };
 
-  window.addEventListener("keyup", function(e){ 
-      if(e.keyCode == 27) 
-          $state.go('login'); 
-      }, false);
+  window.addEventListener('keyup', function(e){ 
+      if(e.keyCode === 27){ 
+          $state.go('login');
+      }
+  }, false);
   
   
   $scope.init();
