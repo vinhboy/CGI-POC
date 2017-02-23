@@ -155,6 +155,7 @@ describe('ProfileController', function() {
       spyOn($state, 'go');
       $scope.registerProfile();
       deferred.resolve({ status: 200, data: {} });
+      authDeferred.resolve({ status: 200, data: {} });
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('landing');
     });

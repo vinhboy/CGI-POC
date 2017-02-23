@@ -73,7 +73,7 @@ cgiWebApp.controller('ProfileController',
     }
   };
 
-  $scope.process = function(beforeNavFunc) {
+  $scope.process = function(beforeNavPromise) {
     $scope.generatePhoneNumber();
 
     var toSend = {
@@ -114,29 +114,29 @@ cgiWebApp.controller('ProfileController',
     }
 
     toCall(toSend).then(function() {
-      if (beforeNavFunc) {
-        beforeNavFunc(toSend);
+      if (beforeNavPromise) {
+        beforeNavPromise(toSend).then(function() {
+          $state.go('landing');
+        });
       }
-    }).then(function() {
-      $state.go('landing');
+      else {
+        $state.go('landing');
+      }
     }).catch(function(response) {
       $scope.processApiErrors(response);
     });
   };
 
   $scope.registerProfile = function() {
-    var beforeNavFunc = function(toSend) {
+    var beforeNavPromise = function(toSend) {
       var credentials = {
         email: toSend.email,
         password: toSend.password
       };
 
-      Authenticator.authenticate(credentials).catch(function(response) {
-        console.log('we should never get this b/c we registered the user first, then turned right around and authenticated with the same info.');
-        console.log(response);
-      });
+      return Authenticator.authenticate(credentials);
     };
-    $scope.process(beforeNavFunc);
+    $scope.process(beforeNavPromise);
   };
 
   $scope.updateProfile = function() {
