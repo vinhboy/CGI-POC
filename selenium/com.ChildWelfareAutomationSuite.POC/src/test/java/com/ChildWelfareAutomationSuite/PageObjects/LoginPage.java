@@ -33,7 +33,8 @@ public class LoginPage {
 	WebElement passwordErrText;
 	@FindBy(xpath="//a[contains(.,'Logout')]")
 	WebElement logout;
-	
+	@FindBy(xpath = "//a[contains(.,'Publish New Notification')]")
+	WebElement PubNewNotification;
 	
 	
 	// Enter Login Details
@@ -77,7 +78,7 @@ public class LoginPage {
 	public String VerifyLoginMesg()
 
 	{
-		String loginMesg = LoginMesg.getText();
+		String loginMesg = PubNewNotification.getText();
 		return loginMesg;
 
 	}

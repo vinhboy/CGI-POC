@@ -23,7 +23,7 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		//Get the Text of User Profile in User Profile Page
 		String verifyMesg = userProfile.VerifyUserProfilePage();
 		//Verify User Profile Header
-		Assert.assertTrue(verifyMesg.contains("User Profile"));
+		Assert.assertTrue(verifyMesg.contains("Your Information"));
 		logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC01_AllowRegistration_1")));
 	}
@@ -43,7 +43,7 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		//Get the Text of User Profile in User Profile Page
 		String verifyMesg = userProfile.VerifyUserProfilePage();
 		//Verify User Profile Header
-		Assert.assertTrue(verifyMesg.contains("User Profile"));
+		Assert.assertTrue(verifyMesg.contains("Your Information"));
 		logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 		// Fetch the data from Excel Sheet
 		userProfile.EnterFistName(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0));
@@ -81,7 +81,7 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		//Get the Text of User Profile in User Profile Page
 		String verifyMesg = userProfile.VerifyUserProfilePage();
 		//Verify User Profile Header
-		Assert.assertTrue(verifyMesg.contains("User Profile"));
+		Assert.assertTrue(verifyMesg.contains("Your Information"));
 		logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 		userProfile.EnterFistName(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0));
 		userProfile.EnterLastName(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 1));
@@ -117,7 +117,7 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		//Get the Text of User Profile in User Profile Page
 		String verifyMesg = userProfile.VerifyUserProfilePage();
 		//Verify User Profile Header
-		Assert.assertTrue(verifyMesg.contains("User Profile"));
+		Assert.assertTrue(verifyMesg.contains("Your Information"));
 		logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 		userProfile.EnterFistName("");
 		userProfile.EnterLastName("");

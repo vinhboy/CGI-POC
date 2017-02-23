@@ -28,7 +28,8 @@ public class TC01_LoginFlow extends BaseClass {
 		//Capture the Text of Login Message of Hitting Login Button
 		String verifyMesg = login.VerifyLoginMesg();
 		//Verify Success Message of Login
-		Assert.assertTrue(verifyMesg.contains("Manage Profile"));
+		Assert.assertTrue(verifyMesg.contains("Publish New Notification"));
+		
 		logger.log(LogStatus.PASS, "Sucessfully Landing page is displayed");
 		//Capture the Screenshot
 		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC_01_AllowLogin_2")));
@@ -53,7 +54,6 @@ public class TC01_LoginFlow extends BaseClass {
 		logger.log(LogStatus.INFO, "Valid User Login Details Entered");
 		//Capture the Text of Login Message of Hitting Login Button
 		String verifyMesg = login.VerifyLoginInvalidMesg();
-		System.out.println("Verify Error Mesage"+verifyMesg);
 		//Verify Error Message of Login
 		Assert.assertTrue(verifyMesg.contains("Incorrect username/password combination"));
 		logger.log(LogStatus.PASS, "Error Message is displayed as "+verifyMesg);

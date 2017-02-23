@@ -28,7 +28,7 @@ public class TC02_UserProfile_DisAllowRegistration extends BaseClass {
 			//Get the Text of User Profile in User Profile Page
 			String verifyMesg = userProfile.VerifyUserProfilePage();
 			//Verify User Profile Header
-			Assert.assertTrue(verifyMesg.contains("User Profile"));
+			Assert.assertTrue(verifyMesg.contains("Your Information"));
 			logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 			// Fetch the data from Excel Sheet
 			String iinValidPhoneNum =DataProviderFactory.getExcel().getNumericDatawithSheetIndex(1, 1, 7);
@@ -58,7 +58,7 @@ public class TC02_UserProfile_DisAllowRegistration extends BaseClass {
 			//Get the Text of User Profile in User Profile Page
 			String verifyMesg = userProfile.VerifyUserProfilePage();
 			//Verify User Profile Header
-			Assert.assertTrue(verifyMesg.contains("User Profile"));
+			Assert.assertTrue(verifyMesg.contains("Your Information"));
 			logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 			// Fetch the data from Excel Sheet
 			
@@ -90,7 +90,7 @@ public class TC02_UserProfile_DisAllowRegistration extends BaseClass {
 			//Get the Text of User Profile in User Profile Page
 			String verifyMesg = userProfile.VerifyUserProfilePage();
 			//Verify User Profile Header
-			Assert.assertTrue(verifyMesg.contains("User Profile"));
+			Assert.assertTrue(verifyMesg.contains("Your Information"));
 			logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 			// Fetch the data from Excel Sheet
 			
@@ -122,7 +122,7 @@ public class TC02_UserProfile_DisAllowRegistration extends BaseClass {
 			//Get the Text of User Profile in User Profile Page
 			String verifyMesg = userProfile.VerifyUserProfilePage();
 			//Verify User Profile Header
-			Assert.assertTrue(verifyMesg.contains("User Profile"));
+			Assert.assertTrue(verifyMesg.contains("Your Information"));
 			logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 			// Fetch the data from Excel Sheet
 			String sPassword=DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 3);
@@ -154,7 +154,7 @@ public class TC02_UserProfile_DisAllowRegistration extends BaseClass {
 			//Get the Text of User Profile in User Profile Page
 			String verifyMesg = userProfile.VerifyUserProfilePage();
 			//Verify User Profile Header
-			Assert.assertTrue(verifyMesg.contains("User Profile"));
+			Assert.assertTrue(verifyMesg.contains("Your Information"));
 			logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 			// Fetch the data from Excel Sheet
 			String sinvaPass="dd";

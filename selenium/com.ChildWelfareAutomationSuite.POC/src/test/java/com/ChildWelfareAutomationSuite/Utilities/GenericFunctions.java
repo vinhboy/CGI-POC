@@ -13,25 +13,28 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Reporter;
 
+import com.ChildWelfareAutomationSuite.BaseClass.BaseClass;
+import com.ChildWelfareAutomationSuite.factory.BrowserFactory;
+import com.ChildWelfareAutomationSuite.factory.DataProviderFactory;
+
 
 public class GenericFunctions {
-	
-	public static String CaptureScreenshot(WebDriver driver, String Screenshotname) {
-		TakesScreenshot ts = (TakesScreenshot) driver;
-		File src = ts.getScreenshotAs(OutputType.FILE);
-		//System.out.println("Source Path" + src);
-		String destination = "../Screenshots/" + Screenshotname + ".PNG";
+			public static String CaptureScreenshot(WebDriver driver, String Screenshotname) {
+			TakesScreenshot ts = (TakesScreenshot) driver;
+			File src = ts.getScreenshotAs(OutputType.FILE);
+			System.out.println("Source Path" + src);
+			String destination = "../Screenshots/" + Screenshotname + System.currentTimeMillis()+".PNG";
 
-		try {
-			//FileUtils.copyFile(src, new File("./Screenshots/" + Screenshotname +System.currentTimeMillis()+".PNG"));
-			FileUtils.copyFile(src, new File("./Screenshots/" + Screenshotname +".PNG"));
-			//System.out.println("Screenshot copied to destination Screenshots folder Sucessfully"+destination);
-		} catch (IOException e) {
-			System.out.println("Failed to take Screenshot" + e.getMessage());
+			try {
+				FileUtils.copyFile(src, new File("./Screenshots/" + Screenshotname + System.currentTimeMillis()+".PNG"));
+				System.out.println("Screenshot copied to destination Screenshots folder Sucessfully"+destination);
+			} catch (IOException e) {
+				System.out.println("Failed to take Screenshot" + e.getMessage());
 
+			}
+			return destination;
 		}
-		return destination;
-	}
+	
 	
 	@SuppressWarnings("resource")
 	public static String CaptureScreenshot12(WebDriver driver, String Screenshotname) throws IOException {
@@ -55,6 +58,9 @@ public class GenericFunctions {
 	    return "data:image/png;base64,"+encodedBase64;
 	   
 	}
+	
+	
+	
 	
 		
 	}

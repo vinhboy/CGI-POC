@@ -22,7 +22,7 @@ public class UserProfile {
 
 	@FindBy(xpath = "//a[contains(.,'Create one now')]")
 	WebElement clickCreateOneNow;
-	@FindBy(xpath = "//h3[contains(.,'User Profile')]")
+	@FindBy(xpath = "//h3[contains(.,'Your Information')]")
 	WebElement UserProfileHeader;
 	@FindBy(xpath = "//input[@name='email']")
 	WebElement profileEmail;

@@ -14,7 +14,7 @@ import com.relevantcodes.extentreports.LogStatus;
 public class TC02_disAllowLogin extends BaseClass {
 	@Test(description = "Verify login error message with nonregister user")
 
-	public void TC02_DisallowLogin_1() {
+	public void TC02_DisallowLogin_1() throws InterruptedException {
 
 		logger = report.startTest("TC01_VerifyErrorMessgNonRegisterUser");
 		logger.log(LogStatus.INFO, "Application is up and running on Chrome Browser");
@@ -34,7 +34,7 @@ public class TC02_disAllowLogin extends BaseClass {
 	//DisAllow Login with Blank Username
 	@Test(description = "Enter Blank Username & Verify the Error Mesg")
 
-	public void TC02_DisallowLogin_2() {
+	public void TC02_DisallowLogin_2() throws InterruptedException {
 
 		logger = report.startTest("TC02_LoginWithBlankUsername");
 		logger.log(LogStatus.INFO, "Application is up and running");
@@ -52,7 +52,7 @@ public class TC02_disAllowLogin extends BaseClass {
 	
 
 @Test(description = "Enter Blank Password & Verify the Error Mesg")
-	public void TC02_DisallowLogin_3() {
+	public void TC02_DisallowLogin_3() throws InterruptedException {
 
 		logger = report.startTest("TC02_LoginWithBlankPassword");
 		logger.log(LogStatus.INFO, "Application is up and running");
@@ -71,7 +71,7 @@ public class TC02_disAllowLogin extends BaseClass {
 	
 	
 @Test(description = "Enter Blank Username & Password & Verify the Error Mesg")
-public void TC02_DisallowLogin_4() {
+public void TC02_DisallowLogin_4() throws InterruptedException {
 
 	logger = report.startTest("TC02_LoginWithBlankPassword");
 	logger.log(LogStatus.INFO, "Application is up and running");
@@ -97,7 +97,7 @@ public void TC02_DisallowLogin_4() {
 	
 	@Test(description = "Verify Error Text Invalid Password")
 
-	public void TC02_DisallowLogin_5() {
+	public void TC02_DisallowLogin_5() throws InterruptedException {
 
 		logger = report.startTest("TC05_VerifyInvalidPassword");
 		logger.log(LogStatus.INFO, "Application is up and running on Chrome Browser");
@@ -116,7 +116,7 @@ public void TC02_DisallowLogin_4() {
 	
 	@Test(description = "Verify User not able login on clicking back button after logout")
 
-	public void TC02_NavigationManagementSession_2() {
+	public void TC02_NavigationManagementSession_2() throws InterruptedException {
 
 		logger = report.startTest("TC05_VerifyUserLoginwithBackButton");
 		logger.log(LogStatus.INFO, "Application is up and running on Chrome Browser");
@@ -127,7 +127,7 @@ public void TC02_DisallowLogin_4() {
 		//Capture the Text of Login Message of Hitting Login Button
 		String verifyMesg = login.VerifyLoginMesg();
 		//Verify Success Message of Login
-		Assert.assertTrue(verifyMesg.contains("Manage Profile"));
+		Assert.assertTrue(verifyMesg.contains("Publish New Notification"));
 		login.clickLogout();
 		BrowserFactory.clickBackButton();
 		//Assert.assert(verifyMesg.contains("RETURN TO MAP"));
