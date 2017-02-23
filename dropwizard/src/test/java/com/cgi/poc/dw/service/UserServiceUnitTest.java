@@ -288,7 +288,7 @@ public class UserServiceUnitTest {
       String actualCode = errorInfo.getErrors().get(0).getCode();
 
       assertEquals("ERR4", actualCode);
-      assertEquals("Duplicate entry for key '<email>'", actualMessage);
+      assertEquals("A profile already exists for that email address. Please register using a different email.", actualMessage);
  
   }
 
