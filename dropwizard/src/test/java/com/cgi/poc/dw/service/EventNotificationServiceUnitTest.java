@@ -100,6 +100,7 @@ public class EventNotificationServiceUnitTest {
     eventNotification.setType("ADMIN_E");
     eventNotification.setDescription("some description");
     eventNotification.setEventNotificationZipcodes(eventNotificationZipcodes);
+    eventNotification.setUserId(user);
 
     doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
     when(textMessageService.send(anyString(), anyString())).thenReturn(true);
