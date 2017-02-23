@@ -86,7 +86,7 @@ public class IntegrationTestHelper {
               + "'required street',\n"
               + "'optional street',\n"
               + "'Sacramento',\n"
-              + "'California',\n"
+              + "'CA',\n"
               + "'95814',\n"
               + "'ADMIN',\n"
               + "38.5824933,\n"
