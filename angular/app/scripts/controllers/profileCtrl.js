@@ -43,6 +43,9 @@ cgiWebApp.controller('ProfileController',
         $scope.processForEmptyString($scope.profile, 'address2');
         $scope.processForEmptyString($scope.profile, 'city');
         $scope.processForEmptyString($scope.profile, 'state');
+
+        // the password is not sent from the API
+        $scope.profile.password = '';
       });
     }
 
