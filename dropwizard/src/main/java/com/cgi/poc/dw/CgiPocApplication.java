@@ -2,9 +2,11 @@ package com.cgi.poc.dw;
 
 import com.cgi.poc.dw.api.service.APICallerService;
 import com.cgi.poc.dw.api.service.APIServiceFactory;
+import com.cgi.poc.dw.api.service.MapsApiService;
 import com.cgi.poc.dw.api.service.impl.APIServiceFactoryImpl;
 import com.cgi.poc.dw.api.service.impl.EventWeatherAPICallerServiceImpl;
 import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
+import com.cgi.poc.dw.api.service.impl.MapsApiServiceImpl;
 import com.cgi.poc.dw.auth.DBAuthenticator;
 import com.cgi.poc.dw.auth.JwtAuthFilter;
 import com.cgi.poc.dw.auth.UserRoleAuthorizer;
@@ -289,11 +291,11 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(APIServiceFactory.class).to(APIServiceFactoryImpl.class).asEagerSingleton();
         bind(JwtReaderService.class).to(JwtReaderServiceImpl.class).asEagerSingleton();
         bind(JwtBuilderService.class).to(JwtBuilderServiceImpl.class).asEagerSingleton();
+        bind(PasswordHash.class).to(PasswordHashImpl.class).asEagerSingleton();
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
-        bind(UserService.class).to(UserServiceImpl.class)
-            .asEagerSingleton();
+        bind(UserService.class).to(UserServiceImpl.class).asEagerSingleton();
         bind(EventNotificationService.class).to(EventNotificationServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         bind(MailConfiguration.class).toInstance(conf.getMailConfig());
@@ -302,6 +304,8 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(EventWeatherAPICallerServiceImpl.class);        
         bind(APICallerService.class).annotatedWith(Names.named("fireService")).to(FireEventAPICallerServiceImpl.class);
         bind(APICallerService.class).annotatedWith(Names.named("weatherService")).to(FireEventAPICallerServiceImpl.class);
+        bind(MapsApiService.class).to(MapsApiServiceImpl.class).asEagerSingleton();
+
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)
             .using(conf.getJerseyClientConfiguration())

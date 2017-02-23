@@ -32,7 +32,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
@@ -100,7 +99,7 @@ public class UserServiceUnitTest {
     user.setNotificationType(notificationType);
 
     JsonNode jsonRespone = new ObjectMapper()
-        .readTree(getClass().getResource("/google_api_geocode_response.json"));
+        .readTree(getClass().getResource("/google_maps_api/success_geocode_response.json"));
 
     when(mapApiConfiguration.getApiURL()).thenReturn("http://googleMapsURL.com");
 

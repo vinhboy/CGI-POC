@@ -3,19 +3,25 @@ package com.cgi.poc.dw.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.cgi.poc.dw.api.service.MapsApiService;
+import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.EventNotificationDAO;
+import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserNotificationType;
-import com.cgi.poc.dw.util.ErrorInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,9 +32,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-import org.hibernate.HibernateException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,18 +41,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventNotificationServiceUnitTest {
 
   @Mock
+  private UserDao userDao;
+
+  @Mock
   private EventNotificationDAO eventNotificationDAO;
+
+  @Mock
+  private EmailService emailService;
+
+  @Mock
+  private TextMessageService textMessageService;
+
+  @Mock
+  private MapsApiService mapsApiService;
 
   @Spy
   private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -90,17 +100,35 @@ public class EventNotificationServiceUnitTest {
     eventNotification.setType("ADMIN_E");
     eventNotification.setDescription("some description");
     eventNotification.setEventNotificationZipcodes(eventNotificationZipcodes);
+
+    doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
+    when(textMessageService.send(anyString(), anyString())).thenReturn(true);
   }
 
 
   @Test
   public void publishNotification_publishesNotificationWithValidInput() {
 
+    List<User> affectedUsers = new ArrayList<>();
+    affectedUsers.add(user);
+
+    GeoCoordinates geoCoordinates = new GeoCoordinates();
+    geoCoordinates.setLongitude(10.00);
+    geoCoordinates.setLongitude(20.00);
+    
+    Double radius = 50.00;
+    
+    when(userDao.getGeoWithinRadius(anyList(), eq(radius))).thenReturn(affectedUsers);
     when(eventNotificationDAO.save(eq(eventNotification))).thenReturn(eventNotification);
-    Response actual = underTest.publishNotification(user, eventNotification);
+    when(mapsApiService.getGeoCoordinatesByZipCode(anyString())).thenReturn(geoCoordinates);
+    Response actual = underTest.publishNotification(eventNotification);
 
     assertEquals(200, actual.getStatus());
     assertEquals(eventNotification, actual.getEntity());
+    //verify that the email notification was never called
+    verify(emailService, never()).send(anyString(), anyList(), anyString(), anyString());
+    //verify that the sms notification was called once
+    verify(textMessageService, times(1)).send(anyString(), anyString());
   }
 
   @Test
@@ -108,7 +136,7 @@ public class EventNotificationServiceUnitTest {
 
     eventNotification.getEventNotificationZipcodes().iterator().next().setZipCode("998");
     try {
-      underTest.publishNotification(user, eventNotification);
+      underTest.publishNotification(eventNotification);
       fail("Expected an exception to be thrown");
 
     } catch (ConstraintViolationException exception) {
@@ -133,7 +161,7 @@ public class EventNotificationServiceUnitTest {
 
     eventNotification.setDescription("abc");
     try {
-      underTest.publishNotification(user, eventNotification);
+      underTest.publishNotification(eventNotification);
       fail("Expected an exception to be thrown");
 
     } catch (ConstraintViolationException exception) {
@@ -153,23 +181,6 @@ public class EventNotificationServiceUnitTest {
     }
   }
 
-  @Test
-  public void publishNotification_CreateNotificationFails() throws Exception {
-
-    doThrow(new HibernateException("Something went wrong.")).when(eventNotificationDAO)
-        .save(any(EventNotification.class));
-    Response registerUser = underTest.publishNotification(user, eventNotification);
-
-    assertEquals(500, registerUser.getStatus());
-    ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
-    String actualMessage = errorInfo.getErrors().get(0).getMessage();
-    String actualCode = errorInfo.getErrors().get(0).getCode();
-
-    assertEquals("ERR1", actualCode);
-    assertEquals(
-        "An Unknown exception has occured. Type: <org.hibernate.HibernateException>. Message: <Something went wrong.>",
-        actualMessage);
-  }
     @Test
     public void retrievehNotificationNoEntries() throws Exception {
         Response response = underTest.retrieveAllNotifications(user);

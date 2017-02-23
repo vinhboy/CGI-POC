@@ -1,6 +1,7 @@
 package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
@@ -23,13 +24,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.cgi.poc.dw.service.EventNotificationService;
-import io.dropwizard.jersey.caching.CacheControl;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 
 @Path("/notification")
 @Produces(MediaType.APPLICATION_JSON)
@@ -56,7 +51,14 @@ public class EventNotificationResource {
   @UnitOfWork
   @Timed(name = "EventNotification.publishNotification")
   public Response publishNotification(@Auth User principal, @NotNull @Valid EventNotification eventNotification) {
-    Response response =  notificationService.publishNotification(principal, eventNotification);
+    //add remaining dependencies to eventNotification entity
+    eventNotification.setUserId(principal);
+    for (EventNotificationZipcode eventNotificationZipcode : eventNotification
+        .getEventNotificationZipcodes()) {
+      eventNotificationZipcode.setEventNotificationId(eventNotification);
+    }
+    
+    Response response =  notificationService.publishNotification(eventNotification);
     if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
       throw new WebApplicationException(response);
     }
