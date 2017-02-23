@@ -69,7 +69,7 @@ import org.hibernate.annotations.Type;
         + "      + sin ( radians( :lat ) ) "
         + "      * sin( radians( latitude ) ) "
         + "    ) "
-        + "  ) AS distance FROM `user` HAVING distance < :radius ORDER BY distance",
+        + "  ) AS distance FROM `user` HAVING distance < :radius AND `role`= 'RESIDENT' ORDER BY distance",
         resultClass = User.class)})
 public class User implements Serializable, Principal {
 

@@ -34,7 +34,7 @@ cgiWebApp.controller('loginController',
   $scope.submitForm = function() {
     $scope.popUp();
     var credentials = {
-      email: $scope.user.email,
+      email: $scope.user.email.toLowerCase(),
       password: $scope.user.password
     };
 

@@ -181,7 +181,7 @@ cgiWebApp.controller('ProfileController',
       return $scope.profile.password === '' || $scope.regexPassword.test($scope.profile.password);
     }
   };
-
+  
   $scope.goBack = function() {
     if ($scope.isNew()) {
       $state.go('login');
@@ -195,7 +195,15 @@ cgiWebApp.controller('ProfileController',
     $state.go('landing');
   };
 
+  $scope.keyCallback= function($event) {
+      $scope.keyCode = $event.which;
+      if($scope.keyCode === 27){
+          $state.go('login');
+      }
+    };
+
   $scope.init();
+
 }]);
 
 cgiWebApp.directive('compareTo', function() {
