@@ -5,10 +5,7 @@ import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.PasswordlessUser;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.util.ErrorInfo;
-import com.cgi.poc.dw.util.GeneralErrors;
-import com.cgi.poc.dw.util.PersistValidationGroup;
-import com.cgi.poc.dw.util.RestValidationGroup;
+import com.cgi.poc.dw.util.*;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,9 +24,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
@@ -84,7 +81,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public Response registerUser(User user) {
 		// Defaulting the user to RESIDENT
 		user.setRole("RESIDENT");
-		
+
 		validate(user, "rest", RestValidationGroup.class, Default.class);
 		// check if the email already exists.
 		User findUserByEmail = userDao.findUserByEmail(user.getEmail());
@@ -95,12 +92,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
 		}
 
-		return processForSave(user, false);
+		return processForSave(user, false, false);
 	}
 
 	private void saveUser(User user, boolean registered) {
 		validate(user, "save", Default.class, PersistValidationGroup.class);
- 
+
 
 		userDao.save(user);
 		if (!registered) {
@@ -146,15 +143,27 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		return errRet;
 	}
 
-	public Response updateUser(User currentUser) {
-		validate(currentUser, "rest", RestValidationGroup.class, Default.class);
-		return processForSave(currentUser, true);
+	public Response updateUser(User user, User modifiedUser) {
+		//If user password is empty keep same password.
+		boolean keepPassword = false;
+		if(StringUtils.isBlank(modifiedUser.getPassword())){
+			modifiedUser.setPassword(user.getPassword());
+			keepPassword = true;
+		}
+		else {
+			validate(user, "update",LoginValidationGroup.class);
+		}
+		modifiedUser.setId(user.getId());
+		modifiedUser.setRole(user.getRole());
+		return processForSave(modifiedUser, true, keepPassword);
 	}
-	
-	private Response processForSave(User user, boolean registered){
+
+	private Response processForSave(User user, boolean registered, boolean keepPassword){
 		Response response = null;
 		try {
-			createPasswordHash(user);
+			if (!keepPassword) {
+				createPasswordHash(user);
+			}
 			setUserGeoCoordinates(user);
 			saveUser(user, registered);
 			response = Response.ok().entity(user).build();
@@ -173,5 +182,5 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		return response;
 	}
-	
+
 }

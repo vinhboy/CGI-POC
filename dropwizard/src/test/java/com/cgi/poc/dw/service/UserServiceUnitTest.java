@@ -377,12 +377,12 @@ public class UserServiceUnitTest {
   }
   @Test
 	public void updateUser_UpdateUserWithValidInput() throws Exception {
-
+    User previouslyPersistedUser = user1;
 		String saltedHash = "9e5f3dd72fbd5f309131364baf42b446f570629f4a809390be533f:"
 				+ "1db93c4885d4bf980e92286d74da720dc298fdc1a29c89cf9c67ce";
 		when(passwordHash.createHash(user1.getPassword())).thenReturn(saltedHash);
 		when(userDao.findUserByEmail(user1.getEmail())).thenReturn(user1);
-		Response actual = underTest.updateUser(user1);
+		Response actual = underTest.updateUser(previouslyPersistedUser, user1);
 
 		assertEquals(200, actual.getStatus());
 		assertEquals(user1, actual.getEntity());
@@ -390,12 +390,12 @@ public class UserServiceUnitTest {
 
 	@Test
 	public void updateUser_PasswordValidationFails() throws Exception {
-
+    User previouslyPersistedUser = user1;
 		user1.setPassword("a"); // one character password
 
 		try {
 			when(userDao.findUserByEmail(user1.getEmail())).thenReturn(user1);
-			underTest.updateUser(user1);
+			underTest.updateUser(previouslyPersistedUser, user1);
 			fail("Expected an exception to be thrown");
 		} catch (ConstraintViolationException exception) {
 			Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
@@ -417,7 +417,7 @@ public class UserServiceUnitTest {
 
 	@Test
 	public void updateUser_UpdateUserFails() throws Exception {
-
+    User previouslyPersistedUser = user1;
 		String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
 				+ "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
 		when(passwordHash.createHash(user1.getPassword())).thenReturn(saltedHash);
@@ -425,7 +425,7 @@ public class UserServiceUnitTest {
 		doThrow(new HibernateException("Something went wrong.")).when(userDao).save(any(User.class));
 
 		when(userDao.findUserByEmail(user1.getEmail())).thenReturn(user1);
-		Response registerUser = underTest.updateUser(user1);
+		Response registerUser = underTest.updateUser(previouslyPersistedUser, user1);
 
 		assertEquals(500, registerUser.getStatus());
 		ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
@@ -441,10 +441,10 @@ public class UserServiceUnitTest {
 
 	@Test
 	public void updateUser_PasswordHashingFails() throws Exception {
-
+    User previouslyPersistedUser = user1;
 		doThrow(new InvalidKeySpecException("Something went wrong.")).when(passwordHash).createHash(user1.getPassword());
 		when(userDao.findUserByEmail(user1.getEmail())).thenReturn(user1);
-		Response updatedUser = underTest.updateUser(user1);
+		Response updatedUser = underTest.updateUser(previouslyPersistedUser, user1);
 
 		assertEquals(500, updatedUser.getStatus());
 		ErrorInfo errorInfo = (ErrorInfo) updatedUser.getEntity();
@@ -488,13 +488,13 @@ public class UserServiceUnitTest {
 
 	@Test
 	public void updateUser_ReturnsExpectedGeoCoordinates() throws Exception {
-
+    User previouslyPersistedUser = user1;
 		String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
 				+ "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
 		when(passwordHash.createHash(user1.getPassword())).thenReturn(saltedHash);
 
 		when(userDao.findUserByEmail(user1.getEmail())).thenReturn(user1);
-		Response actual = underTest.updateUser(user1);
+		Response actual = underTest.updateUser(previouslyPersistedUser, user1);
 
 		User actualUser = (User) actual.getEntity();
 

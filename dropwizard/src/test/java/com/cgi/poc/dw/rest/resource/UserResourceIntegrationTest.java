@@ -348,8 +348,9 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  public void updateSuccess() throws MessagingException {
+  public void updateSuccessWithoutPasswordChange() throws MessagingException {
     Client client = new JerseyClientBuilder().build();
+    tstUser.setPassword("");
     tstUser.setFirstName("Jane");
     String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
     Response response = client.
@@ -382,8 +383,9 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  public void invalidPhoneNumberUpdate() throws JSONException, NoSuchAlgorithmException, InvalidKeySpecException {
+  public void invalidPhoneNumberUpdateWithoutPasswordChange() throws JSONException, NoSuchAlgorithmException, InvalidKeySpecException {
   	Client client = new JerseyClientBuilder().build();
+  	tstUser.setPassword("");
     tstUser.setPhone("44343");
     String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
     Response response = client.
@@ -429,8 +431,9 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  public void invalidZipCodeUpdate() throws JSONException {
+  public void invalidZipCodeUpdateWithoutPasswordChange() throws JSONException {
     Client client = new JerseyClientBuilder().build();
+    tstUser.setPassword("");
     tstUser.setZipCode("983");
 
     String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
@@ -438,7 +441,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+        put(Entity.json(tstUser));
     assertNotNull(response);
     Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);

@@ -8,5 +8,5 @@ public interface UserService {
 
   Response registerUser(User userDto);
 
-	Response updateUser(User userDto);
+	Response updateUser(User user, User modifiedUser);
 }
