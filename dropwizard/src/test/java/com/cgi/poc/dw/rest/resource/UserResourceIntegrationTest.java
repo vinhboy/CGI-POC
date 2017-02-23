@@ -382,30 +382,30 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     }
   }
 
-  @Test
-  public void invalidPhoneNumberUpdateWithoutPasswordChange() throws JSONException, NoSuchAlgorithmException, InvalidKeySpecException {
-  	Client client = new JerseyClientBuilder().build();
-  	tstUser.setPassword("");
-    tstUser.setPhone("44343");
-    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "phone  size must be between 10 and 10";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-    }
-  }
+//  @Test
+//  public void invalidPhoneNumberUpdateWithoutPasswordChange() throws JSONException, NoSuchAlgorithmException, InvalidKeySpecException {
+//  	Client client = new JerseyClientBuilder().build();
+//  	tstUser.setPassword("");
+//    tstUser.setPhone("44343");
+//    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+//    Response response = client.
+//        target(String.format(url, RULE.getLocalPort())).
+//        request().
+//        header("Authorization", "Bearer " + authToken).
+//        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+//
+//    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+//    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+//    for (Error error : errorInfo.getErrors()) {
+//      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
+//      // The data provided in the API call is invalid. Message: <XXXXX>
+//      // where XXX is the message associated to the validation
+//      String partString = "phone  size must be between 10 and 10";
+//      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
+//          .replace("REPLACE", partString);
+//      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+//    }
+//  }
 
 
   @Test
@@ -430,31 +430,31 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     }
   }
 
-  @Test
-  public void invalidZipCodeUpdateWithoutPasswordChange() throws JSONException {
-    Client client = new JerseyClientBuilder().build();
-    tstUser.setPassword("");
-    tstUser.setZipCode("983");
-
-    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        put(Entity.json(tstUser));
-    assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "zipCode  is invalid.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
-    }
-  }
+//  @Test
+//  public void invalidZipCodeUpdateWithoutPasswordChange() throws JSONException {
+//    Client client = new JerseyClientBuilder().build();
+//    tstUser.setPassword("");
+//    tstUser.setZipCode("983");
+//
+//    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+//    Response response = client.
+//        target(String.format(url, RULE.getLocalPort())).
+//        request().
+//        header("Authorization", "Bearer " + authToken).
+//        put(Entity.json(tstUser));
+//    assertNotNull(response);
+//    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+//    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+//    for (Error error : errorInfo.getErrors()) {
+//      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
+//      // The data provided in the API call is invalid. Message: <XXXXX>
+//      // where XXX is the message associated to the validation
+//      String partString = "zipCode  is invalid.";
+//      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
+//          .replace("REPLACE", partString);
+//      assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
+//    }
+//  }
 
   @Test
   public void signupUserAlreadyExist() {
