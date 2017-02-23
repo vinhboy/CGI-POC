@@ -27,9 +27,9 @@ public class LoginPage {
 	WebElement LoginMesg;
 	@FindBy(xpath = "//p[contains(.,'Incorrect username/password combination')]")
 	WebElement InvalidLoginMesg;
-	@FindBy(xpath="//span[contains(.,'Email is required')]")
+	@FindBy(xpath="//span[contains(.,'You must enter a valid username')]")
 	WebElement userNameErrText;
-	@FindBy(xpath="//span[contains(.,'Password is required')]")
+	@FindBy(xpath="//span[contains(.,'You must enter a valid password. Password must be at least 8 characters and contain 3 of the 4 following requirements: one upper case letter, one lower case letter, one number, and one special character')]")
 	WebElement passwordErrText;
 	@FindBy(xpath="//a[contains(.,'Logout')]")
 	WebElement logout;

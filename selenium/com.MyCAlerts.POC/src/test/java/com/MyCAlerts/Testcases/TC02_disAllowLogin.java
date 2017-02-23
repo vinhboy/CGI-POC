@@ -44,7 +44,7 @@ public class TC02_disAllowLogin extends BaseClass {
 		logger.log(LogStatus.INFO, "Username with Blank Value is Entered");
 		String verifyMesg = login.VerifyBlankUsernameErrorText();
 		//Verify Error Message of Login
-		Assert.assertTrue(verifyMesg.contains("Email is required"));
+		Assert.assertTrue(verifyMesg.contains("You must enter a valid username"));
 		logger.log(LogStatus.PASS, "Error Text is displayed with blank username");
 		logger.log(LogStatus.INFO,logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC02_DisallowLogin_2")));
 
@@ -62,7 +62,7 @@ public class TC02_disAllowLogin extends BaseClass {
 		logger.log(LogStatus.INFO, "Password with Blank Value is Entered");
 		String verifyMesg = login.VerifyBlankPasswordErrorText();
 		//Verify Error Message of Login
-		Assert.assertTrue(verifyMesg.contains("Password is required"));
+		Assert.assertTrue(verifyMesg.contains("You must enter a valid password"));
 		logger.log(LogStatus.PASS, "Error Text is displayed with blank username");
 		logger.log(LogStatus.INFO,logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC02_DisallowLogin_3")));
 
@@ -81,13 +81,13 @@ public void TC02_DisallowLogin_4() throws InterruptedException {
 	//login.clickLogin();
 	String verifyMesg1 = login.VerifyBlankUsernameErrorText();
 	//Verify the Blank Username Text Message
-	Assert.assertTrue(verifyMesg1.contains("Email is required"));
+	Assert.assertTrue(verifyMesg1.contains("You must enter a valid username"));
 	//Verify the Blank Password Text Message
 	login.EnterPassword("");
 	login.EnterUsername("");
 	//login.clickLogin();
 	String verifyMesg2 = login.VerifyBlankPasswordErrorText();
-	Assert.assertTrue(verifyMesg2.contains("Password is required"));
+	Assert.assertTrue(verifyMesg2.contains("You must enter a valid password"));
 	BrowserFactory.waitFor();
 	logger.log(LogStatus.INFO, "Username & Password with Blank Value is Entered");
 	logger.log(LogStatus.PASS, "Error Text is displayed for blank username and blank password");
