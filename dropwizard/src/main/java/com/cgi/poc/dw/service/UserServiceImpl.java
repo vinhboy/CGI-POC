@@ -84,14 +84,13 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	}
 
 	private void saveUser(User user, boolean registered) {
-		boolean userIsRegistered = registered;
 		validate(user, "save", Default.class, PersistValidationGroup.class);
 		for (UserNotificationType notificationType : user.getNotificationType()) {
 			notificationType.setUserId(user);
 		}
 
 		userDao.save(user);
-		if (!userIsRegistered) {
+		if (!registered) {
 			// Future TODO enhancement: make the subject and email body configurable
 			emailService.send(null, Arrays.asList(user.getEmail()), "Registration confirmation",
 					"Hello there, thank you for registering.");
