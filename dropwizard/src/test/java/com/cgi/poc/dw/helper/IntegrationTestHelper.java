@@ -132,6 +132,56 @@ public class IntegrationTestHelper {
     }
   }
 
+  public static void signupResidentUser(String zipcode, String email)
+      throws SQLException {
+    Connection sqlConnection = null;
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      st.executeUpdate(
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, role, latitude, longitude)\n"
+              + "VALUES ( 1111,\n"
+              + "'john',\n"
+              + "'doe',\n"
+              + " '"+email+"',\n"
+              + "'9e5f3dd72fbd5f309131364baf42b446f570629f4a809390be533f:1db93c4885d4bf980e92286d74da720dc298fdc1a29c89cf9c67ce',\n"
+              + "'1234567890',\n"
+              + "'required street',\n"
+              + "'optional street',\n"
+              + "'Sacramento',\n"
+              + "'California',\n"
+              +  " '"+ zipcode+"',\n"
+              + "'RESIDENT',\n"
+              + "32.7920948,\n"
+              + "-117.2323367\n"
+              + ")");
+
+      sqlConnection.commit();
+    } catch (Exception ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }
+
+  public static void addUserNotificationType(long userId, long notificationId)
+      throws SQLException {
+    Connection sqlConnection = null;
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      st.executeUpdate(
+          "INSERT INTO user_notification (user_id, notification_id)\n"
+              + "VALUES ( "+userId+", " + notificationId+")");
+      sqlConnection.commit();
+    } catch (Exception ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }
+
+
   public static String getAuthToken(String email, String password,
       DropwizardAppRule<CgiPocConfiguration> RULE) {
     Client client = new JerseyClientBuilder().build();

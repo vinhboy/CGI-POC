@@ -49,11 +49,14 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
   private User tstUser;
 
-  private GreenMail smtpServer;
+  private static GreenMail smtpServer;
   
   @BeforeClass
   public static void createUser() throws SQLException {
     IntegrationTestHelper.signupResidentUser();
+    smtpServer = new GreenMail(new ServerSetup(3025, "127.0.0.1",
+        ServerSetup.PROTOCOL_SMTP));
+    smtpServer.start();
   }
   
   @Before
@@ -76,22 +79,18 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     tstUser.setNotificationType(notificationType);
-
-    smtpServer = new GreenMail(new ServerSetup(3025, "127.0.0.1",
-        ServerSetup.PROTOCOL_SMTP));
-    smtpServer.start();
   }
   
   @After
   public void exit() {
-    if (smtpServer != null) {
-      smtpServer.stop();
-    }
   }
 
   @AfterClass
   public static void cleanup() {
     IntegrationTestHelper.cleanDbState();
+    if (smtpServer != null) {
+      smtpServer.stop();
+    }
   }
 
   @Test
@@ -350,7 +349,8 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Assert.assertEquals(200, response.getStatus());
 
     //verify email registration
-    smtpServer.waitForIncomingEmail(1);
+    smtpServer.waitForIncomingEmail(7000,1);
+    
     MimeMessage[] receivedMails = smtpServer.getReceivedMessages();
     assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
 
@@ -419,7 +419,6 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     }
   }
 
-
   @Test
   public void invalidZipCode() throws JSONException {
     Client client = new JerseyClientBuilder().build();
@@ -486,4 +485,5 @@ public class UserResourceIntegrationTest extends IntegrationTest {
       assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
   }
+  
 }

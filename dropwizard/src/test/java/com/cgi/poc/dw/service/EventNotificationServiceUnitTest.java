@@ -87,7 +87,7 @@ public class EventNotificationServiceUnitTest {
     user.setLatitude(0.0);
     user.setLongitude(0.0);
     UserNotificationType selNot = new UserNotificationType(
-        Long.valueOf(NotificationType.SMS.ordinal()));
+        Long.valueOf(NotificationType.SMS.getValue()));
     Set<UserNotificationType> notificationType = new HashSet<>();
     notificationType.add(selNot);
     user.setNotificationType(notificationType);

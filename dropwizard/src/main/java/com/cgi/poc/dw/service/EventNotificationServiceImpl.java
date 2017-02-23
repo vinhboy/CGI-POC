@@ -84,9 +84,9 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
 
     for (User affectedUser : affectedUsers) {
       for (UserNotificationType notificationType : affectedUser.getNotificationType()) {
-        if (notificationType.getNotificationId() == NotificationType.EMAIL.ordinal()) {
+        if (notificationType.getNotificationId().longValue() == NotificationType.EMAIL.getValue().longValue()) {
           emailAddresses.add(affectedUser.getEmail());
-        } else if (notificationType.getNotificationId() == NotificationType.SMS.ordinal()) {
+        } else if (notificationType.getNotificationId().longValue() == NotificationType.SMS.getValue().longValue()) {
           phoneNumbers.add(affectedUser.getPhone());
         }
       }
