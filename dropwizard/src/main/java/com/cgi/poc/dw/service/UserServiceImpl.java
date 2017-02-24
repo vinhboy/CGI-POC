@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import javax.ws.rs.client.Client;
@@ -133,7 +134,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		return processForSave(modifiedUser, true, keepPassword);
 	}
 
-	private Response processForSave(User user, boolean registered, boolean keepPassword){
+	private Response processForSave(User user, boolean registered, boolean keepPassword) {
 		Response response = null;
 		try {
 			if (!keepPassword) {
@@ -143,6 +144,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			setUserGeoCoordinates(user);
 			saveUser(user, registered);
 			response = Response.ok().entity(user).build();
+		} catch (ConstraintViolationException exception) {
+			throw exception;
 		} catch (Exception exception) {
 			LOG.error("Unable to save a user.", exception);
 			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
