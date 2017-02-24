@@ -31,6 +31,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Fetch;
@@ -98,17 +99,20 @@ public class EventNotification implements Serializable {
     
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
-  @Cascade({ CascadeType.SAVE_UPDATE, CascadeType.PERSIST})
   @NotNull(groups = {PersistValidationGroup.class})
   private User userId;
 
   @OneToMany(mappedBy = "eventNotificationId", fetch = FetchType.EAGER, orphanRemoval = true)
-  @NotNull
   @Valid
   @Cascade({CascadeType.ALL})
   @Fetch(value = FetchMode.SUBSELECT)
   private Set<EventNotificationZipcode> eventNotificationZipcodes;
 
+  @OneToMany(mappedBy = "eventNotificationId", fetch = FetchType.LAZY, orphanRemoval = true)
+  @Valid
+  @Cascade({CascadeType.ALL})
+  @Fetch(value = FetchMode.SUBSELECT)
+  private Set<EventNotificationUser> eventNotificationUser;
     public EventNotification() {
     }
 
@@ -186,8 +190,8 @@ public class EventNotification implements Serializable {
         this.citizensAffected = citizensAffected;
     }
 
-  public User getUserId() {
-    return userId;
+  public Long getUserId() {
+    return userId.getId();
   }
 
   public void setUserId(User userId) {
@@ -212,6 +216,25 @@ public class EventNotification implements Serializable {
         zipCode.setEventNotificationId(this);
      }
   }
+ public Set<EventNotificationUser> getEventNotificationUsers() {
+    return eventNotificationUser;
+  }
+  
+  public void setEventNotificationUsers(
+      Set<EventNotificationUser> eventNotificationUser) {
+    this.eventNotificationUser = eventNotificationUser;
+  }
+  
+  public void addNotifiedUser(EventNotificationUser user) {
+     if (user != null) {
+        if (this.eventNotificationUser == null) {
+            this.eventNotificationUser = new HashSet<EventNotificationUser>();          
+        }
+        this.eventNotificationUser.add(user);
+        user.setEventNotificationId(this);
+     }
+  }
+
   
     @Override
     public int hashCode() {

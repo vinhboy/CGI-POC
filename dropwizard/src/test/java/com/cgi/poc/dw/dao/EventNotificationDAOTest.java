@@ -6,6 +6,7 @@
 package com.cgi.poc.dw.dao;
 
  import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.EventNotificationUser;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
 import java.util.LinkedHashSet;
@@ -65,14 +66,27 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
     public void testCRUD() throws Exception {
         signupAdminUser();
         EventNotification event = new EventNotification();
-        User tmpUser = new User();
-        tmpUser.setId(Long.valueOf(100));
+        User admUser = new User();
+        admUser.setId(Long.valueOf(100));
+        EventNotificationUser resUser1 = new EventNotificationUser();
+        resUser1.setUserId( new User(Long.valueOf(5001)));
+        EventNotificationUser resUser2 = new EventNotificationUser();
+        resUser2.setUserId(new User(Long.valueOf(5002)));
+        EventNotificationUser resUser3= new EventNotificationUser();
+        resUser3.setUserId(new User(Long.valueOf(5003)));
+        
+        signupResidentUser(5001);
+        signupResidentUser(5002);
+        signupResidentUser(5003);
         event.setType("FIRE");
         event.setUrl1("www.msn.com");
         event.setUrl2("www.cnn.com");
-        event.setUserId(tmpUser);
+        event.setUserId(admUser);
         event.setDescription("CRUD TEST EVENT");
         event.setCitizensAffected(Integer.valueOf(1000));
+        event.addNotifiedUser(resUser1);
+        event.addNotifiedUser(resUser2);
+        event.addNotifiedUser(resUser3);
  
         EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();
         eventNotificationZipcode1.setZipCode("92105");
@@ -110,7 +124,9 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         assertEquals(result2.getEventNotificationZipcodes(),result.getEventNotificationZipcodes());
         assertEquals(result2.getGenerationDate(),result.getGenerationDate());
 
-        List<EventNotification> resultList2= eventDAO.retrieveAllForUser(tmpUser);
+        User usrForSelectr = new User();
+        usrForSelectr.setId(Long.valueOf(5001));
+        List<EventNotification> resultList2= eventDAO.retrieveAllForUser(usrForSelectr);
         EventNotification result3  = resultList2.get(0);    
         assertEquals(result3.getId(),result.getId());
         assertEquals(result3.getType(),result.getType());
@@ -121,7 +137,33 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         assertEquals(result3.getCitizensAffected(),result.getCitizensAffected());
         assertEquals(result3.getEventNotificationZipcodes(),result.getEventNotificationZipcodes());
         assertEquals(result3.getGenerationDate(),result.getGenerationDate());
-         
+
+        usrForSelectr.setId(Long.valueOf(5002));
+        List<EventNotification> resultList3= eventDAO.retrieveAllForUser(usrForSelectr);
+        EventNotification result4  = resultList3.get(0);    
+        assertEquals(result4.getId(),result.getId());
+        assertEquals(result4.getType(),result.getType());
+        assertEquals(result4.getUrl1(),result.getUrl1());
+        assertEquals(result4.getUrl2(),result.getUrl2());
+        assertEquals(result4.getDescription(),result.getDescription());
+        assertEquals(result4.getUserId(),result.getUserId());
+        assertEquals(result4.getCitizensAffected(),result.getCitizensAffected());
+        assertEquals(result4.getEventNotificationZipcodes(),result.getEventNotificationZipcodes());
+        assertEquals(result4.getGenerationDate(),result.getGenerationDate());
+        
+        EventNotification event2 = new EventNotification();
+        event2.setType("FLOOD");
+        event2.setUserId(admUser);
+        event2.setDescription("CRUD TEST EVEN3");
+        event2.setCitizensAffected(Integer.valueOf(1000));
+        EventNotificationUser resUser4= new EventNotificationUser();
+        resUser4.setUserId(new User(Long.valueOf(5003)));
+        event2.addNotifiedUser(resUser4);
+        eventDAO.save(event2);
+        
+        usrForSelectr.setId(resUser3.getUserId());
+        List<EventNotification> resultList4= eventDAO.retrieveAllForUser(usrForSelectr);
+         assertThat(resultList4.size()).isEqualTo(2);
     }
     @Test
     public void retriveAllGetsNothing() {

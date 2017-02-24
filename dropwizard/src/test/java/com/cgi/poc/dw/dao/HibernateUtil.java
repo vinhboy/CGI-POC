@@ -12,6 +12,7 @@ import com.cgi.poc.dw.dao.model.EventTsunami;
 import com.cgi.poc.dw.dao.model.EventVolcano;
 import com.cgi.poc.dw.dao.model.EventHurricane;
 import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.EventNotificationUser;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.User;
@@ -77,6 +78,7 @@ public class HibernateUtil {
             configuration.addAnnotatedClass(EventVolcano.class);
             configuration.addAnnotatedClass(EventNotification.class);
             configuration.addAnnotatedClass(EventNotificationZipcode.class);
+            configuration.addAnnotatedClass(EventNotificationUser.class);
 
             sessionFactory = configuration.buildSessionFactory();
             openSession = sessionFactory.openSession();
