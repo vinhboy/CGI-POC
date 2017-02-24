@@ -190,8 +190,8 @@ public class EventNotification implements Serializable {
         this.citizensAffected = citizensAffected;
     }
 
-  public Long getUserId() {
-    return userId.getId();
+  public User getUserId() {
+    return userId;
   }
 
   public void setUserId(User userId) {

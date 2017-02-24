@@ -412,5 +412,17 @@
       <where>role = 'ADMIN'</where>
     </update>
   </changeSet>
-
+    <changeSet id="22" author="Dawna Floyd">
+      <createTable tableName="event_notification_user">
+        <column name="id"  type="bigint" autoIncrement="true">
+          <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="user_id" type="bigint">
+           <constraints nullable="false" foreignKeyName="fk_event_notification_user"  deleteCascade="true" references="user(id)"/>
+        </column>
+        <column name="event_notification_id" type="bigint">
+           <constraints nullable="false" foreignKeyName="fk_event_notification_sr_en_id"  deleteCascade="true" references="event_notification(id)"/>
+        </column>
+      </createTable> 
+    </changeSet>
 </databaseChangeLog>
