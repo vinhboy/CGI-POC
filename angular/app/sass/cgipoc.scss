@@ -206,6 +206,17 @@ and (min-width : 1025px) {
   }
 }
 
+.site-description {
+  width: 80%;
+  height: auto;
+  margin: 60px auto;
+  padding:2px 10px;
+  background: rgba(237, 244, 247, 0.85);
+  color: #000000;
+  font-size: 0.8em;
+}
+
+
 .usa-nav-secondary-links a {
   color: white !important;
 }
