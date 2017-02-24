@@ -80,8 +80,7 @@ and (max-device-width : 480px) {
       box-shadow: 0 0 8px #888888;
 
       .usa-form-large {
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
         background: rgba(237, 244, 247, 0.85);
       }
     }
@@ -121,8 +120,7 @@ and (max-device-width : 768px) {
       box-shadow: 0 0 8px #888888;
 
       .usa-form-large {
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
         background: rgba(237, 244, 247, 0.85);
       }
     }
@@ -162,8 +160,7 @@ and (max-device-width : 1024px) {
       box-shadow: 0 0 8px #888888;
 
       .usa-form-large {
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
         background: rgba(237, 244, 247, 0.85);
       }
     }
@@ -202,8 +199,7 @@ and (min-width : 1025px) {
       box-shadow: 0 0 8px #888888;
 
       .usa-form-large {
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
         background: rgba(237, 244, 247, 0.85);
       }
     }

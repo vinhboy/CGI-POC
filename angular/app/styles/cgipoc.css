@@ -54,8 +54,7 @@
     width: 90%;
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
       background: rgba(237, 244, 247, 0.85); } }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 481px) and (max-device-width: 768px) {
@@ -81,8 +80,7 @@
     width: 400px;
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
       background: rgba(237, 244, 247, 0.85); } }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 769px) and (max-device-width: 1024px) {
@@ -108,8 +106,7 @@
     width: 400px;
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
       background: rgba(237, 244, 247, 0.85); } }
 /* Desktops and laptops ----------- */
 @media only screen and (min-width: 1025px) {
@@ -135,8 +132,7 @@
     width: 400px;
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
       background: rgba(237, 244, 247, 0.85); } }
 .usa-nav-secondary-links a {
   color: white !important; }
