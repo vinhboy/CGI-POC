@@ -76,8 +76,8 @@ public class IntegrationTestHelper {
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, role, latitude, longitude)\n"
-              + "VALUES ( 100,\n"
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude, email_notification, sms_notification, push_notification)\n"
+              + "select 100,\n"
               + "'john',\n"
               + "'smith',\n"
               + "'admin100@cgi.com',\n"
@@ -86,12 +86,15 @@ public class IntegrationTestHelper {
               + "'required street',\n"
               + "'optional street',\n"
               + "'Sacramento',\n"
-              + "'California',\n"
+              + "'CA',\n"
               + "'95814',\n"
               + "'ADMIN',\n"
               + "38.5824933,\n"
-              + "-121.4941738\n"
-              + ")");
+              + "-121.4941738,\n" +
+                  "0,\n" +
+                  "0,\n" +
+                  "0\n"
+              + "where not exists (select * from user where id = 100)");
 
       sqlConnection.commit();
     } catch (Exception ex) {
@@ -108,8 +111,8 @@ public class IntegrationTestHelper {
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, role, latitude, longitude)\n"
-              + "VALUES ( 100,\n"
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude, email_notification, sms_notification, push_notification)\n"
+              + "select 200,\n"
               + "'john',\n"
               + "'doe',\n"
               + "'resident@cgi.com',\n"
@@ -118,12 +121,15 @@ public class IntegrationTestHelper {
               + "'required street',\n"
               + "'optional street',\n"
               + "'Sacramento',\n"
-              + "'California',\n"
+              + "'CA',\n"
               + "'95814',\n"
               + "'RESIDENT',\n"
               + "38.5824933,\n"
-              + "-121.4941738\n"
-              + ")");
+              + "-121.4941738,\n" +
+                  "0,\n" +
+                  "0,\n" +
+                  "0\n"
+              + "where not exists (select * from user where id = 200)");
 
       sqlConnection.commit();
     } catch (Exception ex) {
@@ -140,7 +146,7 @@ public class IntegrationTestHelper {
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, role, latitude, longitude)\n"
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude, email_notification, sms_notification, push_notification)\n"
               + "VALUES ( 1111,\n"
               + "'john',\n"
               + "'doe',\n"
@@ -150,11 +156,14 @@ public class IntegrationTestHelper {
               + "'required street',\n"
               + "'optional street',\n"
               + "'Sacramento',\n"
-              + "'California',\n"
+              + "'CA',\n"
               +  " '"+ zipcode+"',\n"
               + "'RESIDENT',\n"
               + "32.7920948,\n"
-              + "-117.2323367\n"
+              + "-117.2323367,\n" +
+                  "0,\n" +
+                  "0,\n" +
+                  "0\n"
               + ")");
 
       sqlConnection.commit();
@@ -164,23 +173,21 @@ public class IntegrationTestHelper {
     }
   }
 
-  public static void addUserNotificationType(long userId, long notificationId)
-      throws SQLException {
+  public static void addEmailNotificationForUser(String email)
+          throws SQLException {
     Connection sqlConnection = null;
     try {
       SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
-          "INSERT INTO user_notification (user_id, notification_id)\n"
-              + "VALUES ( "+userId+", " + notificationId+")");
+              "update user set email_notification = 1 where email = '" + email + "'");
       sqlConnection.commit();
     } catch (Exception ex) {
       sqlConnection.rollback();
       ex.printStackTrace();
     }
   }
-
 
   public static String getAuthToken(String email, String password,
       DropwizardAppRule<CgiPocConfiguration> RULE) {
@@ -209,7 +216,6 @@ public class IntegrationTestHelper {
       Statement st = sqlConnection.createStatement();
       st.executeUpdate("delete from event_notification_zipcode");
       st.executeUpdate("delete from event_notification");
-      st.executeUpdate("delete from user_notification");
       st.executeUpdate("delete from user");
 
       sqlConnection.commit();
@@ -220,4 +226,18 @@ public class IntegrationTestHelper {
 
   }
 
+  public static void removeAllNotificationsForUser(String email) throws SQLException {
+    Connection sqlConnection = null;
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      st.executeUpdate(
+              "update user set email_notification = 0, sms_notification = 0, push_notification = 0 where email = '" + email + "'");
+      sqlConnection.commit();
+    } catch (Exception ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }
 }

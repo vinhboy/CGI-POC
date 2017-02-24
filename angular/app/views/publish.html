@@ -1,5 +1,5 @@
 <div class="modal-content usa-content usa-form-large">
-  <div class="usa-grid registration-alert">
+  <div class="usa-grid">
     <div class="usa-alert usa-alert-error" role="alert" ng-if="apiErrors.length > 0">
       <div class="usa-alert-body">
         <h3 class="usa-alert-heading">Error</h3>
@@ -73,7 +73,7 @@
       </fieldset>
 
       <div class="usa-form-large">
-        <button type="submit" class="usa-width-one-half usa-button-gray"
+        <button type="button" class="usa-width-one-half usa-button-gray"
           translate="BUTTON.CANCEL" ui-sref="landing"></button>
         <button type="submit" class="usa-width-one-half usa-button-primary"
           translate="BUTTON.SEND" ng-disabled="!notificationForm.$dirty"></button>

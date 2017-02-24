@@ -2968,7 +2968,7 @@ form a {
 }
 
 form [type="submit"],
-form [type="submit"] {
+form [type="button"] {
   display: block;
   margin-bottom: 1.5em;
   margin-top: 2.5rem;
@@ -2976,7 +2976,7 @@ form [type="submit"] {
 
 @media screen and (min-width: 600px) {
   form [type="submit"],
-  form [type="submit"] {
+  form [type="button"] {
     padding-left: 2.7em;
     padding-right: 2.7em;
     width: auto;

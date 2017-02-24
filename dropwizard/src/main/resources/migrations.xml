@@ -261,7 +261,7 @@
             <column name="descrpt" type="varchar(160)" />
             <column name="last_modified" type="timestamp" defaultValueComputed="${now}"/>
             <column name="notification_id" type="integer" />
- 
+
         </createTable>
     </changeSet>
     <changeSet id="12" author="Dawna Floyd">
@@ -272,7 +272,7 @@
 
     </changeSet>
     <changeSet id="13" author="Dawna Floyd">
-    <comment> change from json to text data data. Json data type seems to be loosing precision in x/y coordinates</comment> 
+    <comment> change from json to text data data. Json data type seems to be loosing precision in x/y coordinates</comment>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_fire"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_weather"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_flood"/>
@@ -280,7 +280,7 @@
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_earthquake"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_tsunami"/>
     <modifyDataType columnName="geometry" newDataType="text" tableName="event_volcano"/>
-    
+
     </changeSet>
     <changeSet id="14" author="Dawna Floyd">
     <modifyDataType columnName="firecause" newDataType="VARCHAR(15)" tableName="event_fire"/>
@@ -294,7 +294,7 @@
        <modifyDataType columnName="comments" newDataType="VARCHAR(4000)" tableName="event_tsunami"/>
        <modifyDataType columnName="second" newDataType="NUMERIC(4,2)" tableName="event_tsunami"/>
     </changeSet>
-  
+
   <changeSet id="17" author="Valon Sejdini">
     <createTable tableName="event_notification">
       <column name="id"  type="bigint" autoIncrement="true">
@@ -359,28 +359,48 @@
           <column name="citizensAffected" type="integer" />
       </addColumn>
   </changeSet>
-  
-  <changeSet id="20" author="Felix R. Pelletier">
+    <changeSet id="20" author="Charles Jekal">
         <addColumn tableName="user">
-            <column name="city" type="VARCHAR(50)" >
-            <constraints nullable="false"/>
+            <column name="address1" type="VARCHAR(255)">
+                <constraints nullable="true" />
             </column>
         </addColumn>
         <addColumn tableName="user">
-            <column name="state" type="VARCHAR(15)" >
-            <constraints nullable="false"/>
+            <column name="address2" type="VARCHAR(255)">
+                <constraints nullable="true" />
             </column>
         </addColumn>
         <addColumn tableName="user">
-            <column name="address" type="VARCHAR(250)" >
-            <constraints nullable="false"/>
+            <column name="city" type="VARCHAR(255)">
+                <constraints nullable="true" />
             </column>
         </addColumn>
         <addColumn tableName="user">
-            <column name="address_additional_info" type="VARCHAR(250)" >
-            <constraints nullable="true"/>
+            <column name="state" type="VARCHAR(2)">
+                <constraints nullable="true" />
             </column>
         </addColumn>
+        <dropNotNullConstraint tableName="user" columnName="first_name" columnDataType="VARCHAR(65)" />
+        <dropNotNullConstraint tableName="user" columnName="last_name" columnDataType="VARCHAR(65)" />
+        <dropNotNullConstraint tableName="user" columnName="phone" columnDataType="VARCHAR(20)" />
+    </changeSet>
+    <changeSet id="21" author="Dawna Floyd">
+        <addColumn tableName="user">
+            <column name="email_notification" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="push_notification" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="user">
+            <column name="sms_notification" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <dropTable  tableName="user_notification"/>
     </changeSet>
 
   <changeSet id="21" author="Valon Sejdini">
@@ -388,7 +408,7 @@
     <update tableName="user">
       <column name="city" value="San Diego" />
       <column name="state" value="CA" />
-      <column name="address" value="4529 Mission Bay Dr" />
+      <column name="address1" value="4529 Mission Bay Dr" />
       <where>role = 'ADMIN'</where>
     </update>
   </changeSet>

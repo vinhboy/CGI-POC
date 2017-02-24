@@ -27,7 +27,7 @@ cgiWebApp.service('ProfileService',
 
   this.getProfile = function() {
     var authToken = $sessionStorage.get('jwt');
-    var endpoint = urls.BASE + '/getProfile';
+    var endpoint = urls.BASE + '/user';
     return $http.get(endpoint, {
       headers: { 'Authorization': 'Bearer ' + authToken }
     });

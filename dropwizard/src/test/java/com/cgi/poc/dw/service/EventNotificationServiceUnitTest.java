@@ -1,17 +1,5 @@
 package com.cgi.poc.dw.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.cgi.poc.dw.api.service.MapsApiService;
 import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.auth.model.Role;
@@ -19,22 +7,9 @@ import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.rest.model.EventNotificationDto;
 import com.google.common.collect.Sets;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.ws.rs.core.Response;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,6 +18,25 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventNotificationServiceUnitTest {
@@ -86,11 +80,8 @@ public class EventNotificationServiceUnitTest {
     user.setZipCode("98765");
     user.setLatitude(0.0);
     user.setLongitude(0.0);
-    UserNotificationType selNot = new UserNotificationType(
-        Long.valueOf(NotificationType.SMS.getValue()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    user.setNotificationType(notificationType);
+    user.setEmailNotification(false);
+    user.setSmsNotification(true);
 
     Set<EventNotificationZipcode> eventNotificationZipcodes = new LinkedHashSet<>();
     EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();
@@ -110,11 +101,10 @@ public class EventNotificationServiceUnitTest {
     eventNotificationDto.setType("ADMIN_E");
     eventNotificationDto.setDescription("some description");
     eventNotificationDto.setZipCodes(Sets.newHashSet("92105", "92106"));
-    
+
     doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
     when(textMessageService.send(anyString(), anyString())).thenReturn(true);
   }
-
 
   @Test
   public void publishNotification_publishesNotificationWithValidInput() {
@@ -125,9 +115,9 @@ public class EventNotificationServiceUnitTest {
     GeoCoordinates geoCoordinates = new GeoCoordinates();
     geoCoordinates.setLongitude(10.00);
     geoCoordinates.setLongitude(20.00);
-    
+
     Double radius = 50.00;
-    
+
     when(userDao.getGeoWithinRadius(anyList(), eq(radius))).thenReturn(affectedUsers);
     when(eventNotificationDAO.save(eq(eventNotification))).thenReturn(eventNotification);
     when(mapsApiService.getGeoCoordinatesByZipCode(anyString())).thenReturn(geoCoordinates);
@@ -165,7 +155,7 @@ public class EventNotificationServiceUnitTest {
       }
     }
   }
- 
+
   @Test
   public void publishNotification_InvalidDescription() {
 
@@ -205,7 +195,7 @@ public class EventNotificationServiceUnitTest {
     public void retrievehNotificationEntries() throws Exception {
         List<EventNotification> resultList = new ArrayList<>();
         resultList.add(eventNotification);
-        
+
         when(eventNotificationDAO.retrieveAll()).thenReturn(resultList);
 
         Response response = underTest.retrieveAllNotifications(user);

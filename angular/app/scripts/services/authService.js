@@ -9,11 +9,17 @@
  * authentication service.
  */
 cgiWebApp.service('Authenticator',
-  ['$http', 'urls',
-  function($http, urls) {
+  ['$http', 'urls', '$sessionStorage',
+  function($http, urls, $sessionStorage) {
 
   this.authenticate = function(credentials) {
     var endpoint = urls.BASE + '/login';
-    return $http.post(endpoint, credentials);
+    return $http.post(endpoint, credentials).then(function(response) {
+      $sessionStorage.put('jwt', response.data.authToken);
+      $sessionStorage.put('role', response.data.role);
+
+      $http.defaults.headers.common['Content-Type'] = 'application/json';
+      $http.defaults.headers.common.Authorization =  'Bearer ' + response.data.authToken;
+    });
   };
 }]);

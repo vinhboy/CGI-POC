@@ -6,9 +6,7 @@ import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.rest.model.EventNotificationDto;
 import com.google.inject.Inject;
 import java.util.ArrayList;
@@ -83,12 +81,11 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
     List<String> phoneNumbers = new ArrayList<>(); //subscribed users by sms
 
     for (User affectedUser : affectedUsers) {
-      for (UserNotificationType notificationType : affectedUser.getNotificationType()) {
-        if (notificationType.getNotificationId().longValue() == NotificationType.EMAIL.getValue().longValue()) {
-          emailAddresses.add(affectedUser.getEmail());
-        } else if (notificationType.getNotificationId().longValue() == NotificationType.SMS.getValue().longValue()) {
-          phoneNumbers.add(affectedUser.getPhone());
-        }
+      if (affectedUser.getEmailNotification()) {
+        emailAddresses.add(affectedUser.getEmail());
+      }
+      if (affectedUser.getSmsNotification()) {
+        phoneNumbers.add(affectedUser.getPhone());
       }
     }
 

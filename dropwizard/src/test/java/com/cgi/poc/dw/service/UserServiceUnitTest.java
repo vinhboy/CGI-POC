@@ -15,9 +15,7 @@ import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,7 +65,7 @@ public class UserServiceUnitTest {
 
   @Mock
   private MapApiConfiguration mapApiConfiguration;
-  
+
   @Mock
   private EmailService emailService;
 
@@ -88,15 +86,15 @@ public class UserServiceUnitTest {
     user.setPhone("1234567890");
     user.setZipCode("98765");
     user.setCity("Sacramento");
-    user.setState("California");
-    user.setRequiredStreet("required street");
-    user.setOptionalStreet("optional street");
+    user.setState("CA");
+    user.setAddress1("required street");
+    user.setAddress2("optional street");
+    user.setEmailNotification(false);
+    user.setSmsNotification(false);
+    user.setPushNotification(false);
     user.setLatitude(0.0);
     user.setLongitude(0.0);
-    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    user.setNotificationType(notificationType);
+    user.setSmsNotification(true);
 
     JsonNode jsonRespone = new ObjectMapper()
         .readTree(getClass().getResource("/google_maps_api/success_geocode_response.json"));
@@ -110,7 +108,7 @@ public class UserServiceUnitTest {
     Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
     when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
     when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
-    
+
     doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
     when(textMessageService.send(anyString(), anyString())).thenReturn(true);
   }
@@ -124,7 +122,6 @@ public class UserServiceUnitTest {
     Response actual = underTest.registerUser(user);
 
     assertEquals(200, actual.getStatus());
-    assertEquals(user, actual.getEntity());
   }
 
 
@@ -266,17 +263,17 @@ public class UserServiceUnitTest {
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
 
     when(userDao.findUserByEmail(user.getEmail())).thenReturn(user);
- 
+
       Response registerUser = underTest.registerUser(user);
-      
+
       assertEquals(400, registerUser.getStatus());
       ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
       String actualMessage = errorInfo.getErrors().get(0).getMessage();
       String actualCode = errorInfo.getErrors().get(0).getCode();
 
       assertEquals("ERR4", actualCode);
-      assertEquals("Duplicate entry for key '<email>'", actualMessage);
- 
+      assertEquals("A profile already exists for that email address. Please register using a different email.", actualMessage);
+
   }
 
   @Test
@@ -288,7 +285,7 @@ public class UserServiceUnitTest {
 
     doThrow(new HibernateException("Something went wrong.")).when(userDao).save(any(User.class));
     Response registerUser = underTest.registerUser(user);
-      
+
       assertEquals(500, registerUser.getStatus());
       ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
       String actualMessage = errorInfo.getErrors().get(0).getMessage();
@@ -298,7 +295,7 @@ public class UserServiceUnitTest {
       assertEquals(
           "An Unknown exception has occured. Type: <org.hibernate.HibernateException>. Message: <Something went wrong.>",
           actualMessage);
- 
+
   }
 
   @Test
@@ -306,7 +303,7 @@ public class UserServiceUnitTest {
 
     doThrow(new InternalServerErrorException("Something went wrong.")).when(passwordHash).createHash(user.getPassword());
        Response registerUser = underTest.registerUser(user);
-       
+
       assertEquals(500, registerUser.getStatus());
       ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
       String actualMessage = errorInfo.getErrors().get(0).getMessage();
@@ -317,7 +314,7 @@ public class UserServiceUnitTest {
           "An Unknown exception has occured. Type: <javax.ws.rs.InternalServerErrorException>. Message: <Something went wrong.>",
           actualMessage);
   }
-  
+
   @Test
   public void mapsAPICommunicationFails()
       throws InvalidKeySpecException, NoSuchAlgorithmException {
@@ -362,23 +359,21 @@ public class UserServiceUnitTest {
     assertEquals(new Double(38.5824933), actualUser.getLatitude());
     assertEquals(new Double(-121.4941738), actualUser.getLongitude());
   }
-  
+
   @Test
 	public void updateUser_UpdateUserWithValidInput() throws Exception {
-
-		String saltedHash = "9e5f3dd72fbd5f309131364baf42b446f570629f4a809390be533f:"
+    String saltedHash = "9e5f3dd72fbd5f309131364baf42b446f570629f4a809390be533f:"
 				+ "1db93c4885d4bf980e92286d74da720dc298fdc1a29c89cf9c67ce";
+
 		when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
 		when(userDao.findUserByEmail(user.getEmail())).thenReturn(user);
-		Response actual = underTest.updateUser(user);
+		Response actual = underTest.updateUser(user, user);
 
 		assertEquals(200, actual.getStatus());
-		assertEquals(user, actual.getEntity());
 	}
 
   @Test
   public void updateUser_UpdateUserFails() throws Exception {
-
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
@@ -386,7 +381,7 @@ public class UserServiceUnitTest {
     doThrow(new HibernateException("Something went wrong.")).when(userDao).save(any(User.class));
 
     when(userDao.findUserByEmail(user.getEmail())).thenReturn(user);
-    Response registerUser = underTest.updateUser(user);
+    Response registerUser = underTest.updateUser(user, user);
 
     assertEquals(500, registerUser.getStatus());
     ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();

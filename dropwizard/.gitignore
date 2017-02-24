@@ -109,6 +109,8 @@ local.properties
 
 # IntelliJ
 /out/
+.idea/*
+cgi-poc-dw.iml
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
