@@ -89,6 +89,9 @@ public class UserServiceUnitTest {
     user.setState("CA");
     user.setAddress1("required street");
     user.setAddress2("optional street");
+    user.setEmailNotification(false);
+    user.setSmsNotification(false);
+    user.setPushNotification(false);
     user.setLatitude(0.0);
     user.setLongitude(0.0);
     user.setSmsNotification(true);
@@ -119,7 +122,6 @@ public class UserServiceUnitTest {
     Response actual = underTest.registerUser(user);
 
     assertEquals(200, actual.getStatus());
-    assertEquals(user, actual.getEntity());
   }
 
 
@@ -368,7 +370,6 @@ public class UserServiceUnitTest {
 		Response actual = underTest.updateUser(user, user);
 
 		assertEquals(200, actual.getStatus());
-		assertEquals(user, actual.getEntity());
 	}
 
   @Test

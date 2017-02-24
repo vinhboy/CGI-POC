@@ -63,6 +63,8 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   	tstUser.setLatitude(38.5824933);
   	tstUser.setLongitude(-121.4941738);
     tstUser.setEmailNotification(true);
+    tstUser.setSmsNotification(false);
+    tstUser.setPushNotification(false);
   }
 
   @After
