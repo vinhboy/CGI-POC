@@ -1,0 +1,12 @@
+<div   ng-show="showMapOrDetails === 'MAP' "  class="event-details-container">
+    <div class="mapArea" id="map" >
+        <div id="map-canvas"></div>
+    </div>
+        <div ng-show="isModelDevice"  class=" usa-grid">
+        <div class="usa-width-one-whole"  >
+            <div class="button_wrapper">
+                <button translate="LANDING.MOBILE.RETURN_TO" ng-click="backToDefault(currentSelectedEvent)" class="usa-button-big" type="button"></button>
+            </div>
+        </div>
+    </div>
+</div>

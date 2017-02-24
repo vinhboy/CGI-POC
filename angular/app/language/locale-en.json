@@ -69,5 +69,13 @@
   "NOTIFICATION.MESSAGE.INVALID.ZIPCODESINVALID" : "You must enter a properly formatted zip code",
   "NOTIFICATION.MESSAGE.INVALID.MESSAGEREQUIRED" : "You must enter notification text",
   "NOTIFICATION.MESSAGE.INVALID.MESSAGETOOLONG" : "You must enter 135 characters or less",
-  "HEADER.USER.PUBLISHADHOCNOTIFICATION" : "Publish New Notification"
+  "HEADER.USER.PUBLISHADHOCNOTIFICATION" : "Publish New Notification",
+  "LANDING.USER.TITLE" : "Event Notifications",
+  "LANDING.ADMIN.TITLE" : "National Event Notifications",
+  "LANDING.MOBILE.RETURN_TO" : "RETURN TO LIST",
+  "LANDING.NONMOBILE.RETURN_TO" : "RETURN TO MAP",
+  "LANDING.FILTER.TITLE" : "Find events by",
+  "LANDING.DETAILS.SENT_BY" : "Sent by",
+  "LANDING.DETAILS.AFFECTED_ZIPS" : "Affected Zip Codes",
+  "LANDING.DETAILS.MESSAGE" : "Message"
 }
