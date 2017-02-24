@@ -23,8 +23,12 @@
            <ng-include src="'views/partials/mapDetails.html'"  ></ng-include>
            <ng-include src="'views/partials/eventDetails.html'"  ></ng-include>
 
-        </div>
     </div>
+    <div ng-show="model.filteredNotifications.length === 0" class="usa-grid-full ">
+            <label for="options" translate="LANDING.NO_EVENT"></label>
+    </div>
+
+</div>
 
 </div>
 
