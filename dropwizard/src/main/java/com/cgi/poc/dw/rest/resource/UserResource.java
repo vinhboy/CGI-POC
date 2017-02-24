@@ -8,10 +8,8 @@ import com.google.inject.Inject;
 
 import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -36,13 +34,12 @@ public class UserResource {
 	@ApiOperation(value = "Retrieve user profile registration", notes = "Allows a user to retrieve registration information.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 500, message = "System Error") })
+	@ApiImplicitParams({
+					@ApiImplicitParam(name = "Authorization", required = true, dataType = "string", paramType = "header")
+	})
 	@Timed(name = "User.get")
 	public Response retrieve(@Auth User user) {
-		Response response = userService.retrieveUser(user);
-		if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
-			throw new WebApplicationException(response);
-		}
-		return response;
+		return Response.ok().entity(user).build();
 	}
 
 	@POST
@@ -64,6 +61,9 @@ public class UserResource {
 	@ApiOperation(value = "User profile update", notes = "Allows a user to update.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 500, message = "System Error") })
+	@ApiImplicitParams({
+					@ApiImplicitParam(name = "Authorization", required = true, dataType = "string", paramType = "header")
+	})
 	@Timed(name = "User.save")
 	public Response updateProfile(@Auth User user, @NotNull User modifiedUser) {
 		Response response = userService.updateUser(user, modifiedUser);

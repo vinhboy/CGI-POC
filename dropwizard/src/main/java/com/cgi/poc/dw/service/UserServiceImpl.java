@@ -59,25 +59,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		this.textMessageService = textMessageService;
 	}
 
-	@Override
-	public Response retrieveUser(User user) {
-		Response response = null;
-		try {
-			PasswordlessUser passwordlessUser = new PasswordlessUser();
-			passwordlessUser.copyFrom(user);
-			response = Response.ok().entity(passwordlessUser).build();
-		} catch (IllegalAccessException e) {
-			LOG.error("Unable to map User to PasswordlessUser", e);
-			ErrorInfo errRet = getInternalErrorInfo(e, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-		} catch (InvocationTargetException e) {
-			LOG.error("Invocation target exception.", e);
-			ErrorInfo errRet = getInternalErrorInfo(e, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-		}
-		return response;
-	}
-
 	public Response registerUser(User user) {
 		// Defaulting the user to RESIDENT
 		user.setRole("RESIDENT");
@@ -151,7 +132,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			keepPassword = true;
 		}
 		else {
-			validate(user, "update",LoginValidationGroup.class);
+			validate(modifiedUser, "update",LoginValidationGroup.class);
 		}
 		modifiedUser.setId(user.getId());
 		modifiedUser.setRole(user.getRole());

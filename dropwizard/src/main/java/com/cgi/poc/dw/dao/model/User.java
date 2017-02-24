@@ -26,6 +26,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import com.cgi.poc.dw.util.LoginValidationGroup;
 import com.cgi.poc.dw.util.PasswordType;
@@ -108,6 +111,7 @@ public class User implements Serializable, Principal {
   @Column(name = "password")
   @PasswordType(message = "must be greater that 2 character, contain no whitespace, and have at least one number and one letter.", groups = {
       RestValidationGroup.class, LoginValidationGroup.class})
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
   //if the field contains phone or fax number consider using this annotation to enforce field validation
