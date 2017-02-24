@@ -2,9 +2,11 @@ package com.cgi.poc.dw;
 
 import com.cgi.poc.dw.api.service.APICallerService;
 import com.cgi.poc.dw.api.service.APIServiceFactory;
+import com.cgi.poc.dw.api.service.MapsApiService;
 import com.cgi.poc.dw.api.service.impl.APIServiceFactoryImpl;
 import com.cgi.poc.dw.api.service.impl.EventWeatherAPICallerServiceImpl;
 import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
+import com.cgi.poc.dw.api.service.impl.MapsApiServiceImpl;
 import com.cgi.poc.dw.auth.DBAuthenticator;
 import com.cgi.poc.dw.auth.JwtAuthFilter;
 import com.cgi.poc.dw.auth.UserRoleAuthorizer;
@@ -43,8 +45,13 @@ import com.cgi.poc.dw.service.LoginService;
 import com.cgi.poc.dw.service.LoginServiceImpl;
 import com.cgi.poc.dw.service.UserService;
 import com.cgi.poc.dw.service.UserServiceImpl;
+import com.cgi.poc.dw.util.BadRequestExceptionMapper;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
+import com.cgi.poc.dw.util.InternalServerExceptionMapper;
+import com.cgi.poc.dw.util.JsonMappingExceptionMapper;
+import com.cgi.poc.dw.util.NotFoundExceptionMapper;
+import com.cgi.poc.dw.util.RuntimeExceptionMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
@@ -185,6 +192,12 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     registerResource(environment, injector, LoginResource.class);
     registerResource(environment, injector, CustomConstraintViolationExceptionMapper.class);
     registerResource(environment, injector, CustomSQLConstraintViolationException.class);
+    registerResource(environment, injector, BadRequestExceptionMapper.class);
+    registerResource(environment, injector, NotFoundExceptionMapper.class);
+    registerResource(environment, injector, InternalServerExceptionMapper.class);
+    registerResource(environment, injector, JsonMappingExceptionMapper.class);
+    registerResource(environment, injector, RuntimeExceptionMapper.class);
+
 
     environment.jersey().property(ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
 
@@ -282,8 +295,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(LoginService.class).to(LoginServiceImpl.class).asEagerSingleton();
         bind(EmailService.class).to(EmailServiceImpl.class).asEagerSingleton();
         bind(TextMessageService.class).to(TextMessageServiceImpl.class).asEagerSingleton();
-        bind(UserService.class).to(UserServiceImpl.class)
-            .asEagerSingleton();
+        bind(UserService.class).to(UserServiceImpl.class).asEagerSingleton();
         bind(EventNotificationService.class).to(EventNotificationServiceImpl.class).asEagerSingleton();
         bind(MapApiConfiguration.class).toInstance(conf.getMapApiConfiguration());
         bind(MailConfiguration.class).toInstance(conf.getMailConfig());
@@ -292,6 +304,8 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(EventWeatherAPICallerServiceImpl.class);        
         bind(APICallerService.class).annotatedWith(Names.named("fireService")).to(FireEventAPICallerServiceImpl.class);
         bind(APICallerService.class).annotatedWith(Names.named("weatherService")).to(FireEventAPICallerServiceImpl.class);
+        bind(MapsApiService.class).to(MapsApiServiceImpl.class).asEagerSingleton();
+
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)
             .using(conf.getJerseyClientConfiguration())
