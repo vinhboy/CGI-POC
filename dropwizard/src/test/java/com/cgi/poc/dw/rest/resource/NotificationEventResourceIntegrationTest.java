@@ -3,6 +3,7 @@ package com.cgi.poc.dw.rest.resource;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.dao.model.UserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
 import java.io.IOException;

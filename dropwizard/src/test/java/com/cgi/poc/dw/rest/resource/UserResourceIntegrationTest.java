@@ -2,6 +2,7 @@ package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.dao.model.UserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
 import com.cgi.poc.dw.util.Error;
@@ -37,7 +38,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
   private static final String url = "http://localhost:%d/user";
 
-  private User tstUser;
+  private UserDto tstUser;
 
   private GreenMail smtpServer;
 
@@ -48,7 +49,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
   @Before
   public void initUser() {
-  	tstUser = new User();
+  	tstUser = new UserDto();
   	tstUser.setEmail("resident@cgi.com");
   	tstUser.setPassword("!QAZ1qaz");
   	tstUser.setFirstName("john");

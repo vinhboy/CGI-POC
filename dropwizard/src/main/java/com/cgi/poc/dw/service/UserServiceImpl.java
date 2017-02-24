@@ -3,7 +3,6 @@ package com.cgi.poc.dw.service;
 import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.model.PasswordlessUser;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.util.*;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -11,22 +10,20 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.lang3.StringUtils;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
