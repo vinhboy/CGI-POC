@@ -55,7 +55,18 @@
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
-      background: rgba(237, 244, 247, 0.85); } }
+      background: rgba(237, 244, 247, 0.85); }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 481px) and (max-device-width: 768px) {
   .headerZone {
@@ -81,7 +92,18 @@
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
-      background: rgba(237, 244, 247, 0.85); } }
+      background: rgba(237, 244, 247, 0.85); }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 769px) and (max-device-width: 1024px) {
   .headerZone {
@@ -107,7 +129,18 @@
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
-      background: rgba(237, 244, 247, 0.85); } }
+      background: rgba(237, 244, 247, 0.85); }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
 /* Desktops and laptops ----------- */
 @media only screen and (min-width: 1025px) {
   .headerZone {
@@ -133,16 +166,18 @@
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
-      background: rgba(237, 244, 247, 0.85); } }
-.site-description {
-  width: 80%;
-  height: auto;
-  margin: 60px auto;
-  padding: 2px 10px;
-  background: rgba(237, 244, 247, 0.85);
-  color: #000000;
-  font-size: 0.8em; }
-
+      background: rgba(237, 244, 247, 0.85); }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
 .usa-nav-secondary-links a {
   color: white !important; }
 
