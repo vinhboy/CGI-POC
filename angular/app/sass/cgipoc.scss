@@ -1,282 +1,364 @@
-body{
+body {
 }
 
 .blank {
 }
 
-.usa-grid{
-	background: #edf4f7;
-}
-.centeredForm{
-    margin-top:10%;
-}
-.usa-form-large{
-    margin-left:auto;
-    margin-right:auto;
-    background: #edf4f7;
+.usa-grid {
+  background: #edf4f7;
 }
 
-.profile-form-input{
-    height:3rem;
-    padding-top:0px;
-    padding-bottom:0px;
+.centeredForm {
+  margin-top: 10%;
 }
-.profile-label{
-    margin-top:1.4rem;
+
+.usa-form-large {
+  margin-left: auto;
+  margin-right: auto;
+  background: #edf4f7;
 }
+
+.profile-form-input {
+  height: 3rem;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.profile-label {
+  margin-top: 1.4rem;
+}
+
 .profile-form-input-notification-by-location {
-	margin-top:1.4rem;
-}
-.loginFormDiv{
-    width:90%;
-    margin-left:auto;
-    margin-right:auto;
-}
-.passwordDiv{
-    margin-bottom:30px;
+  margin-top: 1.4rem;
 }
 
-.registrationFormDiv{
-    width:90%;
-    margin-left:auto;
-    margin-right:auto;
+.loginFormDiv {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.headerZone {   
-    background: #003466;
-    width:100%;
-    position:fixed; 
-    top:0;
-    left:0; 
-    z-index:1;
-
+.passwordDiv {
+  margin-bottom: 30px;
 }
+
+.registrationFormDiv {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.headerZone {
+  background: #003466;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
 .usa-nav-secondary-links a {
-      color:white!important;
+  color: white !important;
 }
-.contentZone{
-    margin-top:5em;
-    padding-bottom: 2em;
-    z-index:-1;
-}
-.usa-grid{
-          background: white;
-}
-.scrollable-section{
-         overflow-y : scroll;
-             height: inherit;
-             border: solid;
-             table {
-                 margin-top: 1em;
-             }
 
+.contentZone {
+  margin-top: 5em;
+  padding-bottom: 2em;
+  z-index: -1;
 }
-.data-ui-view{
-    padding:5em;
-    padding-bottom: 5em;
+
+.usa-grid {
+  background: white;
 }
+
+.scrollable-section {
+  overflow-y: scroll;
+  height: inherit;
+  border: solid;
+
+  table {
+    margin-top: 1em;
+  }
+}
+
+.data-ui-view {
+  padding: 5em;
+  padding-bottom: 5em;
+}
+
 .mapArea {
- height: 100%;
- position: relative;
- width:100%;
+  height: 100%;
+  position: relative;
+  width: 100%;
 }
-.event-list-container{
-    height: inherit;
-    height: 500px;
+
+.event-list-container {
+  height: inherit;
+  height: 500px;
+}
+
+.event-details-container {
+  border: solid;
+  height: 500px;
+
+  .usa-heading-alt {
+    border-bottom: solid;
+    margin-right: 2em;
+    margin-left: 2em;
+  }
+  .button_wrapper {
+    padding-left: 6em;
+  }
+  td {
+    border: 0;
+  }
 
 }
-.event-details-container{
-        border:solid;
-    height: 500px;
-    .usa-heading-alt{
-         border-bottom: solid;
-          margin-right: 2em;
-         margin-left: 2em;
-    }
-    .button_wrapper{
-        padding-left: 6em;
-    }
-    td{
-        border:0;
-    }
+
+.event-details {
+  height: 350px;
+  .event-icons {
+    text-align: left;
+    vertical-align: top;
+    width: 10px;
+  }
+
+  .button_wrapper {
+    vertical-align: bottom;
+  }
+}
+
+.event {
+  border-style: solid;
+  margin: 5px;
+
+  table {
+    margin: 0;
+  }
+
+  .event-logo {
+    width: 4em;
+  }
+
+  .event-icons {
+    padding-left: .25em;
+    padding-right: .25em;
+  }
+
+  td {
+
+    padding: 0;
+  }
+
+  h5 {
+    margin-top: 2px;
+  }
 
 }
-.event-details{
-    height:350px;
-    .event-icons {
-         text-align: left;
-         vertical-align: top;
-         width:10px;
-    }
-    .button_wrapper{
-        vertical-align: bottom;
-    }
-    
-}
-.event{
-    border-style: solid;
-    margin:5px;
-    table {
-        margin: 0;
-    }
-    .event-logo{
-        width:4em;
-    }
-    .event-icons{
-        padding-left:.25em;
-        padding-right:.25em;
-    }
-    td {
-    
-        padding : 0;
-    }
-    h5 {
-        margin-top: 2px;
-    }
 
-}
-.active{
+.active {
   border-color: blue;
 }
-.footerZone{
-    width:100%;
-    bottom:0;
+
+.footerZone {
+  width: 100%;
+  bottom: 0;
 }
-button.usa-button-login{
-    margin-left:50%;
-    transform:translateX(-50%);
-	width: 220px;
+
+button.usa-button-login {
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
 }
-label.notifications{
-    margin-top:0px;
+
+label.notifications {
+  margin-top: 0px;
 }
-.login-text{
-    display:inline-block;
-    align:center;
+
+.login-text {
+  display: inline-block;
+  align: center;
 }
-.login-error{
-    float:left;
+
+.login-error {
+  float: left;
 }
-.login-alert{
-	padding:0px;
+
+.login-alert {
+  padding: 0px;
 }
-.usa-form-note{
-    clear:both;
+
+.usa-form-note {
+  clear: both;
 }
-input.phone{
-    float:left;
-    clear:none;
-    margin-right: 1rem;
-    width: 5rem;
+
+input.phone {
+  float: left;
+  clear: none;
+  margin-right: 1rem;
+  width: 5rem;
 }
-input.phoneLong{
-    display:inline-block;
-    width: 6rem;
+
+input.phoneLong {
+  display: inline-block;
+  width: 6rem;
 }
-.zipCodeText{
-    float:right;
-    width:80%;
+
+.zipCodeText {
+  float: right;
+  width: 80%;
 }
-.notificationMessageInfo{
-	float:right;
+
+.notificationMessageInfo {
+  float: right;
 }
-.emailAddressText{
+
+.emailAddressText {
 }
-input.zipCode{
-    display:inline-block;
-    width: 7rem;
+
+input.zipCode {
+  display: inline-block;
+  width: 7rem;
 }
+
 /* The Modal (background) */
 .modal.fade {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
-    -webkit-animation-name: fadeIn; /* Fade in the background */
-    -webkit-animation-duration: 0.5s;
-    animation-name: fadeIn;
-    animation-duration: 0.5s
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.6); /* Black w/ opacity */
+  -webkit-animation-name: fadeIn; /* Fade in the background */
+  -webkit-animation-duration: 0.5s;
+  animation-name: fadeIn;
+  animation-duration: 0.5s
 }
 
 /* Modal Content */
 .modal-content {
-    margin-top:20px;
-    overflow: auto;
-    -webkit-animation-name: slideIn;
-    -webkit-animation-duration: 0.5s;
-    animation-name: slideIn;
-    animation-duration: 0.5s
+  margin-top: 20px;
+  overflow: auto;
+  -webkit-animation-name: slideIn;
+  -webkit-animation-duration: 0.5s;
+  animation-name: slideIn;
+  animation-duration: 0.5s
 }
 
 /* The Close Button */
 .close {
-    color: white;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    -webkit-animation-name: slideOut;
-    -webkit-animation-duration: 0.5s;
-    animation-name: slideOut;
-    animation-duration: 0.5s
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  -webkit-animation-name: slideOut;
+  -webkit-animation-duration: 0.5s;
+  animation-name: slideOut;
+  animation-duration: 0.5s
 }
 
 .close:hover,
 .close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-    -webkit-animation-name: slideOut;
-    -webkit-animation-duration: 0.5s;
-    animation-name: slideOut;
-    animation-duration: 0.5s
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-animation-name: slideOut;
+  -webkit-animation-duration: 0.5s;
+  animation-name: slideOut;
+  animation-duration: 0.5s
 }
 
 /* Add Animation Slide In*/
 @-webkit-keyframes slideIn {
-    from {top: -300px; opacity: 0}
-    to {top: 42px; opacity: 1}
+  from {
+    top: -300px;
+    opacity: 0
+  }
+
+  to {
+    top: 42px;
+    opacity: 1
+  }
 }
 
 @keyframes slideIn {
-    from {top: -300px; opacity: 0}
-    to {top: 42px; opacity: 1}
+  from {
+    top: -300px;
+    opacity: 0
+  }
+
+  to {
+    top: 42px;
+    opacity: 1
+  }
 }
 
 @-webkit-keyframes fadeIn {
-    from {opacity: 0}
-    to {opacity: 1}
+  from {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
 }
 
 @keyframes fadeIn {
-    from {opacity: 0}
-    to {opacity: 1}
+  from {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
 }
 
 // work in progress
 /* Add Animation - Slide out*/
 @-webkit-keyframes slideOut {
-    from {top: 10%; opacity: 1}
-    to {top: -300px; opacity: 0}
+  from {
+    top: 10%;
+    opacity: 1
+  }
+
+  to {
+    top: -300px;
+    opacity: 0
+  }
 }
 
-
 @keyframes slideOut {
-    from {top: 10%; opacity: 1}
-    to {top: -300px; opacity: 0}
+  from {
+    top: 10%;
+    opacity: 1
+  }
+
+  to {
+    top: -300px;
+    opacity: 0
+  }
 }
 
 @-webkit-keyframes fadeOut {
-    from {opacity: 1}
-    to {opacity: 0}
+  from {
+    opacity: 1
+  }
+
+  to {
+    opacity: 0
+  }
 }
 
 @keyframes fadeOut {
-    from {opacity: 1}
-    to {opacity: 0}
+  from {
+    opacity: 1
+  }
+
+  to {
+    opacity: 0
+  }
 }
