@@ -11,7 +11,7 @@ public interface PasswordHash {
    * @param password the password to hash
    * @return a salted PBKDF2 hash of the password
    */
-  String createHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException;
+  String createHash(String password);
 
   /**
    * Returns a salted PBKDF2 hash of the password.

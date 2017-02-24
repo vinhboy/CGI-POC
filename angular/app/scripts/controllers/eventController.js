@@ -41,9 +41,9 @@ cgiWebApp.controller('eventController',
     $scope.generateZipCodes();
 
     var toPost = {
-      notificationType: $scope.notification.notificationType,
-      zipcodes: $scope.notification.zipCodesSplit,
-      message: $scope.notification.message
+      type: $scope.notification.notificationType,
+      zipCodes: $scope.notification.zipCodesSplit,
+      description: $scope.notification.message
     };
 
     //putting this on scope so I can test
