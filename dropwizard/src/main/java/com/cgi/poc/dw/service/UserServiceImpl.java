@@ -142,7 +142,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			}
 			setUserGeoCoordinates(user);
 			saveUser(user, registered);
-			response = Response.ok().build();
+			response = Response.ok().entity(user).build();
 		} catch (Exception exception) {
 			LOG.error("Unable to save a user.", exception);
 			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
