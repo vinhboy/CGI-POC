@@ -8,8 +8,11 @@ import com.google.inject.Inject;
 
 import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
-import io.swagger.annotations.*;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -65,8 +68,15 @@ public class UserResource {
 					@ApiImplicitParam(name = "Authorization", required = true, dataType = "string", paramType = "header")
 	})
 	@Timed(name = "User.save")
-	public Response updateProfile(@Auth User user, @NotNull User modifiedUser) {
-		Response response = userService.updateUser(user, modifiedUser);
+	public Response updateProfile(@ApiParam(hidden = true) @Auth User user, @NotNull User modifiedUser) {
+		//If user password is empty keep same password.
+		if(StringUtils.isBlank(modifiedUser.getPassword())){
+			modifiedUser.setPassword(user.getPassword());
+		}
+		modifiedUser.setId(user.getId());
+		modifiedUser.setRole(user.getRole());
+		
+		Response response = userService.updateUser(modifiedUser);
 		if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
 			throw new WebApplicationException(response);
 		}

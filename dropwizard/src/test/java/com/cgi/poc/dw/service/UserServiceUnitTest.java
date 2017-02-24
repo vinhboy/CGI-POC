@@ -17,6 +17,7 @@ import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.util.ErrorInfo;
+import com.cgi.poc.dw.util.ValidationErrors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -145,9 +146,8 @@ public class UserServiceUnitTest {
               .isEqualTo("must be at least 2 characters in length.");
         } else if (tmp.equals("password") && annotation
             .equals("com.cgi.poc.dw.util.PasswordType")) {
-          assertThat(violation.getMessageTemplate())
-              .isEqualTo(
-                  "must be greater that 2 character, contain no whitespace, and have at least one number and one letter.");
+          assertThat(violation.getMessage())
+              .isEqualTo(ValidationErrors.INVALID_PASSWORD);
         } else {
           fail("not an expected constraint violation");
         }
@@ -173,7 +173,7 @@ public class UserServiceUnitTest {
 
         if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
           assertThat(violation.getMessageTemplate())
-              .isEqualTo("Invalid email address.");
+              .isEqualTo(ValidationErrors.INVALID_EMAIL);
         } else {
           fail("not an expected constraint violation");
         }
@@ -181,7 +181,7 @@ public class UserServiceUnitTest {
     }
   }
   @Test
-  public void registerUser_EmailValidationFailsWhiteSpave() throws Exception {
+  public void registerUser_EmailValidationFailsWhiteSpace() throws Exception {
 
     user.setPassword("aaa"); //one character password
     user.setEmail("aaa @i23.com"); //one character password
@@ -198,7 +198,7 @@ public class UserServiceUnitTest {
 
         if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
           assertThat(violation.getMessageTemplate())
-              .isEqualTo("Invalid email address.");
+              .isEqualTo(ValidationErrors.INVALID_EMAIL);
         } else {
           fail("not an expected constraint violation");
         }
@@ -223,7 +223,7 @@ public class UserServiceUnitTest {
 
         if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
           assertThat(violation.getMessageTemplate())
-              .isEqualTo("Invalid email address.");
+              .isEqualTo(ValidationErrors.INVALID_EMAIL);
         } else {
           fail("not an expected constraint violation");
         }
@@ -248,7 +248,7 @@ public class UserServiceUnitTest {
 
         if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
           assertThat(violation.getMessageTemplate())
-              .isEqualTo("Invalid email address.");
+              .isEqualTo(ValidationErrors.INVALID_EMAIL);
         } else {
           fail("not an expected constraint violation");
         }

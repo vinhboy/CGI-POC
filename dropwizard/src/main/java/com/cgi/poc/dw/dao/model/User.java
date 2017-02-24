@@ -5,6 +5,7 @@
  */
 package com.cgi.poc.dw.dao.model;
 
+import com.cgi.poc.dw.util.ValidationErrors;
 import java.io.Serializable;
 import java.security.Principal;
 import javax.persistence.Basic;
