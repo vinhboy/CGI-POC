@@ -144,7 +144,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			}
 			setUserGeoCoordinates(user);
 			saveUser(user, registered);
-			response = Response.ok().entity(user).build();
+			response = Response.ok().build();
 		} catch (NoSuchAlgorithmException noAlgorithmException) {
 			LOG.error("Unable to create a password hash.", noAlgorithmException);
 			ErrorInfo errRet = getInternalErrorInfo(noAlgorithmException, GeneralErrors.UNKNOWN_EXCEPTION);
