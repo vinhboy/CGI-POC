@@ -1,14 +1,6 @@
 .usa-grid {
   background: #edf4f7; }
 
-.centeredForm {
-  margin-top: 10%; }
-
-.usa-form-large {
-  margin-left: auto;
-  margin-right: auto;
-  background: #edf4f7; }
-
 .profile-form-input {
   height: 3rem;
   padding-top: 0px;
@@ -33,14 +25,119 @@
   margin-left: auto;
   margin-right: auto; }
 
-.headerZone {
-  background: #003466;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1; }
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 300px) and (max-device-width: 480px) {
+  .headerZone {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; }
+    .headerZone .usa-header {
+      background: #003466;
+      width: 100%;
+      height: 48px;
+      padding: 12px 0 12px 12px;
+      box-shadow: 0 2px 4px #888888; }
+      .headerZone .usa-header .usa-header-logo-img {
+        background-size: 80px;
+        width: 80px;
+        height: auto; }
 
+  .usa-content.loginBG {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    background: url("../images/bgs/login-320.jpg") center center no-repeat; }
+  .usa-content .centeredForm {
+    margin: 0% auto;
+    width: 90%;
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin-left: auto;
+      margin-right: auto;
+      background: rgba(237, 244, 247, 0.85); } }
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 481px) and (max-device-width: 768px) {
+  .headerZone {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; }
+    .headerZone .usa-header {
+      background: #003466;
+      width: 100%;
+      height: 74px;
+      padding: 12px 0 12px 12px;
+      box-shadow: 0 2px 4px #888888; }
+      .headerZone .usa-header .usa-header-logo-img {
+        background-size: 1600px;
+        width: 160px;
+        height: auto; }
+
+  .usa-content .centeredForm {
+    margin: 14% auto;
+    width: 400px;
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin-left: auto;
+      margin-right: auto;
+      background: rgba(237, 244, 247, 0.85); } }
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 769px) and (max-device-width: 1024px) {
+  .headerZone {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; }
+    .headerZone .usa-header {
+      background: #003466;
+      width: 100%;
+      height: 92px;
+      padding: 12px 0 12px 12px;
+      box-shadow: 0 2px 4px #888888; }
+      .headerZone .usa-header .usa-header-logo-img {
+        background-size: 220px;
+        width: 220px;
+        height: auto; }
+
+  .usa-content .centeredForm {
+    margin: 12% auto;
+    width: 400px;
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin-left: auto;
+      margin-right: auto;
+      background: rgba(237, 244, 247, 0.85); } }
+/* Desktops and laptops ----------- */
+@media only screen and (min-width: 1025px) {
+  .headerZone {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; }
+    .headerZone .usa-header {
+      background: #003466;
+      width: 100%;
+      height: 108px;
+      padding: 12px 0 12px 12px;
+      box-shadow: 0 2px 4px #888888; }
+      .headerZone .usa-header .usa-header-logo-img {
+        background-size: 260px;
+        width: 260px;
+        height: auto; }
+
+  .usa-content .centeredForm {
+    margin: 12% auto;
+    width: 400px;
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin-left: auto;
+      margin-right: auto;
+      background: rgba(237, 244, 247, 0.85); } }
 .usa-nav-secondary-links a {
   color: white !important; }
 
