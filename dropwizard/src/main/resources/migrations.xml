@@ -403,4 +403,14 @@
         <dropTable  tableName="user_notification"/>
     </changeSet>
 
+  <changeSet id="21" author="Valon Sejdini">
+    <comment>Update the required address fields of the ADMIN user</comment>
+    <update tableName="user">
+      <column name="city" value="San Diego" />
+      <column name="state" value="CA" />
+      <column name="address1" value="4529 Mission Bay Dr" />
+      <where>role = 'ADMIN'</where>
+    </update>
+  </changeSet>
+
 </databaseChangeLog>

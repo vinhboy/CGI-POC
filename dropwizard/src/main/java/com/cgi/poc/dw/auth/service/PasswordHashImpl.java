@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.ws.rs.InternalServerErrorException;
 
 /*
  * PBKDF2 salted password hashing.
@@ -92,9 +93,15 @@ public class PasswordHashImpl implements PasswordHash {
    * @param password the password to hash
    * @return a salted PBKDF2 hash of the password
    */
-  public String createHash(String password)
-      throws NoSuchAlgorithmException, InvalidKeySpecException {
-    return createHash(password.toCharArray());
+  public String createHash(String password) {
+    String msg = "Unable create a password hash.";
+    try {
+      return createHash(password.toCharArray());
+    } catch (NoSuchAlgorithmException e) {
+      throw new InternalServerErrorException(msg, e);
+    } catch (InvalidKeySpecException e) {
+      throw new InternalServerErrorException(msg, e);
+    }
   }
 
   /**

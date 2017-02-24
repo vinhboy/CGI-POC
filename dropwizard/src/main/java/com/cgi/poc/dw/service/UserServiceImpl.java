@@ -87,9 +87,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	}
 
 	private void createPasswordHash(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		String hash = null;
-		hash = passwordHash.createHash(user.getPassword());
-		user.setPassword(hash);
 	}
 
 	// invoke Google Maps API to retrieve latitude and longitude by zipCode
@@ -129,7 +126,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			keepPassword = true;
 		}
 		else {
-			validate(modifiedUser, "update",LoginValidationGroup.class);
+			validate(modifiedUser, "update", LoginValidationGroup.class);
 		}
 		modifiedUser.setId(user.getId());
 		modifiedUser.setRole(user.getRole());
@@ -140,19 +137,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		Response response = null;
 		try {
 			if (!keepPassword) {
-				createPasswordHash(user);
+				String hash = passwordHash.createHash(user.getPassword());
+				user.setPassword(hash);
 			}
 			setUserGeoCoordinates(user);
 			saveUser(user, registered);
 			response = Response.ok().build();
-		} catch (NoSuchAlgorithmException noAlgorithmException) {
-			LOG.error("Unable to create a password hash.", noAlgorithmException);
-			ErrorInfo errRet = getInternalErrorInfo(noAlgorithmException, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-		} catch (InvalidKeySpecException invalidKeyException) {
-			LOG.error("Unable to create a password hash.", invalidKeyException);
-			ErrorInfo errRet = getInternalErrorInfo(invalidKeyException, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
 		} catch (Exception exception) {
 			LOG.error("Unable to save a user.", exception);
 			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);

@@ -76,7 +76,7 @@ public class IntegrationTestHelper {
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude)\n"
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude, email_notification, sms_notification, push_notification)\n"
               + "select 100,\n"
               + "'john',\n"
               + "'smith',\n"
@@ -90,7 +90,10 @@ public class IntegrationTestHelper {
               + "'95814',\n"
               + "'ADMIN',\n"
               + "38.5824933,\n"
-              + "-121.4941738\n"
+              + "-121.4941738,\n" +
+                  "0,\n" +
+                  "0,\n" +
+                  "0\n"
               + "where not exists (select * from user where id = 100)");
 
       sqlConnection.commit();
@@ -108,7 +111,7 @@ public class IntegrationTestHelper {
       sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude)\n"
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude, email_notification, sms_notification, push_notification)\n"
               + "select 200,\n"
               + "'john',\n"
               + "'doe',\n"
@@ -122,9 +125,63 @@ public class IntegrationTestHelper {
               + "'95814',\n"
               + "'RESIDENT',\n"
               + "38.5824933,\n"
-              + "-121.4941738\n"
+              + "-121.4941738,\n" +
+                  "0,\n" +
+                  "0,\n" +
+                  "0\n"
               + "where not exists (select * from user where id = 200)");
 
+      sqlConnection.commit();
+    } catch (Exception ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }
+
+  public static void signupResidentUser(String zipcode, String email)
+      throws SQLException {
+    Connection sqlConnection = null;
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      st.executeUpdate(
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude, email_notification, sms_notification, push_notification)\n"
+              + "VALUES ( 1111,\n"
+              + "'john',\n"
+              + "'doe',\n"
+              + " '"+email+"',\n"
+              + "'9e5f3dd72fbd5f309131364baf42b446f570629f4a809390be533f:1db93c4885d4bf980e92286d74da720dc298fdc1a29c89cf9c67ce',\n"
+              + "'1234567890',\n"
+              + "'required street',\n"
+              + "'optional street',\n"
+              + "'Sacramento',\n"
+              + "'CA',\n"
+              +  " '"+ zipcode+"',\n"
+              + "'RESIDENT',\n"
+              + "32.7920948,\n"
+              + "-117.2323367,\n" +
+                  "0,\n" +
+                  "0,\n" +
+                  "0\n"
+              + ")");
+
+      sqlConnection.commit();
+    } catch (Exception ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }
+
+  public static void addEmailNotificationForUser(String email)
+          throws SQLException {
+    Connection sqlConnection = null;
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      st.executeUpdate(
+              "update user set email_notification = 1 where email = '" + email + "'");
       sqlConnection.commit();
     } catch (Exception ex) {
       sqlConnection.rollback();
@@ -169,4 +226,18 @@ public class IntegrationTestHelper {
 
   }
 
+  public static void removeAllNotificationsForUser(String email) throws SQLException {
+    Connection sqlConnection = null;
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      st.executeUpdate(
+              "update user set email_notification = 0, sms_notification = 0, push_notification = 0 where email = '" + email + "'");
+      sqlConnection.commit();
+    } catch (Exception ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }
 }

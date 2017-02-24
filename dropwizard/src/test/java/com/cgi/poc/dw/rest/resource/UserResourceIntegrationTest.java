@@ -1,7 +1,6 @@
 package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.auth.model.Role;
-import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
@@ -24,12 +23,9 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -40,11 +36,14 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
   private UserDto tstUser;
 
-  private GreenMail smtpServer;
+  private static GreenMail smtpServer;
 
   @BeforeClass
   public static void createUser() throws SQLException {
     IntegrationTestHelper.signupResidentUser();
+    smtpServer = new GreenMail(new ServerSetup(3025, "127.0.0.1",
+        ServerSetup.PROTOCOL_SMTP));
+    smtpServer.start();
   }
 
   @Before
@@ -63,24 +62,19 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   	tstUser.setAddress2("optional street");
   	tstUser.setLatitude(38.5824933);
   	tstUser.setLongitude(-121.4941738);
-        tstUser.setEmailNotification(true);
-
-
-    smtpServer = new GreenMail(new ServerSetup(3025, "127.0.0.1",
-        ServerSetup.PROTOCOL_SMTP));
-    smtpServer.start();
+    tstUser.setEmailNotification(true);
   }
 
   @After
   public void exit() {
-    if (smtpServer != null) {
-      smtpServer.stop();
-    }
   }
 
   @AfterClass
   public static void cleanup() {
     IntegrationTestHelper.cleanDbState();
+    if (smtpServer != null) {
+      smtpServer.stop();
+    }
   }
 
   @Test
@@ -337,7 +331,8 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Assert.assertEquals(200, response.getStatus());
 
     //verify email registration
-    smtpServer.waitForIncomingEmail(1);
+    smtpServer.waitForIncomingEmail(7000,1);
+
     MimeMessage[] receivedMails = smtpServer.getReceivedMessages();
     assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
 
@@ -383,31 +378,30 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     }
   }
 
-//  @Test
-//  public void invalidPhoneNumberUpdateWithoutPasswordChange() throws JSONException, NoSuchAlgorithmException, InvalidKeySpecException {
-//  	Client client = new JerseyClientBuilder().build();
-//  	tstUser.setPassword("");
-//    tstUser.setPhone("44343");
-//    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-//    Response response = client.
-//        target(String.format(url, RULE.getLocalPort())).
-//        request().
-//        header("Authorization", "Bearer " + authToken).
-//        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-//
-//    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-//    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-//    for (Error error : errorInfo.getErrors()) {
-//      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-//      // The data provided in the API call is invalid. Message: <XXXXX>
-//      // where XXX is the message associated to the validation
-//      String partString = "phone  size must be between 10 and 10";
-//      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-//          .replace("REPLACE", partString);
-//      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-//    }
-//  }
+ @Test
+ public void invalidPhoneNumberUpdateWithoutPasswordChange() throws JSONException, NoSuchAlgorithmException, InvalidKeySpecException {
+ 	Client client = new JerseyClientBuilder().build();
+ 	tstUser.setPassword("");
+   tstUser.setPhone("44343");
+   String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+   Response response = client.
+       target(String.format(url, RULE.getLocalPort())).
+       request().
+       header("Authorization", "Bearer " + authToken).
+       put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
+   Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+   ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+   for (Error error : errorInfo.getErrors()) {
+     assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
+     // The data provided in the API call is invalid. Message: <XXXXX>
+     // where XXX is the message associated to the validation
+     String partString = "phone  size must be between 10 and 10";
+     String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
+         .replace("REPLACE", partString);
+     assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+   }
+ }
 
   @Test
   public void invalidZipCode() throws JSONException {
@@ -431,31 +425,31 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     }
   }
 
-//  @Test
-//  public void invalidZipCodeUpdateWithoutPasswordChange() throws JSONException {
-//    Client client = new JerseyClientBuilder().build();
-//    tstUser.setPassword("");
-//    tstUser.setZipCode("983");
-//
-//    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-//    Response response = client.
-//        target(String.format(url, RULE.getLocalPort())).
-//        request().
-//        header("Authorization", "Bearer " + authToken).
-//        put(Entity.json(tstUser));
-//    assertNotNull(response);
-//    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-//    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-//    for (Error error : errorInfo.getErrors()) {
-//      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-//      // The data provided in the API call is invalid. Message: <XXXXX>
-//      // where XXX is the message associated to the validation
-//      String partString = "zipCode  is invalid.";
-//      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-//          .replace("REPLACE", partString);
-//      assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
-//    }
-//  }
+   @Test
+   public void invalidZipCodeUpdateWithoutPasswordChange() throws JSONException {
+     Client client = new JerseyClientBuilder().build();
+     tstUser.setPassword("");
+     tstUser.setZipCode("983");
+
+     String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+     Response response = client.
+         target(String.format(url, RULE.getLocalPort())).
+         request().
+         header("Authorization", "Bearer " + authToken).
+         put(Entity.json(tstUser));
+     assertNotNull(response);
+     Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+     for (Error error : errorInfo.getErrors()) {
+       assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
+       // The data provided in the API call is invalid. Message: <XXXXX>
+       // where XXX is the message associated to the validation
+       String partString = "zipCode  is invalid.";
+       String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
+           .replace("REPLACE", partString);
+       assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
+     }
+   }
 
   @Test
   public void signupUserAlreadyExist() {
@@ -472,69 +466,5 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
       assertThat(error.getMessage()).isEqualTo(expectedErrorString);
     }
-  }
-
-  @Test
-  public void someFieldsAreNullable() throws JSONException, URISyntaxException {
-    tstUser.setEmail("nullsok@gmail.com");
-    tstUser.setFirstName(null);
-    tstUser.setLastName(null);
-    tstUser.setPhone(null);
-    tstUser.setAddress1(null);
-    tstUser.setAddress2(null);
-    tstUser.setCity(null);
-    tstUser.setState(null);
-    Client client = new JerseyClientBuilder().build();
-    Response response = client.target(String.format(url, RULE.getLocalPort())).request()
-        .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-    Assert.assertEquals(200, response.getStatus());
-  }
-
-  @Test
-  public void getsUser() throws SQLException, JSONException {
-    IntegrationTestHelper.signupAdminUser();
-    String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-
-    Client client = new JerseyClientBuilder().build();
-    Response response = client.
-            target(String.format(url, RULE.getLocalPort())).
-            request().
-            header("Authorization", "Bearer " + authToken).
-            get();
-
-    Assert.assertEquals(200, response.getStatus());
-    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
-    Assert.assertEquals("95814", responseJo.optString("zipCode"));
-  }
-
-  @Test
-  public void getsUserDoesNotReturnPassword() throws SQLException, JSONException {
-    IntegrationTestHelper.signupAdminUser();
-    String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-
-    Client client = new JerseyClientBuilder().build();
-    Response response = client.
-            target(String.format(url, RULE.getLocalPort())).
-            request().
-            header("Authorization", "Bearer " + authToken).
-            get();
-
-    Assert.assertEquals(200, response.getStatus());
-    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
-    Assert.assertEquals("", responseJo.optString("password"));
-  }
-
-  @Test
-  public void getsUserFailsAuthorization() throws SQLException, JSONException {
-    IntegrationTestHelper.signupAdminUser();
-
-    Client client = new JerseyClientBuilder().build();
-    Response response = client.
-            target(String.format(url, RULE.getLocalPort())).
-            request().
-            header("Authorization", "Bearer " + "fakeTokenHere").
-            get();
-
-    Assert.assertEquals(401, response.getStatus());
   }
 }

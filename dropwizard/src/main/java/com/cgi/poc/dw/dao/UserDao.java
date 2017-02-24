@@ -75,19 +75,22 @@ public class UserDao extends AbstractDAO<User> {
 
   public List<User> getGeoWithinRadius(List<GeoCoordinates> geo, Double radius) {
 
-    List<User> users = new ArrayList<User>();
+    List<User> affectedUsers = new ArrayList<User>();
 
     for (GeoCoordinates g : geo) {
-       Query query = currentSession().getNamedQuery("getGeoWithinRadius")
+      Query query = currentSession().getNamedQuery("getGeoWithinRadius")
           .setString("lat", g.getLatitude().toString())
           .setString("lng", g.getLongitude().toString())
           .setString("radius", radius.toString());
-      List<User> user = query.list();
+      List<User> users = query.list();
 
-      if (!users.contains(user)) {
-        users.addAll(user);
+      for (User user : users) {
+        if (!affectedUsers.contains(user)) {
+          affectedUsers.add(user);
+        }
       }
     }
-    return users;
+
+    return affectedUsers;
   }
 }
