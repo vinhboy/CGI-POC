@@ -9,8 +9,8 @@
 'use strict';
 
 cgiWebApp.controller('loginController',
-  ['$scope', 'Authenticator', '$sessionStorage', '$state','$http',
-  function ($scope, Authenticator, $sessionStorage, $state,$http) {
+  ['$scope', 'Authenticator', '$state',
+  function ($scope, Authenticator, $state) {
 
   $scope.user = {
     email: '',
@@ -38,16 +38,8 @@ cgiWebApp.controller('loginController',
       password: $scope.user.password
     };
 
-    Authenticator.authenticate(credentials).then(function(response) {
-      if (response.status === 200) {
-        $sessionStorage.put('jwt', response.data.authToken);
-        $sessionStorage.put('role', response.data.role);
-        
-        $http.defaults.headers.common['Content-Type'] = 'application/json';
-        $http.defaults.headers.common.Authorization =  'Bearer ' + response.data.authToken;
-        
-        $state.go('landing');
-      }
+    Authenticator.authenticate(credentials).then(function() {
+      $state.go('landing');
     }).catch(function(){
       $scope.popUp('error', 'LOGIN.MESSAGE.INVALID');
     });

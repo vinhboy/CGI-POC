@@ -4,29 +4,27 @@ import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
-import com.cgi.poc.dw.util.ErrorInfo;
-import com.cgi.poc.dw.util.GeneralErrors;
-import com.cgi.poc.dw.util.PersistValidationGroup;
-import com.cgi.poc.dw.util.RestValidationGroup;
+import com.cgi.poc.dw.util.*;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
@@ -62,29 +60,26 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public Response registerUser(User user) {
 		// Defaulting the user to RESIDENT
 		user.setRole("RESIDENT");
-		
+
 		validate(user, "rest", RestValidationGroup.class, Default.class);
 		// check if the email already exists.
 		User findUserByEmail = userDao.findUserByEmail(user.getEmail());
 		if (findUserByEmail != null) {
 			ErrorInfo errRet = new ErrorInfo();
-			String errorString = GeneralErrors.DUPLICATE_ENTRY.getMessage().replace("REPLACE", "email");
+			String errorString = "A profile already exists for that email address. Please register using a different email.";
 			errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
 			return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
 		}
 
-		return processForSave(user, false);
+		return processForSave(user, false, false);
 	}
 
 	private void saveUser(User user, boolean registered) {
-		boolean userIsRegistered = registered;
 		validate(user, "save", Default.class, PersistValidationGroup.class);
-		for (UserNotificationType notificationType : user.getNotificationType()) {
-			notificationType.setUserId(user);
-		}
+
 
 		userDao.save(user);
-		if (!userIsRegistered) {
+		if (!registered) {
 			// Future TODO enhancement: make the subject and email body configurable
 			emailService.send(null, Arrays.asList(user.getEmail()), "Registration confirmation",
 					"Hello there, thank you for registering.");
@@ -93,9 +88,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	}
 
 	private void createPasswordHash(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		String hash = null;
-		hash = passwordHash.createHash(user.getPassword());
-		user.setPassword(hash);
 	}
 
 	// invoke Google Maps API to retrieve latitude and longitude by zipCode
@@ -127,32 +119,33 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		return errRet;
 	}
 
-	/**
-	 * Updates and saves modified user info to the database
-	 *
-	 * @param modifiedUser
-	 * @return response
-	 */
-	public Response updateUser(User currentUser) {
-		validate(currentUser, "rest", RestValidationGroup.class, Default.class);
-		return processForSave(currentUser, true);
+	public Response updateUser(User user, User modifiedUser) {
+		//If user password is empty keep same password.
+		boolean keepPassword = false;
+		if(StringUtils.isBlank(modifiedUser.getPassword())){
+			modifiedUser.setPassword(user.getPassword());
+			keepPassword = true;
+		}
+		else {
+			validate(modifiedUser, "update", LoginValidationGroup.class);
+		}
+		modifiedUser.setId(user.getId());
+		modifiedUser.setRole(user.getRole());
+		return processForSave(modifiedUser, true, keepPassword);
 	}
-	
-	private Response processForSave(User user, boolean registered){
+
+	private Response processForSave(User user, boolean registered, boolean keepPassword) {
 		Response response = null;
 		try {
-			createPasswordHash(user);
+			if (!keepPassword) {
+				String hash = passwordHash.createHash(user.getPassword());
+				user.setPassword(hash);
+			}
 			setUserGeoCoordinates(user);
 			saveUser(user, registered);
 			response = Response.ok().entity(user).build();
-		} catch (NoSuchAlgorithmException noAlgorithmException) {
-			LOG.error("Unable to create a password hash.", noAlgorithmException);
-			ErrorInfo errRet = getInternalErrorInfo(noAlgorithmException, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
-		} catch (InvalidKeySpecException invalidKeyException) {
-			LOG.error("Unable to create a password hash.", invalidKeyException);
-			ErrorInfo errRet = getInternalErrorInfo(invalidKeyException, GeneralErrors.UNKNOWN_EXCEPTION);
-			response = Response.noContent().status(Status.INTERNAL_SERVER_ERROR).entity(errRet).build();
+		} catch (ConstraintViolationException exception) {
+			throw exception;
 		} catch (Exception exception) {
 			LOG.error("Unable to save a user.", exception);
 			ErrorInfo errRet = getInternalErrorInfo(exception, GeneralErrors.UNKNOWN_EXCEPTION);
@@ -160,5 +153,5 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		return response;
 	}
-	
+
 }

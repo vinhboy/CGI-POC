@@ -16,17 +16,6 @@ body{
     background: #edf4f7;
 }
 
-.profile-form-input{
-    height:3rem;
-    padding-top:0px;
-    padding-bottom:0px;
-}
-.profile-label{
-    margin-top:1.4rem;
-}
-.profile-form-input-notification-by-location {
-	margin-top:1.4rem;
-}
 .loginFormDiv{
     width:90%;
     margin-left:auto;
@@ -36,18 +25,12 @@ body{
     margin-bottom:30px;
 }
 
-.registrationFormDiv{
-    width:90%;
-    margin-left:auto;
-    margin-right:auto;
-}
-
-.headerZone {   
+.headerZone {
     background: #003466;
     width:100%;
-    position:fixed; 
+    position:fixed;
     top:0;
-    left:0; 
+    left:0;
     z-index:1;
 
 }
@@ -85,6 +68,10 @@ body{
     height: 500px;
 
 }
+.event-info {
+        height: 100%;
+    overflow:auto;
+}
 .event-details-container{
         border:solid;
     height: 500px;
@@ -111,7 +98,9 @@ body{
     .button_wrapper{
         vertical-align: bottom;
     }
-    
+}
+.angular-google-map-container {
+    height: 400px;
 }
 .event{
     border-style: solid;
@@ -127,7 +116,7 @@ body{
         padding-right:.25em;
     }
     td {
-    
+
         padding : 0;
     }
     h5 {
@@ -180,7 +169,8 @@ input.phoneLong{
 .notificationMessageInfo{
 	float:right;
 }
-.emailAddressText{
+.additional-input-info{
+	font-size: 13px;
 }
 input.zipCode{
     display:inline-block;

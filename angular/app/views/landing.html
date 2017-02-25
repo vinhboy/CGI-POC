@@ -1,8 +1,9 @@
 <div class="usa-content">
     <div class="usa-grid-full ">
-        <h3 class="usa-heading">Event Notifications</h3>
+        <h3 ng-if="role === 'ADMIN'"  class="usa-heading" translate="LANDING.ADMIN.TITLE"></h3>
+        <h3 ng-if="role !== 'ADMIN'"  class="usa-heading" translate="LANDING.USER.TITLE"></h3>
         <form ng-show="role === 'ADMIN'" class="usa-form">
-            <label for="options">Find events by</label>
+            <label for="options" translate="LANDING.FILTER.TITLE"></label>
             <select  id="eventTypeFilter" name="eventTypeFilter"   ng-model="eventTypeFilter"  class="form-control"  
                      ng-options="eventType.id as eventType.name  for eventType in  eventTypes" ng-change="changeFilters()" >
 
@@ -13,70 +14,21 @@
             </select>
         </form>
     </div>
-    <div class="event-list-container usa-grid-full ">
-        <div class="usa-width-one-third scrollable-section" > 
-            <div class="event" ng-repeat="item in model.filteredNotifications track by $index" ng-class="{'active' : activeItem.item === $index}" > 
-                <table class="usa-table-borderless">
-                    <tr   ng-click="loadMap(item);activeItem.item = $index">
-                        <td class="event-logo">
-                            <img height="30" width="40" class="" src="/images/logo_mycalerts_header.png" alt="Logo image" />`
-                        </td>
-                        <td>
-                            <h5 class="usa-heading-alt">{{item.type}}</h5>
-                            <span>{{item.generationDate|  date:'MM-dd-yyyy&nbsp&nbsphh:mm:ss a'}}</span>
-                            <span><span ng-repeat="z  in item.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
-                        </td>
-                        <td class="event-icons">
-                            <div class="fa-fw icon "><a ng-click="loadEventDetails(item, $event)"><i  class="fa fa-info-circle" ></i></a> </div>
-                            <div  class="fa-fw icon "><a  ng-click="loadMap(item)"><i  class="fa fa-map-marker"   > </i></a></div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="usa-width-two-thirds" >
-            <div   ng-show="showMapOrDetails === 'MAP' && currentSelectedEvent !== undefined"  class="event-details-container">
-                <div class="mapArea" id="map" >
-                    <div id="map-canvas"></div>
-                </div>
-            </div>
-            <div ng-show="showMapOrDetails === 'DETAILS'" class="event-details-container">
-                <h4 class="usa-heading-alt">Notification Details</h4>
-                <div class="event-details usa-grid">
-                    <div class="usa-width-one-whole "  >
-                        <table class="usa-table-borderless">
-                            <tr>
-                                <td class="event-icons"><a><i  class="fa fa-5x fa-info-circle" ></i></a> </td>
-                                <td>
-                                    <h5 class="usa-heading">{{currentSelectedEvent.type}}</h5>
-                                    <span>{{currentSelectedEvent.generationDate|  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
-                                    <h5 >Sent by</h5>
-                                    <span >{{currentSelectedEvent.userId.firstName}} {{currentSelectedEvent.userId.lastName}}</span>
-                                    <h5 >Affected Zip Codes</h5>
-                                    <span><span ng-repeat="z in currentSelectedEvent.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
-                                    <h5 >Message</h5>
-                                    <span >{{currentSelectedEvent.description}}</span>
-                                    <h5 ng-show="role === 'ADMIN'"  >{{currentSelectedEvent.citizensAffected| number}} users notified</h5>
-
-                                </td>
-                            </tr>
-
-                        </table>
-
-
-                    </div>
-                </div>
-                <div class=" usa-grid">
-                    <div class="usa-width-one-whole"  >
-                        <div class="button_wrapper">
-                            <button ng-click="loadMap(currentSelectedEvent)" class="usa-button-big" type="button">RETURN TO MAP</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div ng-show="model.filteredNotifications.length > 0" class="event-list-container usa-grid-full ">
+        <div ng-show="!isModelDevice || (isModelDevice  && showMapOrDetails==='LIST')"  class="usa-width-one-third scrollable-section" > 
+           <ng-include src="'views/partials/eventListing.html'"  ></ng-include>
 
         </div>
+        <ng-show="!isModelDevice"  div class="usa-width-two-thirds" >
+           <ng-include src="'views/partials/mapDetails.html'"  ></ng-include>
+           <ng-include src="'views/partials/eventDetails.html'"  ></ng-include>
+
     </div>
+    <div ng-show="model.filteredNotifications.length === 0" class="usa-grid-full ">
+            <label for="options" translate="LANDING.NO_EVENT"></label>
+    </div>
+
+</div>
 
 </div>
 

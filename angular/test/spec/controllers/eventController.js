@@ -90,12 +90,12 @@ describe('eventController', function() {
       $scope.publishEvent();
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
-      expect($scope.toSend.notificationType).toBe('ADMIN_I');
-      expect($scope.toSend.message).toBe('blah blah message. get away!');
-      expect($scope.toSend.zipcodes.length).toBe(3);
-      expect($scope.toSend.zipcodes[0]).toBe('12345');
-      expect($scope.toSend.zipcodes[1]).toBe('23456');
-      expect($scope.toSend.zipcodes[2]).toBe('45678');
+      expect($scope.toSend.type).toBe('ADMIN_I');
+      expect($scope.toSend.description).toBe('blah blah message. get away!');
+      expect($scope.toSend.zipCodes.length).toBe(3);
+      expect($scope.toSend.zipCodes[0]).toBe('12345');
+      expect($scope.toSend.zipCodes[1]).toBe('23456');
+      expect($scope.toSend.zipCodes[2]).toBe('45678');
     });
   });
 

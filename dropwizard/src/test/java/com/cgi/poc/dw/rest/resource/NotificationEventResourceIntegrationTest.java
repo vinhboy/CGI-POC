@@ -1,64 +1,74 @@
 package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.dao.model.EventNotification;
-import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import com.cgi.poc.dw.rest.model.EventNotificationDto;
+import com.google.common.collect.Sets;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetup;
+import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.*;
+
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.StringUtils;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class NotificationEventResourceIntegrationTest extends IntegrationTest {
 
   private static final String url = "http://localhost:%d/notification";
 
-  private EventNotification eventNotification;
+  private EventNotificationDto eventNotificationDto;
+
+  private static GreenMail smtpServer;
 
   @BeforeClass
   public static void createAdminUser() throws SQLException {
+    IntegrationTestHelper.cleanDbState();
+
     IntegrationTestHelper.signupAdminUser();
+    IntegrationTestHelper.signupResidentUser("92106", "res101@cgi.com");
+    IntegrationTestHelper.removeAllNotificationsForUser("res101@cgi.com");
+    IntegrationTestHelper.addEmailNotificationForUser("res101@cgi.com");
+    smtpServer = new GreenMail(new ServerSetup(3025, "127.0.0.1",
+        ServerSetup.PROTOCOL_SMTP));
+    smtpServer.start();
   }
 
   @Before
   public void createEventNotification() throws IOException {
-    Set<EventNotificationZipcode> eventNotificationZipcodes = new LinkedHashSet<>();
-    EventNotificationZipcode eventNotificationZipcode1 = new EventNotificationZipcode();
-    eventNotificationZipcode1.setZipCode("92105");
-    EventNotificationZipcode eventNotificationZipcode2 = new EventNotificationZipcode();
-    eventNotificationZipcode2.setZipCode("92106");
-    eventNotificationZipcodes.add(eventNotificationZipcode1);
-    eventNotificationZipcodes.add(eventNotificationZipcode2);
-
-    eventNotification = new EventNotification();
-    eventNotification.setType("ADMIN_E");
-    eventNotification.setDescription("some description");
-    eventNotification.setEventNotificationZipcodes(eventNotificationZipcodes);
+    eventNotificationDto = new EventNotificationDto();
+    eventNotificationDto.setType("ADMIN_E");
+    eventNotificationDto.setDescription("flood action");
+    eventNotificationDto.setZipCodes(Sets.newHashSet("92105", "92106"));
   }
 
   @AfterClass
   public static void cleanup() {
     IntegrationTestHelper.cleanDbState();
+    if (smtpServer != null) {
+      smtpServer.stop();
+    }
   }
   
   @Test
-  public void publishNotification_Success() throws JSONException {
+  public void publishNotification_Success() throws JSONException, MessagingException {
 
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
 
@@ -67,9 +77,22 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotification));
+        post(Entity.json(eventNotificationDto));
 
     Assert.assertEquals(200, response.getStatus());
+
+    //verify email registration
+    smtpServer.waitForIncomingEmail(1);
+
+    MimeMessage[] receivedMails = smtpServer.getReceivedMessages();
+    assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
+
+    for(MimeMessage mail : receivedMails) {
+      assertTrue(GreenMailUtil.getHeaders(mail).contains("Emergency notification"));
+      assertTrue(GreenMailUtil.getBody(mail).contains("flood action"));
+    }
+    assertEquals("res101@cgi.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
+
   }
 
   @Test
@@ -92,13 +115,13 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
   @Test
   public void nullDescription() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    eventNotification.setDescription(null);
+    eventNotificationDto.setDescription(null);
     Client client = new JerseyClientBuilder().build();
     Response response = client.
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotification));
+        post(Entity.json(eventNotificationDto));
 
     Assert.assertEquals(422, response.getStatus());
     JSONObject responseJo = new JSONObject(response.readEntity(String.class));
@@ -109,13 +132,13 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidDescription() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    eventNotification.setDescription("abc");
+    eventNotificationDto.setDescription("abc");
     Client client = new JerseyClientBuilder().build();
     Response response = client.
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotification));
+        post(Entity.json(eventNotificationDto));
 
     Assert.assertEquals(422, response.getStatus());
     JSONObject responseJo = new JSONObject(response.readEntity(String.class));
@@ -127,18 +150,18 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
   @Test
   public void invalidZipcode() throws JSONException {
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    eventNotification.getEventNotificationZipcodes().iterator().next().setZipCode("987");
+    eventNotificationDto.getZipCodes().add("987");
     Client client = new JerseyClientBuilder().build();
     Response response = client.
         target(String.format(url, RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotification));
+        post(Entity.json(eventNotificationDto));
 
     Assert.assertEquals(422, response.getStatus());
     JSONObject responseJo = new JSONObject(response.readEntity(String.class));
     Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("errors")));
-    Assert.assertEquals("[\"eventNotificationZipcodes[].zipCode is invalid.\"]",
+    Assert.assertEquals("[\"zipCodes invalid zipcode found.\"]",
         responseJo.optString("errors"));
   }
 

@@ -14,7 +14,8 @@ public enum GeneralErrors {
       "An Unknown exception has occured. Type: <REPLACE1>. Message: <REPLACE2>"),
   CONSTRAINT_VIOLATION("ERR2", "Constraint violation <REPLACE>. Unable to Save"),
   INVALID_INPUT("ERR3", "The data provided in the API call is invalid. Message: <REPLACE>"),
-  DUPLICATE_ENTRY("ERR4", "Duplicate entry for key '<REPLACE>'");
+  DUPLICATE_ENTRY("ERR4", "Duplicate entry for key '<REPLACE>'"),
+  NOT_FOUND("ERR5", "REPLACE");
 
   private String errorCode;
   private String errorMessage;
