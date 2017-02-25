@@ -20,10 +20,10 @@ cgiWebApp.controller('landingController',
   $scope.googleMaps = undefined;
   $scope.showMapOrDetails='MAP';
   $scope.activeItem = {item: -1};
-  $scope.isModelDevice = false;
+  $scope.isMobile = false;
   $scope.role = $sessionStorage.get('role');
   if (/Mobi/.test(navigator.userAgent)) {
-     $scope.isModelDevice=true;
+     $scope.isMobile=true;
 
   } 
     $scope.eventIcons = {};
@@ -67,7 +67,7 @@ cgiWebApp.controller('landingController',
  
    }); 
    $scope.backToDefault = function(currentSelectedEvent) {
-       if ($scope.isModelDevice){
+       if ($scope.isMobile){
             $scope.showMapOrDetails='LIST';
        }else {
             $scope.showMapOrDetails='MAP';
@@ -126,13 +126,14 @@ cgiWebApp.controller('landingController',
     };
     $scope.eventSelected = function(selectedEvent, index){
           $scope.activeItem.item = index;
-          if ($scope.isMobile){
+          if (!$scope.isMobile){
                $scope.loadMap(selectedEvent);
               
           }
     };
     
-    $scope.loadEventDetails = function(selectedEvent, event){
+    $scope.loadEventDetails = function(selectedEvent, event,index){
+          $scope.activeItem.item = index;
        $scope.currentSelectedEvent = selectedEvent;
        $scope.showMapOrDetails='DETAILS';
        if(event){
@@ -207,13 +208,13 @@ cgiWebApp.controller('landingController',
             var mapIngfo = {center: {lat: -34.397, lng: 150.644}, zoom: 8};
             $scope.map = new $scope.maps.Map(ele[0], mapIngfo);
             if ($scope.currentSelectedEvent !== undefined) {
-                if ($scope.currentSelectedEvent.geometry.rings !== undefined) {
-                     $scope.mapLoadFromRings($scope.currentSelectedEvent.geometry.rings);
+                 if (selectedEvent.eventNotificationZipcodes.length > 0) {
+                    $scope.mapLoadFromForZipCodes(selectedEvent.eventNotificationZipcodes);
                 } else if (selectedEvent.geometry.y !== undefined && selectedEvent.geometry.x !== undefined &&
                         selectedEvent.geometry.y !== '' && selectedEvent.geometry.x !== '') {
                     $scope.mapLoadASimplePoint(selectedEvent.geometry.x ,selectedEvent.geometry.y  );
-                } else if (selectedEvent.eventNotificationZipcodes.length > 0) {
-                    $scope.mapLoadFromForZipCodes(selectedEvent.eventNotificationZipcodes);
+                } else if ($scope.currentSelectedEvent.geometry.rings !== undefined) {
+                     $scope.mapLoadFromRings($scope.currentSelectedEvent.geometry.rings);
                 }
             }
         }, 0, false);

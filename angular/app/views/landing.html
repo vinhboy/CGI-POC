@@ -15,11 +15,11 @@
         </form>
     </div>
     <div ng-show="model.filteredNotifications.length > 0" class="event-list-container usa-grid-full ">
-        <div ng-show="!isModelDevice || (isModelDevice  && showMapOrDetails==='LIST')"  class="usa-width-one-third scrollable-section" > 
+        <div ng-show="!isMobile || (isMobile  && showMapOrDetails==='LIST')"  class="usa-width-one-third scrollable-section" > 
            <ng-include src="'views/partials/eventListing.html'"  ></ng-include>
 
         </div>
-        <ng-show="!isModelDevice"  div class="usa-width-two-thirds" >
+        <ng-show="!isMobile"  div class="usa-width-two-thirds" >
            <ng-include src="'views/partials/mapDetails.html'"  ></ng-include>
            <ng-include src="'views/partials/eventDetails.html'"  ></ng-include>
 
