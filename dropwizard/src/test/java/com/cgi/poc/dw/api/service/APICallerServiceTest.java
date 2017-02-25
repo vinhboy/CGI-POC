@@ -143,7 +143,7 @@ public class APICallerServiceTest extends IntegrationTest {
 		assertThat(loggingEvent.getLevel(), equalTo(Level.ERROR));
 		// Check the message being logged is correct
 		assertThat(loggingEvent.getFormattedMessage(), containsString(
-				"Unable to parse the result for the url event : http://www.google.com error"));
+				"Unable to parse the result for the url event : http://www.google.com"));
 	}
 
 	@Test
@@ -213,7 +213,7 @@ public class APICallerServiceTest extends IntegrationTest {
 		assertThat(loggingEvent.getLevel(), equalTo(Level.ERROR));
 		// Check the message being logged is correct
 		assertThat(loggingEvent.getFormattedMessage(), containsString(
-				"Unable to parse the result for the url event : http://www.google.com error"));
+				"Unable to parse the result for the url event : http://www.google.com"));
 	}
 
 	@Test
@@ -259,7 +259,7 @@ public class APICallerServiceTest extends IntegrationTest {
 		assertThat(loggingEvent.getLevel(), equalTo(Level.ERROR));
 		// Check the message being logged is correct
 		assertThat(loggingEvent.getFormattedMessage(), containsString(
-				"Unable to parse the result for the url event : http://www.google.com error"));
+				"Unable to parse the result for the url event : http://www.google.com"));
 	}
 
 	@Test
