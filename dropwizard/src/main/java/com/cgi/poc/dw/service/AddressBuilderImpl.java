@@ -1,8 +1,11 @@
 package com.cgi.poc.dw.service;
 
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.cgi.poc.dw.dao.model.User;
+
+import java.util.Optional;
 
 public class AddressBuilderImpl implements AddressBuilder {
   @Override
@@ -16,8 +19,8 @@ public class AddressBuilderImpl implements AddressBuilder {
       return zipCode;
     }
     if (isBlank(address2)) {
-      return String.format("%s, %s, %s %s", address1, city, state, zipCode);
+      return String.format("%s, %s, %s %s", ofNullable(address1).orElse(""), ofNullable(city).orElse(""), ofNullable(state).orElse(""), ofNullable(zipCode).orElse(""));
     }
-    return String.format("%s, %s, %s, %s %s", address1, address2, city, state, zipCode);
+    return String.format("%s, %s, %s, %s %s", ofNullable(address1).orElse(""), ofNullable(address2).orElse(""), ofNullable(city).orElse(""), ofNullable(state).orElse(""), ofNullable(zipCode).orElse(""));
   }
 }

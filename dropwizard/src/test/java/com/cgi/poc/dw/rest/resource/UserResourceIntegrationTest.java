@@ -1,6 +1,8 @@
 package com.cgi.poc.dw.rest.resource;
 
+import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
@@ -37,9 +39,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import static com.cgi.poc.dw.helper.IntegrationTestHelper.requestPost;
+
 public class UserResourceIntegrationTest extends IntegrationTest {
 
   private static final String url = "http://localhost:%d/user";
+  private static final GeoCoordinates cgiSacLocation = new GeoCoordinates(38.57885, -121.49909);
 
   private UserDto tstUser;
 
@@ -255,4 +260,38 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     }
   }
 
+
+  @Test
+  public void geoCodingWithIncompleteAddressHandledGracefully() throws MessagingException {
+    tstUser.setEmail("geocodeme@gmail.com");
+    tstUser.setEmailNotification(false);
+    tstUser.setSmsNotification(false);
+    tstUser.setAddress1("621 Capitol Mall");
+    tstUser.setAddress2(null);
+    tstUser.setCity("Sacramento");
+    tstUser.setState(null);
+    tstUser.setZipCode("95814");
+    Response response = requestPost(url, RULE, tstUser);
+    Assert.assertEquals(200, response.getStatus());
+    User user = IntegrationTestHelper.getUserFromDb(tstUser.getEmail());
+    assertEquals(cgiSacLocation.getLatitude(), user.getLatitude(), 0.00001);
+    assertEquals(cgiSacLocation.getLongitude(), user.getLongitude(), 0.00001);
+  }
+
+  @Test
+  public void zipOnlyAddressGeoCodedDifferently() throws MessagingException {
+    tstUser.setEmail("geozip@gmail.com");
+    tstUser.setEmailNotification(false);
+    tstUser.setSmsNotification(false);
+    tstUser.setAddress1(null);
+    tstUser.setAddress2(null);
+    tstUser.setCity(null);
+    tstUser.setState(null);
+    tstUser.setZipCode("95814");
+    Response response = requestPost(url, RULE, tstUser);
+    Assert.assertEquals(200, response.getStatus());
+    User user = IntegrationTestHelper.getUserFromDb(tstUser.getEmail());
+    Assert.assertNotEquals(cgiSacLocation.getLatitude(), user.getLatitude(), 0.00001);
+    Assert.assertNotEquals(cgiSacLocation.getLongitude(), user.getLongitude(), 0.00001);
+  }
 }

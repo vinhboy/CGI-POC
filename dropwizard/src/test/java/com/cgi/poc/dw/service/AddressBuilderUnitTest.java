@@ -26,4 +26,9 @@ public class AddressBuilderUnitTest {
   public void buildsAddressIncludingAddress2() {
     assertEquals("3188 Zinfandel Dr, Suite 799, Rancho Cordova, CA 95670", builder.build("3188 Zinfandel Dr", "Suite 799", "Rancho Cordova", "CA", "95670"));
   }
+
+  @Test
+  public void nullsAreTreatedAsEmptyStrings() {
+    assertEquals("3188 Zinfandel Dr, Suite 799, ,  95670", builder.build("3188 Zinfandel Dr", "Suite 799", null, null, "95670"));
+  }
 }
