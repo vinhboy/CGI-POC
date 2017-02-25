@@ -65,9 +65,9 @@ public abstract class APICallerServiceImpl implements APICallerService {
                 parsingEventsResponse(eventJson);
            }
         } catch (JsonParseException e) {
-            LOG.error("Unable to parse the result for the url event : {} error: {}", eventUrl, e.getMessage());
+            LOG.error("Unable to parse the result for the url event : {}", eventUrl, e);
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(APICallerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error("Unable to parse the result for the url event : {}", eventUrl, ex);
         } 
 
        

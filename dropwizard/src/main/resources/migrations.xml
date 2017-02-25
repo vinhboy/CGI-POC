@@ -413,6 +413,7 @@
     </update>
   </changeSet>
     <changeSet id="22" author="Dawna Floyd">
+    <comment>Table that tracks the users who were sent a particular notification</comment>
       <createTable tableName="event_notification_user">
         <column name="id"  type="bigint" autoIncrement="true">
           <constraints primaryKey="true" nullable="false"/>
