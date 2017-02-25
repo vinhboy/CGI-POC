@@ -9,9 +9,7 @@ public class ValidationErrors {
   public static final String MISSING_PASSWORD = "Password is missing.";
   public static final String INVALID_PHONE = "You must enter a valid mobile phone number.";
   public static final String INVALID_ZIPCODE = "You must enter a valid zip code.";
+  public static final String INVALID_STATE = "You must enter a valid state of 2 letters in length.";
   public static final String DUPLICATE_USER = "A profile already exists for that email address. Please register using a different email.";
-
-
-
 
 }

@@ -5,8 +5,6 @@ import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.util.ErrorInfo;
-import com.cgi.poc.dw.util.GeneralErrors;
 import com.cgi.poc.dw.util.LoginValidationGroup;
 import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.cgi.poc.dw.util.RestValidationGroup;
@@ -16,7 +14,6 @@ import java.util.Arrays;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,13 +32,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private final EmailService emailService;
 
 	private final TextMessageService textMessageService;
-
-	// The name of the query param for the
-	private static final String ADDRESS = "address";
-
+	
 	@Inject
 	public UserServiceImpl(MapsApiService mapsApiService, UserDao userDao, PasswordHash passwordHash,
-			Validator validator, Client client, EmailService emailService, TextMessageService textMessageService) {
+			Validator validator, EmailService emailService, TextMessageService textMessageService) {
 		super(validator);
 		this.userDao = userDao;
 		this.passwordHash = passwordHash;
@@ -76,19 +70,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 	}
 	
-	private ErrorInfo getInternalErrorInfo(Exception exception, GeneralErrors generalErrors) {
-		ErrorInfo errRet = new ErrorInfo();
-		String message = generalErrors.getMessage();
-		String exMsg = "";
-		if (exception.getMessage() != null) {
-			exMsg = exception.getMessage();
-		}
-		String errorString = message.replace("REPLACE1", exception.getClass().getCanonicalName()).replace("REPLACE2",
-				exMsg);
-		errRet.addError(generalErrors.getCode(), errorString);
-		return errRet;
-	}
-
 	public Response updateUser(User user, User modifiedUser) {
 		//If user password is empty keep same password.
 		boolean keepPassword = false;
