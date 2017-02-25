@@ -44,12 +44,12 @@ public class UserProfile {
 	WebElement pushNotification;
 	@FindBy(xpath = "//input[@ng-model='profile.smsNotification']")
 	WebElement smsNotification;
-	@FindBy(xpath = "//button[contains(.,'SAVE')]")
+	@FindBy(xpath = "//button[@translate='REGISTRATION.BUTTON.SAVE']")
 	WebElement profileSave;
 	@FindBy(xpath = "//button[contains(.,'CANCEL')]")
 	WebElement profileCancel;
-	@FindBy(xpath = "//span[contains(.,'You must enter a valid phone number')]")
-	WebElement invalidPhoneNum;
+	public static @FindBy(xpath = "//span[contains(.,'You must enter a valid phone number')]")
+	 WebElement invalidPhoneNum;
 	@FindBy(xpath = "//span[contains(.,'You must enter a valid Zip code')]")
 	WebElement invalidzipCode;
 	@FindBy(xpath = "//span[contains(.,'A valid email address is required')]")
@@ -58,6 +58,15 @@ public class UserProfile {
 	WebElement passwordDonotMactch;
 	@FindBy(xpath = "//span[contains(.,'Password must be at least 8 characters and contain 3 of the 4 following requirements: one upper case letter, one lower case letter, one number, and one special character')]")
 	WebElement invalidPassword;
+
+	@FindBy(xpath = "//a[contains(.,'Manage Profile')]")
+	WebElement manageProfile;
+	
+	@FindBy(xpath = "//h3[contains(.,'Event Notifications')]")
+	WebElement notificationMesg;
+	
+	public static @FindBy(xpath="//li[contains(.,' A profile already exists for that email address. Please register using a different email. ')]")
+	WebElement alreadyMesg;
 	
 	// Click on the CreateNowLink
 	public void clickCreateNow() {
@@ -74,10 +83,24 @@ public class UserProfile {
 		profileLastName.sendKeys(slastName);
 	}
 
-	// Enter PhoneNumber
-	public void EnterPhonenum(String iPhoneNum) {
+	// Enter PhoneNuonMousePhonember
+	public void onMousePhone()
+	{
+		JavascriptExecutor je = (JavascriptExecutor) driver;
+		WebElement elementiPhone = driver.findElement(By.xpath("//input[@id='phone']"));
+		je.executeScript("arguments[0].scrollIntoView(true);",elementiPhone);
+		Actions action = new Actions(driver);
+		action.moveToElement(elementiPhone).perform();
+		BrowserFactory.waitFor();
+		elementiPhone.sendKeys("");
+		profileEmail.sendKeys(Keys.TAB);
+	}
+	
+	public void EnterPhonenum(String iPhoneNum)
+	{
+		
 		profilePhone.sendKeys(iPhoneNum);
-		profilePhone.sendKeys(Keys.TAB);
+		profileEmail.sendKeys(Keys.TAB);
 		
 	}
 
@@ -115,6 +138,35 @@ public class UserProfile {
 		return sprofileHeader;
 
 	}
+	
+	public String VerifyUserProfilealreadyExistMesg()
+
+	{
+		String sprofileExist = alreadyMesg.getText();
+		return sprofileExist;
+
+	}
+	
+	
+	// Verify UserProfile Landing Page
+	public String VerifyUserLandingPage()
+
+	{
+		String slandingPage = manageProfile.getText();
+		return slandingPage;
+
+	}
+	
+	
+	// Verify Notifications Message
+		public String VerifyNotficationMesg()
+
+		{
+			String snotMesg = notificationMesg.getText();
+			return snotMesg;
+
+		}
+	
 
 	// Verify Error Message Invalid Phone in UserProfile Page
 	public String VerifyinvalidPhNumErrorMesgProfilePage()

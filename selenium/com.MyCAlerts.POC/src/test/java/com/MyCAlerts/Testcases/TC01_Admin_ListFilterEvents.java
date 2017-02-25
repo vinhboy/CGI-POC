@@ -35,8 +35,8 @@ public class TC01_Admin_ListFilterEvents extends BaseClass {
 		String verifyMesg = adminFilter.VerifyPublishNotificationLink();
 		//Verify Success Message of Login
 		Assert.assertTrue(verifyMesg.contains("Publish New Notification"));
-		logger.log(LogStatus.PASS, "Sucessfully Landing page is displayed");
-		//Capture the Screenshot
+		logger.log(LogStatus.PASS, "Admin User Landing page is displayed");
+		
 		WebElement element = driver.findElement(By.xpath("//select[@id='eventTypeFilter']"));
 
 		Select select=new Select(element);
@@ -50,6 +50,7 @@ public class TC01_Admin_ListFilterEvents extends BaseClass {
 		       select.selectByVisibleText(sValue);
 		       logger.log(LogStatus.PASS, "Filter Event Type List --" +sValue+"-- is Selected");
 		    }
+		
 		
 		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC01_ListFilterEvent_2")));
 		
