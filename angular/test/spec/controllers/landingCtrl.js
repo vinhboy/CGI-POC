@@ -136,5 +136,16 @@ describe('landingController', function() {
       expect($scope.model.notifications[0].generationDate).toEqual(expectDate);
  });
 
+ it('set the default display based on mobile or not', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {type: 'Weather', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    $scope.isMobile = true;
+    $scope.backToDefault(selectedEvent);
+      expect($scope.showMapOrDetails).toBe('LIST');
 
+    $scope.isMobile = false;
+    $scope.backToDefault(selectedEvent);
+      expect($scope.showMapOrDetails).toBe('MAP');
+ 
+ });
 });
