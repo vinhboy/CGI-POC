@@ -70,6 +70,9 @@ public class UserServiceUnitTest {
   @Mock
   private MapsApiService mapsApiService;
 
+  @Spy
+  private AddressBuilder addressBuilder = new AddressBuilderImpl();
+
   private User user;
 
   @SuppressWarnings("unchecked")
@@ -82,11 +85,11 @@ public class UserServiceUnitTest {
     user.setLastName("smith");
     user.setRole(Role.RESIDENT.name());
     user.setPhone("1234567890");
-    user.setZipCode("98765");
+    user.setZipCode("95814");
     user.setCity("Sacramento");
     user.setState("CA");
-    user.setAddress1("required street");
-    user.setAddress2("optional street");
+    user.setAddress1("621 Capitol Mall");
+    user.setAddress2(null);
     user.setEmailNotification(false);
     user.setSmsNotification(false);
     user.setPushNotification(false);

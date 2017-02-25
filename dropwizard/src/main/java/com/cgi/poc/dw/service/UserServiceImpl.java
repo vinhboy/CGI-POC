@@ -27,16 +27,19 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	private final PasswordHash passwordHash;
 	
-	private MapsApiService mapsApiService;
+  private final AddressBuilder addressBuilder;
+
+  private MapsApiService mapsApiService;
 	
 	@Inject
 	public UserServiceImpl(MapsApiService mapsApiService, UserDao userDao, PasswordHash passwordHash,
-			Validator validator) {
+			Validator validator, AddressBuilder addressBuilder) {
 		super(validator);
 		this.userDao = userDao;
 		this.passwordHash = passwordHash;
 		this.mapsApiService = mapsApiService;
-	}
+    this.addressBuilder = addressBuilder;
+  }
 
 	public Response registerUser(User user) {
 		// Defaulting the user to RESIDENT
