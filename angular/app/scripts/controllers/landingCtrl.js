@@ -207,13 +207,13 @@ cgiWebApp.controller('landingController',
             var mapIngfo = {center: {lat: -34.397, lng: 150.644}, zoom: 8};
             $scope.map = new $scope.maps.Map(ele[0], mapIngfo);
             if ($scope.currentSelectedEvent !== undefined) {
-                if ($scope.currentSelectedEvent.geometry.rings !== undefined) {
-                     $scope.mapLoadFromRings($scope.currentSelectedEvent.geometry.rings);
+                 if (selectedEvent.eventNotificationZipcodes.length > 0) {
+                    $scope.mapLoadFromForZipCodes(selectedEvent.eventNotificationZipcodes);
                 } else if (selectedEvent.geometry.y !== undefined && selectedEvent.geometry.x !== undefined &&
                         selectedEvent.geometry.y !== '' && selectedEvent.geometry.x !== '') {
                     $scope.mapLoadASimplePoint(selectedEvent.geometry.x ,selectedEvent.geometry.y  );
-                } else if (selectedEvent.eventNotificationZipcodes.length > 0) {
-                    $scope.mapLoadFromForZipCodes(selectedEvent.eventNotificationZipcodes);
+                } else if ($scope.currentSelectedEvent.geometry.rings !== undefined) {
+                     $scope.mapLoadFromRings($scope.currentSelectedEvent.geometry.rings);
                 }
             }
         }, 0, false);
