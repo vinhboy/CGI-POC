@@ -27,6 +27,13 @@
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 300px) and (max-device-width: 480px) {
+  .login-bg {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: url(../images/bgs/login-320.jpg) 0 0 no-repeat; }
+
   .headerZone {
     width: 100%;
     position: fixed;
@@ -44,11 +51,6 @@
         width: 80px;
         height: auto; }
 
-  .usa-content.loginBG {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    background: url("../images/bgs/login-320.jpg") center center no-repeat; }
   .usa-content .centeredForm {
     margin: 0% auto;
     width: 90%;
