@@ -29,6 +29,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -261,19 +262,14 @@ public class UserServiceUnitTest {
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
-
     when(userDao.findUserByEmail(user.getEmail())).thenReturn(user);
 
+    try {
       Response registerUser = underTest.registerUser(user);
-
-      assertEquals(400, registerUser.getStatus());
-      ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
-      String actualMessage = errorInfo.getErrors().get(0).getMessage();
-      String actualCode = errorInfo.getErrors().get(0).getCode();
-
-      assertEquals("ERR4", actualCode);
-      assertEquals("A profile already exists for that email address. Please register using a different email.", actualMessage);
-
+      fail("Expected an exception to be thrown");
+    } catch (BadRequestException exception) {
+      assertEquals(exception.getMessage(), ValidationErrors.DUPLICATE_USER);
+    }
   }
 
   @Test

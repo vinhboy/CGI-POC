@@ -1,7 +1,6 @@
 package com.cgi.poc.dw.rest.resource;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -10,14 +9,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.cgi.poc.dw.auth.model.Role;
-import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserDto;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.util.ErrorInfo;
 import com.cgi.poc.dw.util.ValidationErrors;
-import java.util.HashSet;
-import java.util.Set;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -113,7 +109,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
 
     Response newUserResponse = client.target(String.format("http://localhost:%d/user", RULE.getLocalPort())).request()
         .post(Entity.json(user));
-    Assert.assertEquals(200, newUserResponse.getStatus());
+    assertEquals(200, newUserResponse.getStatus());
 
     // login user
     LoginUserDto loginUserDto = new LoginUserDto();

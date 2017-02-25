@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import javax.ws.rs.BadRequestException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,12 +64,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 		validate(user, "rest", RestValidationGroup.class, Default.class);
 		// check if the email already exists.
-		User findUserByEmail = userDao.findUserByEmail(user.getEmail());
-		if (findUserByEmail != null) {
-			ErrorInfo errRet = new ErrorInfo();
-			String errorString = "A profile already exists for that email address. Please register using a different email.";
-			errRet.addError(GeneralErrors.DUPLICATE_ENTRY.getCode(), errorString);
-			return Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
+		User exitingUser = userDao.findUserByEmail(user.getEmail());
+		if (exitingUser != null) {
+			throw new BadRequestException(ValidationErrors.DUPLICATE_USER);
 		}
 
 		return processForSave(user, false, false);
@@ -76,7 +74,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	private void saveUser(User user, boolean registered) {
 		validate(user, "save", Default.class, PersistValidationGroup.class);
-
 
 		userDao.save(user);
 		if (!registered) {
@@ -87,8 +84,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 	}
 
-	private void createPasswordHash(User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
-	}
 
 	// invoke Google Maps API to retrieve latitude and longitude by zipCode
 	private void setUserGeoCoordinates(User user) throws JsonParseException, JsonMappingException, IOException {

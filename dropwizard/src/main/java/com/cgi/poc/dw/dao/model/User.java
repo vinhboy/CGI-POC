@@ -94,37 +94,34 @@ public class User implements Serializable, Principal {
     @Size(max = 65)
     @Column(name = "last_name")
     private String lastName;
-    
-  // pattern checks for XXX@YYY.com
-  // generated regex
-  @ApiModelProperty(value = "Validates for standard email format:  XXX@YYY.ZZZ. No whitespace allowed ", required = true)
-  @Pattern(groups = {Default.class,
-      LoginValidationGroup.class}, regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Invalid email address.")
-  @Basic(optional = false)
-  @NotNull(groups = {Default.class, LoginValidationGroup.class})
-  @Size(min = 1, max = 150, groups = {Default.class, LoginValidationGroup.class})
-    @Column(name = "email")
-    private String email;
 
   @Basic(optional = false)
-  @NotNull(message = "is missing", groups = {Default.class, LoginValidationGroup.class})
-  @Size(min = 2, max = 150, message = "must be at least 2 characters in length.")
+  @ApiModelProperty(value = "Validates for standard email format:  XXX@YYY.ZZZ. No whitespace allowed ", required = true)
+  @Pattern(groups = {Default.class,
+      LoginValidationGroup.class}, regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+      message = ValidationErrors.INVALID_EMAIL)
+  @NotNull(message = ValidationErrors.MISSING_EMAIL, groups = {Default.class, LoginValidationGroup.class})
+  @Size(min = 1, max = 150, groups = {Default.class, LoginValidationGroup.class})
+  @Column(name = "email")
+  private String email;
+
+  @Basic(optional = false)
+  @NotNull(message = ValidationErrors.MISSING_PASSWORD, groups = {Default.class, LoginValidationGroup.class})
   @Column(name = "password")
-  @PasswordType(message = "must be greater that 2 character, contain no whitespace, and have at least one number and one letter.", groups = {
-      RestValidationGroup.class, LoginValidationGroup.class})
+  @PasswordType(message = ValidationErrors.INVALID_PASSWORD, groups = {RestValidationGroup.class, LoginValidationGroup.class })
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
+  private String password;
 
   //if the field contains phone or fax number consider using this annotation to enforce field validation
   //@Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")
   @Nullable
-  @Size(min = 10, max = 10)
+  @Size(message = ValidationErrors.INVALID_PHONE, min = 10, max = 10)
   @Column(name = "phone")
-    private String phone;
+  private String phone;
 
   @Basic(optional = false)
   @NotNull
-  @Pattern(regexp = "\\d{5}", message = "is invalid.")
+  @Pattern(regexp = "\\d{5}", message = ValidationErrors.INVALID_ZIPCODE)
   @Column(name = "zip_code")
     private String zipCode;
 
