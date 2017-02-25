@@ -262,7 +262,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
 
   @Test
-  public void geoCodingWithIncompleteAddressHandledGracefully() throws MessagingException {
+  public void geoCodesWithFullAddressIfAvailable() throws MessagingException {
     tstUser.setEmail("geocodeme@gmail.com");
     tstUser.setEmailNotification(false);
     tstUser.setSmsNotification(false);
@@ -279,7 +279,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  public void zipOnlyAddressGeoCodedDifferently() throws MessagingException {
+  public void geoCodesWithZipOnlyIfFullAddressMissing() throws MessagingException {
     tstUser.setEmail("geozip@gmail.com");
     tstUser.setEmailNotification(false);
     tstUser.setSmsNotification(false);
