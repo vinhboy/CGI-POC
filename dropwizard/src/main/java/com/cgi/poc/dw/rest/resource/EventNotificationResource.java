@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.HashSet;
@@ -51,7 +52,7 @@ public class EventNotificationResource {
   })
   @UnitOfWork
   @Timed(name = "EventNotification.publishNotification")
-  public Response publishNotification(@Auth User principal, @NotNull @Valid EventNotificationDto eventNotificationDto) {
+  public Response publishNotification(@ApiParam(hidden = true) @Auth User principal, @NotNull @Valid EventNotificationDto eventNotificationDto) {
     
     
     Response response =  notificationService.publishNotification(principal, eventNotificationDto);
@@ -79,7 +80,7 @@ public class EventNotificationResource {
   })
   @UnitOfWork
   @Timed(name = "EventNotification.getNotifications")
-  public Response getNotifications(@Auth User principal) {
+  public Response getNotifications(@ApiParam(hidden = true) @Auth User principal) {
       Response response = notificationService.retrieveAllNotifications(principal);
       if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
           throw new WebApplicationException(response);
@@ -103,7 +104,7 @@ public class EventNotificationResource {
   })
   @UnitOfWork
   @Timed(name = "EventNotification.getNotifications")
-  public Response getNotificationsForUser(@Auth User principal) {
+  public Response getNotificationsForUser(@ApiParam(hidden = true) @Auth User principal) {
       Response response = notificationService.retrieveNotificationsForUser(principal);
       if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
           throw new WebApplicationException(response);

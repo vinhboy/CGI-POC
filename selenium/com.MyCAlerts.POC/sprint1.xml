@@ -7,6 +7,7 @@
       <class name="com.MyCAlerts.Testcases.TC02_disAllowLogin"/>
       <class name="com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration"/>
       <class name="com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration"/>
+      <class name="com.MyCAlerts.Testcases.TC01_Admin_ListFilterEvents"/>
       
       
     </classes>
