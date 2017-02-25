@@ -39,7 +39,7 @@ server:
 #Jersey client settings
 jerseyClient:
     #The maximum time to wait for a connection to be returned from the connection pool.
-    connectionRequestTimeout: 9000ms
+    connectionRequestTimeout: 1000ms
     #The maximum time to wait for a connection to open.
     connectionTimeout: 9000ms
     #The maximum idle time for a connection, once established.
