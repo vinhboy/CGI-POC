@@ -28,7 +28,7 @@ database:
 server:
     applicationConnectors:
         - type: http
-          port: 9090
+          port: 8080
         - type: https
           port: 8443
           keyStorePath: development.keystore
@@ -38,11 +38,16 @@ server:
 
 #Jersey client settings
 jerseyClient:
+    #The maximum time to wait for a connection to be returned from the connection pool.
+    connectionRequestTimeout: 1000ms
+    #The maximum time to wait for a connection to open.
+    connectionTimeout: 9000ms
     #The maximum idle time for a connection, once established.
-    timeout: 5000ms
+    timeout: 9000ms
     #The size of the work queue of the pool used for asynchronous requests.
     #Additional threads will be spawn only if the queue is reached its maximum size.
-    workQueueSize: 16
+    workQueueSize: 20	
+    
 # CORS settings
 #   A list of comma-separated domains that the service will allow cross-origin access from.  If the Origin matches one
 #     of the domains in the list the application will generate a matching Access-Control-Allow-Origin header in the response.

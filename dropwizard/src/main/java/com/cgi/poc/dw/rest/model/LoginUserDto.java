@@ -1,5 +1,6 @@
 package com.cgi.poc.dw.rest.model;
 
+import com.cgi.poc.dw.util.ValidationErrors;
 import com.cgi.poc.dw.util.LoginValidationGroup;
 import com.cgi.poc.dw.util.PasswordType;
 import com.cgi.poc.dw.util.RestValidationGroup;
@@ -15,17 +16,16 @@ public class LoginUserDto {
 
   @ApiModelProperty(value = "Validates for standard email format:  XXX@YYY.ZZZ. No whitespace allowed ", required = true)
   @Pattern(groups = {Default.class,
-      LoginValidationGroup.class}, regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Invalid email address.")
-  @NotNull(groups = {Default.class, LoginValidationGroup.class})
+      LoginValidationGroup.class}, regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", 
+      message = ValidationErrors.INVALID_EMAIL)
+  @NotNull(message = ValidationErrors.MISSING_EMAIL, groups = {Default.class, LoginValidationGroup.class})
   @Size(min = 1, max = 150, groups = {Default.class, LoginValidationGroup.class})
   private String email;
 
   @Basic(optional = false)
-  @NotNull(message = "is missing", groups = {Default.class, LoginValidationGroup.class})
-  @Size(min = 2, max = 150, message = "must be at least 2 characters in length.")
+  @NotNull(message = ValidationErrors.MISSING_PASSWORD, groups = {Default.class, LoginValidationGroup.class})
   @Column(name = "password")
-  @PasswordType(message = "must be greater that 2 character, contain no whitespace, and have at least one number and one letter.", groups = {
-      RestValidationGroup.class, LoginValidationGroup.class})
+  @PasswordType(message = ValidationErrors.INVALID_PASSWORD, groups = {RestValidationGroup.class, LoginValidationGroup.class })
   private String password;
 
   public String getEmail() {
