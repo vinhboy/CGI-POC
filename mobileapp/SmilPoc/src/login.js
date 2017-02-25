@@ -10,7 +10,25 @@ import {
   Button, h3,FormLabel, FormInput, FormValidationMessage
 } from 'react-native-elements';
 
-export default class Login extends Component {
+import * as actions from './actions';
+
+
+import { connect } from 'react-redux';
+import {getNav,  getLogin} from './reducers'
+import * as Animatable from 'react-native-animatable';
+
+const mapDispatchToProps = {
+  ...actions
+}
+
+const mapStateToProps = (state, props)=> {
+  return {
+    ...getNav(state),
+    ...getLogin(state)
+  }
+}
+
+class Login extends Component {
 
   state = {
     email: '',
@@ -18,21 +36,37 @@ export default class Login extends Component {
     errmessage: ''
   }
 
+  constructor(props) {
+        super(props);
+    }
+
   _login(){
-
-
     const {email, pwd} = this.state;
 
     if (email.length < 1  ){
       this.setState({errmessage: 'Please enter valid credentials'});
+
     }else{
         this.setState({errmessage: ''});
+
+
+        //this.props.dispatch(actions.handleLogin(email, pwd) );
+        //instead of above
+        this.props.handleLogin(email, pwd)
+
     }
+
+    //using props, i should be able to dispatch
   }
 
 
   componentDidMount(){
 
+    // if (1 === 1){
+    //   this.props.handleLogin('token', '')
+    // }
+
+    this.refs.view.pulse(1800)
 
   }
 
@@ -40,30 +74,39 @@ export default class Login extends Component {
 
   const {errmessage} = this.state;
     return (
+      <View style={{justifyContent:'center',flexDirection: 'column', flex: 1,marginTop: 10}}>
+        <View style={styles.container}>
 
-      <View style={styles.container}>
 
+          <FormLabel>Email</FormLabel>
+          <FormInput
+            onChangeText={(text) => this.setState({email: text})}
+            />
 
-        <FormLabel>Email</FormLabel>
-        <FormInput
-          onChangeText={(text) => this.setState({email: text})}
-          />
+          <FormLabel>Password</FormLabel>
 
-        <FormLabel>Password</FormLabel>
+          <FormInput
+            onChangeText={(text) => this.setState({pwd: text})}
+            secureTextEntry
+            />
 
-        <FormInput
-          onChangeText={(text) => this.setState({pwd: text})}
-          secureTextEntry
-          />
+          <FormValidationMessage>
+            {errmessage}
 
-        <FormValidationMessage>
-          {errmessage}
-        </FormValidationMessage>
-        <Button
-          raised
-          icon={{name: 'cached'}}
-          title='Login'
-          onPress={this._login.bind(this)}/>
+          </FormValidationMessage>
+
+        </View>
+        <View style={styles.container2}>
+          <Animatable.View ref="view">
+
+            <Button
+              raised
+              icon={{name: 'vpn-key'}}
+              title='Login'
+              onPress={this._login.bind(this)}
+              />
+          </Animatable.View>
+        </View>
 
       </View>
     );
@@ -72,7 +115,14 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.8,
+
+  },
+  container2: {
+    flex: 0.2,
+
   },
 
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

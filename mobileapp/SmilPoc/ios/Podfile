@@ -3,13 +3,10 @@
 
 target 'SmilPoc' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
+  use_frameworks!
 
-  # Pods for SmilPoc
-  pod 'RNMobileCenter', '~> 0.2.0'
-  pod 'MobileCenter', '~> 0.4.0'
+  pod 'Firebase/Messaging'
 
-  
 
   target 'SmilPocTests' do
     inherit! :search_paths

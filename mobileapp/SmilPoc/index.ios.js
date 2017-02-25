@@ -8,6 +8,6 @@ import {
 } from 'react-native';
 
 
-import App from './src/login';
+import App from './src/app';
 
 AppRegistry.registerComponent('SmilPoc', () => App);
