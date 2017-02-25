@@ -106,13 +106,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(tstUser));
-    assertNotNull(response);
-    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
-      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
-      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_EMAIL), anyOf(is(ValidationErrors.MISSING_EMAIL))));
-    }
+    assertInvalidEmail(response);
   }
 
   @Test
@@ -123,15 +117,9 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(tstUser));
 
-    assertNotNull(response);
-    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
-      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
-      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_EMAIL), anyOf(is(ValidationErrors.MISSING_EMAIL))));
-    }
+    assertInvalidEmail(response);
   }
-
+  
   @Test
   public void noPassword() {
     Client client = new JerseyClientBuilder().build();
@@ -141,15 +129,9 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
-    assertNotNull(response);
-    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
-      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
-      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_PASSWORD), anyOf(is(ValidationErrors.MISSING_PASSWORD))));
-    }
+    assertInvalidPassword(response);
   }
-
+  
   @Test
   public void invalidPasswordTooShort() {
     Client client = new JerseyClientBuilder().build();
@@ -159,35 +141,8 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
-    assertNotNull(response);
-    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
-      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
-      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_PASSWORD), anyOf(is(ValidationErrors.MISSING_PASSWORD))));
-    }
+    assertInvalidPassword(response);
   }
-
-  public void invalidPasswordTooShortUpdate() {
-    Client client = new JerseyClientBuilder().build();
-    tstUser.setPassword("a");
-
-    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-
-    assertNotNull(response);
-    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
-      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
-      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_PASSWORD), anyOf(is(ValidationErrors.MISSING_PASSWORD))));
-    }
-  }
-  
 
   @Test
   public void invalidPasswordContainsWhiteSpace() {
@@ -198,13 +153,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
-    assertNotNull(response);
-    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
-      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
-      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_PASSWORD), anyOf(is(ValidationErrors.MISSING_PASSWORD))));
-    }
+    assertInvalidPassword(response);
   }
 
   @Test
@@ -216,17 +165,9 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
-    assertNotNull(response);
-    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
-      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
-      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_PASSWORD), anyOf(is(ValidationErrors.MISSING_PASSWORD))));
-    }
+    assertInvalidPassword(response);
   }
-
   
-
   @Test
   public void signupSuccess() throws MessagingException {
     Client client = new JerseyClientBuilder().build();
@@ -312,4 +253,26 @@ public class UserResourceIntegrationTest extends IntegrationTest {
       assertThat(error.getMessage(), is(ValidationErrors.DUPLICATE_USER));
     }
   }
+
+  
+  private void assertInvalidEmail(Response response) {
+    assertNotNull(response);
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+    for (Error error : errorInfo.getErrors()) {
+      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
+      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_EMAIL), anyOf(is(ValidationErrors.MISSING_EMAIL))));
+    }
+  }
+
+  private void assertInvalidPassword(Response response) {
+    assertNotNull(response);
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+    for (Error error : errorInfo.getErrors()) {
+      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
+      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_PASSWORD), anyOf(is(ValidationErrors.MISSING_PASSWORD))));
+    }
+  }
+
 }
