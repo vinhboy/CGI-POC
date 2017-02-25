@@ -50,32 +50,27 @@ public abstract class APICallerServiceImpl implements APICallerService {
     /**
      * call the service API to collect event information.
      */
+    @Override
     public void callServiceAPI() {
 
-        // TODO parameter which event to call
-        // parameter to call the right event collector
-        WebTarget webTarget = client.target(eventUrl );
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        Response response = invocationBuilder.get();
+       try {
 
-        LOG.debug("json : " + response.getEntity());
+          String response = client 
+             .target(eventUrl)
+             .request(MediaType.APPLICATION_JSON)
+             .get(String.class); 
 
-        // create ObjectMapper instance
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode eventJson=null;
-        try {
-            JsonFactory jsonFactory = new JsonFactory();
-            JsonParser parser = jsonFactory.createParser((InputStream) response.getEntity());
-	    parser.setCodec(objectMapper);
-            eventJson = parser.readValueAs(ObjectNode.class);
+            final ObjectNode eventJson = new ObjectMapper().readValue(response, ObjectNode.class);         
+            if (eventJson != null){
+                parsingEventsResponse(eventJson);
+           }
         } catch (JsonParseException e) {
-            LOG.error("Unable to parse the result for the url event : {} error: {}", webTarget.getUri(), e.getMessage());
+            LOG.error("Unable to parse the result for the url event : {} error: {}", eventUrl, e.getMessage());
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(APICallerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (eventJson != null){
-             parsingEventsResponse(eventJson);
-        }
+        } 
+
+       
     }
 
     /**
