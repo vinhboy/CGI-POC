@@ -22,6 +22,7 @@ import com.cgi.poc.dw.dao.model.EventEarthquake;
 import com.cgi.poc.dw.dao.model.EventFlood;
 import com.cgi.poc.dw.dao.model.EventHurricane;
 import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.EventNotificationUser;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.EventTsunami;
 import com.cgi.poc.dw.dao.model.EventVolcano;
@@ -105,7 +106,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
       = new HibernateBundle<CgiPocConfiguration>(User.class, 
       FireEvent.class, EventEarthquake.class, EventWeather.class, EventFlood.class,
       EventHurricane.class, EventTsunami.class, EventVolcano.class, EventNotification.class,
-      EventNotificationZipcode.class) {
+      EventNotificationZipcode.class,EventNotificationUser.class ){
     @Override
     public DataSourceFactory getDataSourceFactory(CgiPocConfiguration configuration) {
       return configuration.getDataSourceFactory();
