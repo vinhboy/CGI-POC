@@ -5,7 +5,7 @@
                     <img height="30" width="40" class="" ng-src="{{eventIcons[item.type]}}" alt="Logo image" />
                 </td>
                 <td>
-                    <h5 class="usa-heading-alt">{{item.type}}</h5>
+                    <h5 class="usa-heading-alt">{{(eventTypes | filter : {id: item.type})[0].name }} </h5>
                     <span>{{item.generationDate|  date:'MM-dd-yyyy&nbsp&nbsphh:mm:ss a'}}</span>
                     <span><span ng-repeat="z  in item.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
                 </td>
