@@ -52,7 +52,7 @@ jerseyClient:
 #   c.f. https://www.eclipse.org/jetty/documentation/9.3.x/cross-origin-filter.html
 # IMPORTANT NOTE: if there is no * character in the expression, the filter processes it as a raw string, NOT as a regex
 cors:
-  allowedDomains: https?://*.cgi.[a-z]{3},https?://*.cgi.[a-z]{3}:[0-9]{4},http://localhost:9000,http://localhost:8000,https?://(192.168).*.*:[0-9]{4},https?://(10.1).*.*:[0-9]{4}
+  allowedDomains: https?://*.cgi.[a-z]{3},https?://*.cgi.[a-z]{3}:[0-9]{4},http://localhost,http://localhost:9000,http://localhost:8000,https?://(192.168).*.*:[0-9]{4},https?://(10.1).*.*:[0-9]{4}
   allowedHeaders:
    - Accept
    - Authorization
