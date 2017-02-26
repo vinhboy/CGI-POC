@@ -54,33 +54,16 @@ describe('landingController', function() {
     $scope.changeFilters();
 
     expect($scope.model.notifications.length).toBe(10);
-    expect($scope.model.filteredNotifications.length).toBe(2);
+    expect($scope.model.filteredNotifications.length).toBe(10);
 
     $scope.eventTypeFilter='Weather';
-    $scope.eventTimeFilter=30;
     $scope.changeFilters();
-    expect($scope.model.filteredNotifications.length).toBe(1);
+    expect($scope.model.filteredNotifications.length).toBe(2);
 
     $scope.eventTypeFilter='Flood';
-    $scope.eventTimeFilter=365;
     $scope.changeFilters();
     expect($scope.model.filteredNotifications.length).toBe(6);
 
-
-    $scope.eventTypeFilter=undefined;
-    $scope.eventTimeFilter=365;
-    $scope.changeFilters();
-    expect($scope.model.filteredNotifications.length).toBe(10);
-
-    $scope.eventTypeFilter=undefined;
-    $scope.eventTimeFilter=60;
-    $scope.changeFilters();
-    expect($scope.model.filteredNotifications.length).toBe(4);
-
-    $scope.eventTypeFilter=undefined;
-    $scope.eventTimeFilter=90;
-    $scope.changeFilters();
-    expect($scope.model.filteredNotifications.length).toBe(7);
 
   });
   it('set the current select event and the showMapOrDetails', function() {

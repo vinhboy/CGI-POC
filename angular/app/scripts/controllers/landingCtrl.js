@@ -52,11 +52,9 @@ cgiWebApp.controller('landingController',
       notifications: []
     };
     $scope.eventTypeFilter=undefined;
-    $scope.eventTimeFilter=30;
     $scope.changeFilters = function(){
         $scope.model.filteredNotifications = angular.copy( $scope.model.notifications); 
         $scope.model.filteredNotifications  =  $filter('filter')($scope.model.filteredNotifications, {type: $scope.eventTypeFilter}, true);
-        $scope.model.filteredNotifications  =   $filter('eventTime')([$scope.model.filteredNotifications, $scope.eventTimeFilter]);
         $scope.currentSelectedEvent = $scope.model.filteredNotifications[0];
         $scope.activeItem.item = 0;
         $scope.backToDefault($scope.model.filteredNotifications[0]);
