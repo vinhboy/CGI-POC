@@ -6,10 +6,15 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.api.service.impl.MapsApiServiceImpl;
+import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.service.AddressBuilder;
+import com.cgi.poc.dw.service.AddressBuilderImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -25,6 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,6 +42,9 @@ public class MapsApiServiceUnitTest {
   @Mock
   private MapApiConfiguration mapApiConfiguration;
 
+  @Spy
+  private AddressBuilder addressBuilder = new AddressBuilderImpl();
+
   @InjectMocks
   private MapsApiServiceImpl underTest;
 
@@ -46,7 +55,7 @@ public class MapsApiServiceUnitTest {
   }
 
   @Test(expected = InternalServerErrorException.class)
-  public void registerUser_MapsAPICommunicationFails()
+  public void mapsAPICommunicationFails()
       throws InvalidKeySpecException, NoSuchAlgorithmException {
 
     //mocking the Jersey Client
@@ -62,7 +71,7 @@ public class MapsApiServiceUnitTest {
   }
 
   @Test
-  public void registerUser_FoundGeoCoordinates() throws Exception {
+  public void foundGeoCoordinates() throws Exception {
 
     JsonNode jsonRespone = new ObjectMapper().
         readTree(getClass().getResource("/google_maps_api/success_geocode_response.json"));
@@ -81,7 +90,7 @@ public class MapsApiServiceUnitTest {
   }
 
   @Test
-  public void registerUser_NotFoundGeoCoordinates() throws Exception {
+  public void notFoundGeoCoordinates() throws Exception {
 
     JsonNode jsonRespone = new ObjectMapper().
         readTree(getClass().getResource("/google_maps_api/not_found_geocode_response.json"));
@@ -99,4 +108,43 @@ public class MapsApiServiceUnitTest {
     assertEquals(new Double(0.0), result.getLongitude());
   }
 
+  @Test
+  public void foundGeoCoordinatesForUser() throws Exception {
+
+    JsonNode jsonRespone = new ObjectMapper().
+            readTree(getClass().getResource("/google_maps_api/success_geocode_response.json"));
+
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+    when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
+
+    User user = new User();
+    user.setZipCode("92105");
+    GeoCoordinates result = underTest.getGeoCoordinatesByUser(user);
+    assertEquals(new Double(38.5824933), result.getLatitude());
+    assertEquals(new Double(-121.4941738), result.getLongitude());
+  }
+
+  @Test
+  public void asksAddressBuilderForAddressToLookup() throws IOException {
+    JsonNode jsonResponse = new ObjectMapper().
+            readTree(getClass().getResource("/google_maps_api/success_geocode_response.json"));
+
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+    when(mockBuilder.get(String.class)).thenReturn(jsonResponse.toString());
+
+    User user = new User();
+    user.setZipCode("92105");
+    underTest.getGeoCoordinatesByUser(user);
+    verify(addressBuilder, times(1)).build(user);
+  }
 }

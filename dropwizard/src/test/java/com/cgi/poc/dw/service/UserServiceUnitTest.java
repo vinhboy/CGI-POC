@@ -100,7 +100,7 @@ public class UserServiceUnitTest {
     GeoCoordinates geoCoordinates = new GeoCoordinates();
     geoCoordinates.setLatitude(10.00);
     geoCoordinates.setLongitude(20.00);
-    when(mapsApiService.getGeoCoordinatesByZipCode(anyString())).thenReturn(geoCoordinates);
+    when(mapsApiService.getGeoCoordinatesByUser(user)).thenReturn(geoCoordinates);
 
     JsonNode jsonRespone = new ObjectMapper()
         .readTree(getClass().getResource("/google_maps_api/success_geocode_response.json"));
@@ -305,7 +305,7 @@ public class UserServiceUnitTest {
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
-    doThrow(new InternalServerErrorException("Processing failed.")).when(mapsApiService).getGeoCoordinatesByZipCode(anyString());
+    doThrow(new InternalServerErrorException("Processing failed.")).when(mapsApiService).getGeoCoordinatesByUser(user);
     
     try {
       Response response = underTest.registerUser(user);

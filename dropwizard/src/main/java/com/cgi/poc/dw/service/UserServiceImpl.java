@@ -77,7 +77,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			user.setPassword(hash);
 		}
 
-		GeoCoordinates geoCoordinates = mapsApiService.getGeoCoordinatesByZipCode(user.getZipCode());
+		GeoCoordinates geoCoordinates = mapsApiService.getGeoCoordinatesByUser(user);
 		user.setLatitude(geoCoordinates.getLatitude());
 		user.setLongitude(geoCoordinates.getLongitude());
 
