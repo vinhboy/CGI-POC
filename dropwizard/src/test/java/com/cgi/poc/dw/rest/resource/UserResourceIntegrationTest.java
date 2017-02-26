@@ -43,14 +43,9 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
   private UserDto tstUser;
 
-  private static GreenMail smtpServer;
-
   @BeforeClass
   public static void createUser() throws SQLException {
     IntegrationTestHelper.signupResidentUser();
-    smtpServer = new GreenMail(new ServerSetup(3025, "127.0.0.1",
-        ServerSetup.PROTOCOL_SMTP));
-    smtpServer.start();
   }
 
   @Before
@@ -81,9 +76,6 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   @AfterClass
   public static void cleanup() {
     IntegrationTestHelper.cleanDbState();
-    if (smtpServer != null) {
-      smtpServer.stop();
-    }
   }
 
   @Test
@@ -175,19 +167,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     Assert.assertEquals(200, response.getStatus());
-
-    //verify email registration
-    smtpServer.waitForIncomingEmail(7000,1);
-
-    MimeMessage[] receivedMails = smtpServer.getReceivedMessages();
-    assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
-
-    for(MimeMessage mail : receivedMails) {
-      assertTrue(GreenMailUtil.getHeaders(mail).contains("Registration confirmation"));
-      assertTrue(GreenMailUtil.getBody(mail).contains("Hello there, thank you for registering."));
-    }
-    assertEquals("random_mail12@gmail.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
-  }
+}
 
   @Test
   public void updateSuccessWithoutPasswordChange() throws MessagingException {

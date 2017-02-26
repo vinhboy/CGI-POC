@@ -28,20 +28,14 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private final PasswordHash passwordHash;
 	
 	private MapsApiService mapsApiService;
-
-	private final EmailService emailService;
-
-	private final TextMessageService textMessageService;
 	
 	@Inject
 	public UserServiceImpl(MapsApiService mapsApiService, UserDao userDao, PasswordHash passwordHash,
-			Validator validator, EmailService emailService, TextMessageService textMessageService) {
+			Validator validator) {
 		super(validator);
 		this.userDao = userDao;
 		this.passwordHash = passwordHash;
 		this.mapsApiService = mapsApiService;
-		this.emailService = emailService;
-		this.textMessageService = textMessageService;
 	}
 
 	public Response registerUser(User user) {
@@ -55,19 +49,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			throw new BadRequestException(ValidationErrors.DUPLICATE_USER);
 		}
 
-		return processForSave(user, false, false);
-	}
-
-	private void saveUser(User user, boolean registered) {
-		validate(user, "save", Default.class, PersistValidationGroup.class);
-
-		userDao.save(user);
-		if (!registered) {
-			// Future TODO enhancement: make the subject and email body configurable
-			emailService.send(null, Arrays.asList(user.getEmail()), "Registration confirmation",
-					"Hello there, thank you for registering.");
-			textMessageService.send(user.getPhone(), "MyCAlerts: Thank you for registering.");
-		}
+		return processForSave(user, false);
 	}
 	
 	public Response updateUser(User user, User modifiedUser) {
@@ -82,10 +64,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		modifiedUser.setId(user.getId());
 		modifiedUser.setRole(user.getRole());
-		return processForSave(modifiedUser, true, keepPassword);
+		return processForSave(modifiedUser, keepPassword);
 	}
 
-	private Response processForSave(User user, boolean registered, boolean keepPassword) {
+	private Response processForSave(User user, boolean keepPassword) {
 		Response response = null;
 		if (!keepPassword) {
 			String hash = passwordHash.createHash(user.getPassword());
@@ -96,7 +78,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		user.setLatitude(geoCoordinates.getLatitude());
 		user.setLongitude(geoCoordinates.getLongitude());
 
-		saveUser(user, registered);
+		validate(user, "save", Default.class, PersistValidationGroup.class);
+		userDao.save(user);
+
 		response = Response.ok().entity(user).build();
 
 		return response;
