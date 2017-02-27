@@ -33,10 +33,20 @@ import com.cgi.poc.dw.rest.resource.EventNotificationResource;
 import com.cgi.poc.dw.jobs.JobExecutionService;
 import com.cgi.poc.dw.jobs.JobFactory;
 import com.cgi.poc.dw.jobs.JobFactoryImpl;
-import com.cgi.poc.dw.service.*;
+import com.cgi.poc.dw.factory.AddressBuilder;
+import com.cgi.poc.dw.factory.AddressBuilderImpl;
+import com.cgi.poc.dw.service.EmailService;
+import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.rest.resource.LoginResource;
 import com.cgi.poc.dw.rest.resource.UserResource;
+import com.cgi.poc.dw.service.TextMessageService;
+import com.cgi.poc.dw.service.TextMessageServiceImpl;
 import com.cgi.poc.dw.sockets.AlertEndpoint;
+import com.cgi.poc.dw.service.EventNotificationServiceImpl;
+import com.cgi.poc.dw.service.LoginService;
+import com.cgi.poc.dw.service.LoginServiceImpl;
+import com.cgi.poc.dw.service.UserService;
+import com.cgi.poc.dw.service.UserServiceImpl;
 import com.cgi.poc.dw.util.BadRequestExceptionMapper;
 import com.cgi.poc.dw.util.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.util.CustomSQLConstraintViolationException;
@@ -85,6 +95,7 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.cgi.poc.dw.service.EventNotificationService;
 
 /**
  * Main Dropwizard Application class.

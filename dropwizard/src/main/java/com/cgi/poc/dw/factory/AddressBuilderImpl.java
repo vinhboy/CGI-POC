@@ -1,11 +1,9 @@
-package com.cgi.poc.dw.service;
+package com.cgi.poc.dw.factory;
 
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.cgi.poc.dw.dao.model.User;
-
-import java.util.Optional;
 
 public class AddressBuilderImpl implements AddressBuilder {
   @Override

@@ -3,8 +3,6 @@ package com.cgi.poc.dw.api.service.impl;
 import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.api.service.MapsApiService;
 import com.cgi.poc.dw.api.service.data.GeoCoordinates;
-import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.service.AddressBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -21,15 +19,13 @@ public class MapsApiServiceImpl implements MapsApiService {
   private MapApiConfiguration mapApiConfiguration;
 
   private Client client;
-  private AddressBuilder addressBuilder;
 
   private static final String ADDRESS = "address";
 
   @Inject
-  public MapsApiServiceImpl(MapApiConfiguration mapApiConfiguration, Client client, AddressBuilder addressBuilder) {
+  public MapsApiServiceImpl(MapApiConfiguration mapApiConfiguration, Client client) {
     this.mapApiConfiguration = mapApiConfiguration;
     this.client = client;
-    this.addressBuilder = addressBuilder;
   }
 
   @Override
@@ -38,8 +34,8 @@ public class MapsApiServiceImpl implements MapsApiService {
   }
 
   @Override
-  public GeoCoordinates getGeoCoordinatesByUser(User user) {
-    return getGeoCoordinates(addressBuilder.build(user));
+  public GeoCoordinates getGeoCoordinatesByAddress(String address) {
+    return getGeoCoordinates(address);
   }
 
   private GeoCoordinates getGeoCoordinates(String address) {

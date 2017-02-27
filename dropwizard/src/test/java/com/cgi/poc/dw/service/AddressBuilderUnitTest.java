@@ -2,6 +2,8 @@ package com.cgi.poc.dw.service;
 
 import static org.junit.Assert.assertEquals;
 
+import com.cgi.poc.dw.factory.AddressBuilder;
+import com.cgi.poc.dw.factory.AddressBuilderImpl;
 import org.junit.Test;
 
 public class AddressBuilderUnitTest {

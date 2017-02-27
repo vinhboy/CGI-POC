@@ -1,4 +1,4 @@
-package com.cgi.poc.dw.service;
+package com.cgi.poc.dw.factory;
 
 import com.cgi.poc.dw.dao.model.User;
 

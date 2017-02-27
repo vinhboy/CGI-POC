@@ -5,12 +5,12 @@ import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.factory.AddressBuilder;
 import com.cgi.poc.dw.util.LoginValidationGroup;
 import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.cgi.poc.dw.util.RestValidationGroup;
 import com.cgi.poc.dw.util.ValidationErrors;
 import com.google.inject.Inject;
-import java.util.Arrays;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import javax.ws.rs.BadRequestException;
@@ -77,7 +77,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			user.setPassword(hash);
 		}
 
-		GeoCoordinates geoCoordinates = mapsApiService.getGeoCoordinatesByUser(user);
+		GeoCoordinates geoCoordinates = mapsApiService.getGeoCoordinatesByAddress(addressBuilder.build(user));
 		user.setLatitude(geoCoordinates.getLatitude());
 		user.setLongitude(geoCoordinates.getLongitude());
 

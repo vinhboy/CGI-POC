@@ -6,5 +6,5 @@ import com.cgi.poc.dw.dao.model.User;
 public interface MapsApiService {
 
   GeoCoordinates getGeoCoordinatesByZipCode(String zipCode);
-  GeoCoordinates getGeoCoordinatesByUser(User user);
+  GeoCoordinates getGeoCoordinatesByAddress(String address);
 }
