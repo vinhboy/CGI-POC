@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import java.io.IOException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import org.hibernate.SessionFactory;

@@ -70,21 +70,21 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
 
       Transaction transaction = session.beginTransaction();
       EventFlood eventFromDB = eventDAO.selectForUpdate(event);
-      boolean bNewEvent = false;
+      boolean isNewEvent = false;
       try {
         event.setLastModified(eventFromDB.getLastModified());
       } catch (Exception ex) {
         LOG.info("Event is new");
         // row doesn't exist it's new... nothing wrong..
         // just ignore the exectoion
-        bNewEvent = true;
+        isNewEvent = true;
       }
       LOG.info("Event to save : {}", event.toString());
       // Archive users based on last login date
       retEvent = eventDAO.save(event);
       transaction.commit();
 
-      if (bNewEvent || !retEvent.getLastModified().equals(eventFromDB.getLastModified())) {
+      if (isNewEvent || isChangedEvent(retEvent, eventFromDB)) {
         LOG.info("Event for notifications");
 
         GeoCoordinates geo = new GeoCoordinates();
@@ -128,6 +128,10 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
       session.close();
       ManagedSessionContext.unbind(sessionFactory);
     }
+  }
+
+  private boolean isChangedEvent(EventFlood retEvent, EventFlood eventFromDB) {
+    return !retEvent.getLastModified().equals(eventFromDB.getLastModified());
   }
 
 

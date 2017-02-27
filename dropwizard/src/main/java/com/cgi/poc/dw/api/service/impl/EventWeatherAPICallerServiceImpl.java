@@ -69,21 +69,21 @@ public class EventWeatherAPICallerServiceImpl extends APICallerServiceImpl {
 
       Transaction transaction = session.beginTransaction();
       EventWeather eventFromDB = eventDAO.selectForUpdate(event);
-      boolean bNewEvent = false;
+      boolean isNewEvent = false;
       try {
         event.setLastModified(eventFromDB.getLastModified());
       } catch (Exception ex) {
         LOG.info("Event is new");
         // row doesn't exist it's new... nothing wrong..
         // just ignore the exectoion
-        bNewEvent = true;
+        isNewEvent = true;
       }
       LOG.info("Event to save : {}", event.toString());
       // Archive users based on last login date
       retEvent = eventDAO.update(event);
       transaction.commit();
 
-      if (bNewEvent || !retEvent.getLastModified().equals(eventFromDB.getLastModified())) {
+      if (isNewEvent || isChangedEvent(retEvent, eventFromDB)) {
         LOG.info("Event for notifications");
 
         List<User> users = userDao.getGeoWithinRadius(geoJson, 50.00);
@@ -124,6 +124,10 @@ public class EventWeatherAPICallerServiceImpl extends APICallerServiceImpl {
       ManagedSessionContext.unbind(sessionFactory);
     }
 
+  }
+
+  private boolean isChangedEvent(EventWeather retEvent, EventWeather eventFromDB) {
+    return !retEvent.getLastModified().equals(eventFromDB.getLastModified());
   }
 
 
