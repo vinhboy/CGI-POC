@@ -62,6 +62,7 @@ class Home extends Component {
        FCM.getFCMToken().then(token => {
           //  console.log("FCM token",token)
            // store fcm token in your server
+          //  this.props.storeToken(token);
        });
 
        this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {

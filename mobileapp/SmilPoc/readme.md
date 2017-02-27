@@ -38,3 +38,12 @@
 'React' should now appear under Targets section. Click and drag it to the top so that it will be the first item in the list (before your project).
 
 - Clean the project and build.
+
+
+
+#### Upgrading to the newest version of React Native
+
+* Please be aware that standard react-native upgrade will replace ios/android main files (e.g. appdelegate) with a standard one
+
+* Best way is to use this package that will try to resolve conflicts
+* https://github.com/facebook/react-native/tree/master/react-native-git-upgrade

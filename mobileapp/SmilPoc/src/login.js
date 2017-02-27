@@ -17,6 +17,8 @@ import { connect } from 'react-redux';
 import {getNav,  getLogin} from './reducers'
 import * as Animatable from 'react-native-animatable';
 
+
+
 const mapDispatchToProps = {
   ...actions
 }
@@ -62,9 +64,9 @@ class Login extends Component {
 
   componentDidMount(){
 
-    // if (1 === 1){
-    //   this.props.handleLogin('token', '')
-    // }
+    //this will check if token is present and move to next view
+    // this.props.tryLocalToken();
+
 
     this.refs.view.pulse(1800)
 

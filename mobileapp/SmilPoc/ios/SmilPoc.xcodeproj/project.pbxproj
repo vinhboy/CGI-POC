@@ -95,6 +95,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNFIRMessaging;
 		};
+		080B3CE41E624BA50094F5A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 83CBBA2D1A601D0E00E9B192;
+			remoteInfo = React;
+		};
 		08BBCABC1E5F529100506655 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BF8401041E5A4F41BBCD4965 /* RNVectorIcons.xcodeproj */;
@@ -592,6 +599,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				080B3CE51E624BA50094F5A5 /* PBXTargetDependency */,
 			);
 			name = SmilPoc;
 			productName = "Hello World";
@@ -1175,6 +1183,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		080B3CE51E624BA50094F5A5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = React;
+			targetProxy = 080B3CE41E624BA50094F5A5 /* PBXContainerItemProxy */;
+		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2D02E47A1E0B4A5D006451C7 /* SmilPoc-tvOS */;
