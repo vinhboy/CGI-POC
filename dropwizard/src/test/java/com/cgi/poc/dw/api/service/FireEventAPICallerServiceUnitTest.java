@@ -22,22 +22,28 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
+import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
 import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.dao.FireEventDAO;
 import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.FireEventDAO;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.FireEvent;
+import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.TextMessageService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -48,7 +54,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
@@ -57,7 +62,6 @@ import org.slf4j.LoggerFactory;
 @RunWith(MockitoJUnitRunner.class)
 public class FireEventAPICallerServiceUnitTest {
 
-  @InjectMocks
   private FireEventAPICallerServiceImpl underTest;
 
   @Mock
@@ -85,7 +89,25 @@ public class FireEventAPICallerServiceUnitTest {
   private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
   @Before
-  public void setup() {
+  public void setup() throws IOException {
+
+    JsonNode jsonRespone = new ObjectMapper().
+        readTree(getClass().getResource("/exampleFireEvent.json"));
+
+    Client client = mock(Client.class);
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+    when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
+
+    String eventUrl = "http://events.com";
+    underTest = new FireEventAPICallerServiceImpl(
+        eventUrl, client, eventDAO, sessionFactory, textMessageService, emailService, userDao,
+        eventNotificationDAO);
+
     final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     logger.addAppender(mockAppender);
   }
@@ -97,10 +119,35 @@ public class FireEventAPICallerServiceUnitTest {
   }
 
   @Test
-  public void newEventWithNoAffectedUsers() throws IOException {
-    URL resource = getClass().getResource("/exampleFireEvent.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
+  public void callServiceAPI_Failure() throws IOException {
+    Client client = mock(Client.class);
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+    doThrow(new ProcessingException("Processing failed.")).when(mockBuilder).get(String.class);
 
+    String eventUrl = "http://events.com";
+    FireEventAPICallerServiceImpl underTest = new FireEventAPICallerServiceImpl(
+        eventUrl, client, eventDAO, sessionFactory, textMessageService, emailService, userDao,
+        eventNotificationDAO);
+
+    underTest.callServiceAPI();
+
+    //verify logging interactions
+    verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
+    final LoggingEvent loggingEvent = captorLoggingEvent.getValue();
+    //Check log level is correct
+    assertThat(loggingEvent.getLevel(), is(Level.ERROR));
+    //Check the message being logged is correct
+    assertThat(loggingEvent.getFormattedMessage().toLowerCase(),
+        containsString("unable to parse the result for the url event : " + eventUrl));
+  }
+
+  @Test
+  public void newEventWithNoAffectedUsers() throws IOException {
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
@@ -116,7 +163,7 @@ public class FireEventAPICallerServiceUnitTest {
     //return empty list to indicate no affected users
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(Collections.emptyList());
 
-    underTest.processEventJSON(node);
+    underTest.callServiceAPI();
 
     verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
@@ -127,9 +174,6 @@ public class FireEventAPICallerServiceUnitTest {
 
   @Test
   public void newEventWithAffectedUsers() throws IOException {
-    URL resource = getClass().getResource("/exampleFireEvent.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
-
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
@@ -153,7 +197,7 @@ public class FireEventAPICallerServiceUnitTest {
     //return empty list to indicate no affected users
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(affectedUsers);
 
-    underTest.processEventJSON(node);
+    underTest.callServiceAPI();
 
     verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
@@ -164,9 +208,6 @@ public class FireEventAPICallerServiceUnitTest {
 
   @Test
   public void changedEventWithNoAffectedUsers() throws IOException {
-    URL resource = getClass().getResource("/exampleFireEvent.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
-
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
@@ -176,7 +217,7 @@ public class FireEventAPICallerServiceUnitTest {
     FireEvent eventFromDB = mock(FireEvent.class);
     when(eventDAO.selectForUpdate(any(FireEvent.class))).thenReturn(eventFromDB);
     when(eventFromDB.getLastModified()).thenReturn(new Date(2017, 2, 27));
-    
+
     FireEvent retEvent = mock(FireEvent.class);
     when(eventDAO.save(any(FireEvent.class))).thenReturn(retEvent);
     when(retEvent.getLastModified()).thenReturn(new Date(2017, 2, 28));
@@ -184,7 +225,7 @@ public class FireEventAPICallerServiceUnitTest {
     //return empty list to indicate no affected users
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(Collections.emptyList());
 
-    underTest.processEventJSON(node);
+    underTest.callServiceAPI();
 
     verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
@@ -195,15 +236,12 @@ public class FireEventAPICallerServiceUnitTest {
 
   @Test
   public void changedEventWithAffectedUsers() throws IOException {
-    URL resource = getClass().getResource("/exampleFireEvent.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
-
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
     Transaction transaction = mock(Transaction.class);
     when(session.beginTransaction()).thenReturn(transaction);
-    
+
     FireEvent eventFromDB = mock(FireEvent.class);
     when(eventDAO.selectForUpdate(any(FireEvent.class))).thenReturn(eventFromDB);
     when(eventFromDB.getLastModified()).thenReturn(new Date(2017, 2, 27));
@@ -223,7 +261,7 @@ public class FireEventAPICallerServiceUnitTest {
     //return empty list to indicate no affected users
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(affectedUsers);
 
-    underTest.processEventJSON(node);
+    underTest.callServiceAPI();
 
     verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
@@ -235,13 +273,27 @@ public class FireEventAPICallerServiceUnitTest {
   @Test
   public void logsTheErrorWhenParsingUnexpectedJson() throws IOException {
 
-    URL resource = getClass().getResource("/unexpectedFormatFireEvent.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
+    JsonNode jsonRespone = new ObjectMapper().
+        readTree(getClass().getResource("/exampleFireEventInvalidData.json"));
 
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
-    underTest.processEventJSON(node);
+    Client client = mock(Client.class);
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+    when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
+
+    String eventUrl = "http://events.com";
+    FireEventAPICallerServiceImpl underTest = new FireEventAPICallerServiceImpl(
+        eventUrl, client, eventDAO, sessionFactory, textMessageService, emailService, userDao,
+        eventNotificationDAO);
+
+    underTest.callServiceAPI();
 
     //verify logging interactions
     verify(mockAppender, atLeast(1)).doAppend(captorLoggingEvent.capture());

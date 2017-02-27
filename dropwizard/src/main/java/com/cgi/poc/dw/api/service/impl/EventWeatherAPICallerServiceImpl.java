@@ -16,8 +16,6 @@ import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.TextMessageService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.Arrays;
@@ -32,80 +30,63 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author dawna.floyd
  */
 public class EventWeatherAPICallerServiceImpl extends APICallerServiceImpl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EventWeatherAPICallerServiceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(EventWeatherAPICallerServiceImpl.class);
 
-    private EventWeatherDAO eventDAO;
-    private TextMessageService textMessageService;
-    private EmailService emailService;
-    private UserDao userDao;
-    private EventNotificationDAO eventNotificationDAO;
+  private EventWeatherDAO eventDAO;
+  private TextMessageService textMessageService;
+  private EmailService emailService;
+  private UserDao userDao;
+  private EventNotificationDAO eventNotificationDAO;
 
-    @Inject
-    public EventWeatherAPICallerServiceImpl(String eventUrl, Client client, EventWeatherDAO weatherEventDAO,
-          SessionFactory sessionFactory, TextMessageService textMessageService,
-          EmailService emailService, UserDao userDao, EventNotificationDAO eventNotificationDAO) {
-        super(eventUrl, client, sessionFactory);
-        eventDAO = weatherEventDAO;
-        this.textMessageService = textMessageService;
-        this.emailService = emailService;
-        this.userDao = userDao;
-        this.eventNotificationDAO = eventNotificationDAO;
+  @Inject
+  public EventWeatherAPICallerServiceImpl(String eventUrl, Client client,
+      EventWeatherDAO weatherEventDAO,
+      SessionFactory sessionFactory, TextMessageService textMessageService,
+      EmailService emailService, UserDao userDao, EventNotificationDAO eventNotificationDAO) {
+    super(eventUrl, client, sessionFactory);
+    eventDAO = weatherEventDAO;
+    this.textMessageService = textMessageService;
+    this.emailService = emailService;
+    this.userDao = userDao;
+    this.eventNotificationDAO = eventNotificationDAO;
 
-    }
+  }
 
-    /**
-     * parsing the json to a java object.
-     *
-     * @param featureJson the json string get from the Rest API
-     */
-    public void processEventJSON(ObjectNode featureJson) {
-        ArrayNode featuresArray = (ArrayNode) featureJson.get("features");
-        LOG.info("Events to save : {}", featuresArray.size());
-        for (int i = 0; i < featuresArray.size(); i++) {
-            JsonNode feature = featuresArray.get(i);
-            JsonNode event1 = feature.get("attributes");
-            JsonNode geoJson = feature.get("geometry");
-            mapAndSave(event1, geoJson);
-        }
-    }
+  public void mapAndSave(JsonNode eventJson, JsonNode geoJson) {
+    ObjectMapper mapper = new ObjectMapper();
+    EventWeather retEvent;
 
+    Session session = sessionFactory.openSession();
+    try {
+      EventWeather event = mapper.readValue(eventJson.toString(), EventWeather.class);
 
-    private void mapAndSave(JsonNode eventJson, JsonNode geoJson) {
-        ObjectMapper mapper = new ObjectMapper();
-        EventWeather retEvent;
+      event.setGeometry(geoJson.toString());
+      ManagedSessionContext.bind(session);
 
-        Session session = sessionFactory.openSession();
-        try {
-            EventWeather event = mapper.readValue(eventJson.toString(), EventWeather.class);
+      Transaction transaction = session.beginTransaction();
+      EventWeather eventFromDB = eventDAO.selectForUpdate(event);
+      boolean bNewEvent = false;
+      try {
+        event.setLastModified(eventFromDB.getLastModified());
+      } catch (Exception ex) {
+        LOG.info("Event is new");
+        // row doesn't exist it's new... nothing wrong..
+        // just ignore the exectoion
+        bNewEvent = true;
+      }
+      LOG.info("Event to save : {}", event.toString());
+      // Archive users based on last login date
+      retEvent = eventDAO.update(event);
+      transaction.commit();
 
-            event.setGeometry(geoJson.toString());
-            ManagedSessionContext.bind(session);
+      if (bNewEvent || !retEvent.getLastModified().equals(eventFromDB.getLastModified())) {
+        LOG.info("Event for notifications");
 
-            Transaction transaction = session.beginTransaction();
-            EventWeather eventFromDB = eventDAO.selectForUpdate(event);
-            boolean bNewEvent = false;
-            try {
-                 event.setLastModified(eventFromDB.getLastModified());
-            } catch (Exception ex) {
-                LOG.info("Event is new");
-                // row doesn't exist it's new... nothing wrong..
-                // just ignore the exectoion
-                bNewEvent = true;
-            }
-            LOG.info("Event to save : {}", event.toString());
-            // Archive users based on last login date
-            retEvent = eventDAO.update(event);
-            transaction.commit();
-
-            if(bNewEvent || !retEvent.getLastModified().equals(eventFromDB.getLastModified()) ){
-                LOG.info("Event for notifications");
-
-                List<User> users = userDao.getGeoWithinRadius(geoJson, 50.00);
+        List<User> users = userDao.getGeoWithinRadius(geoJson, 50.00);
 
                 EventNotification eventNotification = new EventNotification();
                 eventNotification.setCitizensAffected(users.size());
@@ -116,33 +97,34 @@ public class EventWeatherAPICallerServiceImpl extends APICallerServiceImpl {
                 eventNotification.setType("Weather");
                 eventNotification.setUserId(userDao.getAdminUser());
 
-                if (users.size() > 0) {
+        if (users.size() > 0) {
 
-                    LOG.info("Send notifications to : {}", users.toString());
-                    for (User user : users) {
-                        EventNotificationUser currENUser= new EventNotificationUser();
-                        currENUser.setUserId(user);
-                        eventNotification.addNotifiedUser(currENUser);
+          LOG.info("Send notifications to : {}", users.toString());
+          for (User user : users) {
+            EventNotificationUser currENUser = new EventNotificationUser();
+            currENUser.setUserId(user);
+            eventNotification.addNotifiedUser(currENUser);
 
-                        if (user.getSmsNotification()) {
-                            textMessageService.send(user.getPhone(), eventNotification.getDescription());
-                        }
-                        if (user.getEmailNotification()) {
-                            emailService.send(null, Arrays.asList(user.getEmail()), "Emergency alert from MyCAlerts: " + event.getProdType(),
-                                eventNotification.getDescription());
-                        }
-                    }
-                }
-                eventNotificationDAO.save(eventNotification);
+            if (user.getSmsNotification()) {
+              textMessageService.send(user.getPhone(), eventNotification.getDescription());
             }
-        } catch (IOException ex) {
-            LOG.error("Unable to parse the result for the weather event : error: {}", ex.getMessage());
-        } finally {
-            session.close();
-            ManagedSessionContext.unbind(sessionFactory);
+            if (user.getEmailNotification()) {
+              emailService.send(null, Arrays.asList(user.getEmail()),
+                  "Emergency alert from MyCAlerts: " + event.getProdType(),
+                  eventNotification.getDescription());
+            }
+          }
         }
-
+        eventNotificationDAO.save(eventNotification);
+      }
+    } catch (IOException ex) {
+      LOG.error("Unable to parse the result for the weather event : error: {}", ex.getMessage());
+    } finally {
+      session.close();
+      ManagedSessionContext.unbind(sessionFactory);
     }
+
+  }
 
 
 }

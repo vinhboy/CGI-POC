@@ -30,10 +30,9 @@ import com.cgi.poc.dw.dao.model.EventFlood;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.TextMessageService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -52,7 +51,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
@@ -61,7 +59,6 @@ import org.slf4j.LoggerFactory;
 @RunWith(MockitoJUnitRunner.class)
 public class EventFloodAPICallerServiceUnitTest {
 
-  @InjectMocks
   private EventFloodAPICallerServiceImpl underTest;
 
   @Mock
@@ -89,7 +86,25 @@ public class EventFloodAPICallerServiceUnitTest {
   private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
 
   @Before
-  public void setup() {
+  public void setup() throws IOException {
+
+    JsonNode jsonRespone = new ObjectMapper().
+        readTree(getClass().getResource("/exampleFloodEvent.json"));
+
+    Client client = mock(Client.class);
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+    when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
+
+    String eventUrl = "http://events.com";
+    underTest = new EventFloodAPICallerServiceImpl(
+        eventUrl, client, eventDAO, sessionFactory, textMessageService, emailService, userDao,
+        eventNotificationDAO);
+
     final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     logger.addAppender(mockAppender);
   }
@@ -115,6 +130,7 @@ public class EventFloodAPICallerServiceUnitTest {
     EventFloodAPICallerServiceImpl underTest = new EventFloodAPICallerServiceImpl(
         eventUrl, client, eventDAO, sessionFactory, textMessageService, emailService, userDao,
         eventNotificationDAO);
+
     underTest.callServiceAPI();
 
     //verify logging interactions
@@ -129,9 +145,6 @@ public class EventFloodAPICallerServiceUnitTest {
 
   @Test
   public void newEventWithNoAffectedUsers() throws IOException {
-    URL resource = getClass().getResource("/exampleFloodEvent.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
-
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
@@ -147,7 +160,7 @@ public class EventFloodAPICallerServiceUnitTest {
     //return empty list to indicate no affected users
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(Collections.emptyList());
 
-    underTest.processEventJSON(node);
+    underTest.callServiceAPI();
 
     verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
@@ -158,9 +171,6 @@ public class EventFloodAPICallerServiceUnitTest {
 
   @Test
   public void newEventWithAffectedUsers() throws IOException {
-    URL resource = getClass().getResource("/exampleFloodEvent.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
-
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
@@ -184,7 +194,7 @@ public class EventFloodAPICallerServiceUnitTest {
     //return empty list to indicate no affected users
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(affectedUsers);
 
-    underTest.processEventJSON(node);
+    underTest.callServiceAPI();
 
     verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
@@ -195,9 +205,6 @@ public class EventFloodAPICallerServiceUnitTest {
 
   @Test
   public void changedEventWithNoAffectedUsers() throws IOException {
-    URL resource = getClass().getResource("/exampleFloodEvent.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
-
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
@@ -215,7 +222,7 @@ public class EventFloodAPICallerServiceUnitTest {
     //return empty list to indicate no affected users
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(Collections.emptyList());
 
-    underTest.processEventJSON(node);
+    underTest.callServiceAPI();
 
     verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
@@ -226,9 +233,6 @@ public class EventFloodAPICallerServiceUnitTest {
 
   @Test
   public void changedEventWithAffectedUsers() throws IOException {
-    URL resource = getClass().getResource("/exampleFloodEvent.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
-
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
@@ -254,7 +258,7 @@ public class EventFloodAPICallerServiceUnitTest {
     //return empty list to indicate no affected users
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(affectedUsers);
 
-    underTest.processEventJSON(node);
+    underTest.callServiceAPI();
 
     verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
@@ -266,13 +270,27 @@ public class EventFloodAPICallerServiceUnitTest {
   @Test
   public void logsTheErrorWhenParsingUnexpectedJson() throws IOException {
 
-    URL resource = getClass().getResource("/exampleFloodEventInvalidDataType.json");
-    final ObjectNode node = new ObjectMapper().readValue(resource, ObjectNode.class);
+    JsonNode jsonRespone = new ObjectMapper().
+        readTree(getClass().getResource("/exampleFloodEventInvalidDataType.json"));
 
     Session session = mock(Session.class);
     when(sessionFactory.openSession()).thenReturn(session);
 
-    underTest.processEventJSON(node);
+    Client client = mock(Client.class);
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+    when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
+
+    String eventUrl = "http://events.com";
+    EventFloodAPICallerServiceImpl underTest = new EventFloodAPICallerServiceImpl(
+        eventUrl, client, eventDAO, sessionFactory, textMessageService, emailService, userDao,
+        eventNotificationDAO);
+
+    underTest.callServiceAPI();
 
     //verify logging interactions
     verify(mockAppender, atLeast(1)).doAppend(captorLoggingEvent.capture());
