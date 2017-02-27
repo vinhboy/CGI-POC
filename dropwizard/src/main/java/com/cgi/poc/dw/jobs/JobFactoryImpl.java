@@ -5,7 +5,6 @@
  */
 package com.cgi.poc.dw.jobs;
 
-import com.cgi.poc.dw.api.service.APICallerService;
 import com.cgi.poc.dw.api.service.impl.EventFloodAPICallerServiceImpl;
 import com.cgi.poc.dw.api.service.impl.EventWeatherAPICallerServiceImpl;
 import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
@@ -15,9 +14,7 @@ import com.cgi.poc.dw.api.service.impl.FireEventAPICallerServiceImpl;
  * @author dawna.floyd
  */
 public class JobFactoryImpl implements JobFactory{
-
- 
-
+    
     @Override
     public PollingDataJob create(FireEventAPICallerServiceImpl apiCallerService) {
         return  new PollingDataJob(apiCallerService);

@@ -18,6 +18,8 @@ import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.TextMessageService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.Arrays;
@@ -59,8 +61,23 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
         this.userDao = userDao;
         this.eventNotificationDAO = eventNotificationDAO;
     }
+    /**
+     * parsing the json to a java object.
+     *
+     * @param featureJson the json string get from the Rest API
+     */
+    public void processEventJSON(ObjectNode featureJson) {
+        ArrayNode featuresArray = (ArrayNode) featureJson.get("features");
+        LOG.info("Events to save : {}", featuresArray.size());
+        for (int i = 0; i < featuresArray.size(); i++) {
+            JsonNode feature = featuresArray.get(i);
+            JsonNode event = feature.get("attributes");
+            JsonNode geoJson = feature.get("geometry");
+            mapAndSave(event, geoJson);
+        }
+    }
 
-    public void mapAndSave(JsonNode eventJson, JsonNode geoJson) {
+    private void mapAndSave(JsonNode eventJson, JsonNode geoJson) {
         ObjectMapper mapper = new ObjectMapper();
         FireEvent retEvent;
 
@@ -73,21 +90,22 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
 
             Transaction transaction = session.beginTransaction();
             FireEvent eventFromDB = eventDAO.selectForUpdate(event);
-            boolean bNewEvent = false;
+            boolean isNewEvent = false;
             try {
                  event.setLastModified(eventFromDB.getLastModified());
-            } catch (Exception ex) {
+              //this is to protect from the Hibernate ObjectNotFoundException when the eventFromDB is a proxy object
+            } catch (Exception ex) { 
                 LOG.info("Event is new");
                 // row doesn't exist it's new... nothing wrong..
-                // just ignore the exectoion
-                bNewEvent = true;
+                // just ignore the exception
+                isNewEvent = true;
             }
             LOG.info("Event to save : {}", event.toString());
             // Archive users based on last login date
             retEvent = eventDAO.save(event);
             transaction.commit();
-
-            if(bNewEvent || !retEvent.getLastModified().equals(eventFromDB.getLastModified()) ){
+          
+          if (isNewEvent || isChangedEvent(retEvent, eventFromDB)) {
                 LOG.info("Event for notifications");
 
                 GeoCoordinates geo = new GeoCoordinates();
@@ -132,5 +150,9 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
         }
 
     }
+
+  private boolean isChangedEvent(FireEvent retEvent, FireEvent eventFromDB) {
+    return !retEvent.getLastModified().equals(eventFromDB.getLastModified());
+  }
 
 }
