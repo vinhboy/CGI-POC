@@ -20,8 +20,20 @@ cgiWebApp.controller('landingController',
   $scope.googleMaps = undefined;
   $scope.showMapOrDetails='MAP';
   $scope.activeItem = {item: -1};
+  $scope.isMobile = false;
   $scope.role = $sessionStorage.get('role');
+  if (/Mobi/.test(navigator.userAgent)) {
+     $scope.isMobile=true;
 
+  } 
+    $scope.eventIcons = {};
+    $scope.eventIcons.ADMIN_E ='/images/admin-emergency.svg';
+    $scope.eventIcons.ADMIN_I = '/images/admin-non-emergency.svg';
+    $scope.eventIcons.Weather = '/images/weather.svg';
+    $scope.eventIcons.Flood = '/images/flood.svg';
+    $scope.eventIcons.Fire = '/images/fire.svg';
+  
+  
   $scope.currentSelectedEvent=null;
     $scope.eventTypes = [
         { name: 'All', id: undefined},
@@ -47,13 +59,24 @@ cgiWebApp.controller('landingController',
         $scope.model.filteredNotifications  =   $filter('eventTime')([$scope.model.filteredNotifications, $scope.eventTimeFilter]);
         $scope.currentSelectedEvent = $scope.model.filteredNotifications[0];
         $scope.activeItem.item = 0;
-        $scope.loadMap($scope.model.filteredNotifications[0]);
+        $scope.backToDefault($scope.model.filteredNotifications[0]);
 
     };
    uiGmapGoogleMapApi.then(function(maps) {
           $scope.maps =maps;
  
    }); 
+   $scope.backToDefault = function(currentSelectedEvent) {
+       if ($scope.isMobile){
+            $scope.showMapOrDetails='LIST';
+       }else {
+            $scope.showMapOrDetails='MAP';
+            $scope.loadMap(currentSelectedEvent);
+           
+       }
+
+   };
+
  
    $scope.processApiErrors = function(response) {
     $scope.apiErrors = [];
@@ -101,8 +124,16 @@ cgiWebApp.controller('landingController',
 
         
     };
+    $scope.eventSelected = function(selectedEvent, index){
+          $scope.activeItem.item = index;
+          if (!$scope.isMobile){
+               $scope.loadMap(selectedEvent);
+              
+          }
+    };
     
-    $scope.loadEventDetails = function(selectedEvent, event){
+    $scope.loadEventDetails = function(selectedEvent, event,index){
+          $scope.activeItem.item = index;
        $scope.currentSelectedEvent = selectedEvent;
        $scope.showMapOrDetails='DETAILS';
        if(event){
@@ -177,13 +208,13 @@ cgiWebApp.controller('landingController',
             var mapIngfo = {center: {lat: -34.397, lng: 150.644}, zoom: 8};
             $scope.map = new $scope.maps.Map(ele[0], mapIngfo);
             if ($scope.currentSelectedEvent !== undefined) {
-                if ($scope.currentSelectedEvent.geometry.rings !== undefined) {
-                     $scope.mapLoadFromRings($scope.currentSelectedEvent.geometry.rings);
+                 if (selectedEvent.eventNotificationZipcodes.length > 0) {
+                    $scope.mapLoadFromForZipCodes(selectedEvent.eventNotificationZipcodes);
                 } else if (selectedEvent.geometry.y !== undefined && selectedEvent.geometry.x !== undefined &&
                         selectedEvent.geometry.y !== '' && selectedEvent.geometry.x !== '') {
                     $scope.mapLoadASimplePoint(selectedEvent.geometry.x ,selectedEvent.geometry.y  );
-                } else if (selectedEvent.eventNotificationZipcodes.length > 0) {
-                    $scope.mapLoadFromForZipCodes(selectedEvent.eventNotificationZipcodes);
+                } else if ($scope.currentSelectedEvent.geometry.rings !== undefined) {
+                     $scope.mapLoadFromRings($scope.currentSelectedEvent.geometry.rings);
                 }
             }
         }, 0, false);

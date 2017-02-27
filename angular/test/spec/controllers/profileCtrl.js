@@ -6,20 +6,18 @@ describe('ProfileController', function() {
   var profileService;
   var authenticationService;
   var $state;
-  var $sessionStorage;
   var $q;
   var deferred;
   var authDeferred;
 
   beforeEach(module('cgi-web-app'));
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _ProfileService_, _Authenticator_, _$state_, _$sessionStorage_, _$q_) {
+  beforeEach(inject(function(_$rootScope_, _$controller_, _ProfileService_, _Authenticator_, _$state_, _$q_) {
     $q = _$q_;
     $scope = _$rootScope_.$new();
     profileService = _ProfileService_;
     authenticationService = _Authenticator_;
     $state = _$state_;
-    $sessionStorage = _$sessionStorage_;
 
     deferred = _$q_.defer();
     authDeferred = _$q_.defer();
@@ -33,7 +31,6 @@ describe('ProfileController', function() {
       $scope: $scope,
       ProfileService: profileService,
       $state: $state,
-      $sessionStorage: _$sessionStorage_,
       Authenticator: authenticationService
     });
   }));
@@ -46,12 +43,14 @@ describe('ProfileController', function() {
       expect($scope.profile.password).toBe('');
       expect($scope.profile.passwordConfirmation).toBe('');
       expect($scope.profile.phone).toBe('');
+      expect($scope.profile.address1).toBe('');
+      expect($scope.profile.address2).toBe('');
+      expect($scope.profile.city).toBe('');
+      expect($scope.profile.state).toBe('');
       expect($scope.profile.zipCode).toBe('');
-      expect($scope.profile.notificationType.length).toBe(0);
       expect($scope.profile.emailNotification).toBe(false);
       expect($scope.profile.pushNotification).toBe(false);
       expect($scope.profile.smsNotification).toBe(false);
-      expect($scope.profile.allowNotificationsByLocation).toBe(false);
     });
 
     it('initializes the apiErrors', function() {
@@ -74,127 +73,131 @@ describe('ProfileController', function() {
       expect(profileService.getProfile).toHaveBeenCalled();
       expect($scope.profile).toBe(retrievedProfile);
     });
-  });
 
-  describe('updateProfile', function() {
-    beforeEach(function () {
+    it('should process these optional fields for empty string', function() {
       $state.current.name = 'manageProfile';
-    });
-
-    it('should call the ProfileService.update', function() {
-      $scope.updateProfile();
+      spyOn($scope, 'processForEmptyString');
+      $scope.init();
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
-      expect(profileService.update).toHaveBeenCalledWith($scope.toSend);
-    });
-
-    it('should transform the notificationTypes', function() {
-      $scope.profile.smsNotification = true;
-      spyOn($scope, 'processNotificationTypes').and.callThrough();
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.processNotificationTypes).toHaveBeenCalled();
-    });
-
-    it('should construct the phoneNumber', function() {
-      $scope.profile.phone = '313-252-7456';
-      spyOn($scope, 'generatePhoneNumber').and.callThrough();
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.generatePhoneNumber).toHaveBeenCalled();
-    });
-
-    it('should redirect if successful', function() {
-      spyOn($state, 'go');
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('landing');
-    });
-
-    it('should construct apiErrors if failed', function() {
-      spyOn($scope, 'processApiErrors');
-      $scope.updateProfile();
-      var response = { status: 404, data: {} };
-      deferred.reject(response);
-      $scope.$apply();
-      expect($scope.processApiErrors).toHaveBeenCalledWith(response);
-    });
-
-    it('should use undefined for password value if it is not populated', function() {
-      $scope.profile.password = '';
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.toSend.password).toBeUndefined();
-    });
-
-    it('should use provided value for password value if it is not populated', function() {
-      $scope.profile.password = 'abcABC123';
-      $scope.updateProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.toSend.password).toBe('abcABC123');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'firstName');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'lastName');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'phone');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'address1');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'address2');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'city');
+      expect($scope.processForEmptyString).toHaveBeenCalledWith($scope.profile, 'state');
     });
   });
 
-  describe('registerProfile', function() {
-    beforeEach(function () {
-      $state.current.name = 'register';
+  describe('saveProfile', function() {
+    describe('updating profile', function() {
+      beforeEach(function () {
+        $state.current.name = 'manageProfile';
+      });
+
+      it('should call the ProfileService.update', function() {
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect(profileService.update).toHaveBeenCalledWith($scope.toSend);
+      });
+
+      it('should construct the phoneNumber', function() {
+        $scope.profile.phone = '313-252-7456';
+        spyOn($scope, 'generatePhoneNumber').and.callThrough();
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.generatePhoneNumber).toHaveBeenCalled();
+      });
+
+      it('should redirect if successful', function() {
+        spyOn($state, 'go');
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($state.go).toHaveBeenCalledWith('landing');
+      });
+
+      it('should construct apiErrors if failed', function() {
+        spyOn($scope, 'processApiErrors');
+        $scope.saveProfile();
+        var response = { status: 404, data: {} };
+        deferred.reject(response);
+        $scope.$apply();
+        expect($scope.processApiErrors).toHaveBeenCalledWith(response);
+      });
+
+      it('should use blank for password value if it is not populated', function() {
+        $scope.profile.password = '';
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.toSend.password).toBe('');
+      });
+
+      it('should use provided value for password value if it is populated', function() {
+        $scope.profile.password = 'abcABC123';
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.toSend.password).toBe('abcABC123');
+      });
     });
 
-    it('should call the ProfileService.register', function() {
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect(profileService.register).toHaveBeenCalledWith($scope.toSend);
-    });
+    describe('registering new profile', function() {
+      beforeEach(function () {
+        $state.current.name = 'register';
+      });
 
-    it('should transform the notificationTypes', function() {
-      $scope.profile.smsNotification = true;
-      spyOn($scope, 'processNotificationTypes').and.callThrough();
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.processNotificationTypes).toHaveBeenCalled();
-    });
+      it('should call the ProfileService.register', function() {
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect(profileService.register).toHaveBeenCalledWith($scope.toSend);
+      });
 
-    it('should construct the phoneNumber', function() {
-      $scope.profile.phone = '313-252-7456';
-      spyOn($scope, 'generatePhoneNumber').and.callThrough();
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($scope.generatePhoneNumber).toHaveBeenCalled();
-    });
+      it('should construct the phoneNumber', function() {
+        $scope.profile.phone = '313-252-7456';
+        spyOn($scope, 'generatePhoneNumber').and.callThrough();
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.generatePhoneNumber).toHaveBeenCalled();
+      });
 
-    it('should redirect if successful', function() {
-      spyOn($state, 'go');
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('landing');
-    });
+      it('should redirect if successful', function() {
+        spyOn($state, 'go');
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        authDeferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($state.go).toHaveBeenCalledWith('landing');
+      });
 
-    it('should construct apiErrors if failed', function() {
-      spyOn($scope, 'processApiErrors');
-      $scope.registerProfile();
-      var response = { status: 404, data: {} };
-      deferred.reject(response);
-      $scope.$apply();
-      expect($scope.processApiErrors).toHaveBeenCalledWith(response);
-    });
+      it('should construct apiErrors if failed', function() {
+        spyOn($scope, 'processApiErrors');
+        $scope.saveProfile();
+        var response = { status: 404, data: {} };
+        deferred.reject(response);
+        $scope.$apply();
+        expect($scope.processApiErrors).toHaveBeenCalledWith(response);
+      });
 
-    it('should get the auth token', function() {
-      spyOn($sessionStorage, 'put');
-      $scope.registerProfile();
-      deferred.resolve({ status: 200, data: {} });
-      authDeferred.resolve({ status: 200, data: { authToken: 'the auth token' } });
-      $scope.$apply();
-      expect(authenticationService.authenticate).toHaveBeenCalled();
-      expect($sessionStorage.put).toHaveBeenCalledWith('jwt', 'the auth token');
+      it('should process these optional fields for null', function() {
+        spyOn($scope, 'processForNull');
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'firstName');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'lastName');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'phone');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'address1');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'address2');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'city');
+        expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'state');
+      });
     });
   });
 
@@ -218,35 +221,6 @@ describe('ProfileController', function() {
       $scope.profile.pushNotification = false;
       $scope.profile.smsNotification = true;
       expect($scope.someSelected()).toBe(true);
-    });
-  });
-
-  describe('processNotificationTypes', function() {
-    it('notificationType should be empty if nothing is checked', function() {
-      $scope.profile.emailNotification = false; // id: 1
-      $scope.profile.pushNotification = false; // id: 3
-      $scope.profile.smsNotification = false; // id: 2
-      $scope.processNotificationTypes();
-      expect($scope.profile.notificationType.length).toBe(0);
-    });
-
-    it('notificationType should include everything if everything is checked', function() {
-      $scope.profile.emailNotification = true; // id: 1
-      $scope.profile.pushNotification = true; // id: 3
-      $scope.profile.smsNotification = true; // id: 2
-      $scope.processNotificationTypes();
-      expect($scope.profile.notificationType[0].notificationId).toBe(1);
-      expect($scope.profile.notificationType[1].notificationId).toBe(2);
-      expect($scope.profile.notificationType[2].notificationId).toBe(3);
-    });
-
-    it('notificationType should only include checked', function() {
-      $scope.profile.emailNotification = true; // id: 1
-      $scope.profile.pushNotification = false; // id: 3
-      $scope.profile.smsNotification = true; // id: 2
-      $scope.processNotificationTypes();
-      expect($scope.profile.notificationType[0].notificationId).toBe(1);
-      expect($scope.profile.notificationType[1].notificationId).toBe(2);
     });
   });
 
@@ -299,6 +273,26 @@ describe('ProfileController', function() {
       $scope.processApiErrors(response);
       expect($scope.apiErrors.length).toBe(0);
     });
+
+    it('should construct the apiErrors for unauthorized', function() {
+      var response = {
+        status: 401,
+        statusText: 'Unauthorized',
+        data: 'Credentials are required to access this resource.'
+      };
+      $scope.processApiErrors(response);
+      expect($scope.apiErrors[0]).toBe('Credentials are required to access this resource.');
+    });
+
+    it('should default to generic error message', function() {
+      var response = {
+        status: -1,
+        statusText: '',
+        data: null
+      };
+      $scope.processApiErrors(response);
+      expect($scope.apiErrors[0]).toBe('Server error occurred. Please try again later.');
+    });
   });
 
   describe('isNew', function() {
@@ -344,6 +338,58 @@ describe('ProfileController', function() {
       $state.current.name = 'register';
       $scope.profile.password = 'abcABC123';
       expect($scope.isPasswordValid()).toBe(true);
+    });
+  });
+
+  describe('processForNull', function() {
+    it('should null out any falsey value', function() {
+      var obj = { something: '' };
+      $scope.processForNull(obj, 'something');
+      expect(obj.something).toBeNull();
+    });
+
+    it('should NOT null out any populated string', function() {
+      var obj = { something: 'not empty' };
+      $scope.processForNull(obj, 'something');
+      expect(obj.something).not.toBeNull();
+    });
+  });
+
+  describe('processForEmptyString', function() {
+    it('should assign empty string for nulls', function() {
+      var obj = { something: null };
+      $scope.processForEmptyString(obj, 'something');
+      expect(obj.something).toBe('');
+    });
+
+    it('should NOT null out any populated string', function() {
+      var obj = { something: 'not empty' };
+      $scope.processForEmptyString(obj, 'something');
+      expect(obj.something).not.toBe('');
+    });
+  });
+
+  describe('goBack', function() {
+    it('should go back to login page for new registers', function() {
+      $state.current.name = 'register';
+      spyOn($state, 'go');
+      $scope.goBack();
+      expect($state.go).toHaveBeenCalledWith('login');
+    });
+
+    it('should go back to landing page for editing users', function() {
+      $state.current.name = 'manageProfile';
+      spyOn($state, 'go');
+      $scope.goBack();
+      expect($state.go).toHaveBeenCalledWith('landing');
+    });
+  });
+
+  describe('proceedForward', function() {
+    it('should go to the landing page', function() {
+      spyOn($state, 'go');
+      $scope.proceedForward();
+      expect($state.go).toHaveBeenCalledWith('landing');
     });
   });
 });

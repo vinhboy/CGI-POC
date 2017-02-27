@@ -84,7 +84,7 @@ $sceDelegateProvider.resourceUrlWhitelist([
 
         // redirect to login page if not logged in and trying to access a restricted page
         $rootScope.$on('$locationChangeStart', function (event, next, current) { // jshint ignore:line
-            var publicPages = ['/login'];
+            var publicPages = ['/login', '/register'];
             var restrictedPage = publicPages.indexOf($location.path()) === -1;
             if (restrictedPage && !$sessionStorage.get('jwt')) {
                 $location.path('/login');

@@ -1,406 +1,50 @@
-.usa-grid {
-  background: #edf4f7; }
+/*
+Error: Invalid CSS after "...>>> integration": expected "{", was "}"
+        on line 37 of app/sass/cgipoc.scss
 
-.profile-form-input {
-  height: 3rem;
-  padding-top: 0px;
-  padding-bottom: 0px; }
+32: .loginFormDiv{
+33:     width:90%;
+34:     margin-left:auto;
+35:     margin-right:auto;
+36: >>>>>>> integration
+37: }
+38: 
+39: .passwordDiv {
+40:   margin-bottom: 30px;
+41: }
+42: 
 
-.profile-label {
-  margin-top: 1.4rem; }
-
-.profile-form-input-notification-by-location {
-  margin-top: 1.4rem; }
-
-.loginFormDiv {
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto; }
-
-.passwordDiv {
-  margin-bottom: 30px; }
-
-.registrationFormDiv {
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto; }
-
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen and (min-device-width: 300px) and (max-device-width: 480px) {
-  .login-bg {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: url(../images/bgs/login-320.jpg) 0 0 no-repeat; }
-
-  .headerZone {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1; }
-    .headerZone .usa-header {
-      background: #003466;
-      width: 100%;
-      height: 48px;
-      padding: 12px 0 12px 12px;
-      box-shadow: 0 2px 4px #888888; }
-      .headerZone .usa-header .usa-header-logo-img {
-        background-size: 80px;
-        width: 80px;
-        height: auto; }
-
-  .usa-content .centeredForm {
-    margin: 0% auto;
-    width: 90%;
-    box-shadow: 0 0 8px #888888; }
-    .usa-content .centeredForm .usa-form-large {
-      margin: 0 auto;
-      background: rgba(237, 244, 247, 0.85); }
-  .usa-content .site-description {
-    width: 80%;
-    height: auto;
-    margin: 60px auto;
-    padding: 2px 10px;
-    background: rgba(0, 52, 102, 0.6);
-    color: #ffffff;
-    font-size: 0.8em; }
-    .usa-content .site-description p {
-      width: 100% !important;
-      max-width: 100% !important; } }
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen and (min-device-width: 481px) and (max-device-width: 768px) {
-  .headerZone {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1; }
-    .headerZone .usa-header {
-      background: #003466;
-      width: 100%;
-      height: 74px;
-      padding: 12px 0 12px 12px;
-      box-shadow: 0 2px 4px #888888; }
-      .headerZone .usa-header .usa-header-logo-img {
-        background-size: 1600px;
-        width: 160px;
-        height: auto; }
-
-  .usa-content .centeredForm {
-    margin: 14% auto;
-    width: 400px;
-    box-shadow: 0 0 8px #888888; }
-    .usa-content .centeredForm .usa-form-large {
-      margin: 0 auto;
-      background: rgba(237, 244, 247, 0.85); }
-  .usa-content .site-description {
-    width: 80%;
-    height: auto;
-    margin: 60px auto;
-    padding: 2px 10px;
-    background: rgba(0, 52, 102, 0.6);
-    color: #ffffff;
-    font-size: 0.8em; }
-    .usa-content .site-description p {
-      width: 100% !important;
-      max-width: 100% !important; } }
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen and (min-device-width: 769px) and (max-device-width: 1024px) {
-  .headerZone {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1; }
-    .headerZone .usa-header {
-      background: #003466;
-      width: 100%;
-      height: 92px;
-      padding: 12px 0 12px 12px;
-      box-shadow: 0 2px 4px #888888; }
-      .headerZone .usa-header .usa-header-logo-img {
-        background-size: 220px;
-        width: 220px;
-        height: auto; }
-
-  .usa-content .centeredForm {
-    margin: 12% auto;
-    width: 400px;
-    box-shadow: 0 0 8px #888888; }
-    .usa-content .centeredForm .usa-form-large {
-      margin: 0 auto;
-      background: rgba(237, 244, 247, 0.85); }
-  .usa-content .site-description {
-    width: 80%;
-    height: auto;
-    margin: 60px auto;
-    padding: 2px 10px;
-    background: rgba(0, 52, 102, 0.6);
-    color: #ffffff;
-    font-size: 0.8em; }
-    .usa-content .site-description p {
-      width: 100% !important;
-      max-width: 100% !important; } }
-/* Desktops and laptops ----------- */
-@media only screen and (min-width: 1025px) {
-  .headerZone {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1; }
-    .headerZone .usa-header {
-      background: #003466;
-      width: 100%;
-      height: 108px;
-      padding: 12px 0 12px 12px;
-      box-shadow: 0 2px 4px #888888; }
-      .headerZone .usa-header .usa-header-logo-img {
-        background-size: 260px;
-        width: 260px;
-        height: auto; }
-
-  .usa-content .centeredForm {
-    margin: 12% auto;
-    width: 400px;
-    box-shadow: 0 0 8px #888888; }
-    .usa-content .centeredForm .usa-form-large {
-      margin: 0 auto;
-      background: rgba(237, 244, 247, 0.85); }
-  .usa-content .site-description {
-    width: 80%;
-    height: auto;
-    margin: 60px auto;
-    padding: 2px 10px;
-    background: rgba(0, 52, 102, 0.6);
-    color: #ffffff;
-    font-size: 0.8em; }
-    .usa-content .site-description p {
-      width: 100% !important;
-      max-width: 100% !important; } }
-.usa-nav-secondary-links a {
-  color: white !important; }
-
-.contentZone {
-  margin-top: 5em;
-  padding-bottom: 2em;
-  z-index: -1; }
-
-.usa-grid {
-  background: white; }
-
-.scrollable-section {
-  overflow-y: scroll;
-  height: inherit;
-  border: solid; }
-  .scrollable-section table {
-    margin-top: 1em; }
-
-.data-ui-view {
-  padding: 5em;
-  padding-bottom: 5em; }
-
-.mapArea {
-  height: 100%;
-  position: relative;
-  width: 100%; }
-
-.event-list-container {
-  height: inherit;
-  height: 500px; }
-
-.event-details-container {
-  border: solid;
-  height: 500px; }
-  .event-details-container .usa-heading-alt {
-    border-bottom: solid;
-    margin-right: 2em;
-    margin-left: 2em; }
-  .event-details-container .button_wrapper {
-    padding-left: 6em; }
-  .event-details-container td {
-    border: 0; }
-
-.event-details {
-  height: 350px; }
-  .event-details .event-icons {
-    text-align: left;
-    vertical-align: top;
-    width: 10px; }
-  .event-details .button_wrapper {
-    vertical-align: bottom; }
-
-.event {
-  border-style: solid;
-  margin: 5px; }
-  .event table {
-    margin: 0; }
-  .event .event-logo {
-    width: 4em; }
-  .event .event-icons {
-    padding-left: .25em;
-    padding-right: .25em; }
-  .event td {
-    padding: 0; }
-  .event h5 {
-    margin-top: 2px; }
-
-.active {
-  border-color: blue; }
-
-.footerZone {
-  width: 100%;
-  bottom: 0; }
-
-button.usa-button-login {
-  margin-left: 50%;
-  transform: translateX(-50%);
-  width: 220px; }
-
-label.notifications {
-  margin-top: 0px; }
-
-.login-text {
-  display: inline-block;
-  align: center; }
-
-.login-error {
-  float: left; }
-
-.login-alert {
-  padding: 0px; }
-
-.usa-form-note {
-  clear: both; }
-
-input.phone {
-  float: left;
-  clear: none;
-  margin-right: 1rem;
-  width: 5rem; }
-
-input.phoneLong {
-  display: inline-block;
-  width: 6rem; }
-
-.zipCodeText {
-  float: right;
-  width: 80%; }
-
-.notificationMessageInfo {
-  float: right; }
-
-input.zipCode {
-  display: inline-block;
-  width: 7rem; }
-
-/* The Modal (background) */
-.modal.fade {
-  display: none;
-  /* Hidden by default */
-  position: fixed;
-  /* Stay in place */
-  z-index: 1;
-  /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%;
-  /* Full width */
-  height: 100%;
-  /* Full height */
-  overflow: auto;
-  /* Enable scroll if needed */
-  background-color: black;
-  /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.6);
-  /* Black w/ opacity */
-  -webkit-animation-name: fadeIn;
-  /* Fade in the background */
-  -webkit-animation-duration: 0.5s;
-  animation-name: fadeIn;
-  animation-duration: 0.5s; }
-
-/* Modal Content */
-.modal-content {
-  margin-top: 20px;
-  overflow: auto;
-  -webkit-animation-name: slideIn;
-  -webkit-animation-duration: 0.5s;
-  animation-name: slideIn;
-  animation-duration: 0.5s; }
-
-/* The Close Button */
-.close {
-  color: white;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  -webkit-animation-name: slideOut;
-  -webkit-animation-duration: 0.5s;
-  animation-name: slideOut;
-  animation-duration: 0.5s; }
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-animation-name: slideOut;
-  -webkit-animation-duration: 0.5s;
-  animation-name: slideOut;
-  animation-duration: 0.5s; }
-
-/* Add Animation Slide In*/
-@-webkit-keyframes slideIn {
-  from {
-    top: -300px;
-    opacity: 0; }
-  to {
-    top: 42px;
-    opacity: 1; } }
-@keyframes slideIn {
-  from {
-    top: -300px;
-    opacity: 0; }
-  to {
-    top: 42px;
-    opacity: 1; } }
-@-webkit-keyframes fadeIn {
-  from {
-    opacity: 0; }
-  to {
-    opacity: 1; } }
-@keyframes fadeIn {
-  from {
-    opacity: 0; }
-  to {
-    opacity: 1; } }
-/* Add Animation - Slide out*/
-@-webkit-keyframes slideOut {
-  from {
-    top: 10%;
-    opacity: 1; }
-  to {
-    top: -300px;
-    opacity: 0; } }
-@keyframes slideOut {
-  from {
-    top: 10%;
-    opacity: 1; }
-  to {
-    top: -300px;
-    opacity: 0; } }
-@-webkit-keyframes fadeOut {
-  from {
-    opacity: 1; }
-  to {
-    opacity: 0; } }
-@keyframes fadeOut {
-  from {
-    opacity: 1; }
-  to {
-    opacity: 0; } }
-
-/*# sourceMappingURL=cgipoc.css.map */
+Backtrace:
+app/sass/cgipoc.scss:37
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:1189:in `expected'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:1125:in `expected'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:1120:in `tok!'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:656:in `block'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:726:in `declaration_or_ruleset'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:676:in `block_child'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:668:in `block_contents'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:657:in `block'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:726:in `declaration_or_ruleset'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:676:in `block_child'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:668:in `block_contents'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:657:in `block'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:649:in `ruleset'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:675:in `block_child'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:668:in `block_contents'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:125:in `stylesheet'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/scss/parser.rb:41:in `parse'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/engine.rb:406:in `_to_tree'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/engine.rb:381:in `_render_with_sourcemap'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/engine.rb:298:in `render_with_sourcemap'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/exec/sass_scss.rb:391:in `run'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/exec/sass_scss.rb:63:in `process_result'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/exec/base.rb:52:in `parse'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/lib/sass/exec/base.rb:19:in `parse!'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.22/bin/sass:13:in `<top (required)>'
+/usr/local/bin/sass:22:in `load'
+/usr/local/bin/sass:22:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Invalid CSS after \"...>>> integration\": expected \"{\", was \"}\"\A         on line 37 of app/sass/cgipoc.scss\A \A 32: .loginFormDiv{\A 33:     width:90%;\A 34:     margin-left:auto;\A 35:     margin-right:auto;\A 36: >>>>>>> integration\A 37: }\A 38: \A 39: .passwordDiv {\A 40:   margin-bottom: 30px;\A 41: }\A 42: "; }

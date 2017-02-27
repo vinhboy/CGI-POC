@@ -1,15 +1,22 @@
 package com.cgi.poc.dw.rest.resource;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.dao.model.UserDto;
+import com.cgi.poc.dw.helper.IntegrationTest;
+import com.cgi.poc.dw.helper.IntegrationTestHelper;
+import com.cgi.poc.dw.util.Error;
+import com.cgi.poc.dw.util.ErrorInfo;
+import com.cgi.poc.dw.util.GeneralErrors;
+import com.cgi.poc.dw.util.ValidationErrors;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetup;
+import javax.ws.rs.core.Response.Status;
+import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.*;
 
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
@@ -18,39 +25,26 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.sql.SQLException;
 
-import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.cgi.poc.dw.auth.model.Role;
-import com.cgi.poc.dw.dao.model.NotificationType;
-import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
-import com.cgi.poc.dw.helper.IntegrationTest;
-import com.cgi.poc.dw.helper.IntegrationTestHelper;
-import com.cgi.poc.dw.util.Error;
-import com.cgi.poc.dw.util.ErrorInfo;
-import com.cgi.poc.dw.util.GeneralErrors;
-import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import com.icegreen.greenmail.util.ServerSetup;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class UserResourceIntegrationTest extends IntegrationTest {
 
   private static final String url = "http://localhost:%d/user";
 
-  private User tstUser;
+  private UserDto tstUser;
 
   private static GreenMail smtpServer;
-  
+
   @BeforeClass
   public static void createUser() throws SQLException {
     IntegrationTestHelper.signupResidentUser();
@@ -58,10 +52,10 @@ public class UserResourceIntegrationTest extends IntegrationTest {
         ServerSetup.PROTOCOL_SMTP));
     smtpServer.start();
   }
-  
+
   @Before
   public void initUser() {
-  	tstUser = new User();
+  	tstUser = new UserDto();
   	tstUser.setEmail("resident@cgi.com");
   	tstUser.setPassword("!QAZ1qaz");
   	tstUser.setFirstName("john");
@@ -70,17 +64,16 @@ public class UserResourceIntegrationTest extends IntegrationTest {
   	tstUser.setPhone("1234567890");
   	tstUser.setZipCode("95814");
   	tstUser.setCity("Sacramento");
-  	tstUser.setState("California");
-  	tstUser.setRequiredStreet("required street");
-  	tstUser.setOptionalStreet("optional street");
+  	tstUser.setState("CA");
+  	tstUser.setAddress1("required street");
+  	tstUser.setAddress2("optional street");
   	tstUser.setLatitude(38.5824933);
   	tstUser.setLongitude(-121.4941738);
-    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
+    tstUser.setEmailNotification(true);
+    tstUser.setSmsNotification(false);
+    tstUser.setPushNotification(false);
   }
-  
+
   @After
   public void exit() {
   }
@@ -108,25 +101,12 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Client client = new JerseyClientBuilder().build();
     tstUser.setEmail(null);
 
-    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.EMAIL.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    tstUser.setNotificationType(notificationType);
+    tstUser.setEmailNotification(true);
+
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(tstUser));
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "email  may not be null";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-    }
-
+    assertInvalidEmail(response);
   }
 
   @Test
@@ -137,47 +117,21 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(tstUser));
 
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "email  Invalid email address.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-    }
-
+    assertInvalidEmail(response);
   }
-
+  
   @Test
   public void noPassword() {
     Client client = new JerseyClientBuilder().build();
     tstUser.setEmail("nopass@gmail.com");
     tstUser.setPassword(null);
-    
+
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    boolean bValidErr = false;
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "password  is missing";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      if (error.getMessage().equals(expectedErrorString)) {
-        bValidErr = true;
-      }
-    }
-    assertThat(bValidErr).isEqualTo(true);
-
+    assertInvalidPassword(response);
   }
-
+  
   @Test
   public void invalidPasswordTooShort() {
     Client client = new JerseyClientBuilder().build();
@@ -187,61 +141,9 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
-    assertNotNull(response);
-
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    // this should fail 2 validations.. size and pwd validity
-    // this test is specific to validity.. 
-    boolean bValidErr = false;
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "password  must be at least 2 characters in length.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      if (error.getMessage().equals(expectedErrorString)) {
-        bValidErr = true;
-      }
-    }
-    assertThat(bValidErr).isEqualTo(true);
-
+    assertInvalidPassword(response);
   }
 
-  public void invalidPasswordTooShortUpdate() {
-    Client client = new JerseyClientBuilder().build();
-    tstUser.setPassword("a");
-
-    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-
-    assertNotNull(response);
-
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    // this should fail 2 validations.. size and pwd validity
-    // this test is specific to validity.. 
-    boolean bValidErr = false;
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      if (error.getMessage().equals(expectedErrorString)) {
-        bValidErr = true;
-      }
-    }
-    assertThat(bValidErr).isEqualTo(true);
-
-  }
-  
   @Test
   public void invalidPasswordContainsWhiteSpace() {
     Client client = new JerseyClientBuilder().build();
@@ -251,45 +153,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
-    assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-    }
-
-  }
-  
-  @Test
-  public void invalidPasswordContainsWhiteSpaceUpdate() {
-    Client client = new JerseyClientBuilder().build();
-    tstUser.setPassword("abcd abcd");
-
-    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-    assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-    }
-
+    assertInvalidPassword(response);
   }
 
   @Test
@@ -301,45 +165,9 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
 
-    assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-    }
+    assertInvalidPassword(response);
   }
   
-  @Test
-  public void invalidPasswordNoAlphabeticalCharactersUpdate() {
-    Client client = new JerseyClientBuilder().build();
-    tstUser.setPassword("123");
-
-    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-    assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "password  must be greater that 2 character, contain no whitespace, and have at least one number and one letter.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-    }
-  }
-
   @Test
   public void signupSuccess() throws MessagingException {
     Client client = new JerseyClientBuilder().build();
@@ -350,7 +178,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
     //verify email registration
     smtpServer.waitForIncomingEmail(7000,1);
-    
+
     MimeMessage[] receivedMails = smtpServer.getReceivedMessages();
     assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
 
@@ -360,10 +188,11 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     }
     assertEquals("random_mail12@gmail.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
   }
-  
+
   @Test
-  public void updateSuccess() throws MessagingException {
+  public void updateSuccessWithoutPasswordChange() throws MessagingException {
     Client client = new JerseyClientBuilder().build();
+    tstUser.setPassword("");
     tstUser.setFirstName("Jane");
     String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
     Response response = client.
@@ -382,42 +211,15 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    assertNotNull(response);
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "phone  size must be between 10 and 10";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
+      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
+      assertThat(error.getMessage(), is(ValidationErrors.INVALID_PHONE));
     }
-  }
 
-  @Test
-  public void invalidPhoneNumberUpdate() throws JSONException, NoSuchAlgorithmException, InvalidKeySpecException {
-  	Client client = new JerseyClientBuilder().build();
-    tstUser.setPhone("44343");
-    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-    
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "phone  size must be between 10 and 10";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
-    }
-  }
+ }
 
   @Test
   public void invalidZipCode() throws JSONException {
@@ -427,63 +229,50 @@ public class UserResourceIntegrationTest extends IntegrationTest {
 
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
+    
     assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "zipCode  is invalid.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
+    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
+      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
+      assertThat(error.getMessage(), is(ValidationErrors.INVALID_ZIPCODE));
     }
   }
-  @Test
-  public void invalidZipCodeUpdate() throws JSONException {
-    Client client = new JerseyClientBuilder().build();
-    tstUser.setZipCode("983");
 
-    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
-    Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        put(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
-    assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "zipCode  is invalid.";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage().trim().toLowerCase()).isEqualTo(expectedErrorString.trim().toLowerCase());
-    }
-  }
-  
   @Test
   public void signupUserAlreadyExist() {
     Client client = new JerseyClientBuilder().build();
     tstUser.setEmail("resident@cgi.com");
-    
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.entity(tstUser, MediaType.APPLICATION_JSON_TYPE));
     assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.DUPLICATE_ENTRY.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String expectedErrorString = GeneralErrors.DUPLICATE_ENTRY.getMessage()
-          .replace("REPLACE", "email");
-
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
+      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
+      assertThat(error.getMessage(), is(ValidationErrors.DUPLICATE_USER));
     }
   }
+
   
+  private void assertInvalidEmail(Response response) {
+    assertNotNull(response);
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+    for (Error error : errorInfo.getErrors()) {
+      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
+      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_EMAIL), anyOf(is(ValidationErrors.MISSING_EMAIL))));
+    }
+  }
+
+  private void assertInvalidPassword(Response response) {
+    assertNotNull(response);
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
+    for (Error error : errorInfo.getErrors()) {
+      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
+      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_PASSWORD), anyOf(is(ValidationErrors.MISSING_PASSWORD))));
+    }
+  }
+
 }

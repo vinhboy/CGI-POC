@@ -9,8 +9,8 @@
 'use strict';
 
 cgiWebApp.controller('ProfileController',
-  ['$scope', 'ProfileService', '$state', '$sessionStorage', 'Authenticator', '$anchorScroll',
-  function ($scope, ProfileService, $state, $sessionStorage, Authenticator,$anchorScroll) {
+  ['$scope', 'ProfileService', '$state', 'Authenticator', '$anchorScroll',
+  function ($scope, ProfileService, $state, Authenticator, $anchorScroll) {
 
   $scope.init = function() {
     $scope.apiErrors = [];
@@ -22,19 +22,30 @@ cgiWebApp.controller('ProfileController',
       password: '',
       passwordConfirmation: '',
       phone: '',
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
       zipCode: '',
       emailNotification: false,
       pushNotification: false,
-      smsNotification: false,
-      notificationType: [],
-      latitude: 0,
-      longitude: 0,
-      allowNotificationsByLocation: false
+      smsNotification: false
     };
 
     if ($scope.isEdit()) {
       ProfileService.getProfile().then(function(response) {
         $scope.profile = response.data;
+
+        $scope.processForEmptyString($scope.profile, 'firstName');
+        $scope.processForEmptyString($scope.profile, 'lastName');
+        $scope.processForEmptyString($scope.profile, 'phone');
+        $scope.processForEmptyString($scope.profile, 'address1');
+        $scope.processForEmptyString($scope.profile, 'address2');
+        $scope.processForEmptyString($scope.profile, 'city');
+        $scope.processForEmptyString($scope.profile, 'state');
+
+        // the password is not sent from the API
+        $scope.profile.password = '';
       });
     }
 
@@ -46,52 +57,69 @@ cgiWebApp.controller('ProfileController',
   $scope.processApiErrors = function(response) {
     $scope.apiErrors = [];
     if (response.data && response.data.errors) {
-        $anchorScroll();
       for (var i = 0; i < response.data.errors.length; i++) {
         if (response.data.errors[i].message) {
           $scope.apiErrors.push(response.data.errors[i].message);
         }
       }
+    } else if (response.status === 401 && response.data) {
+      $scope.apiErrors.push(response.data);
+    } else {
+      $scope.apiErrors.push('Server error occurred. Please try again later.');
     }
-  };
 
-  $scope.processNotificationTypes = function() {
-    var notificationTypes = [];
-    if ($scope.profile.emailNotification) {
-      notificationTypes.push({ notificationId: 1 });
+    if ($scope.apiErrors.length > 0) {
+      $anchorScroll();
     }
-    if ($scope.profile.smsNotification) {
-      notificationTypes.push({ notificationId: 2 });
-    }
-    if ($scope.profile.pushNotification) {
-      notificationTypes.push({ notificationId: 3 });
-    }
-    $scope.profile.notificationType = notificationTypes;
   };
 
   $scope.generatePhoneNumber = function() {
     $scope.profile.phone = $scope.profile.phone.replace(/-/g, '');
   };
 
-  $scope.process = function(beforeNavFunc){
-    $scope.processNotificationTypes();
+  // this is meant to null out any empty strings, be careful with false/0
+  $scope.processForNull = function(toSend, property) {
+    if(!toSend[property]) {
+      toSend[property] = null;
+    }
+  };
+
+  // this is meant to set empty strings for nulls, be careful with non-strings
+  $scope.processForEmptyString = function(retrievedProfile, property) {
+    if(retrievedProfile[property] === null) {
+      retrievedProfile[property] = '';
+    }
+  };
+
+  $scope.process = function(beforeNavPromise) {
     $scope.generatePhoneNumber();
 
-    var toPost = {
+    var toSend = {
       email: $scope.profile.email,
       password: $scope.profile.password,
       firstName: $scope.profile.firstName,
       lastName: $scope.profile.lastName,
       phone: $scope.profile.phone,
+      address1: $scope.profile.address1,
+      address2: $scope.profile.address2,
+      city: $scope.profile.city,
+      state: $scope.profile.state,
       zipCode: $scope.profile.zipCode,
-      city: 'Sacramento',
-      state: 'California',
-      requiredStreet:'This is a required street',
-      optionalStreet:'This is an optional street',
-      latitude: 0,
-      longitude: 0,
-      notificationType: $scope.profile.notificationType
+      emailNotification: $scope.profile.emailNotification,
+      pushNotification: $scope.profile.pushNotification,
+      smsNotification: $scope.profile.smsNotification
     };
+
+    $scope.processForNull(toSend, 'firstName');
+    $scope.processForNull(toSend, 'lastName');
+    $scope.processForNull(toSend, 'phone');
+    $scope.processForNull(toSend, 'address1');
+    $scope.processForNull(toSend, 'address2');
+    $scope.processForNull(toSend, 'city');
+    $scope.processForNull(toSend, 'state');
+
+    //putting this on scope so I can test
+    $scope.toSend = toSend;
 
     var toCall;
     if ($scope.isNew()) {
@@ -99,44 +127,38 @@ cgiWebApp.controller('ProfileController',
     } else {
       toCall = ProfileService.update;
       if ($scope.profile.password === '') {
-        toPost.password = undefined;
+        toSend.password = '';
       }
     }
 
-    //putting this on scope so I can test
-    $scope.toSend = toPost;
-
-    toCall(toPost).then(function() {
-      if (beforeNavFunc) {
-        beforeNavFunc(toPost);
+    toCall(toSend).then(function() {
+      if (beforeNavPromise) {
+        beforeNavPromise(toSend).then(function() {
+          $scope.proceedForward('landing');
+        });
       }
-      $state.go('landing');
+      else {
+        $scope.proceedForward('landing');
+      }
     }).catch(function(response) {
       $scope.processApiErrors(response);
     });
   };
 
-  $scope.registerProfile = function() {
-    var beforeNavFunc = function(toPost) {
-      var credentials = {
-        email: toPost.email,
-        password: toPost.password
+  $scope.saveProfile = function() {
+    if ($scope.isNew()) {
+      var beforeNavPromise = function(toSend) {
+        var credentials = {
+          email: toSend.email,
+          password: toSend.password
+        };
+
+        return Authenticator.authenticate(credentials);
       };
-
-      Authenticator.authenticate(credentials).then(function(response) {
-        if (response.status === 200) {
-          $sessionStorage.put('jwt', response.data.authToken);
-        }
-      }).catch(function(response) {
-        console.log('we should never get this b/c we registered the user first, then turned right around and authenticated with the same info.');
-        console.log(response);
-      });
-    };
-    $scope.process(beforeNavFunc);
-  };
-
-  $scope.updateProfile = function() {
-    $scope.process();
+      $scope.process(beforeNavPromise);
+    } else {
+      $scope.process();
+    }
   };
 
   $scope.someSelected = function() {
@@ -159,17 +181,29 @@ cgiWebApp.controller('ProfileController',
       return $scope.profile.password === '' || $scope.regexPassword.test($scope.profile.password);
     }
   };
-  
+
+  $scope.goBack = function() {
+    if ($scope.isNew()) {
+      $state.go('login');
+    }
+    else {
+      $state.go('landing');
+    }
+  };
+
+  $scope.proceedForward = function() {
+    $state.go('landing');
+  };
+
   $scope.keyCallback= function($event) {
       $scope.keyCode = $event.which;
-      if($scope.keyCode === 27){ 
-          $state.go('login');
+      if($scope.keyCode === 27){
+        $scope.goBack();
       }
     };
-  
-  
+
   $scope.init();
-  
+
 }]);
 
 cgiWebApp.directive('compareTo', function() {
@@ -189,4 +223,3 @@ cgiWebApp.directive('compareTo', function() {
     }
   };
 });
-

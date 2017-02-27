@@ -102,7 +102,7 @@ public class DaoUnitTestBase {
        sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
       Statement st = sqlConnection.createStatement();
       int res = st.executeUpdate(
-          "INSERT INTO user (id, first_name, last_name, email, password, phone, address, address_additional_info, city, state, zip_code, role, latitude, longitude)\n"
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude)\n"
               + "VALUES ( 100,\n"
               + "'john',\n"
               + "'smith',\n"
@@ -112,12 +112,43 @@ public class DaoUnitTestBase {
               + "'required street',\n"
               + "'optional street',\n"
               + "'Sacramento',\n"
-              + "'California',\n"
+              + "'CA',\n"
               + "'95814',\n"
               + "'ADMIN',\n"
               + "38.5824933,\n"
               + "-121.4941738\n"
               + ")");
+
+      sqlConnection.commit();
+    } catch (Exception ex) {
+      sqlConnection.rollback();
+      ex.printStackTrace();
+    }
+  }
+  public static void signupResidentUser(int newId)
+      throws SQLException {
+    Connection sqlConnection = null;
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+      sqlConnection = ((SessionImpl) sessionFactory.openSession()).connection();
+      Statement st = sqlConnection.createStatement();
+      st.executeUpdate(
+          "INSERT INTO user (id, first_name, last_name, email, password, phone, address1, address2, city, state, zip_code, role, latitude, longitude)\n"
+              + "select " + newId + ",\n"
+              + "'john',\n"
+              + "'doe',\n"
+              + "'resident"+newId+"@cgi.com',\n"
+              + "'9e5f3dd72fbd5f309131364baf42b446f570629f4a809390be533f:1db93c4885d4bf980e92286d74da720dc298fdc1a29c89cf9c67ce',\n"
+              + "'1234567890',\n"
+              + "'required street',\n"
+              + "'optional street',\n"
+              + "'Sacramento',\n"
+              + "'CA',\n"
+              + "'95814',\n"
+              + "'RESIDENT',\n"
+              + "38.5824933,\n"
+              + "-121.4941738\n"
+              + "where not exists (select * from user where id = 200)");
 
       sqlConnection.commit();
     } catch (Exception ex) {

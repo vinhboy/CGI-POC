@@ -63,17 +63,13 @@ public class EventNotificationTest extends BaseTest {
         
         Set<ConstraintViolation<EventNotification>> validate = validator.validate(testEvent);
         assertThat(validate.isEmpty()).isEqualTo(false);
-        assertThat(validate.size()).isEqualTo(3);
+        assertThat(validate.size()).isEqualTo(2);
         for ( ConstraintViolation violation : validate ) {
                 
               String tmp = ((PathImpl)violation.getPropertyPath())
                 .getLeafNode().getName();
               if (tmp.equals("userId")){
                assertThat(tmp).isEqualTo("userId");
-               assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
-                  
-              }else if (tmp.equals("eventNotificationZipcodes")){
-               assertThat(tmp).isEqualTo("eventNotificationZipcodes");
                assertThat(violation.getMessageTemplate()).isEqualTo("{javax.validation.constraints.NotNull.message}");
                   
               }else if (tmp.equals("type")){

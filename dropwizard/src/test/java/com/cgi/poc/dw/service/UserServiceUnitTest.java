@@ -12,13 +12,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.cgi.poc.dw.MapApiConfiguration;
+import com.cgi.poc.dw.api.service.MapsApiService;
+import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.util.ErrorInfo;
+import com.cgi.poc.dw.util.ValidationErrors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -66,8 +68,8 @@ public class UserServiceUnitTest {
   private Client client;
 
   @Mock
-  private MapApiConfiguration mapApiConfiguration;
-  
+  private MapsApiService mapsApiService;
+
   @Mock
   private EmailService emailService;
 
@@ -88,20 +90,23 @@ public class UserServiceUnitTest {
     user.setPhone("1234567890");
     user.setZipCode("98765");
     user.setCity("Sacramento");
-    user.setState("California");
-    user.setRequiredStreet("required street");
-    user.setOptionalStreet("optional street");
+    user.setState("CA");
+    user.setAddress1("required street");
+    user.setAddress2("optional street");
+    user.setEmailNotification(false);
+    user.setSmsNotification(false);
+    user.setPushNotification(false);
     user.setLatitude(0.0);
     user.setLongitude(0.0);
-    UserNotificationType selNot = new UserNotificationType(Long.valueOf(NotificationType.SMS.ordinal()));
-    Set<UserNotificationType> notificationType = new HashSet<>();
-    notificationType.add(selNot);
-    user.setNotificationType(notificationType);
+    user.setSmsNotification(true);
+    
+    GeoCoordinates geoCoordinates = new GeoCoordinates();
+    geoCoordinates.setLatitude(10.00);
+    geoCoordinates.setLongitude(20.00);
+    when(mapsApiService.getGeoCoordinatesByZipCode(anyString())).thenReturn(geoCoordinates);
 
     JsonNode jsonRespone = new ObjectMapper()
         .readTree(getClass().getResource("/google_maps_api/success_geocode_response.json"));
-
-    when(mapApiConfiguration.getApiURL()).thenReturn("http://googleMapsURL.com");
 
     //mocking the Jersey Client
     WebTarget mockWebTarget = mock(WebTarget.class);
@@ -110,7 +115,7 @@ public class UserServiceUnitTest {
     Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
     when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
     when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
-    
+
     doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
     when(textMessageService.send(anyString(), anyString())).thenReturn(true);
   }
@@ -124,7 +129,6 @@ public class UserServiceUnitTest {
     Response actual = underTest.registerUser(user);
 
     assertEquals(200, actual.getStatus());
-    assertEquals(user, actual.getEntity());
   }
 
 
@@ -148,9 +152,8 @@ public class UserServiceUnitTest {
               .isEqualTo("must be at least 2 characters in length.");
         } else if (tmp.equals("password") && annotation
             .equals("com.cgi.poc.dw.util.PasswordType")) {
-          assertThat(violation.getMessageTemplate())
-              .isEqualTo(
-                  "must be greater that 2 character, contain no whitespace, and have at least one number and one letter.");
+          assertThat(violation.getMessage())
+              .isEqualTo(ValidationErrors.INVALID_PASSWORD);
         } else {
           fail("not an expected constraint violation");
         }
@@ -176,7 +179,7 @@ public class UserServiceUnitTest {
 
         if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
           assertThat(violation.getMessageTemplate())
-              .isEqualTo("Invalid email address.");
+              .isEqualTo(ValidationErrors.INVALID_EMAIL);
         } else {
           fail("not an expected constraint violation");
         }
@@ -184,7 +187,7 @@ public class UserServiceUnitTest {
     }
   }
   @Test
-  public void registerUser_EmailValidationFailsWhiteSpave() throws Exception {
+  public void registerUser_EmailValidationFailsWhiteSpace() throws Exception {
 
     user.setPassword("aaa"); //one character password
     user.setEmail("aaa @i23.com"); //one character password
@@ -201,7 +204,7 @@ public class UserServiceUnitTest {
 
         if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
           assertThat(violation.getMessageTemplate())
-              .isEqualTo("Invalid email address.");
+              .isEqualTo(ValidationErrors.INVALID_EMAIL);
         } else {
           fail("not an expected constraint violation");
         }
@@ -226,7 +229,7 @@ public class UserServiceUnitTest {
 
         if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
           assertThat(violation.getMessageTemplate())
-              .isEqualTo("Invalid email address.");
+              .isEqualTo(ValidationErrors.INVALID_EMAIL);
         } else {
           fail("not an expected constraint violation");
         }
@@ -251,7 +254,7 @@ public class UserServiceUnitTest {
 
         if (tmp.equals("email") && annotation.equals("javax.validation.constraints.Pattern")) {
           assertThat(violation.getMessageTemplate())
-              .isEqualTo("Invalid email address.");
+              .isEqualTo(ValidationErrors.INVALID_EMAIL);
         } else {
           fail("not an expected constraint violation");
         }
@@ -264,88 +267,59 @@ public class UserServiceUnitTest {
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
-
     when(userDao.findUserByEmail(user.getEmail())).thenReturn(user);
- 
-      Response registerUser = underTest.registerUser(user);
-      
-      assertEquals(400, registerUser.getStatus());
-      ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
-      String actualMessage = errorInfo.getErrors().get(0).getMessage();
-      String actualCode = errorInfo.getErrors().get(0).getCode();
 
-      assertEquals("ERR4", actualCode);
-      assertEquals("Duplicate entry for key '<email>'", actualMessage);
- 
+    try {
+      Response registerUser = underTest.registerUser(user);
+      fail("Expected an exception to be thrown");
+    } catch (BadRequestException exception) {
+      assertEquals(exception.getMessage(), ValidationErrors.DUPLICATE_USER);
+    }
   }
 
   @Test
   public void registerUser_CreateUserFails() throws Exception {
-
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
 
     doThrow(new HibernateException("Something went wrong.")).when(userDao).save(any(User.class));
-    Response registerUser = underTest.registerUser(user);
-      
-      assertEquals(500, registerUser.getStatus());
-      ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
-      String actualMessage = errorInfo.getErrors().get(0).getMessage();
-      String actualCode = errorInfo.getErrors().get(0).getCode();
-
-      assertEquals("ERR1", actualCode);
-      assertEquals(
-          "An Unknown exception has occured. Type: <org.hibernate.HibernateException>. Message: <Something went wrong.>",
-          actualMessage);
- 
+    try {
+      Response registerUser = underTest.registerUser(user);
+      fail("Expected an exception to be thrown");
+    } catch (HibernateException exception) {
+      assertEquals(exception.getMessage(), "Something went wrong.");
+    }
   }
 
   @Test
   public void passwordHashingFails() throws Exception {
 
     doThrow(new InternalServerErrorException("Something went wrong.")).when(passwordHash).createHash(user.getPassword());
-       Response registerUser = underTest.registerUser(user);
-       
-      assertEquals(500, registerUser.getStatus());
-      ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
-      String actualMessage = errorInfo.getErrors().get(0).getMessage();
-      String actualCode = errorInfo.getErrors().get(0).getCode();
-
-      assertEquals("ERR1", actualCode);
-      assertEquals(
-          "An Unknown exception has occured. Type: <javax.ws.rs.InternalServerErrorException>. Message: <Something went wrong.>",
-          actualMessage);
+    try {
+      Response response = underTest.registerUser(user);
+      fail("Expected an exception to be thrown");
+    }
+    catch (InternalServerErrorException exception) {
+      assertEquals("Something went wrong.", exception.getMessage());
+    }
   }
-  
+
   @Test
-  public void mapsAPICommunicationFails()
-      throws InvalidKeySpecException, NoSuchAlgorithmException {
+  public void mapsAPICommunicationFails() {
 
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
-
-    //mocking the Jersey Client
-    WebTarget mockWebTarget = mock(WebTarget.class);
-    when(client.target(anyString())).thenReturn(mockWebTarget);
-    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
-    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
-    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
-
-    doThrow(new ProcessingException("Processing failed.")).when(mockBuilder).get(String.class);
-
-    Response response = underTest.registerUser(user);
-
-    Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
-    ErrorInfo errorInfo = (ErrorInfo) response.getEntity();
-    String actualMessage = errorInfo.getErrors().get(0).getMessage();
-    String actualCode = errorInfo.getErrors().get(0).getCode();
-
-    assertEquals("ERR1", actualCode);
-    assertEquals(
-        "An Unknown exception has occured. Type: <javax.ws.rs.ProcessingException>. Message: <Processing failed.>",
-        actualMessage);
+    doThrow(new InternalServerErrorException("Processing failed.")).when(mapsApiService).getGeoCoordinatesByZipCode(anyString());
+    
+    try {
+      Response response = underTest.registerUser(user);
+      fail("Expected an exception to be thrown");
+    } 
+    catch (InternalServerErrorException exception) {
+      assertEquals("Processing failed.", exception.getMessage());
+    }
   }
 
   @Test
@@ -359,43 +333,19 @@ public class UserServiceUnitTest {
     User actualUser = (User) actual.getEntity();
 
     assertEquals(200, actual.getStatus());
-    assertEquals(new Double(38.5824933), actualUser.getLatitude());
-    assertEquals(new Double(-121.4941738), actualUser.getLongitude());
+    assertEquals(new Double(10.0), actualUser.getLatitude());
+    assertEquals(new Double(20.0), actualUser.getLongitude());
   }
-  
+
   @Test
 	public void updateUser_UpdateUserWithValidInput() throws Exception {
-
-		String saltedHash = "9e5f3dd72fbd5f309131364baf42b446f570629f4a809390be533f:"
+    String saltedHash = "9e5f3dd72fbd5f309131364baf42b446f570629f4a809390be533f:"
 				+ "1db93c4885d4bf980e92286d74da720dc298fdc1a29c89cf9c67ce";
+
 		when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
 		when(userDao.findUserByEmail(user.getEmail())).thenReturn(user);
-		Response actual = underTest.updateUser(user);
+		Response actual = underTest.updateUser(user, user);
 
 		assertEquals(200, actual.getStatus());
-		assertEquals(user, actual.getEntity());
 	}
-
-  @Test
-  public void updateUser_UpdateUserFails() throws Exception {
-
-    String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
-        + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
-    when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
-
-    doThrow(new HibernateException("Something went wrong.")).when(userDao).save(any(User.class));
-
-    when(userDao.findUserByEmail(user.getEmail())).thenReturn(user);
-    Response registerUser = underTest.updateUser(user);
-
-    assertEquals(500, registerUser.getStatus());
-    ErrorInfo errorInfo = (ErrorInfo) registerUser.getEntity();
-    String actualMessage = errorInfo.getErrors().get(0).getMessage();
-    String actualCode = errorInfo.getErrors().get(0).getCode();
-
-    assertEquals("ERR1", actualCode);
-    assertEquals(
-        "An Unknown exception has occured. Type: <org.hibernate.HibernateException>. Message: <Something went wrong.>",
-        actualMessage);
-  }
 }

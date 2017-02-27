@@ -1,0 +1,35 @@
+<div ng-show="showMapOrDetails === 'DETAILS'" class="event-details-container ">
+    <h4 class="usa-heading-alt">Notification Details</h4>
+    <div class="event-details usa-grid event-info">
+        <div class="usa-width-one-whole "  >
+            <table class="usa-table-borderless">
+                <tr>
+                    <td class="event-icons"><a><i  class="fa fa-5x fa-info-circle" ></i></a> </td>
+                    <td>
+                        <h5 class="usa-heading">{{currentSelectedEvent.type}}</h5>
+                        <span>{{currentSelectedEvent.generationDate|  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
+                        <h5 translate="LANDING.DETAILS.SENT_BY"></h5>
+                        <span >{{currentSelectedEvent.userId.firstName}} {{currentSelectedEvent.userId.lastName}}</span>
+                        <h5 ng-show="currentSelectedEvent.eventNotificationZipcodes.length > 0"  translate="LANDING.DETAILS.AFFECTED_ZIPS"></h5>
+                        <span ng-show="currentSelectedEvent.eventNotificationZipcodes.length > 0" ><span ng-repeat="z in currentSelectedEvent.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
+                        <h5 translate="LANDING.DETAILS.MESSAGE"></h5>
+                        <span >{{currentSelectedEvent.description}}</span>
+                        <h5 ng-show="role === 'ADMIN'"  >{{currentSelectedEvent.citizensAffected| number}} users notified</h5>
+
+                    </td>
+                </tr>
+
+            </table>
+
+
+        </div>
+    </div>
+    <div class=" usa-grid">
+        <div class="usa-width-one-half"  >
+            <div class="button_wrapper">
+                <button ng-if="isMobile"  ng-click="backToDefault(currentSelectedEvent)" class="usa-button-big" type="button" translate="LANDING.MOBILE.RETURN_TO"></button>
+                <button ng-if="!isMobile"  ng-click="backToDefault(currentSelectedEvent)" class="usa-button-big" type="button" translate="LANDING.NONMOBILE.RETURN_TO"></button>
+            </div>
+        </div>
+    </div>
+</div>

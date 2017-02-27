@@ -27,6 +27,7 @@ public class AdminUserLandingPage {
 	WebElement evenTyFilter;
 	@FindBy(xpath = "//select[@id='eventTimeFilter']")
 	WebElement evenTimeFilter;
+	public static @FindBy(xpath="//div[@class='usa-width-one-third scrollable-section']") WebElement scroballSection;
 	public static @FindBy(xpath="//a[contains(.,'Logout')]")
 	WebElement logout;
 	
@@ -44,7 +45,11 @@ public class AdminUserLandingPage {
 	
 
 
-
+	public static WebElement verifyScrollSection()
+	{
+		return scroballSection;
+	}
+	
 	
 	//click Logout
 	public void clickLogout()

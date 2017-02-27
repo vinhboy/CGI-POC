@@ -10,11 +10,10 @@ import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.FireEventDAO;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.EventNotificationUser;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.FireEvent;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.TextMessageService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -63,7 +62,7 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
 
     public void mapAndSave(JsonNode eventJson, JsonNode geoJson) {
         ObjectMapper mapper = new ObjectMapper();
-        FireEvent retEvent = new FireEvent();
+        FireEvent retEvent;
 
         Session session = sessionFactory.openSession();
         try {
@@ -73,16 +72,11 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
             ManagedSessionContext.bind(session);
 
             Transaction transaction = session.beginTransaction();
-            try {
-                LOG.info("Event to save : {}", event.toString());
-                // Archive users based on last login date
-                retEvent = ((FireEventDAO) eventDAO).save(event);
-                transaction.commit();
-            } catch (Exception e) {
-                transaction.rollback();
-                LOG.error("Unable to save event : error: {}", e.getMessage());
-            }
 
+            LOG.info("Event to save : {}", event.toString());
+            // Archive users based on last login date
+            retEvent = eventDAO.save(event);
+            transaction.commit();
 
             if(retEvent.getLastModified() != null){
                 LOG.info("Event for notifications");
@@ -93,15 +87,6 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
 
                 List<User> users = userDao.getGeoWithinRadius(Arrays.asList(geo), 50.00);
 
-                if (users.size() > 0) {
-
-                    LOG.info("Send notifications to : {}", users.toString());
-
-                    /*
-                    * TODO
-                    *   additional subtask for refactoring eventNotification
-                    *   removing not null requirements for zipcode
-                    * */
                     EventNotification eventNotification = new EventNotification();
                     eventNotification.setCitizensAffected(users.size());
                     eventNotification.setDescription("Emergency alert: Fire near "+event.getIncidentname()+" in your area. Please log in at <our site> for more information.");
@@ -111,26 +96,24 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
                     eventNotification.setType("Fire");
                     eventNotification.setUserId(userDao.getAdminUser());
 
-                    EventNotificationZipcode zipcode = new EventNotificationZipcode();
-                    zipcode.setZipCode("00000");
-                    Set<EventNotificationZipcode> eventNotificationZipcode = new HashSet<>();
-                    eventNotificationZipcode.add(zipcode);
+                if (users.size() > 0) {
 
-                    eventNotification.setEventNotificationZipcodes(eventNotificationZipcode);
-
-                    eventNotificationDAO.save(eventNotification);
-
+                    LOG.info("Send notifications to : {}", users.toString());
                     for (User user : users) {
-                        for (UserNotificationType userNotification : user.getNotificationType()){
-                            if(userNotification.getNotificationId() == NotificationType.SMS.ordinal()){
-                                textMessageService.send(user.getPhone(), eventNotification.getDescription());
-                            }else if(userNotification.getNotificationId() == NotificationType.EMAIL.ordinal()){
-                                emailService.send(null, Arrays.asList(user.getEmail()), "Emergency alert from MyCAlerts: Fire near " + event.getIncidentname(),
-                                    eventNotification.getDescription());
-                            }
+                        EventNotificationUser currENUser= new EventNotificationUser();
+                        currENUser.setUserId(user);
+                        eventNotification.addNotifiedUser(currENUser);
+
+                        if (user.getSmsNotification()) {
+                            textMessageService.send(user.getPhone(), eventNotification.getDescription());
                         }
-                    }
+                        if (user.getEmailNotification()) {
+                            emailService.send(null, Arrays.asList(user.getEmail()), "Emergency alert from MyCAlerts: Fire near " + event.getIncidentname(),
+                                    eventNotification.getDescription());
+                        }
+                     }
                 }
+                eventNotificationDAO.save(eventNotification);
             }else{
                 LOG.debug("Event last modified not changed");
             }

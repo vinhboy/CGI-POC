@@ -4,18 +4,16 @@ describe('loginController', function() {
   var loginController;
   var $scope;
   var authenticationService;
-  var $sessionStorage;
   var $state;
   var $q;
   var deferred;
 
   beforeEach(module('cgi-web-app'));
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _Authenticator_, _$sessionStorage_, _$state_, _$q_) {
+  beforeEach(inject(function(_$rootScope_, _$controller_, _Authenticator_, _$state_, _$q_) {
     $q = _$q_;
     $scope = _$rootScope_.$new();
     authenticationService = _Authenticator_;
-    $sessionStorage = _$sessionStorage_;
     $state = _$state_;
 
     deferred = _$q_.defer();
@@ -24,7 +22,6 @@ describe('loginController', function() {
     loginController = _$controller_('loginController', {
       $scope: $scope,
       Authenticator: authenticationService,
-      $sessionStorage: $sessionStorage,
       $state: $state
     });
   }));
@@ -49,16 +46,6 @@ describe('loginController', function() {
       $scope.$apply();
 
       expect($state.go).toHaveBeenCalledWith('landing');
-    });
-
-    it('should save the JWT auth token', function() {
-      spyOn($sessionStorage, 'put');
-
-      $scope.submitForm();
-      deferred.resolve({ status: 200, data: { authToken: 'the jwt auth token' } });
-      $scope.$apply();
-
-      expect($sessionStorage.put).toHaveBeenCalledWith('jwt', 'the jwt auth token');
     });
 
     it('should set the error message on unauthorized', function() {

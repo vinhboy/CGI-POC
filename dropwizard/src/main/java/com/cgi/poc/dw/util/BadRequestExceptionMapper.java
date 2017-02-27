@@ -17,8 +17,8 @@ public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestExce
   @Override
   public Response toResponse(BadRequestException exception) {
     ErrorInfo errRet = new ErrorInfo();
-    String errorString = GeneralErrors.INVALID_INPUT.getMessage().replace("REPLACE", exception.getMessage());
-    errRet.addError(GeneralErrors.INVALID_INPUT.getCode(), errorString);
+    String message = exception.getMessage();
+    errRet.addError(Integer.toString(Response.Status.BAD_REQUEST.getStatusCode()), message);
     Response response = Response.status(Status.BAD_REQUEST).entity(errRet).build();
     LOG.error("Exception: ", exception);
     return response;

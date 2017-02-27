@@ -22,13 +22,13 @@ import com.cgi.poc.dw.dao.model.EventEarthquake;
 import com.cgi.poc.dw.dao.model.EventFlood;
 import com.cgi.poc.dw.dao.model.EventHurricane;
 import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.EventNotificationUser;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.EventTsunami;
 import com.cgi.poc.dw.dao.model.EventVolcano;
 import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserNotificationType;
 import com.cgi.poc.dw.rest.resource.EventNotificationResource;
 import com.cgi.poc.dw.jobs.JobExecutionService;
 import com.cgi.poc.dw.jobs.JobFactory;
@@ -103,10 +103,10 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
   private final static Logger LOG = LoggerFactory.getLogger(CgiPocApplication.class);
 
   private final HibernateBundle<CgiPocConfiguration> hibernateBundle
-      = new HibernateBundle<CgiPocConfiguration>(User.class, UserNotificationType.class,
+      = new HibernateBundle<CgiPocConfiguration>(User.class, 
       FireEvent.class, EventEarthquake.class, EventWeather.class, EventFlood.class,
       EventHurricane.class, EventTsunami.class, EventVolcano.class, EventNotification.class,
-      EventNotificationZipcode.class) {
+      EventNotificationZipcode.class,EventNotificationUser.class ){
     @Override
     public DataSourceFactory getDataSourceFactory(CgiPocConfiguration configuration) {
       return configuration.getDataSourceFactory();

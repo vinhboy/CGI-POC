@@ -1,8 +1,6 @@
 package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.dao.model.EventNotification;
-import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
-import com.cgi.poc.dw.dao.model.NotificationType;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
@@ -11,11 +9,12 @@ import com.google.common.collect.Sets;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.*;
+
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -23,19 +22,13 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.StringUtils;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class NotificationEventResourceIntegrationTest extends IntegrationTest {
 
@@ -51,7 +44,8 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
 
     IntegrationTestHelper.signupAdminUser();
     IntegrationTestHelper.signupResidentUser("92106", "res101@cgi.com");
-    IntegrationTestHelper.addUserNotificationType(1111, NotificationType.EMAIL.getValue());
+    IntegrationTestHelper.removeAllNotificationsForUser("res101@cgi.com");
+    IntegrationTestHelper.addEmailNotificationForUser("res101@cgi.com");
     smtpServer = new GreenMail(new ServerSetup(3025, "127.0.0.1",
         ServerSetup.PROTOCOL_SMTP));
     smtpServer.start();

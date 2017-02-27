@@ -59,8 +59,8 @@ public class EventNotificationZipcode implements Serializable {
     this.zipCode = zipCode;
   }
 
-  public EventNotification getEventNotificationId() {
-    return eventNotificationId;
+  public Long getEventNotificationId() {
+    return eventNotificationId.getId();
   }
 
   public void setEventNotificationId(EventNotification eventNotificationId) {

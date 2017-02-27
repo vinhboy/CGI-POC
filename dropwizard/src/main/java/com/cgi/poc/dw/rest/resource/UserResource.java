@@ -9,16 +9,14 @@ import com.google.inject.Inject;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -36,6 +34,19 @@ public class UserResource {
 
 	@Inject
 	private UserService userService;
+
+	@GET
+	@UnitOfWork
+	@ApiOperation(value = "Retrieve user profile registration", notes = "Allows a user to retrieve registration information.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
+			@ApiResponse(code = 500, message = "System Error") })
+	@ApiImplicitParams({
+					@ApiImplicitParam(name = "Authorization", required = true, dataType = "string", paramType = "header")
+	})
+	@Timed(name = "User.get")
+	public Response retrieve(@Auth User user) {
+		return Response.ok().entity(user).build();
+	}
 
 	@POST
 	@UnitOfWork
@@ -56,16 +67,12 @@ public class UserResource {
 	@ApiOperation(value = "User profile update", notes = "Allows a user to update.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 500, message = "System Error") })
+	@ApiImplicitParams({
+					@ApiImplicitParam(name = "Authorization", required = true, dataType = "string", paramType = "header")
+	})
 	@Timed(name = "User.save")
-	public Response updateProfile(@Auth User user, @NotNull User modifiedUser) {
-		//If user password is empty keep same password.
-		if(StringUtils.isBlank(modifiedUser.getPassword())){
-			modifiedUser.setPassword(user.getPassword());
-		}
-		modifiedUser.setId(user.getId());
-		modifiedUser.setRole(user.getRole());
-		
-		Response response = userService.updateUser(modifiedUser);
+	public Response updateProfile(@ApiParam(hidden = true) @Auth User user, @NotNull User modifiedUser) {
+		Response response = userService.updateUser(user, modifiedUser);
 		if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
 			throw new WebApplicationException(response);
 		}
