@@ -125,16 +125,13 @@ public class EventFloodTest extends BaseTest {
     }
         @Test
     public void testExampleFromSource() throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
            File file = new File(ClassLoader.getSystemResource("exampleFloodEvent.json").toURI());
 
             JsonParser  parser  = jsonFactory.createParser(new FileReader(file));
 	    parser.setCodec(mapper);
             ObjectNode node = parser.readValueAs(ObjectNode.class);
-            JsonNode event = node.get("attributes");
-            JsonNode geo = node.get("attributes");
- 
-
+            JsonNode event = node.get("features").get(0).get("attributes");
+          
            EventFlood tst = mapper.readValue(event.toString(), EventFlood.class);
            
            
