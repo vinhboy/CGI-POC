@@ -57,7 +57,7 @@ public class TC01_Admin_ListFilterEvents extends BaseClass {
 	}
 	
 	
-	@Test(description="Verify Admin User see all Event Times in Filter List")
+	/*@Test(description="Verify Admin User see all Event Times in Filter List")
 
 	public void TC01_ListFilterEvent_3() throws InterruptedException {
 		// Start Create New HTML report for the Testcase
@@ -97,7 +97,7 @@ public class TC01_Admin_ListFilterEvents extends BaseClass {
 		element.click();
 		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC01_ListFilterEvent_3")));
 		
-	}
+	}*/
 	
 	
 	
