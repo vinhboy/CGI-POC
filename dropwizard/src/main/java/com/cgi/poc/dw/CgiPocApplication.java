@@ -33,6 +33,8 @@ import com.cgi.poc.dw.rest.resource.EventNotificationResource;
 import com.cgi.poc.dw.jobs.JobExecutionService;
 import com.cgi.poc.dw.jobs.JobFactory;
 import com.cgi.poc.dw.jobs.JobFactoryImpl;
+import com.cgi.poc.dw.factory.AddressBuilder;
+import com.cgi.poc.dw.factory.AddressBuilderImpl;
 import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.EmailServiceImpl;
 import com.cgi.poc.dw.rest.resource.LoginResource;
@@ -305,6 +307,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(APICallerService.class).annotatedWith(Names.named("fireService")).to(FireEventAPICallerServiceImpl.class);
         bind(APICallerService.class).annotatedWith(Names.named("weatherService")).to(FireEventAPICallerServiceImpl.class);
         bind(MapsApiService.class).to(MapsApiServiceImpl.class).asEagerSingleton();
+        bind(AddressBuilder.class).to(AddressBuilderImpl.class).asEagerSingleton();
 
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)

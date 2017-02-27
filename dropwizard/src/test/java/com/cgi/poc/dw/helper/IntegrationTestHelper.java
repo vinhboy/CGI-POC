@@ -2,7 +2,9 @@ package com.cgi.poc.dw.helper;
 
 import com.cgi.poc.dw.CgiPocConfiguration;
 import com.cgi.poc.dw.dao.HibernateUtil;
+import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.rest.resource.UserResourceIntegrationTest;
 import io.dropwizard.testing.junit.DropwizardAppRule;
@@ -17,7 +19,9 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.internal.SessionImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -238,6 +242,34 @@ public class IntegrationTestHelper {
     } catch (Exception ex) {
       sqlConnection.rollback();
       ex.printStackTrace();
+    }
+  }
+
+  public static Response requestPost(String url, DropwizardAppRule<CgiPocConfiguration> rule, Object entity) {
+    Client client = new JerseyClientBuilder().build();
+    return client.target(String.format(url, rule.getLocalPort())).request().post(Entity.json(entity));
+  }
+
+  public static Response requestGet(String url, DropwizardAppRule<CgiPocConfiguration> rule) {
+    Client client = new JerseyClientBuilder().build();
+    return client.target(String.format(url, rule.getLocalPort())).request().get();
+  }
+
+  public static Response requestPut(String url, DropwizardAppRule<CgiPocConfiguration> rule, Object entity) {
+    Client client = new JerseyClientBuilder().build();
+    return client.target(String.format(url, rule.getLocalPort())).request().put(Entity.json(entity));
+  }
+
+  public static User getUserFromDb(String email) {
+    SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
+    Transaction transaction = null;
+    try {
+      transaction = sessionFactory.getCurrentSession().beginTransaction();
+      UserDao dao = new UserDao(sessionFactory);
+      return dao.findUserByEmail(email);
+    }
+    finally {
+      transaction.rollback();
     }
   }
 }

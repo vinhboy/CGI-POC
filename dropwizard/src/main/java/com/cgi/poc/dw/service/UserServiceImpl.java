@@ -5,12 +5,12 @@ import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.factory.AddressBuilder;
 import com.cgi.poc.dw.util.LoginValidationGroup;
 import com.cgi.poc.dw.util.PersistValidationGroup;
 import com.cgi.poc.dw.util.RestValidationGroup;
 import com.cgi.poc.dw.util.ValidationErrors;
 import com.google.inject.Inject;
-import java.util.Arrays;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import javax.ws.rs.BadRequestException;
@@ -27,16 +27,19 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	private final PasswordHash passwordHash;
 	
-	private MapsApiService mapsApiService;
+  private final AddressBuilder addressBuilder;
+
+  private MapsApiService mapsApiService;
 	
 	@Inject
 	public UserServiceImpl(MapsApiService mapsApiService, UserDao userDao, PasswordHash passwordHash,
-			Validator validator) {
+			Validator validator, AddressBuilder addressBuilder) {
 		super(validator);
 		this.userDao = userDao;
 		this.passwordHash = passwordHash;
 		this.mapsApiService = mapsApiService;
-	}
+    this.addressBuilder = addressBuilder;
+  }
 
 	public Response registerUser(User user) {
 		// Defaulting the user to RESIDENT
@@ -74,7 +77,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			user.setPassword(hash);
 		}
 
-		GeoCoordinates geoCoordinates = mapsApiService.getGeoCoordinatesByZipCode(user.getZipCode());
+		GeoCoordinates geoCoordinates = mapsApiService.getGeoCoordinatesByAddress(addressBuilder.build(user));
 		user.setLatitude(geoCoordinates.getLatitude());
 		user.setLongitude(geoCoordinates.getLongitude());
 
