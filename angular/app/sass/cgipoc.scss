@@ -124,12 +124,12 @@ and (max-device-width : 480px) {
       margin: 0% auto;
       padding: 12px;
       width: 90%;
+      background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
       .usa-form-large {
         margin: 0 auto;
         padding: 8px;
-        background: rgba(237, 244, 247, 0.85);
       }
     }
 
@@ -181,12 +181,12 @@ and (max-device-width : 768px) {
       margin: 8% auto;
       padding: 12px;
       width: 400px;
+      background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
       .usa-form-large {
         margin: 0 auto;
         padding: 8px;
-        background: rgba(237, 244, 247, 0.85);
       }
     }
 
@@ -239,15 +239,15 @@ and (max-device-width : 1024px) {
 
   .usa-content {
     .centeredForm {
-      margin: 12% auto;
+      margin: 10% auto;
       padding: 12px;
       width: 400px;
+      background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
       .usa-form-large {
         margin: 0 auto;
         padding: 8px;
-        background: rgba(237, 244, 247, 0.85);
       }
     }
 
@@ -299,15 +299,15 @@ and (min-width : 1025px) {
 
   .usa-content {
     .centeredForm {
-      margin: 14% auto;
+      margin: 10% auto;
       padding: 12px;
       width: 400px;
+      background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
       .usa-form-large {
         margin: 0 auto;
         padding: 8px;
-        background: rgba(237, 244, 247, 0.85);
       }
     }
 
