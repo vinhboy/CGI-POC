@@ -83,10 +83,12 @@
 
   .usa-content .centeredForm {
     margin: 0% auto;
+    padding: 12px;
     width: 90%;
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
+      padding: 8px;
       background: rgba(237, 244, 247, 0.85); }
   .usa-content .site-description {
     width: 80%;
@@ -119,11 +121,13 @@
         height: auto; }
 
   .usa-content .centeredForm {
-    margin: 14% auto;
+    margin: 8% auto;
+    padding: 12px;
     width: 400px;
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
+      padding: 8px;
       background: rgba(237, 244, 247, 0.85); }
   .usa-content .site-description {
     width: 80%;
@@ -160,10 +164,12 @@
 
   .usa-content .centeredForm {
     margin: 12% auto;
+    padding: 12px;
     width: 400px;
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
+      padding: 8px;
       background: rgba(237, 244, 247, 0.85); }
   .usa-content .site-description {
     width: 80%;
@@ -196,24 +202,27 @@
         height: auto; }
       .headerZone .usa-header td {
         padding: 0; }
-    .headerZone .usa-content .centeredForm {
-      margin: 12% auto;
-      width: 400px;
-      box-shadow: 0 0 8px #888888; }
-      .headerZone .usa-content .centeredForm .usa-form-large {
-        margin: 0 auto;
-        background: rgba(237, 244, 247, 0.85); }
-    .headerZone .usa-content .site-description {
-      width: 80%;
-      height: auto;
-      margin: 60px auto;
-      padding: 2px 10px;
-      background: rgba(0, 52, 102, 0.6);
-      color: #ffffff;
-      font-size: 0.8em; }
-      .headerZone .usa-content .site-description p {
-        width: 100% !important;
-        max-width: 100% !important; } }
+
+  .usa-content .centeredForm {
+    margin: 14% auto;
+    padding: 12px;
+    width: 400px;
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin: 0 auto;
+      padding: 8px;
+      background: rgba(237, 244, 247, 0.85); }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
 .usa-nav-secondary-links a {
   color: white !important; }
 
@@ -360,7 +369,7 @@ input.phoneLong {
 
 /* Modal Content */
 .modal-content {
-  margin-top: 20px;
+  margin: 20px auto;
   overflow: auto;
   -webkit-animation-name: slideIn;
   -webkit-animation-duration: 0.5s;
