@@ -91,4 +91,14 @@ $sceDelegateProvider.resourceUrlWhitelist([
             }
         });
 
+
+        // Initialize Firebase
+        // TODO: Replace with your project's customized code snippet
+
+          firebase.initializeApp({
+            'messagingSenderId': '1037053801988'
+          });
+
+        
+
     }]);
