@@ -38,6 +38,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -94,6 +98,33 @@ public class EventFloodAPICallerServiceUnitTest {
   public void teardown() {
     final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     logger.detachAppender(mockAppender);
+  }
+
+  @Test
+  public void callServiceAPI_Failure() throws IOException {
+    Client client = mock(Client.class);
+    //mocking the Jersey Client
+    WebTarget mockWebTarget = mock(WebTarget.class);
+    when(client.target(anyString())).thenReturn(mockWebTarget);
+    when(mockWebTarget.queryParam(anyString(), anyString())).thenReturn(mockWebTarget);
+    Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
+    when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
+    doThrow(new ProcessingException("Processing failed.")).when(mockBuilder).get(String.class);
+
+    String eventUrl = "http://events.com";
+    EventFloodAPICallerServiceImpl underTest = new EventFloodAPICallerServiceImpl(
+        eventUrl, client, eventDAO, sessionFactory, textMessageService, emailService, userDao,
+        eventNotificationDAO);
+    underTest.callServiceAPI();
+
+    //verify logging interactions
+    verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
+    final LoggingEvent loggingEvent = captorLoggingEvent.getValue();
+    //Check log level is correct
+    assertThat(loggingEvent.getLevel(), is(Level.ERROR));
+    //Check the message being logged is correct
+    assertThat(loggingEvent.getFormattedMessage().toLowerCase(),
+        containsString("unable to parse the result for the url event : " + eventUrl));
   }
 
   @Test

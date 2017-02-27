@@ -48,10 +48,8 @@ public abstract class APICallerServiceImpl implements APICallerService {
       if (eventJson != null) {
         processEventJSON(eventJson);
       }
-    } catch (JsonParseException e) {
+    } catch (Exception e) {
       LOG.error("Unable to parse the result for the url event : {}", eventUrl, e);
-    } catch (IOException ex) {
-      LOG.error("Unable to parse the result for the url event : {}", eventUrl, ex);
     }
   }
 
