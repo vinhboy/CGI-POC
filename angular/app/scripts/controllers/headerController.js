@@ -7,19 +7,18 @@
 'use strict';
 
 cgiWebApp.controller('headerController',
-  ['$scope', '$sessionStorage', '$state','$http',
-  function ($scope, $sessionStorage, $state,$http) {
-    $scope.isLoggedIn = function(){
-      return $sessionStorage.get('jwt') !== null ;
+  ['$scope', '$state', 'Authenticator',
+  function ($scope, $state, Authenticator) {
+    $scope.isLoggedIn = function() {
+      return Authenticator.isLoggedIn();
     };
-    $scope.isAdminUser = function(){
-      return $sessionStorage.get('role') === 'ADMIN';
+
+    $scope.isAdminUser = function() {
+      return Authenticator.isAdminUser();
     };
 
     $scope.logout = function(){
-        $sessionStorage.remove('role');
-        $sessionStorage.remove('jwt');
-        $http.defaults.headers.common.Authorization =  'Bearer ';
-        $state.go('login');
+      Authenticator.logout();
+      $state.go('login');
     };
 }]);

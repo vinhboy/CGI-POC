@@ -12,14 +12,18 @@ cgiWebApp.controller('loginController',
   ['$scope', 'Authenticator', '$state',
   function ($scope, Authenticator, $state) {
 
-  $scope.user = {
-    email: '',
-    password: ''
-  };
+  $scope.init = function() {
+    $scope.user = {
+      email: '',
+      password: ''
+    };
 
-  $scope.model = {
-    errorNotif: false,
-    errorMessage: ''
+    $scope.model = {
+      errorNotif: false,
+      errorMessage: ''
+    };
+
+    Authenticator.logout();
   };
 
   $scope.popUp = function(code, message) {
@@ -45,4 +49,5 @@ cgiWebApp.controller('loginController',
     });
   };
 
+  $scope.init();
 }]);
