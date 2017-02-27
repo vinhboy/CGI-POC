@@ -5,6 +5,7 @@ import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventNotification;
+import com.cgi.poc.dw.dao.model.EventNotificationUser;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.rest.model.EventNotificationDto;
@@ -68,7 +69,6 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
     EventNotification eventNotification = convertToEntity(adminUser, eventNotificationDto);
 
     validate(eventNotification, "eventNotification validation", Default.class);
-    eventNotificationDAO.save(eventNotification);
 
     List<GeoCoordinates> geoCoordinates = new ArrayList<>();
     for (EventNotificationZipcode zipcode : eventNotification.getEventNotificationZipcodes()) {
@@ -87,6 +87,9 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
       if (affectedUser.getSmsNotification()) {
         phoneNumbers.add(affectedUser.getPhone());
       }
+      EventNotificationUser currENUser= new EventNotificationUser();
+      currENUser.setUserId(affectedUser);
+      eventNotification.addNotifiedUser(currENUser);
     }
 
     if (emailAddresses.size() > 0) {
@@ -104,6 +107,8 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
         textMessageService.send(phoneNumber, eventNotification.getDescription());
       }
     }
+    eventNotification.setCitizensAffected(affectedUsers.size());
+    eventNotificationDAO.save(eventNotification);
 
     return Response.ok().entity(eventNotification).build();
   }

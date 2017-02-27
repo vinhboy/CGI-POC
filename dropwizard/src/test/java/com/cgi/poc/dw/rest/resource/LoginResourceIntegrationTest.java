@@ -1,20 +1,19 @@
 package com.cgi.poc.dw.rest.resource;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import com.cgi.poc.dw.auth.model.Role;
-import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserDto;
 import com.cgi.poc.dw.rest.model.LoginUserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.util.ErrorInfo;
-import com.cgi.poc.dw.util.GeneralErrors;
-import java.util.HashSet;
-import java.util.Set;
+import com.cgi.poc.dw.util.ValidationErrors;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -23,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class LoginResourceIntegrationTest extends IntegrationTest {
@@ -50,20 +48,14 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
         .post(Entity.json(loginUserDto));
 
     assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
     for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "email  may not be null";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      assertThat(error.getMessage()).isEqualTo(expectedErrorString);
+      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
+      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_EMAIL), anyOf(is(ValidationErrors.MISSING_EMAIL))));
     }
   }
-
-
+  
   @Test
   public void noPassword() {
     Client client = new JerseyClientBuilder().build();
@@ -73,21 +65,12 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
         .post(Entity.json(loginUserDto));
 
     assertNotNull(response);
-    Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    boolean bValidErr = false;
     for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
-      assertThat(error.getCode()).isEqualTo(GeneralErrors.INVALID_INPUT.getCode());
-      // The data provided in the API call is invalid. Message: <XXXXX>
-      // where XXX is the message associated to the validation
-      String partString = "password  is missing";
-      String expectedErrorString = GeneralErrors.INVALID_INPUT.getMessage()
-          .replace("REPLACE", partString);
-      if (error.getMessage().equals(expectedErrorString)) {
-        bValidErr = true;
-      }
+      assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
+      assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_PASSWORD), anyOf(is(ValidationErrors.MISSING_PASSWORD))));
     }
-    assertThat(bValidErr).isEqualTo(true);
   }
 
   @Test
@@ -123,10 +106,11 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     user.setAddress1("required street");
     user.setAddress2("optional street");
     user.setEmailNotification(true);
+    user.setSmsNotification(false);
 
     Response newUserResponse = client.target(String.format("http://localhost:%d/user", RULE.getLocalPort())).request()
         .post(Entity.json(user));
-    Assert.assertEquals(200, newUserResponse.getStatus());
+    assertEquals(200, newUserResponse.getStatus());
 
     // login user
     LoginUserDto loginUserDto = new LoginUserDto();
@@ -134,10 +118,10 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     loginUserDto.setPassword("test123");
     Response response = client.target(String.format(url, RULE.getLocalPort())).request()
         .post(Entity.json(loginUserDto));
-    Assert.assertEquals(200, response.getStatus());
+    assertEquals(200, response.getStatus());
     JSONObject responseJo = new JSONObject(response.readEntity(String.class));
-    Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("authToken")));
-    Assert.assertEquals(Role.RESIDENT.toString(), responseJo.optString("role"));
+    assertTrue(!StringUtils.isBlank(responseJo.optString("authToken")));
+    assertEquals(Role.RESIDENT.toString(), responseJo.optString("role"));
   }
 
   @Test

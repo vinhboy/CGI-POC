@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.hibernate.validator.internal.engine.path.PathImpl;
 
 /**
  * @author dawna.floyd
@@ -29,14 +28,8 @@ public class CustomConstraintViolationExceptionMapper implements
     ErrorInfo errRet = new ErrorInfo();
     Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
     for (ConstraintViolation violation : constraintViolations) {
-
-      String tmp = ((PathImpl) violation.getPropertyPath())
-          .getLeafNode().getName() + "  " + violation.getMessage();
-
-      String errorString = GeneralErrors.INVALID_INPUT.getMessage().replace("REPLACE", tmp);
-
-      errRet.addError(GeneralErrors.INVALID_INPUT.getCode(), errorString);
-
+      String message = violation.getMessage();
+      errRet.addError(Integer.toString(Response.Status.BAD_REQUEST.getStatusCode()), message);
     }
     response = Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
 

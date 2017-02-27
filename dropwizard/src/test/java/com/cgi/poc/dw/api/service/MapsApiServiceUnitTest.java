@@ -13,8 +13,6 @@ import com.cgi.poc.dw.api.service.impl.MapsApiServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -40,14 +38,13 @@ public class MapsApiServiceUnitTest {
   private MapsApiServiceImpl underTest;
 
   @Before
-  public void start () throws IOException {
+  public void start() throws IOException {
 
     when(mapApiConfiguration.getApiURL()).thenReturn("http://googleMapsURL.com");
   }
 
   @Test(expected = InternalServerErrorException.class)
-  public void registerUser_MapsAPICommunicationFails()
-      throws InvalidKeySpecException, NoSuchAlgorithmException {
+  public void mapsAPICommunicationFails() {
 
     //mocking the Jersey Client
     WebTarget mockWebTarget = mock(WebTarget.class);
@@ -56,13 +53,13 @@ public class MapsApiServiceUnitTest {
     Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
     when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
     doThrow(new ProcessingException("Processing failed.")).when(mockBuilder).get(String.class);
-    
+
     underTest.getGeoCoordinatesByZipCode("92105");
     fail("Expected an exception to be thrown");
   }
 
   @Test
-  public void registerUser_FoundGeoCoordinates() throws Exception {
+  public void foundGeoCoordinates() throws Exception {
 
     JsonNode jsonRespone = new ObjectMapper().
         readTree(getClass().getResource("/google_maps_api/success_geocode_response.json"));
@@ -81,7 +78,7 @@ public class MapsApiServiceUnitTest {
   }
 
   @Test
-  public void registerUser_NotFoundGeoCoordinates() throws Exception {
+  public void notFoundGeoCoordinates() throws Exception {
 
     JsonNode jsonRespone = new ObjectMapper().
         readTree(getClass().getResource("/google_maps_api/not_found_geocode_response.json"));
@@ -98,5 +95,4 @@ public class MapsApiServiceUnitTest {
     assertEquals(new Double(0.0), result.getLatitude());
     assertEquals(new Double(0.0), result.getLongitude());
   }
-
 }
