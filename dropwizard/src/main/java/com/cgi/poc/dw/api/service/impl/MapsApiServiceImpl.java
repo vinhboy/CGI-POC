@@ -42,18 +42,18 @@ public class MapsApiServiceImpl implements MapsApiService {
     GeoCoordinates geoCoordinates = new GeoCoordinates();
     try {
       String response = client
-              .target(mapApiConfiguration.getApiURL())
-              .queryParam(ADDRESS, address)
-              .request(MediaType.APPLICATION_JSON)
-              .get(String.class);
+          .target(mapApiConfiguration.getApiURL())
+          .queryParam(ADDRESS, address)
+          .request(MediaType.APPLICATION_JSON)
+          .get(String.class);
 
       final ObjectNode node = new ObjectMapper().readValue(response, ObjectNode.class);
 
       if (node.path("results").size() > 0 && "OK".equals(node.path("status").asText())) {
         geoCoordinates.setLatitude(
-                node.get("results").get(0).get("geometry").get("location").get("lat").asDouble());
+            node.get("results").get(0).get("geometry").get("location").get("lat").asDouble());
         geoCoordinates.setLongitude(
-                node.get("results").get(0).get("geometry").get("location").get("lng").asDouble());
+            node.get("results").get(0).get("geometry").get("location").get("lng").asDouble());
       } else {
         geoCoordinates.setLatitude(0.0);
         geoCoordinates.setLongitude(0.0);
