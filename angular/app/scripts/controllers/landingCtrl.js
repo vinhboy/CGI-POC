@@ -121,27 +121,44 @@ cgiWebApp.controller('landingController',
 
              //setup firebase messaging
              // Retrieve Firebase Messaging object.
-             //TODO not here
-             const messaging = firebase.messaging();
-             // Get Instance ID token. Initially this makes a network call, once retrieved
-              // subsequent calls to getToken will return from cache.
-              messaging.getToken()
-              .then(function(currentToken) {
-                if (currentToken) {
-                  //TODO send an api to update profile with push device token
-                  console.log("PUSH token, "currentToken)
-                } else {
-                  // Show permission request.
-                  console.log('No Instance ID token available. Request permission to generate one.');
-                  // Show permission UI.
+             firebase.initializeApp({
+               'messagingSenderId': '1037053801988'
+             });
 
-                }
-              })
-              .catch(function(err) {
-                console.log('An error occurred while retrieving token. ', err);
+              const messaging = firebase.messaging();
 
-              });
-            }
+             messaging.requestPermission()
+            .then(function() {
+              console.log('Notification permission granted.');
+              // TODO(developer): Retrieve a Instance ID token for use with FCM.
+              // Get Instance ID token. Initially this makes a network call, once retrieved
+               // subsequent calls to getToken will return from cache.
+               messaging.getToken()
+               .then(function(currentToken) {
+                 if (currentToken) {
+                   //TODO send an api to update profile with push device token
+                   console.log("PUSH token, ",currentToken);
+
+                   //local storage will be useful for this use case
+                 } else {
+                   // Show permission request.
+                   console.log('No Instance ID token available. Request permission to generate one.');
+                   // Show permission UI.
+
+                 }
+               })
+               .catch(function(err) {
+                 console.log('An error occurred while retrieving token. ', err);
+
+               } );
+            })
+            .catch(function(err) {
+              console.log('Unable to get permission to notify. ', err);
+            });
+
+
+
+
         }
 
 
