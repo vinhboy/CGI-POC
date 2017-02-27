@@ -254,6 +254,10 @@
   height: inherit;
   height: 500px; }
 
+.event-info {
+  height: 100%;
+  overflow: auto; }
+
 .event-details-container {
   border: solid;
   height: 500px; }

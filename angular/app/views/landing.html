@@ -8,10 +8,6 @@
                      ng-options="eventType.id as eventType.name  for eventType in  eventTypes" ng-change="changeFilters()" >
 
             </select>
-            <select  id="eventTimeFilter" name="eventTimeFilter"   ng-model="eventTimeFilter"  class="form-control"  
-                     ng-options="eventTime.id as eventTime.name  for eventTime in  eventTimeFrames" ng-change="changeFilters()" >
-
-            </select>
         </form>
     </div>
     <div ng-show="model.filteredNotifications.length > 0" class="event-list-container usa-grid-full ">

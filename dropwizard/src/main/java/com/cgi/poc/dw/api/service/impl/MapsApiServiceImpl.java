@@ -30,12 +30,20 @@ public class MapsApiServiceImpl implements MapsApiService {
 
   @Override
   public GeoCoordinates getGeoCoordinatesByZipCode(String zipCode) {
+    return getGeoCoordinates(zipCode);
+  }
 
+  @Override
+  public GeoCoordinates getGeoCoordinatesByAddress(String address) {
+    return getGeoCoordinates(address);
+  }
+
+  private GeoCoordinates getGeoCoordinates(String address) {
     GeoCoordinates geoCoordinates = new GeoCoordinates();
     try {
       String response = client
           .target(mapApiConfiguration.getApiURL())
-          .queryParam(ADDRESS, zipCode)
+          .queryParam(ADDRESS, address)
           .request(MediaType.APPLICATION_JSON)
           .get(String.class);
 

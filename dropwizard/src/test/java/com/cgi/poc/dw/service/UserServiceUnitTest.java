@@ -4,28 +4,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.cgi.poc.dw.MapApiConfiguration;
 import com.cgi.poc.dw.api.service.MapsApiService;
 import com.cgi.poc.dw.api.service.data.GeoCoordinates;
 import com.cgi.poc.dw.auth.model.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.util.ErrorInfo;
+import com.cgi.poc.dw.factory.AddressBuilder;
+import com.cgi.poc.dw.factory.AddressBuilderImpl;
 import com.cgi.poc.dw.util.ValidationErrors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.HashSet;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -33,14 +28,12 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,11 +63,8 @@ public class UserServiceUnitTest {
   @Mock
   private MapsApiService mapsApiService;
 
-  @Mock
-  private EmailService emailService;
-
-  @Mock
-  private TextMessageService textMessageService;
+  @Spy
+  private AddressBuilder addressBuilder = new AddressBuilderImpl();
 
   private User user;
 
@@ -88,11 +78,11 @@ public class UserServiceUnitTest {
     user.setLastName("smith");
     user.setRole(Role.RESIDENT.name());
     user.setPhone("1234567890");
-    user.setZipCode("98765");
+    user.setZipCode("95814");
     user.setCity("Sacramento");
     user.setState("CA");
-    user.setAddress1("required street");
-    user.setAddress2("optional street");
+    user.setAddress1("621 Capitol Mall");
+    user.setAddress2(null);
     user.setEmailNotification(false);
     user.setSmsNotification(false);
     user.setPushNotification(false);
@@ -103,7 +93,7 @@ public class UserServiceUnitTest {
     GeoCoordinates geoCoordinates = new GeoCoordinates();
     geoCoordinates.setLatitude(10.00);
     geoCoordinates.setLongitude(20.00);
-    when(mapsApiService.getGeoCoordinatesByZipCode(anyString())).thenReturn(geoCoordinates);
+    when(mapsApiService.getGeoCoordinatesByAddress(anyString())).thenReturn(geoCoordinates);
 
     JsonNode jsonRespone = new ObjectMapper()
         .readTree(getClass().getResource("/google_maps_api/success_geocode_response.json"));
@@ -115,9 +105,6 @@ public class UserServiceUnitTest {
     Invocation.Builder mockBuilder = mock(Invocation.Builder.class);
     when(mockWebTarget.request(anyString())).thenReturn(mockBuilder);
     when(mockBuilder.get(String.class)).thenReturn(jsonRespone.toString());
-
-    doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
-    when(textMessageService.send(anyString(), anyString())).thenReturn(true);
   }
 
   @Test
@@ -311,7 +298,7 @@ public class UserServiceUnitTest {
     String saltedHash = "518bd5283161f69a6278981ad00f4b09a2603085f145426ba8800c:"
         + "8bd85a69ed2cb94f4b9694d67e3009909467769c56094fc0fce5af";
     when(passwordHash.createHash(user.getPassword())).thenReturn(saltedHash);
-    doThrow(new InternalServerErrorException("Processing failed.")).when(mapsApiService).getGeoCoordinatesByZipCode(anyString());
+    doThrow(new InternalServerErrorException("Processing failed.")).when(mapsApiService).getGeoCoordinatesByAddress(anyString());
     
     try {
       Response response = underTest.registerUser(user);

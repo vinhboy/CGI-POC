@@ -67,13 +67,22 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
             ManagedSessionContext.bind(session);
 
             Transaction transaction = session.beginTransaction();
-
+            EventFlood eventFromDB = eventDAO.selectForUpdate(event);
+            boolean bNewEvent = false;
+            try {
+                 event.setLastModified(eventFromDB.getLastModified());
+            } catch (Exception ex) {
+                LOG.info("Event is new");
+                // row doesn't exist it's new... nothing wrong..
+                // just ignore the exectoion
+                bNewEvent = true;
+            }
             LOG.info("Event to save : {}", event.toString());
             // Archive users based on last login date
             retEvent = eventDAO.save(event);
             transaction.commit();
 
-            if(retEvent.getLastModified() != null){
+            if(bNewEvent || !retEvent.getLastModified().equals(eventFromDB.getLastModified()) ){
                 LOG.info("Event for notifications");
 
                 GeoCoordinates geo = new GeoCoordinates();
@@ -109,8 +118,6 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
                     }
                 }
                 eventNotificationDAO.save(eventNotification);
-            }else{
-                LOG.debug("Event last modified not changed");
             }
         } catch (IOException ex) {
             LOG.error("Unable to parse the result for the flood event : error: {}", ex.getMessage());

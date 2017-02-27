@@ -6,7 +6,7 @@
                 <tr>
                     <td class="event-icons"><a><i  class="fa fa-5x fa-info-circle" ></i></a> </td>
                     <td>
-                        <h5 class="usa-heading">{{currentSelectedEvent.type}}</h5>
+                        <h5 class="usa-heading">{{(eventTypes | filter : {id: currentSelectedEvent.type})[0].name }}</h5>
                         <span>{{currentSelectedEvent.generationDate|  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
                         <h5 translate="LANDING.DETAILS.SENT_BY"></h5>
                         <span >{{currentSelectedEvent.userId.firstName}} {{currentSelectedEvent.userId.lastName}}</span>

@@ -107,6 +107,7 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
         textMessageService.send(phoneNumber, eventNotification.getDescription());
       }
     }
+    eventNotification.setCitizensAffected(affectedUsers.size());
     eventNotificationDAO.save(eventNotification);
 
     return Response.ok().entity(eventNotification).build();
