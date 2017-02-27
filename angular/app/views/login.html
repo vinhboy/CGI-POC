@@ -1,46 +1,52 @@
-<div class="usa-content">
-  <div class="usa-grid login-alert">
-    <div class="usa-alert usa-alert-error" role="alert" ng-if="model.errorNotif">
-      <div class="usa-alert-body">
-        <h3 class="usa-alert-heading">Error</h3>
-        <p class="usa-alert-text" translate="{{model.errorMessage}}"></p>
+<div style="background: url("../images/bgs/login-320.jpg")";>
+  <div class="usa-content">
+    <div class="usa-grid login-alert">
+      <div class="usa-alert usa-alert-error" role="alert" ng-if="model.errorNotif">
+        <div class="usa-alert-body">
+          <h3 class="usa-alert-heading">Error</h3>
+          <p class="usa-alert-text" translate="{{model.errorMessage}}"></p>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="centeredForm">
-    <form class="usa-form-large" name="authForm" ng-submit="submitForm()">
-      <fieldset>
-        <div class="loginFormDiv" ng-class="{ 'usa-input-error': authForm.email.$touched && authForm.email.$invalid }">
-          <h3 translate="LOGIN.LABEL.TITLE"></h3>
-          <label for="email" translate="LOGIN.LABEL.USERNAME"></label>
-          <div ng-messages="authForm.email.$error" ng-show="authForm.email.$touched">
-            <span ng-message="required" class="usa-input-error-message" role="alert" translate="LOGIN.MESSAGE.INVALID.USERNAMEREQUIRED"></span>
-            <span ng-message="email" class="usa-input-error-message" role="alert" translate="LOGIN.MESSAGE.INVALID.USERNAMEINVALID"></span>
+    <div class="centeredForm">
+      <form class="usa-form-large" name="authForm" ng-submit="submitForm()">
+        <fieldset>
+          <div class="loginFormDiv" ng-class="{ 'usa-input-error': authForm.email.$touched && authForm.email.$invalid }">
+            <h3 translate="LOGIN.LABEL.TITLE"></h3>
+            <label for="email" translate="LOGIN.LABEL.USERNAME"></label>
+            <div ng-messages="authForm.email.$error" ng-show="authForm.email.$touched">
+              <span ng-message="required" class="usa-input-error-message" role="alert" translate="LOGIN.MESSAGE.INVALID.USERNAMEREQUIRED"></span>
+              <span ng-message="email" class="usa-input-error-message" role="alert" translate="LOGIN.MESSAGE.INVALID.USERNAMEINVALID"></span>
+            </div>
+            <input id="email" name="email" type="email" data-autocapitalize="off"
+                   data-autocorrect="off" ng-model="user.email" ng-required="true"
+                   placeholder="example@domain.com" ng-class="{ 'usa-input-success': authForm.email.$touched && authForm.email.$valid }" />
           </div>
-          <input id="email" name="email" type="email" data-autocapitalize="off"
-            data-autocorrect="off" ng-model="user.email" ng-required="true"
-            placeholder="example@domain.com" ng-class="{ 'usa-input-success': authForm.email.$touched && authForm.email.$valid }" />
-        </div>
-        <div class="loginFormDiv passwordDiv" ng-class="{ 'usa-input-error': authForm.password.$touched && authForm.password.$invalid }">
-          <label for="password" translate="LOGIN.LABEL.PASSWORD"></label>
-          <div ng-messages="authForm.password.$error" ng-show="authForm.password.$touched">
-            <span ng-message="required" class="usa-input-error-message" role="alert" translate="LOGIN.MESSAGE.INVALID.PASSWORDREQUIRED"></span>
+          <div class="loginFormDiv passwordDiv" ng-class="{ 'usa-input-error': authForm.password.$touched && authForm.password.$invalid }">
+            <label for="password" translate="LOGIN.LABEL.PASSWORD"></label>
+            <div ng-messages="authForm.password.$error" ng-show="authForm.password.$touched">
+              <span ng-message="required" class="usa-input-error-message" role="alert" translate="LOGIN.MESSAGE.INVALID.PASSWORDREQUIRED"></span>
+            </div>
+            <input id="password" name="password" type="password" ng-model="user.password"
+                   ng-required="true" placeholder="xxxxxxxxx" ng-class="{ 'usa-input-success': authForm.password.$touched && authForm.password.$valid }">
           </div>
-          <input id="password" name="password" type="password" ng-model="user.password"
-            ng-required="true" placeholder="xxxxxxxxx" ng-class="{ 'usa-input-success': authForm.password.$touched && authForm.password.$valid }">
-        </div>
-        <div class="loginFormDiv">
-          <h5 class="login-text" translate="LOGIN.MESSAGE.SIGNUP"></h5>
-          <h5 class="login-text">
-            <a class="login-text" ui-sref="register" translate="LOGIN.MESSAGE.SIGNUP.LINK"></a>.
-          </h5>
-        </div>
-        <div>
+          <div class="loginFormDiv">
+            <h5 class="login-text" translate="LOGIN.MESSAGE.SIGNUP"></h5>
+            <h5 class="login-text">
+              <a class="login-text" ui-sref="register" translate="LOGIN.MESSAGE.SIGNUP.LINK"></a>.
+            </h5>
+          </div>
           <div>
-            <button type="submit" class="usa-button-primary-alt usa-button-login"
-              translate="LOGIN.BUTTON.SUBMIT" ng-disabled="!authForm.$dirty"></button>
-          </div>
-      </fieldset>
-    </form>
+            <div>
+              <button type="submit" class="usa-button-primary-alt usa-button-login"
+                      translate="LOGIN.BUTTON.SUBMIT" ng-disabled="!authForm.$dirty"></button>
+            </div>
+        </fieldset>
+      </form>
+    </div>
+    <div class="site-description">
+      <p>MyCAlerts.com is an alert service for California residents which monitors emergency events, such as fires, floods, and weather events. We also inform registered users of emergency and non-emergency events near them, via email, text message, or push notification. Register here to sign up for alerts!</p>
+      <p>Note that MyCAlerts is in its infancy, and hasn't yet implemented all emergency alerts. We will inform our users as we add more event types.</p>
+    </div>
   </div>
 </div>

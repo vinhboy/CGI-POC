@@ -1,13 +1,16 @@
 .usa-grid {
   background: #edf4f7; }
 
-.centeredForm {
-  margin-top: 10%; }
+.profile-form-input {
+  height: 3rem;
+  padding-top: 0px;
+  padding-bottom: 0px; }
 
-.usa-form-large {
-  margin-left: auto;
-  margin-right: auto;
-  background: #edf4f7; }
+.profile-label {
+  margin-top: 1.4rem; }
+
+.profile-form-input-notification-by-location {
+  margin-top: 1.4rem; }
 
 .loginFormDiv {
   width: 90%;
@@ -17,6 +20,11 @@
 .passwordDiv {
   margin-bottom: 30px; }
 
+.registrationFormDiv {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto; }
+
 .headerZone {
   background: #003466;
   width: 100%;
@@ -25,6 +33,196 @@
   left: 0;
   z-index: 1; }
 
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 300px) and (max-device-width: 480px) {
+  .login-bg {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: url(../images/bgs/login-320.jpg) 0 0 no-repeat; }
+
+  .headerZone {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; }
+    .headerZone .usa-header {
+      background: #003466;
+      width: 100%;
+      height: 48px;
+      padding: 12px 0 12px 12px;
+      box-shadow: 0 2px 4px #888888; }
+      .headerZone .usa-header .usa-header-logo-img {
+        background-size: 80px;
+        width: 80px;
+        height: auto; }
+    .headerZone .data-ui-view {
+      padding: 5em;
+      padding-bottom: 5em; }
+    .headerZone .mapArea {
+      height: 100%;
+      position: relative;
+      width: 100%; }
+    .headerZone .event-list-container {
+      height: inherit;
+      height: 500px; }
+    .headerZone .event-info {
+      height: 100%;
+      overflow: auto; }
+    .headerZone .event-details-container {
+      border: solid;
+      height: 500px; }
+      .headerZone .event-details-container .usa-heading-alt {
+        border-bottom: solid;
+        margin-right: 2em;
+        margin-left: 2em; }
+      .headerZone .event-details-container .button_wrapper {
+        padding-left: 6em; }
+
+  .usa-content .centeredForm {
+    margin: 0% auto;
+    padding: 12px;
+    width: 90%;
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin: 0 auto;
+      padding: 8px;
+      background: rgba(237, 244, 247, 0.85); }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 481px) and (max-device-width: 768px) {
+  .headerZone {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; }
+    .headerZone .usa-header {
+      background: #003466;
+      width: 100%;
+      height: 74px;
+      padding: 12px 0 12px 12px;
+      box-shadow: 0 2px 4px #888888; }
+      .headerZone .usa-header .usa-header-logo-img {
+        background-size: 1600px;
+        width: 160px;
+        height: auto; }
+
+  .usa-content .centeredForm {
+    margin: 8% auto;
+    padding: 12px;
+    width: 400px;
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin: 0 auto;
+      padding: 8px;
+      background: rgba(237, 244, 247, 0.85); }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
+.angular-google-map-container {
+  height: 400px; }
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 769px) and (max-device-width: 1024px) {
+  .headerZone {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; }
+    .headerZone .usa-header {
+      background: #003466;
+      width: 100%;
+      height: 92px;
+      padding: 12px 0 12px 12px;
+      box-shadow: 0 2px 4px #888888; }
+      .headerZone .usa-header .usa-header-logo-img {
+        background-size: 220px;
+        width: 220px;
+        height: auto; }
+
+  .usa-content .centeredForm {
+    margin: 12% auto;
+    padding: 12px;
+    width: 400px;
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin: 0 auto;
+      padding: 8px;
+      background: rgba(237, 244, 247, 0.85); }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
+/* Desktops and laptops ----------- */
+@media only screen and (min-width: 1025px) {
+  .headerZone {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; }
+    .headerZone .usa-header {
+      background: #003466;
+      width: 100%;
+      height: 108px;
+      padding: 12px 0 12px 12px;
+      box-shadow: 0 2px 4px #888888; }
+      .headerZone .usa-header .usa-header-logo-img {
+        background-size: 260px;
+        width: 260px;
+        height: auto; }
+      .headerZone .usa-header td {
+        padding: 0; }
+
+  .usa-content .centeredForm {
+    margin: 14% auto;
+    padding: 12px;
+    width: 400px;
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin: 0 auto;
+      padding: 8px;
+      background: rgba(237, 244, 247, 0.85); }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
 .usa-nav-secondary-links a {
   color: white !important; }
 
@@ -80,9 +278,6 @@
     width: 10px; }
   .event-details .button_wrapper {
     vertical-align: bottom; }
-
-.angular-google-map-container {
-  height: 400px; }
 
 .event {
   border-style: solid;
@@ -144,10 +339,9 @@ input.phoneLong {
 .notificationMessageInfo {
   float: right; }
 
-.additional-input-info {
+.emailAddressText .additional-input-info {
   font-size: 13px; }
-
-input.zipCode {
+.emailAddressText input.zipCode {
   display: inline-block;
   width: 7rem; }
 
@@ -179,7 +373,7 @@ input.zipCode {
 
 /* Modal Content */
 .modal-content {
-  margin-top: 20px;
+  margin: 20px auto;
   overflow: auto;
   -webkit-animation-name: slideIn;
   -webkit-animation-duration: 0.5s;

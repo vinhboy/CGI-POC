@@ -12,7 +12,7 @@ cgiWebApp.controller('loginController',
   ['$scope', 'Authenticator', '$state',
   function ($scope, Authenticator, $state) {
 
-  $scope.user = {
+    $scope.user = {
     email: '',
     password: ''
   };
