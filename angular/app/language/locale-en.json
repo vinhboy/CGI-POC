@@ -47,7 +47,7 @@
   "REGISTRATION.MESSAGE.INVALID.PHONENUMBERINVALID":"You must enter a valid phone number",
   "REGISTRATION.MESSAGE.INVALID.ZIPCODEREQUIRED":"You must enter a valid Zip code",
   "REGISTRATION.MESSAGE.INVALID.ZIPCODEINVALID":"You must enter a valid Zip code",
-  "REGISTRATION.MESSAGE.INVALID.CHECKBOXREQUIRED" : "You must select at least 1 notification option",
+  "REGISTRATION.MESSAGE.INVALID.CHECKBOXREQUIRED" : "You must select at least one notification type",
   "REGISTRATION.MESSAGE.REGISTERED" : "Registration successful",
   "REGISTRATION.MESSAGE.INVALID" : "An error occured during the registration proces",
   "REGISTRATION.BUTTON.SAVE" : "SAVE PROFILE",
