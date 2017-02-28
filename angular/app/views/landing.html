@@ -10,8 +10,9 @@
             </select>
         </form>
     </div>
-    <div ng-show="model.filteredNotifications.length > 0" class="event-list-container usa-grid-full ">
-        <div ng-show="!isMobile || (isMobile  && showMapOrDetails==='LIST')"  class="usa-width-one-third scrollable-section" > 
+    <div ng-show="model.displayedNotifications.length > 0" class="event-list-container usa-grid-full ">
+        <div   infinite-scroll="loadMore()" can-load="moreToLoad()"
+              ng-show="!isMobile || (isMobile  && showMapOrDetails==='LIST')"  class="usa-width-one-third scrollable-section" > 
            <ng-include src="'views/partials/eventListing.html'"  ></ng-include>
 
         </div>
@@ -20,7 +21,7 @@
            <ng-include src="'views/partials/eventDetails.html'"  ></ng-include>
 
     </div>
-    <div ng-show="model.filteredNotifications.length === 0" class="usa-grid-full ">
+    <div ng-show="model.displayedNotifications.length === 0" class="usa-grid-full ">
             <label for="options" translate="LANDING.NO_EVENT"></label>
     </div>
 
