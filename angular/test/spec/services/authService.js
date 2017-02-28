@@ -54,4 +54,46 @@ describe('Authenticator', function() {
       expect($sessionStorage.get('role')).toBe('the role');
     });
   });
+
+  describe('logout', function() {
+    it('should clear the persisted auth token', function() {
+      spyOn($sessionStorage, 'remove');
+      authenticationService.logout();
+      expect($sessionStorage.remove).toHaveBeenCalledWith('jwt');
+    });
+
+    it('should clear the persisted role', function() {
+      spyOn($sessionStorage, 'remove');
+      authenticationService.logout();
+      expect($sessionStorage.remove).toHaveBeenCalledWith('role');
+    });
+  });
+
+  describe('isLoggedIn', function() {
+    it('should consider those with authToken to be logged in', function() {
+      spyOn($sessionStorage, 'get').and.returnValue('the jwt token');
+      expect(authenticationService.isLoggedIn()).toBe(true);
+    });
+
+    it('should consider those without authToken to be logged out', function() {
+      spyOn($sessionStorage, 'get').and.returnValue(null);
+      expect(authenticationService.isLoggedIn()).toBe(false);
+    });
+  });
+
+  describe('isAdminUser', function() {
+    it('true if session value is ADMIN ', function() {
+      spyOn($sessionStorage, 'get').and.returnValue('ADMIN');
+      expect(authenticationService.isAdminUser()).toBe(true);
+    });
+
+    it('false if session value is not set', function() {
+      spyOn($sessionStorage, 'get').and.returnValue(null);
+      expect(authenticationService.isAdminUser()).toBe(false);
+    });
+    it('false if session value is not ADMIN', function() {
+      spyOn($sessionStorage, 'get').and.returnValue('RESIDENT');
+      expect(authenticationService.isAdminUser()).toBe(false);
+    });
+  });
 });
