@@ -27,6 +27,7 @@ import com.cgi.poc.dw.dao.EventFloodDAO;
 import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventFlood;
+import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.service.EmailService;
 import com.cgi.poc.dw.service.TextMessageService;
@@ -223,8 +224,10 @@ public class EventFloodAPICallerServiceUnitTest {
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(Collections.emptyList());
 
     underTest.callServiceAPI();
+    verify(eventNotificationDAO,never()).save(any(EventNotification.class));
 
-    verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
+
+    verify(userDao, never()).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
     verify(emailService, never()).send(anyString(), anyList(), anyString(), anyString());
     //verify that the sms notification was never called
@@ -259,12 +262,13 @@ public class EventFloodAPICallerServiceUnitTest {
     when(userDao.getGeoWithinRadius(anyList(), anyDouble())).thenReturn(affectedUsers);
 
     underTest.callServiceAPI();
+    verify(eventNotificationDAO,never()).save(any(EventNotification.class));
 
-    verify(userDao, times(1)).getGeoWithinRadius(anyList(), anyDouble());
+    verify(userDao, never()).getGeoWithinRadius(anyList(), anyDouble());
     //verify that the email notification was never called
-    verify(emailService, times(2)).send(eq(null), anyList(), anyString(), anyString());
+    verify(emailService, never()).send(eq(null), anyList(), anyString(), anyString());
     //verify that the sms notification was never called
-    verify(textMessageService, times(1)).send(anyString(), anyString());
+    verify(textMessageService, never()).send(anyString(), anyString());
   }
 
   @Test

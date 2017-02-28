@@ -108,7 +108,7 @@ public class EventNotification implements Serializable {
   @Fetch(value = FetchMode.SUBSELECT)
   private Set<EventNotificationZipcode> eventNotificationZipcodes;
 
-  @OneToMany(mappedBy = "eventNotificationId", fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToMany(mappedBy = "eventNotificationId", fetch = FetchType.EAGER, orphanRemoval = true)
   @Valid
   @Cascade({CascadeType.ALL})
   @Fetch(value = FetchMode.SUBSELECT)
@@ -216,7 +216,8 @@ public class EventNotification implements Serializable {
         zipCode.setEventNotificationId(this);
      }
   }
- public Set<EventNotificationUser> getEventNotificationUsers() {
+ @JsonIgnore
+  public Set<EventNotificationUser> getEventNotificationUsers() {
     return eventNotificationUser;
   }
   

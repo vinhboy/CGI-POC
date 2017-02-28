@@ -83,8 +83,8 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
       // Archive users based on last login date
       retEvent = eventDAO.save(event);
       transaction.commit();
-
-      if (isNewEvent || isChangedEvent(retEvent, eventFromDB)) {
+      // for flood events.. only new entries will be processed.
+      if (isNewEvent) {
         LOG.info("Event for notifications");
 
         GeoCoordinates geo = new GeoCoordinates();
@@ -130,9 +130,6 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
     }
   }
 
-  private boolean isChangedEvent(EventFlood retEvent, EventFlood eventFromDB) {
-    return !retEvent.getLastModified().equals(eventFromDB.getLastModified());
-  }
 
 
 }
