@@ -121,11 +121,9 @@ cgiWebApp.controller('landingController',
 
              //setup firebase messaging
              // Retrieve Firebase Messaging object.
-             firebase.initializeApp({
-               'messagingSenderId': '1037053801988'
-             });
 
-              const messaging = firebase.messaging();
+
+            const messaging = firebase.messaging();
 
              messaging.requestPermission()
             .then(function() {
@@ -137,7 +135,7 @@ cgiWebApp.controller('landingController',
                .then(function(currentToken) {
                  if (currentToken) {
                    //TODO send an api to update profile with push device token
-                   console.log("PUSH token, ",currentToken);
+                   console.log('PUSH token, ',currentToken);
 
                    //local storage will be useful for this use case
                  } else {
