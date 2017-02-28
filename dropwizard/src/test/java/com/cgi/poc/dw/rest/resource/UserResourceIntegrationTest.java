@@ -8,6 +8,7 @@ import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
 import com.cgi.poc.dw.exception.Error;
 import com.cgi.poc.dw.exception.ErrorInfo;
+import com.cgi.poc.dw.rest.dto.FcmTokenDto;
 import com.cgi.poc.dw.validator.ValidationErrors;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +28,6 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import static com.cgi.poc.dw.helper.IntegrationTestHelper.requestPost;
 
@@ -283,5 +283,43 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     User user = IntegrationTestHelper.getUserFromDb(tstUser.getEmail());
     Assert.assertNotEquals(cgiSacLocation.getLatitude(), user.getLatitude(), 0.00001);
     Assert.assertNotEquals(cgiSacLocation.getLongitude(), user.getLongitude(), 0.00001);
+  }
+
+  @Test
+  public void updateFcmToken() throws MessagingException {
+    Client client = new JerseyClientBuilder().build();
+
+    FcmTokenDto fcmTokenDto = new FcmTokenDto();
+    fcmTokenDto.setFcmtoken("daj-nd_sj23232knj34fewf_vevre-v332f");
+    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+    Response response = client.
+        target(String.format(url+"/fcmtoken", RULE.getLocalPort())).
+        request().
+        header("Authorization", "Bearer " + authToken).
+        put(Entity.entity(fcmTokenDto, MediaType.APPLICATION_JSON_TYPE));
+    
+    assertEquals(200, response.getStatus());
+    User user = IntegrationTestHelper.getUserFromDb(tstUser.getEmail());
+    
+    assertEquals(fcmTokenDto.getFcmtoken(), user.getFcmtoken());
+  }
+
+  @Test
+  public void invalidFcmToken() throws MessagingException, JSONException {
+    Client client = new JerseyClientBuilder().build();
+
+    FcmTokenDto fcmTokenDto = new FcmTokenDto();
+    
+    String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
+    Response response = client.
+        target(String.format(url+"/fcmtoken", RULE.getLocalPort())).
+        request().
+        header("Authorization", "Bearer " + authToken).
+        put(Entity.entity(fcmTokenDto, MediaType.APPLICATION_JSON_TYPE));
+
+    assertEquals(422, response.getStatus());
+    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
+    Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("errors")));
+    Assert.assertEquals("[\"fcmtoken may not be null\"]", responseJo.optString("errors"));
   }
 }
