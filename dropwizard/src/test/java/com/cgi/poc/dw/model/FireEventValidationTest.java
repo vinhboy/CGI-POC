@@ -83,8 +83,7 @@ public class FireEventValidationTest extends BaseTest {
             JsonParser  parser  = jsonFactory.createParser(new FileReader(file));
 	    parser.setCodec(mapper);
             ObjectNode node = parser.readValueAs(ObjectNode.class);
-            JsonNode event = node.get("attributes");
-            JsonNode geo = node.get("attributes");
+      JsonNode event = node.get("features").get(0).get("attributes");
             
            FireEvent tst = mapper.readValue(event.toString(), FireEvent.class);
            //tst.setGeometry(geo.toString());  

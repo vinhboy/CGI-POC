@@ -1,0 +1,38 @@
+{
+  "features": [
+    {
+      "attributes": {
+        "objectid": 6356,
+        "gaugelid": "RSTV2",
+        "location": "Roa Sewer Plant",
+        "latitude": "invalid",
+        "longitude": "incorrect",
+        "waterbody": "Roanoke River",
+        "state": "VA",
+        "observed": "31.30",
+        "obstime": "2017-02-17 13:19:00",
+        "units": "ft",
+        "action": "11.00",
+        "flood": "13.50",
+        "moderate": "16.00",
+        "major": "21.00",
+        "lowthresh": " ",
+        "lowthreshu": "ft",
+        "wfo": "rnk",
+        "hdatum": "NAD83/WGS84",
+        "pedts": "HGIRR",
+        "secvalue": "-999.00",
+        "secunit": "kcfs",
+        "url": "https://water.weather.gov/ahps2/hydrograph.php?wfo=rnk&gage=rstv2",
+        "idp_source": "national_shapefile_obs",
+        "idp_subset": "default",
+        "status": "major",
+        "forecast": null
+      },
+      "geometry": {
+        "x": -79.910832999842967,
+        "y": 37.266943999256185
+      }
+    }
+  ]
+}
