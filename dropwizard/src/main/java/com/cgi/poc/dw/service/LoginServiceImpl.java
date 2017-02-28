@@ -1,13 +1,13 @@
 package com.cgi.poc.dw.service;
 
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.auth.data.Role;
 import com.cgi.poc.dw.auth.service.JwtBuilderService;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.rest.model.AccessTokenDto;
-import com.cgi.poc.dw.rest.model.LoginUserDto;
-import com.cgi.poc.dw.util.LoginValidationGroup;
+import com.cgi.poc.dw.rest.dto.AccessTokenDto;
+import com.cgi.poc.dw.rest.dto.LoginUserDto;
+import com.cgi.poc.dw.validator.LoginValidationGroup;
 import com.google.inject.Inject;
 import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;

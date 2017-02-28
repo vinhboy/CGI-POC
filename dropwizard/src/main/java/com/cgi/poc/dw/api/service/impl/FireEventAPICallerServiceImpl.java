@@ -11,7 +11,6 @@ import com.cgi.poc.dw.dao.FireEventDAO;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationUser;
-import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.service.EmailService;
@@ -22,9 +21,7 @@ import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.ws.rs.client.Client;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -34,67 +31,67 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author dawna.floyd
  */
 
 public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FireEventAPICallerServiceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FireEventAPICallerServiceImpl.class);
 
-    private FireEventDAO eventDAO;
-    private TextMessageService textMessageService;
-    private EmailService emailService;
-    private UserDao userDao;
-    private EventNotificationDAO eventNotificationDAO;
+  private FireEventDAO eventDAO;
+  private TextMessageService textMessageService;
+  private EmailService emailService;
+  private UserDao userDao;
+  private EventNotificationDAO eventNotificationDAO;
 
-    @Inject
-    public FireEventAPICallerServiceImpl(String eventUrl, Client client, FireEventDAO fireEventDAO,
-          SessionFactory sessionFactory, TextMessageService textMessageService,
-          EmailService emailService, UserDao userDao, EventNotificationDAO eventNotificationDAO) {
-        super(eventUrl, client, sessionFactory);
-        eventDAO = fireEventDAO;
-        this.textMessageService = textMessageService;
-        this.emailService = emailService;
-        this.userDao = userDao;
-        this.eventNotificationDAO = eventNotificationDAO;
-    }
+  @Inject
+  public FireEventAPICallerServiceImpl(String eventUrl, Client client, FireEventDAO fireEventDAO,
+      SessionFactory sessionFactory, TextMessageService textMessageService,
+      EmailService emailService, UserDao userDao, EventNotificationDAO eventNotificationDAO) {
+    super(eventUrl, client, sessionFactory);
+    eventDAO = fireEventDAO;
+    this.textMessageService = textMessageService;
+    this.emailService = emailService;
+    this.userDao = userDao;
+    this.eventNotificationDAO = eventNotificationDAO;
+  }
 
-    public void mapAndSave(JsonNode eventJson, JsonNode geoJson) {
-        ObjectMapper mapper = new ObjectMapper();
-        FireEvent retEvent;
+  public void mapAndSave(JsonNode eventJson, JsonNode geoJson) {
+    ObjectMapper mapper = new ObjectMapper();
+    FireEvent retEvent;
 
-        Session session = sessionFactory.openSession();
-        try {
-            FireEvent event = mapper.readValue(eventJson.toString(), FireEvent.class);
+    Session session = sessionFactory.openSession();
+    try {
+      FireEvent event = mapper.readValue(eventJson.toString(), FireEvent.class);
 
-            event.setGeometry(geoJson.toString());
-            ManagedSessionContext.bind(session);
+      event.setGeometry(geoJson.toString());
+      ManagedSessionContext.bind(session);
 
-            Transaction transaction = session.beginTransaction();
-            FireEvent eventFromDB = eventDAO.selectForUpdate(event);
-            boolean bNewEvent = false;
-            try {
-                 event.setLastModified(eventFromDB.getLastModified());
-            } catch (Exception ex) {
-                LOG.info("Event is new");
-                // row doesn't exist it's new... nothing wrong..
-                // just ignore the exectoion
-                bNewEvent = true;
-            }
-            LOG.info("Event to save : {}", event.toString());
-            // Archive users based on last login date
-            retEvent = eventDAO.save(event);
-            transaction.commit();
+      Transaction transaction = session.beginTransaction();
+      FireEvent eventFromDB = eventDAO.selectForUpdate(event);
+      boolean isNewEvent = false;
+      try {
+        event.setLastModified(eventFromDB.getLastModified());
+        //this is to protect from the Hibernate ObjectNotFoundException when the eventFromDB is a proxy object
+      } catch (Exception ex) {
+        LOG.info("Event is new");
+        // row doesn't exist it's new... nothing wrong..
+        // just ignore the exception
+        isNewEvent = true;
+      }
+      LOG.info("Event to save : {}", event.toString());
+      // Archive users based on last login date
+      retEvent = eventDAO.save(event);
+      transaction.commit();
 
-            if(bNewEvent || !retEvent.getLastModified().equals(eventFromDB.getLastModified()) ){
-                LOG.info("Event for notifications");
+      if (isNewEvent || isChangedEvent(retEvent, eventFromDB)) {
+        LOG.info("Event for notifications");
 
-                GeoCoordinates geo = new GeoCoordinates();
-                geo.setLatitude(event.getLatitude().doubleValue());
-                geo.setLongitude(event.getLongitude().doubleValue());
+        GeoCoordinates geo = new GeoCoordinates();
+        geo.setLatitude(event.getLatitude().doubleValue());
+        geo.setLongitude(event.getLongitude().doubleValue());
 
-                List<User> users = userDao.getGeoWithinRadius(Arrays.asList(geo), 50.00);
+        List<User> users = userDao.getGeoWithinRadius(Arrays.asList(geo), 50.00);
 
                     EventNotification eventNotification = new EventNotification();
                     eventNotification.setCitizensAffected(users.size());
@@ -105,32 +102,37 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
                     eventNotification.setType("Fire");
                     eventNotification.setUserId(userDao.getAdminUser());
 
-                if (users.size() > 0) {
+        if (users.size() > 0) {
 
-                    LOG.info("Send notifications to : {}", users.toString());
-                    for (User user : users) {
-                        EventNotificationUser currENUser= new EventNotificationUser();
-                        currENUser.setUserId(user);
-                        eventNotification.addNotifiedUser(currENUser);
+          LOG.info("Send notifications to : {}", users.toString());
+          for (User user : users) {
+            EventNotificationUser currENUser = new EventNotificationUser();
+            currENUser.setUserId(user);
+            eventNotification.addNotifiedUser(currENUser);
 
-                        if (user.getSmsNotification()) {
-                            textMessageService.send(user.getPhone(), eventNotification.getDescription());
-                        }
-                        if (user.getEmailNotification()) {
-                            emailService.send(null, Arrays.asList(user.getEmail()), "Emergency alert from MyCAlerts: Fire near " + event.getIncidentname(),
-                                    eventNotification.getDescription());
-                        }
-                     }
-                }
-                eventNotificationDAO.save(eventNotification);
+            if (user.getSmsNotification()) {
+              textMessageService.send(user.getPhone(), eventNotification.getDescription());
             }
-        } catch (IOException ex) {
-            LOG.error("Unable to parse the result for the fire event : error: {}", ex.getMessage());
-        } finally {
-            session.close();
-            ManagedSessionContext.unbind(sessionFactory);
+            if (user.getEmailNotification()) {
+              emailService.send(null, Arrays.asList(user.getEmail()),
+                  "Emergency alert from MyCAlerts: Fire near " + event.getIncidentname(),
+                  eventNotification.getDescription());
+            }
+          }
         }
-
+        eventNotificationDAO.save(eventNotification);
+      }
+    } catch (IOException ex) {
+      LOG.error("Unable to parse the result for the fire event : error: {}", ex.getMessage());
+    } finally {
+      session.close();
+      ManagedSessionContext.unbind(sessionFactory);
     }
+
+  }
+
+  private boolean isChangedEvent(FireEvent retEvent, FireEvent eventFromDB) {
+    return !retEvent.getLastModified().equals(eventFromDB.getLastModified());
+  }
 
 }

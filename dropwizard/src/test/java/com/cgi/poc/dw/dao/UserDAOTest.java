@@ -1,7 +1,7 @@
 package com.cgi.poc.dw.dao;
 
 import com.cgi.poc.dw.api.service.data.GeoCoordinates;
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.auth.data.Role;
 import com.cgi.poc.dw.dao.model.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,8 +12,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.junit.Assert.assertEquals;

@@ -77,8 +77,8 @@ public class EventWeatherDAOTest extends DaoUnitTestBase  {
              JsonParser  parser  = jsonFactory.createParser(new FileReader(file));
 	    parser.setCodec(mapper);
             ObjectNode node = parser.readValueAs(ObjectNode.class);
-            JsonNode jsonEvent = node.get("attributes");
-            JsonNode geo = node.get("attributes");
+            JsonNode jsonEvent = node.get("features").get(0).get("attributes");
+            JsonNode geo = node.get("features").get(0).get("attributes");
            
         EventWeather event = mapper.readValue(jsonEvent.toString(), EventWeather.class);
         event.setGeometry(geo.toString());

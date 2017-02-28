@@ -29,67 +29,69 @@ import org.hibernate.Transaction;
 import org.hibernate.context.internal.ManagedSessionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
- *
  * @author dawna.floyd
  */
 public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EventFloodAPICallerServiceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(EventFloodAPICallerServiceImpl.class);
 
-    private EventFloodDAO eventDAO;
-    private TextMessageService textMessageService;
-    private EmailService emailService;
-    private UserDao userDao;
-    private EventNotificationDAO eventNotificationDAO;
+  private EventFloodDAO eventDAO;
+  private TextMessageService textMessageService;
+  private EmailService emailService;
+  private UserDao userDao;
+  private EventNotificationDAO eventNotificationDAO;
 
-    @Inject
-    public EventFloodAPICallerServiceImpl(String eventUrl, Client client, EventFloodDAO weatherEventDAO,
-          SessionFactory sessionFactory, TextMessageService textMessageService,
-        EmailService emailService, UserDao userDao, EventNotificationDAO eventNotificationDAO) {
-        super(eventUrl, client, sessionFactory);
-        eventDAO = weatherEventDAO;
-        this.textMessageService = textMessageService;
-        this.emailService = emailService;
-        this.userDao = userDao;
-        this.eventNotificationDAO = eventNotificationDAO;
-    }
+  @Inject
+  public EventFloodAPICallerServiceImpl(String eventUrl, Client client,
+      EventFloodDAO weatherEventDAO,
+      SessionFactory sessionFactory, TextMessageService textMessageService,
+      EmailService emailService, UserDao userDao, EventNotificationDAO eventNotificationDAO) {
+    super(eventUrl, client, sessionFactory);
+    eventDAO = weatherEventDAO;
+    this.textMessageService = textMessageService;
+    this.emailService = emailService;
+    this.userDao = userDao;
+    this.eventNotificationDAO = eventNotificationDAO;
+  }
 
-    public void mapAndSave(JsonNode eventJson, JsonNode geoJson) {
-        ObjectMapper mapper = new ObjectMapper();
-        EventFlood retEvent;
 
-        Session session = sessionFactory.openSession();
-        try {
-            EventFlood event = mapper.readValue(eventJson.toString(), EventFlood.class);
+  public void mapAndSave(JsonNode eventJson, JsonNode geoJson) {
+    ObjectMapper mapper = new ObjectMapper();
+    EventFlood retEvent;
 
-            event.setGeometry(geoJson.toString());
-            ManagedSessionContext.bind(session);
+    Session session = sessionFactory.openSession();
+    try {
+      EventFlood event = mapper.readValue(eventJson.toString(), EventFlood.class);
 
-            Transaction transaction = session.beginTransaction();
-            EventFlood eventFromDB = eventDAO.selectForUpdate(event);
-            boolean bNewEvent = false;
-            try {
-                 event.setLastModified(eventFromDB.getLastModified());
-            } catch (Exception ex) {
-                LOG.info("Event is new");
-                // row doesn't exist it's new... nothing wrong..
-                // just ignore the exectoion
-                bNewEvent = true;
-            }
-            LOG.info("Event to save : {}", event.toString());
-            // Archive users based on last login date
-            retEvent = eventDAO.save(event);
-            transaction.commit();
+      event.setGeometry(geoJson.toString());
+      ManagedSessionContext.bind(session);
 
-            if(bNewEvent || !retEvent.getLastModified().equals(eventFromDB.getLastModified()) ){
-                LOG.info("Event for notifications");
+      Transaction transaction = session.beginTransaction();
+      EventFlood eventFromDB = eventDAO.selectForUpdate(event);
+      boolean isNewEvent = false;
+      try {
+        event.setLastModified(eventFromDB.getLastModified());
+      } catch (Exception ex) {
+        LOG.info("Event is new");
+        // row doesn't exist it's new... nothing wrong..
+        // just ignore the exectoion
+        isNewEvent = true;
+      }
+      LOG.info("Event to save : {}", event.toString());
+      // Archive users based on last login date
+      retEvent = eventDAO.save(event);
+      transaction.commit();
+      // for flood events.. only new entries will be processed.
+      if (isNewEvent) {
+        LOG.info("Event for notifications");
 
-                GeoCoordinates geo = new GeoCoordinates();
-                geo.setLatitude(event.getLatitude().doubleValue());
-                geo.setLongitude(event.getLongitude().doubleValue());
+        GeoCoordinates geo = new GeoCoordinates();
+        geo.setLatitude(event.getLatitude().doubleValue());
+        geo.setLongitude(event.getLongitude().doubleValue());
 
-                List<User> users = userDao.getGeoWithinRadius(Arrays.asList(geo), 50.00);
+        List<User> users = userDao.getGeoWithinRadius(Arrays.asList(geo), 50.00);
 
                 EventNotification eventNotification = new EventNotification();
                 eventNotification.setCitizensAffected(users.size());
@@ -100,33 +102,34 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
                 eventNotification.setType("Flood");
                 eventNotification.setUserId(userDao.getAdminUser());
 
-                if (users.size() > 0) {
+        if (users.size() > 0) {
 
-                    LOG.info("Send notifications to : {}", users.toString());
-                    for (User user : users) {
-                        EventNotificationUser currENUser= new EventNotificationUser();
-                        currENUser.setUserId(user);
-                        eventNotification.addNotifiedUser(currENUser);
+          LOG.info("Send notifications to : {}", users.toString());
+          for (User user : users) {
+            EventNotificationUser currENUser = new EventNotificationUser();
+            currENUser.setUserId(user);
+            eventNotification.addNotifiedUser(currENUser);
 
-                        if (user.getSmsNotification()) {
-                            textMessageService.send(user.getPhone(), eventNotification.getDescription());
-                        }
-                        if (user.getEmailNotification()) {
-                            emailService.send(null, Arrays.asList(user.getEmail()), "Emergency alert from MyCAlerts: Flood near " + event.getWaterbody(),
-                                eventNotification.getDescription());
-                        }
-                    }
-                }
-                eventNotificationDAO.save(eventNotification);
+            if (user.getSmsNotification()) {
+              textMessageService.send(user.getPhone(), eventNotification.getDescription());
             }
-        } catch (IOException ex) {
-            LOG.error("Unable to parse the result for the flood event : error: {}", ex.getMessage());
-        } finally {
-            session.close();
-            ManagedSessionContext.unbind(sessionFactory);
+            if (user.getEmailNotification()) {
+              emailService.send(null, Arrays.asList(user.getEmail()),
+                  "Emergency alert from MyCAlerts: Flood near " + event.getWaterbody(),
+                  eventNotification.getDescription());
+            }
+          }
         }
-
+        eventNotificationDAO.save(eventNotification);
+      }
+    } catch (IOException ex) {
+      LOG.error("Unable to parse the result for the flood event : error: {}", ex.getMessage());
+    } finally {
+      session.close();
+      ManagedSessionContext.unbind(sessionFactory);
     }
+  }
+
 
 
 }

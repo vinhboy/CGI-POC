@@ -39,13 +39,6 @@
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 300px) and (max-device-width: 480px) {
-  .login-bg {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: url(../images/bgs/login-320.jpg) 0 0 no-repeat; }
-
   .headerZone {
     width: 100%;
     position: fixed;
@@ -56,12 +49,28 @@
       background: #003466;
       width: 100%;
       height: 48px;
-      padding: 12px 0 12px 12px;
+      padding: 8px 12px;
       box-shadow: 0 2px 4px #888888; }
-      .headerZone .usa-header .usa-header-logo-img {
+      .headerZone .usa-header .usa-header-logo .usa-header-logo-img {
+        position: relative;
+        float: left;
+        display: inline-block;
         background-size: 80px;
-        width: 80px;
+        max-width: 33%;
         height: auto; }
+      .headerZone .usa-header .usa-nav-inner {
+        position: absolute;
+        top: 0;
+        right: 8px; }
+        .headerZone .usa-header .usa-nav-inner .usa-nav-secondary {
+          padding: 11px 2px; }
+          .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li {
+            display: inline-block; }
+            .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a {
+              color: white !important;
+              font-size: 0.6em; }
+              .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
+                margin-right: 10px; }
     .headerZone .data-ui-view {
       padding: 5em;
       padding-bottom: 5em; }
@@ -85,15 +94,20 @@
       .headerZone .event-details-container .button_wrapper {
         padding-left: 6em; }
 
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-480.jpg") center bottom no-repeat; }
+
+  .usa-content h3 {
+    font-size: 1.8rem; }
   .usa-content .centeredForm {
     margin: 0% auto;
     padding: 12px;
     width: 90%;
+    background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
-      padding: 8px;
-      background: rgba(237, 244, 247, 0.85); }
+      padding: 8px; }
   .usa-content .site-description {
     width: 80%;
     height: auto;
@@ -119,20 +133,39 @@
       height: 74px;
       padding: 12px 0 12px 12px;
       box-shadow: 0 2px 4px #888888; }
-      .headerZone .usa-header .usa-header-logo-img {
-        background-size: 1600px;
-        width: 160px;
+      .headerZone .usa-header .usa-header-logo .usa-header-logo-img {
+        position: relative;
+        float: left;
+        display: inline-block;
+        background-size: 160px;
+        max-width: 20%;
         height: auto; }
+      .headerZone .usa-header .usa-nav-inner {
+        position: absolute;
+        top: 0;
+        right: 8px; }
+        .headerZone .usa-header .usa-nav-inner .usa-nav-secondary {
+          padding: 28px 2px 20px; }
+          .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li {
+            display: inline-block; }
+            .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a {
+              color: white !important;
+              font-size: 0.9em; }
+              .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
+                margin-right: 10px; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-768.jpg") center bottom no-repeat; }
 
   .usa-content .centeredForm {
     margin: 8% auto;
     padding: 12px;
     width: 400px;
+    background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
-      padding: 8px;
-      background: rgba(237, 244, 247, 0.85); }
+      padding: 8px; }
   .usa-content .site-description {
     width: 80%;
     height: auto;
@@ -161,20 +194,97 @@
       height: 92px;
       padding: 12px 0 12px 12px;
       box-shadow: 0 2px 4px #888888; }
-      .headerZone .usa-header .usa-header-logo-img {
-        background-size: 220px;
-        width: 220px;
-        height: auto; }
+      .headerZone .usa-header .usa-header-logo .usa-header-logo-img {
+        position: relative !important;
+        float: left !important;
+        display: inline-block !important;
+        background-size: 220px !important;
+        max-width: 20% !important;
+        height: auto !important; }
+      .headerZone .usa-header .usa-nav-inner {
+        position: absolute !important;
+        top: 0 !important;
+        right: 8px !important; }
+        .headerZone .usa-header .usa-nav-inner .usa-nav-secondary {
+          padding: 33px 2px !important; }
+          .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li {
+            display: inline-block !important; }
+            .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a {
+              color: white !important;
+              font-size: 0.9em !important; }
+              .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
+                margin-right: 10px !important; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-1024.jpg") center bottom no-repeat; }
 
   .usa-content .centeredForm {
-    margin: 12% auto;
+    margin: 10% auto;
     padding: 12px;
     width: 400px;
+    background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
-      padding: 8px;
-      background: rgba(237, 244, 247, 0.85); }
+      padding: 8px; }
+  .usa-content .site-description {
+    width: 80%;
+    height: auto;
+    margin: 60px auto;
+    padding: 2px 10px;
+    background: rgba(0, 52, 102, 0.6);
+    color: #ffffff;
+    font-size: 0.8em; }
+    .usa-content .site-description p {
+      width: 100% !important;
+      max-width: 100% !important; } }
+/* Weird sizing ----------- */
+@media only screen and (min-device-width: 951px) and (max-device-width: 1024px) {
+  .headerZone {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1; }
+    .headerZone .usa-header {
+      background: #003466;
+      width: 100%;
+      height: 92px;
+      padding: 12px 0 12px 12px;
+      box-shadow: 0 2px 4px #888888; }
+      .headerZone .usa-header .usa-header-logo .usa-header-logo-img {
+        position: relative !important;
+        float: left !important;
+        display: inline-block !important;
+        background-size: 220px !important;
+        max-width: 20% !important;
+        height: auto !important; }
+      .headerZone .usa-header .usa-nav-inner {
+        position: relative !important;
+        top: 0 !important;
+        right: 8px !important; }
+        .headerZone .usa-header .usa-nav-inner .usa-nav-secondary {
+          padding: 33px 2px !important; }
+          .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li {
+            display: inline-block !important; }
+            .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a {
+              color: white !important;
+              font-size: 0.9em !important; }
+              .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
+                margin-right: 10px !important; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-1024.jpg") center bottom no-repeat; }
+
+  .usa-content .centeredForm {
+    margin: 10% auto;
+    padding: 12px;
+    width: 400px;
+    background: rgba(237, 244, 247, 0.85);
+    box-shadow: 0 0 8px #888888; }
+    .usa-content .centeredForm .usa-form-large {
+      margin: 0 auto;
+      padding: 8px; }
   .usa-content .site-description {
     width: 80%;
     height: auto;
@@ -201,21 +311,40 @@
       padding: 12px 0 12px 12px;
       box-shadow: 0 2px 4px #888888; }
       .headerZone .usa-header .usa-header-logo-img {
+        position: relative;
+        float: left;
+        display: inline-block;
         background-size: 260px;
         width: 260px;
         height: auto; }
       .headerZone .usa-header td {
         padding: 0; }
+      .headerZone .usa-header .usa-nav-inner {
+        position: relative !important;
+        top: 0;
+        right: 8px; }
+        .headerZone .usa-header .usa-nav-inner .usa-nav-secondary {
+          padding: 28px 2px 20px; }
+          .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li {
+            display: inline-block; }
+            .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a {
+              color: white !important;
+              font-size: 0.9em; }
+              .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
+                margin-right: 10px; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-1080.jpg") center bottom no-repeat; }
 
   .usa-content .centeredForm {
-    margin: 14% auto;
+    margin: 10% auto;
     padding: 12px;
     width: 400px;
+    background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
     .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
-      padding: 8px;
-      background: rgba(237, 244, 247, 0.85); }
+      padding: 8px; }
   .usa-content .site-description {
     width: 80%;
     height: auto;
@@ -227,9 +356,6 @@
     .usa-content .site-description p {
       width: 100% !important;
       max-width: 100% !important; } }
-.usa-nav-secondary-links a {
-  color: white !important; }
-
 .contentZone {
   margin-top: 5em;
   padding-bottom: 2em;
@@ -373,7 +499,7 @@ input.phoneLong {
 
 /* Modal Content */
 .modal-content {
-  margin: 20px auto;
+  margin: 14% auto;
   overflow: auto;
   -webkit-animation-name: slideIn;
   -webkit-animation-duration: 0.5s;

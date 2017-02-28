@@ -1,6 +1,6 @@
 package com.cgi.poc.dw.auth.service;
 
-import com.cgi.poc.dw.auth.model.Keys;
+import com.cgi.poc.dw.auth.data.Keys;
 import com.google.inject.Inject;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;

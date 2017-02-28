@@ -2,13 +2,13 @@ package com.cgi.poc.dw.service;
 
 import com.cgi.poc.dw.api.service.MapsApiService;
 import com.cgi.poc.dw.api.service.data.GeoCoordinates;
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.auth.data.Role;
 import com.cgi.poc.dw.dao.EventNotificationDAO;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.rest.model.EventNotificationDto;
+import com.cgi.poc.dw.rest.dto.EventNotificationDto;
 import com.google.common.collect.Sets;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.junit.Before;
