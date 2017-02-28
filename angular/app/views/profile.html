@@ -33,17 +33,17 @@
                    placeholder="{{ 'REGISTRATION.LABEL.LASTNAME' | translate }}" />
           </div>
 
-          <div ng-class="{ 'usa-input-error': profileForm.email.$touched && profileForm.email.$invalid }">
-            <label for="email" class="usa-input-required"
+          <div ng-class="{ 'usa-input-error': profileForm.username.$touched && profileForm.username.$invalid }">
+            <label for="username" class="usa-input-required"
                    translate="REGISTRATION.LABEL.EMAIL"></label>
 
-            <div ng-messages="profileForm.email.$error" ng-if="profileForm.email.$touched">
+            <div ng-messages="profileForm.username.$error" ng-if="profileForm.username.$touched">
             <span ng-message="required" class="usa-input-error-message" role="alert"
                   translate="REGISTRATION.MESSAGE.INVALID.EMAILREQUIRED"></span>
             <span ng-message="email" class="usa-input-error-message" role="alert"
                   translate="REGISTRATION.MESSAGE.INVALID.EMAILINVALID"></span>
             </div>
-            <input id="email" name="email" type="email" ng-model="profile.email" ng-required="true"
+            <input id="username" name="username" type="email" ng-model="profile.email" ng-required="true"
               placeholder="{{ 'REGISTRATION.LABEL.EMAIL' | translate }}"
               class="username" />
             <div class="additional-input-info" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
