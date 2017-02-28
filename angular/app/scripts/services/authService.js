@@ -19,7 +19,21 @@ cgiWebApp.service('Authenticator',
       $sessionStorage.put('role', response.data.role);
 
       $http.defaults.headers.common['Content-Type'] = 'application/json';
-      $http.defaults.headers.common.Authorization =  'Bearer ' + response.data.authToken;
+      $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.authToken;
     });
+  };
+
+  this.logout = function() {
+    $sessionStorage.remove('role');
+    $sessionStorage.remove('jwt');
+    $http.defaults.headers.common.Authorization = 'Bearer ';
+  };
+
+  this.isLoggedIn = function(){
+    return $sessionStorage.get('jwt') !== null ;
+  };
+
+  this.isAdminUser = function(){
+    return $sessionStorage.get('role') === 'ADMIN';
   };
 }]);

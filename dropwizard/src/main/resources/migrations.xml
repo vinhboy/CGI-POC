@@ -424,6 +424,12 @@
         <column name="event_notification_id" type="bigint">
            <constraints nullable="false" foreignKeyName="fk_event_notification_sr_en_id"  deleteCascade="true" references="event_notification(id)"/>
         </column>
-      </createTable> 
+      </createTable>
     </changeSet>
+  <changeSet id="23" author="Charles Jekal">
+    <comment>Update the username field to be all lowercase</comment>
+    <update tableName="user">
+      <column name="email" valueComputed="lower(email)" />
+    </update>
+  </changeSet>
 </databaseChangeLog>

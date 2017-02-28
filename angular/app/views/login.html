@@ -19,7 +19,8 @@
           </div>
           <input id="email" name="email" type="email" data-autocapitalize="off"
                  data-autocorrect="off" ng-model="user.email" ng-required="true"
-                 placeholder="example@domain.com" ng-class="{ 'usa-input-success': authForm.email.$touched && authForm.email.$valid }" />
+                 placeholder="example@domain.com" ng-class="{ 'usa-input-success': authForm.email.$touched && authForm.email.$valid }"
+                 class="username" />
         </div>
         <div class="loginFormDiv passwordDiv" ng-class="{ 'usa-input-error': authForm.password.$touched && authForm.password.$invalid }">
           <label for="password" translate="LOGIN.LABEL.PASSWORD"></label>
