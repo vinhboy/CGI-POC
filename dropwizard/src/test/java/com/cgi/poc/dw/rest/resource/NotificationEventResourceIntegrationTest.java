@@ -88,7 +88,7 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
     assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
 
     for(MimeMessage mail : receivedMails) {
-      assertTrue(GreenMailUtil.getHeaders(mail).contains("Emergency notification"));
+      assertTrue(GreenMailUtil.getHeaders(mail).contains("Emergency alert"));
       assertTrue(GreenMailUtil.getBody(mail).contains("flood action"));
     }
     assertEquals("res101@cgi.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());

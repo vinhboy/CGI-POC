@@ -26,8 +26,16 @@ describe('loginController', function() {
     });
   }));
 
-  it('should initially not have any notifications', function() {
-    expect($scope.model.errorNotif).toBe(false);
+  describe('init', function() {
+    it('should initially not have any notifications', function() {
+      expect($scope.model.errorNotif).toBe(false);
+    });
+
+    it('should logout any logged-in user', function() {
+      spyOn(authenticationService, 'logout');
+      $scope.init();
+      expect(authenticationService.logout).toHaveBeenCalled();
+    });
   });
 
   it('should assign error notifications on pop-up', function() {
