@@ -35,12 +35,6 @@
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 300px) and (max-device-width: 480px) {
-  .login-bg {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0; }
-
   .headerZone {
     width: 100%;
     position: fixed;
@@ -95,6 +89,9 @@
         margin-left: 2em; }
       .headerZone .event-details-container .button_wrapper {
         padding-left: 6em; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-480.jpg") center bottom no-repeat; }
 
   .usa-content h3 {
     font-size: 1.8rem; }
@@ -152,6 +149,9 @@
               font-size: 0.9em; }
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-768.jpg") center bottom no-repeat; }
 
   .usa-content .centeredForm {
     margin: 8% auto;
@@ -211,6 +211,9 @@
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px !important; }
 
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-1024.jpg") center bottom no-repeat; }
+
   .usa-content .centeredForm {
     margin: 10% auto;
     padding: 12px;
@@ -265,6 +268,9 @@
               font-size: 0.9em !important; }
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px !important; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-1024.jpg") center bottom no-repeat; }
 
   .usa-content .centeredForm {
     margin: 10% auto;
@@ -322,6 +328,9 @@
               font-size: 0.9em; }
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-1080.jpg") center bottom no-repeat; }
 
   .usa-content .centeredForm {
     margin: 10% auto;
