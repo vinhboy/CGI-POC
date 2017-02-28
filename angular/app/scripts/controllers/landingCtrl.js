@@ -13,8 +13,8 @@
 'use strict';
 
 cgiWebApp.controller('landingController',
-  ['$scope','$filter','$timeout','EventNotificationService' ,'uiGmapGoogleMapApi','$sessionStorage',
-  function ($scope,$filter,$timeout,EventNotificationService,uiGmapGoogleMapApi,$sessionStorage ) {
+  ['$scope','$filter','$timeout','EventNotificationService' ,'uiGmapGoogleMapApi','$sessionStorage','ProfileService',
+  function ($scope,$filter,$timeout,EventNotificationService,uiGmapGoogleMapApi,$sessionStorage, ProfileService ) {
   $scope.apiErrors = [];
   $scope.map = undefined;
   $scope.googleMaps = undefined;
@@ -101,6 +101,51 @@ cgiWebApp.controller('landingController',
 
     };
 
+    $scope.handlePushNotifications = function(){
+      //setup firebase messaging
+      // Retrieve Firebase Messaging object.
+
+
+     const messaging = firebase.messaging();
+
+      messaging.requestPermission()
+     .then(function() {
+       //granted permission
+       // Retrieve a Instance ID token for use with FCM.
+       // Get Instance ID token. Initially this makes a network call, once retrieved
+        // subsequent calls to getToken will return from cache.
+        messaging.getToken()
+        .then(function(currentToken) {
+          if (currentToken) {
+
+            console.log('PUSH token, ',currentToken);
+             ProfileService.updateFcmtoken({fcmtoken: currentToken}).then(function() {
+               //NOOP
+
+             }).catch( function(err){
+               //error handling
+               console.error('Unable to set web push, will try again later',err);
+
+             });
+
+          } else {
+            // Show permission request.
+            console.log('No Instance ID token available. Request permission to generate one.');
+            // Show permission UI.
+
+          }
+        })
+        .catch(function(err) {
+          console.log('An error occurred while retrieving token. ', err);
+
+        } );
+     })
+     .catch(function(err) {
+       console.log('Unable to get permission to notify. ', err);
+     });
+
+   };
+
     $scope.initLoad = function(){
         if ($scope.role === 'ADMIN'){
              EventNotificationService.allNotifications().then(function(response) {
@@ -119,42 +164,11 @@ cgiWebApp.controller('landingController',
              });
 
 
-             //setup firebase messaging
-             // Retrieve Firebase Messaging object.
-
-
-            const messaging = firebase.messaging();
-
-             messaging.requestPermission()
-            .then(function() {
-              console.log('Notification permission granted.');
-              // TODO(developer): Retrieve a Instance ID token for use with FCM.
-              // Get Instance ID token. Initially this makes a network call, once retrieved
-               // subsequent calls to getToken will return from cache.
-               messaging.getToken()
-               .then(function(currentToken) {
-                 if (currentToken) {
-                   //TODO send an api to update profile with push device token
-                   console.log('PUSH token, ',currentToken);
-
-                   //local storage will be useful for this use case
-                 } else {
-                   // Show permission request.
-                   console.log('No Instance ID token available. Request permission to generate one.');
-                   // Show permission UI.
-
-                 }
-               })
-               .catch(function(err) {
-                 console.log('An error occurred while retrieving token. ', err);
-
-               } );
-            })
-            .catch(function(err) {
-              console.log('Unable to get permission to notify. ', err);
-            });
-
-
+             try{
+               $scope.handlePushNotifications();
+             }catch(err){
+               //this should not prevent the user from doing anything else
+             }
 
 
         }

@@ -25,6 +25,14 @@ cgiWebApp.service('ProfileService',
     });
   };
 
+  this.updateFcmtoken = function(fcmtoken) {
+    var authToken = $sessionStorage.get('jwt');
+    var endpoint = urls.BASE + '/user/fcmtoken';
+    return $http.patch(endpoint, fcmtoken, {
+      headers: { 'Authorization': 'Bearer ' + authToken }
+    });
+  };
+
   this.getProfile = function() {
     var authToken = $sessionStorage.get('jwt');
     var endpoint = urls.BASE + '/user';
