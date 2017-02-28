@@ -183,34 +183,38 @@
             <div class="additional-input-info" translate="REGISTRATION.LABEL.ZIPCODE.INFO"></div>
           </div>
 
-          <div>
+          <div ng-class="{ 'usa-input-error': profileForm.notification.$touched && profileForm.notification.$invalid }">
             <h3>
               <span class="usa-input-required notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.OPTIONS"></span>
             </h3>
             <hr />
-          </div>
-
-          <ul class="usa-unstyled-list">
-            <li>
-              <input id="email" type="checkbox" name="notification" value="1"
-                     ng-model="profile.emailNotification" ng-required="!someSelected()">
-              <label for="email" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.EMAIL"></label>
-            </li>
-            <li>
-              <input id="push" type="checkbox" name="notification" value="3"
-                     ng-model="profile.pushNotification" ng-required="!someSelected()">
-              <label for="push" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.PUSH"></label>
-            </li>
-            <li>
-              <input id="sms" type="checkbox" name="notification" value="2"
-                     ng-model="profile.smsNotification" ng-required="!someSelected()">
-              <label for="sms" class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.TEXT"></label>
-            </li>
-          </ul>
-
-          <div ng-messages="profileForm.notification.$error" ng-show="profileForm.$submitted && profileForm.notification.$invalid">
-          <span class="usa-input-error-message" role="alert" ng-message="required"
+            <div ng-messages="profileForm.notification.$error" ng-if="profileForm.notification.$touched">
+              <span ng-message="required" class="usa-input-error-message" role="alert"
                 translate="REGISTRATION.MESSAGE.INVALID.CHECKBOXREQUIRED"></span>
+            </div>
+            <fieldset class="usa-fieldset-inputs usa-sans">
+              <legend class="usa-sr-only" translate="REGISTRATION.LABEL.NOTIFICATIONS.OPTIONS"></legend>
+              <ul class="usa-unstyled-list" >
+                <li>
+                  <input id="email" name="notification" type="checkbox"
+                    ng-model="profile.emailNotification" ng-required="!someSelected()"
+                    ng-blur="profileForm.notification.$setTouched();">
+                  <label for="email" translate="REGISTRATION.LABEL.NOTIFICATIONS.EMAIL"></label>
+                </li>
+                <li>
+                  <input id="push" name="notification" type="checkbox"
+                    ng-model="profile.pushNotification" ng-required="!someSelected()"
+                    ng-blur="profileForm.notification.$setTouched();">
+                  <label for="push" translate="REGISTRATION.LABEL.NOTIFICATIONS.PUSH"></label>
+                </li>
+                <li>
+                  <input id="sms" name="notification" type="checkbox"
+                    ng-model="profile.smsNotification" ng-required="!someSelected()"
+                    ng-blur="profileForm.notification.$setTouched();">
+                  <label for="sms" translate="REGISTRATION.LABEL.NOTIFICATIONS.TEXT"></label>
+                </li>
+              </ul>
+            </fieldset>
           </div>
 
           <div>

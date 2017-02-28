@@ -35,12 +35,6 @@
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 300px) and (max-device-width: 480px) {
-  .login-bg {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0; }
-
   .headerZone {
     width: 100%;
     position: fixed;
@@ -95,6 +89,9 @@
         margin-left: 2em; }
       .headerZone .event-details-container .button_wrapper {
         padding-left: 6em; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-480.jpg") center bottom no-repeat; }
 
   .usa-content h3 {
     font-size: 1.8rem; }
@@ -152,6 +149,9 @@
               font-size: 0.9em; }
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px; }
+
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-768.jpg") center bottom no-repeat; }
 
   .usa-content .centeredForm {
     margin: 8% auto;
@@ -211,18 +211,19 @@
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px !important; }
 
-  .usa-content .usa-grid-full h3 {
-    margin-top: 7.5em; }
-  .usa-content .usa-grid-full .centeredForm {
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-1024.jpg") center bottom no-repeat; }
+
+  .usa-content .centeredForm {
     margin: 10% auto;
     padding: 12px;
     width: 400px;
     background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
-    .usa-content .usa-grid-full .centeredForm .usa-form-large {
+    .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
       padding: 8px; }
-  .usa-content .usa-grid-full .site-description {
+  .usa-content .site-description {
     width: 80%;
     height: auto;
     margin: 60px auto;
@@ -230,7 +231,7 @@
     background: rgba(0, 52, 102, 0.6);
     color: #ffffff;
     font-size: 0.8em; }
-    .usa-content .usa-grid-full .site-description p {
+    .usa-content .site-description p {
       width: 100% !important;
       max-width: 100% !important; } }
 /* Weird sizing ----------- */
@@ -268,18 +269,19 @@
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px !important; }
 
-  .usa-content .usa-grid-full h3 {
-    margin-top: 7.5em; }
-  .usa-content .usa-grid-full .centeredForm {
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-1024.jpg") center bottom no-repeat; }
+
+  .usa-content .centeredForm {
     margin: 10% auto;
     padding: 12px;
     width: 400px;
     background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
-    .usa-content .usa-grid-full .centeredForm .usa-form-large {
+    .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
       padding: 8px; }
-  .usa-content .usa-grid-full .site-description {
+  .usa-content .site-description {
     width: 80%;
     height: auto;
     margin: 60px auto;
@@ -287,7 +289,7 @@
     background: rgba(0, 52, 102, 0.6);
     color: #ffffff;
     font-size: 0.8em; }
-    .usa-content .usa-grid-full .site-description p {
+    .usa-content .site-description p {
       width: 100% !important;
       max-width: 100% !important; } }
 /* Desktops and laptops ----------- */
@@ -327,18 +329,19 @@
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px; }
 
-  .usa-content .usa-grid-full h3 {
-    margin-top: 7.5em; }
-  .usa-content .usa-grid-full .centeredForm {
+  .contentZone.lightning-background {
+    background: url("../images/backgrounds/lightning-1080.jpg") center bottom no-repeat; }
+
+  .usa-content .centeredForm {
     margin: 10% auto;
     padding: 12px;
     width: 400px;
     background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
-    .usa-content .usa-grid-full .centeredForm .usa-form-large {
+    .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
       padding: 8px; }
-  .usa-content .usa-grid-full .site-description {
+  .usa-content .site-description {
     width: 80%;
     height: auto;
     margin: 60px auto;
@@ -346,7 +349,7 @@
     background: rgba(0, 52, 102, 0.6);
     color: #ffffff;
     font-size: 0.8em; }
-    .usa-content .usa-grid-full .site-description p {
+    .usa-content .site-description p {
       width: 100% !important;
       max-width: 100% !important; } }
 .contentZone {

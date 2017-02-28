@@ -51,15 +51,40 @@ cgiWebApp.controller('landingController',
     $scope.model = {
       notifications: []
     };
+        $scope.model.displayedNotifications =[];
+    
     $scope.eventTypeFilter=undefined;
     $scope.changeFilters = function(){
         $scope.model.filteredNotifications = angular.copy( $scope.model.notifications); 
         $scope.model.filteredNotifications  =  $filter('filter')($scope.model.filteredNotifications, {type: $scope.eventTypeFilter}, true);
-        $scope.currentSelectedEvent = $scope.model.filteredNotifications[0];
+        $scope.model.displayedNotifications =[];
+        $scope.loadMore();
+        $scope.currentSelectedEvent = $scope.model.displayedNotifications[0];
         $scope.activeItem.item = 0;
-        $scope.backToDefault($scope.model.filteredNotifications[0]);
+        $scope.backToDefault($scope.model.displayedNotifications[0]);
 
     };
+   $scope.moreToLoad = function() {
+       var bMoreToLoad = true;
+       if ($scope.model.displayedNotifications.length === $scope.model.filteredNotifications.length)
+       { 
+           bMoreToLoad = false;
+       }   
+       return bMoreToLoad;
+    };
+   $scope.loadMore = function() {
+       if ($scope.model.filteredNotifications!== undefined && $scope.model.filteredNotifications.length > 0) {
+          var last = $scope.model.displayedNotifications.length;
+          var iteamsToAdd = 40;
+          if ($scope.model.filteredNotifications.length - $scope.model.displayedNotifications.length < iteamsToAdd){
+              iteamsToAdd = $scope.model.filteredNotifications.length - $scope.model.displayedNotifications.length;
+          }
+           for (var i = 0; i < iteamsToAdd; i++) {
+            $scope.model.displayedNotifications.push($scope.model.filteredNotifications[last + i]);
+          }
+       }
+   };
+   
    uiGmapGoogleMapApi.then(function(maps) {
           $scope.maps =maps;
  
@@ -219,3 +244,19 @@ cgiWebApp.controller('landingController',
     };
     $scope.initLoad();
 }]);
+
+
+cgiWebApp.directive('infiniteScroll',   function ( ) {
+        return {
+            link:function (scope, element, attrs) {
+                var offset = parseInt(attrs.threshold) || 0;
+                var e = element[0];
+
+                element.bind('scroll', function () {
+                    if (scope.$eval(attrs.canLoad) && e.scrollTop + e.offsetHeight >= e.scrollHeight - offset) {
+                        scope.$apply(attrs.infiniteScroll);
+                    }
+                });
+            }
+        };
+    });
