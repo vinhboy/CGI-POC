@@ -211,18 +211,16 @@
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px !important; }
 
-  .usa-content .usa-grid-full h3 {
-    margin-top: 7.5em; }
-  .usa-content .usa-grid-full .centeredForm {
+  .usa-content .centeredForm {
     margin: 10% auto;
     padding: 12px;
     width: 400px;
     background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
-    .usa-content .usa-grid-full .centeredForm .usa-form-large {
+    .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
       padding: 8px; }
-  .usa-content .usa-grid-full .site-description {
+  .usa-content .site-description {
     width: 80%;
     height: auto;
     margin: 60px auto;
@@ -230,7 +228,7 @@
     background: rgba(0, 52, 102, 0.6);
     color: #ffffff;
     font-size: 0.8em; }
-    .usa-content .usa-grid-full .site-description p {
+    .usa-content .site-description p {
       width: 100% !important;
       max-width: 100% !important; } }
 /* Weird sizing ----------- */
@@ -268,18 +266,16 @@
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px !important; }
 
-  .usa-content .usa-grid-full h3 {
-    margin-top: 7.5em; }
-  .usa-content .usa-grid-full .centeredForm {
+  .usa-content .centeredForm {
     margin: 10% auto;
     padding: 12px;
     width: 400px;
     background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
-    .usa-content .usa-grid-full .centeredForm .usa-form-large {
+    .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
       padding: 8px; }
-  .usa-content .usa-grid-full .site-description {
+  .usa-content .site-description {
     width: 80%;
     height: auto;
     margin: 60px auto;
@@ -287,7 +283,7 @@
     background: rgba(0, 52, 102, 0.6);
     color: #ffffff;
     font-size: 0.8em; }
-    .usa-content .usa-grid-full .site-description p {
+    .usa-content .site-description p {
       width: 100% !important;
       max-width: 100% !important; } }
 /* Desktops and laptops ----------- */
@@ -327,18 +323,16 @@
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px; }
 
-  .usa-content .usa-grid-full h3 {
-    margin-top: 7.5em; }
-  .usa-content .usa-grid-full .centeredForm {
+  .usa-content .centeredForm {
     margin: 10% auto;
     padding: 12px;
     width: 400px;
     background: rgba(237, 244, 247, 0.85);
     box-shadow: 0 0 8px #888888; }
-    .usa-content .usa-grid-full .centeredForm .usa-form-large {
+    .usa-content .centeredForm .usa-form-large {
       margin: 0 auto;
       padding: 8px; }
-  .usa-content .usa-grid-full .site-description {
+  .usa-content .site-description {
     width: 80%;
     height: auto;
     margin: 60px auto;
@@ -346,7 +340,7 @@
     background: rgba(0, 52, 102, 0.6);
     color: #ffffff;
     font-size: 0.8em; }
-    .usa-content .usa-grid-full .site-description p {
+    .usa-content .site-description p {
       width: 100% !important;
       max-width: 100% !important; } }
 .contentZone {
