@@ -740,6 +740,26 @@ input.phoneLong {
   }
 }
 
+input.username {
+  text-transform: lowercase !important;
+}
+
+::-webkit-input-placeholder {
+   text-transform: initial;
+}
+
+:-moz-placeholder {
+   text-transform: initial;
+}
+
+::-moz-placeholder {
+   text-transform: initial;
+}
+
+:-ms-input-placeholder {
+   text-transform: initial;
+}
+
 /* The Modal (background) */
 .modal.fade {
   display: none; /* Hidden by default */
