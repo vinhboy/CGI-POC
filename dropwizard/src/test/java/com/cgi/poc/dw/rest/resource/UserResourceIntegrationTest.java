@@ -1,18 +1,14 @@
 package com.cgi.poc.dw.rest.resource;
 
 import com.cgi.poc.dw.api.service.data.GeoCoordinates;
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.auth.data.Role;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.dao.model.UserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
-import com.cgi.poc.dw.util.Error;
-import com.cgi.poc.dw.util.ErrorInfo;
-import com.cgi.poc.dw.util.GeneralErrors;
-import com.cgi.poc.dw.util.ValidationErrors;
-import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import com.icegreen.greenmail.util.ServerSetup;
+import com.cgi.poc.dw.exception.Error;
+import com.cgi.poc.dw.exception.ErrorInfo;
+import com.cgi.poc.dw.validator.ValidationErrors;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -20,19 +16,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.*;
 
-import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -198,7 +189,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     assertNotNull(response);
     assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
+    for (Error error : errorInfo.getErrors()) {
       assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
       assertThat(error.getMessage(), is(ValidationErrors.INVALID_PHONE));
     }
@@ -217,7 +208,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     assertNotNull(response);
     assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
+    for (Error error : errorInfo.getErrors()) {
       assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
       assertThat(error.getMessage(), is(ValidationErrors.INVALID_ZIPCODE));
     }
@@ -232,7 +223,7 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     assertNotNull(response);
     assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
+    for (Error error : errorInfo.getErrors()) {
       assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
       assertThat(error.getMessage(), is(ValidationErrors.DUPLICATE_USER));
     }
