@@ -95,11 +95,11 @@
     overflow: inherit; }
 
   .usa-content {
-    marginp: 25% 0% 2% !important; }
+    margin: 25% 0% 2% !important; }
     .usa-content h3 {
       font-size: 1.8rem; }
     .usa-content .centeredForm {
-      margin: 0% auto;
+      margin: 0 auto;
       padding: 12px;
       width: 90%;
       background: rgba(237, 244, 247, 0.85);
@@ -160,7 +160,7 @@
   .usa-content {
     margin: 16% 0% 2% !important; }
     .usa-content .centeredForm {
-      margin: 8% auto;
+      margin: 0 auto;
       padding: 12px;
       width: 400px;
       background: rgba(237, 244, 247, 0.85);
@@ -224,7 +224,7 @@
   .usa-content {
     margin: 12% 0% 2% !important; }
     .usa-content .centeredForm {
-      margin: 10% auto;
+      margin: 0 auto;
       padding: 12px;
       width: 400px;
       background: rgba(237, 244, 247, 0.85);
@@ -285,7 +285,7 @@
   .usa-content {
     margin: 14% 0% 2% !important; }
     .usa-content .centeredForm {
-      margin: 10% auto;
+      margin: 0 auto;
       padding: 12px;
       width: 400px;
       background: rgba(237, 244, 247, 0.85);
@@ -348,7 +348,7 @@
   .usa-content {
     margin: 11% 0% 2% !important; }
     .usa-content .centeredForm {
-      margin: 10% auto;
+      margin: 0 auto;
       padding: 12px;
       width: 400px;
       background: rgba(237, 244, 247, 0.85);
@@ -368,6 +368,7 @@
         width: 100% !important;
         max-width: 100% !important; } }
 .contentZone {
+  margin: 0 auto;
   padding-bottom: 2em;
   z-index: -1; }
 
@@ -379,7 +380,8 @@
   height: inherit;
   border: solid; }
   .scrollable-section table {
-    margin-top: 1em; }
+    margin-top: 1em;
+    border: none !important; }
 
 .data-ui-view {
   padding: 5em;
@@ -416,22 +418,26 @@
     vertical-align: bottom; }
 
 .event {
-  border-style: solid;
-  margin: 5px; }
+  border: 2px solid #000;
+  margin: 5px;
+  padding: 2px 4px 4px 4px; }
   .event table {
-    margin: 0; }
+    margin: 0;
+    border: none !important; }
   .event .event-logo {
     width: 4em; }
+    .event .event-logo img {
+      margin: 6px 8px 4px 6px; }
   .event .event-icons {
-    padding-left: .25em;
-    padding-right: .25em; }
+    padding: 0.25em;
+    font-size: 2em; }
   .event td {
     padding: 0; }
   .event h5 {
-    margin-top: 2px; }
+    margin-top: 8px; }
 
 .active {
-  border-color: blue; }
+  border: 4px solid #fbad23; }
 
 .footerZone {
   width: 100%;
@@ -509,7 +515,7 @@ input.phoneLong {
 
 /* Modal Content */
 .modal-content {
-  margin: 14% auto;
+  margin: 0 auto;
   overflow: auto;
   -webkit-animation-name: slideIn;
   -webkit-animation-duration: 0.5s;

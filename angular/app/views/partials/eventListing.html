@@ -1,19 +1,19 @@
-     <div class="event" ng-repeat="item in model.filteredNotifications track by $index" ng-class="{'active' : activeItem.item === $index}" > 
+     <div class="event" ng-repeat="item in model.filteredNotifications track by $index" ng-class="{'active' : activeItem.item === $index}" >
         <table class="usa-table-borderless">
             <tr   ng-click="eventSelected(item,$index)">
                 <td class="event-logo">
-                    <img height="30" width="40" class="" ng-src="{{eventIcons[item.type]}}" alt="Logo image" />
+                    <img height="54" width="54" class="" ng-src="{{eventIcons[item.type]}}" alt="Logo image" />
                 </td>
                 <td>
                     <h5 class="usa-heading-alt">{{(eventTypes | filter : {id: item.type})[0].name }} </h5>
                     <span>{{item.generationDate|  date:'MM-dd-yyyy&nbsp&nbsphh:mm:ss a'}}</span>
-                    <span><span ng-repeat="z  in item.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
+                    <br />
+                    <span>Zip Codes: &nbsp;<span ng-repeat="z  in item.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
                 </td>
                 <td class="event-icons">
-                    <div class="fa-fw icon "><a ng-click="loadEventDetails(item, $event,$index)"><i  class="fa fa-info-circle" ></i></a> </div>
-                    <div ng-show="isMobile" class="fa-fw icon "><a  ng-click="loadMap(item)"><i  class="fa fa-map-marker"   > </i></a></div>
+                    <div class="icon "><a ng-click="loadEventDetails(item, $event,$index)"><i  class="fa fa-fw fa-info-circle" ></i></a> </div>
+                    <div ng-show="isMobile" class="icon "><a  ng-click="loadMap(item)"><i  class="fa fa-fw fa-map-marker"   > </i></a></div>
                 </td>
             </tr>
         </table>
     </div>
- 
