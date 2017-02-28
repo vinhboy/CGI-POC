@@ -85,10 +85,6 @@ cgiWebApp.constant('urls', {
       // If logged out and transitioning to a logged in page:
       e.preventDefault();
       $state.go('login');
-    } else if (toState.module === 'public' && authenticated) {
-      // If logged in and transitioning to a logged out page:
-      e.preventDefault();
-      $state.go('landing');
-    };
+    }
   });
 }]);
