@@ -4,7 +4,7 @@ import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
-import com.cgi.poc.dw.rest.model.EventNotificationDto;
+import com.cgi.poc.dw.rest.dto.EventNotificationDto;
 import com.google.common.collect.Sets;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
@@ -88,7 +88,7 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
     assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
 
     for(MimeMessage mail : receivedMails) {
-      assertTrue(GreenMailUtil.getHeaders(mail).contains("Emergency notification"));
+      assertTrue(GreenMailUtil.getHeaders(mail).contains("Emergency alert"));
       assertTrue(GreenMailUtil.getBody(mail).contains("flood action"));
     }
     assertEquals("res101@cgi.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());

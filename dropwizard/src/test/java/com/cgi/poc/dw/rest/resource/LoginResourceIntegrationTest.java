@@ -8,12 +8,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.auth.data.Role;
 import com.cgi.poc.dw.dao.model.UserDto;
-import com.cgi.poc.dw.rest.model.LoginUserDto;
+import com.cgi.poc.dw.exception.Error;
+import com.cgi.poc.dw.rest.dto.LoginUserDto;
 import com.cgi.poc.dw.helper.IntegrationTest;
-import com.cgi.poc.dw.util.ErrorInfo;
-import com.cgi.poc.dw.util.ValidationErrors;
+import com.cgi.poc.dw.exception.ErrorInfo;
+import com.cgi.poc.dw.validator.ValidationErrors;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -50,7 +51,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     assertNotNull(response);
     assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
+    for (Error error : errorInfo.getErrors()) {
       assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
       assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_EMAIL), anyOf(is(ValidationErrors.MISSING_EMAIL))));
     }
@@ -67,7 +68,7 @@ public class LoginResourceIntegrationTest extends IntegrationTest {
     assertNotNull(response);
     assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     ErrorInfo errorInfo = response.readEntity(ErrorInfo.class);
-    for (com.cgi.poc.dw.util.Error error : errorInfo.getErrors()) {
+    for (Error error : errorInfo.getErrors()) {
       assertEquals(error.getCode(), Integer.toString(Status.BAD_REQUEST.getStatusCode()));
       assertThat(error.getMessage(), anyOf(is(ValidationErrors.INVALID_PASSWORD), anyOf(is(ValidationErrors.MISSING_PASSWORD))));
     }

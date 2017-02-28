@@ -14,6 +14,8 @@ import com.relevantcodes.extentreports.LogStatus;
 
 public class TC01_UserProfile_AllowRegistration extends BaseClass {
 	
+	@Test(description="Verify User Profile Page is displayed")
+	
 	public void TC01_AllowRegistration_1() throws InterruptedException {
 		// Start Create New HTML report for the Testcase
 		logger = report.startTest("TC01_VerifyUserProfilePage");
@@ -68,7 +70,7 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		Assert.assertEquals(verifyNotifyMesg, "Event Notifications");
 		logger.log(LogStatus.PASS, "Sucessfully Landing page is displayed");
 		//Capture the Screenshot
-		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC_01_AllowLogin_2")));
+		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC01_AllowRegistration_2")));
 	
 }
 	
@@ -120,7 +122,7 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		Assert.assertEquals(verifyNotifyMesg, "Event Notifications");
 		logger.log(LogStatus.PASS, "Sucessfully Landing page is displayed");
 		//Capture the Screenshot
-		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC_01_AllowLogin_3")));
+		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC01_AllowRegistration_3")));
 	
 }
 
@@ -173,7 +175,7 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		Assert.assertEquals(verifyNotifyMesg, "Event Notifications");
 		logger.log(LogStatus.PASS, "Sucessfully Landing page is displayed");
 		//Capture the Screenshot
-		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC_01_AllowLogin_4")));
+		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC01_AllowRegistration_4")));
 	
 }
 	
