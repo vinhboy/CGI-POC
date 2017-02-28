@@ -1,29 +1,28 @@
 'use strict';
 
-var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages','uiGmapgoogle-maps' ]);
+var cgiWebApp = angular.module('cgi-web-app',
+  ['pascalprecht.translate', 'ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages', 'uiGmapgoogle-maps']);
 
 cgiWebApp.constant('urls', {
   // have to be change depending of the environment
   BASE: 'http://localhost:8080',
   WS_BASE: 'ws://localhost:8080'
 })
-.config([ '$translateProvider', '$urlRouterProvider', '$stateProvider','$sceDelegateProvider',
-    function($translateProvider, $urlRouterProvider, $stateProvider,$sceDelegateProvider ) {
+.config(['$translateProvider', '$urlRouterProvider', '$stateProvider', '$sceDelegateProvider',
+  function($translateProvider, $urlRouterProvider, $stateProvider, $sceDelegateProvider) {
 
 
-$sceDelegateProvider.resourceUrlWhitelist([
+  $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
     'self',
     // Allow loading from our assets domain.  Notice the difference between * and **.
     'https://maps.google.com/**'
-
-
   ]);
 
 
   $translateProvider.useStaticFilesLoader({
-    prefix : 'language/locale-', // path to translations files
-    suffix : '.json' // suffix, currently- extension of the translations
+    prefix: 'language/locale-', // path to translations files
+    suffix: '.json' // suffix, currently- extension of the translations
   });
   $translateProvider.preferredLanguage('en');
 
@@ -31,31 +30,35 @@ $sceDelegateProvider.resourceUrlWhitelist([
   $urlRouterProvider.otherwise('login');
 
   $stateProvider.state('login', {
-    url : '/login',
-    views:{
-      'pageContent':{
+    url: '/login',
+    module: 'public',
+    views: {
+      'pageContent': {
         templateUrl: '/views/login.html',
         controller: 'loginController'
-  }
+      }
     }
   }).state('register', {
     url: '/register',
-    views:{
-      'pageContent':{
+    module: 'public',
+    views: {
+      'pageContent': {
         templateUrl: '/views/profile.html',
         controller: 'ProfileController'
-    }
+      }
     }
   }).state('landing', {
-       url : '/landing',
-    views:{
-      'pageContent':{
-       templateUrl: 'views/landing.html',
-       controller: 'landingController'
-    }
+    url: '/landing',
+    module: 'restricted',
+    views: {
+      'pageContent': {
+        templateUrl: 'views/landing.html',
+        controller: 'landingController'
+      }
     }
   }).state('manageProfile', {
     url: '/manageProfile',
+    module: 'restricted',
     views: {
       'pageContent': {
         templateUrl: '/views/profile.html',
@@ -64,6 +67,7 @@ $sceDelegateProvider.resourceUrlWhitelist([
     }
   }).state('publish', {
     url: '/publish',
+    module: 'restricted',
     views: {
       'pageContent': {
         templateUrl: '/views/publish.html',
@@ -73,22 +77,18 @@ $sceDelegateProvider.resourceUrlWhitelist([
   });
 }])
 
-.run(['$sessionStorage', '$http', '$rootScope', '$location', function ($sessionStorage, $http, $rootScope, $location) {
-
-        var authToken = $sessionStorage.get('jwt');
-        // Setup api access token
-        $http.defaults.headers.common['Content-Type'] = 'application/json';
-        $http.defaults.headers.common.Authorization =  'Bearer ' + authToken;
-        //Caching will be set by the nginx, so lets take advantage of that.
-        //$http.defaults.headers.common['Cache-Control'] = 'no-cache';
-
-        // redirect to login page if not logged in and trying to access a restricted page
-        $rootScope.$on('$locationChangeStart', function (event, next, current) { // jshint ignore:line
-            var publicPages = ['/login', '/register'];
-            var restrictedPage = publicPages.indexOf($location.path()) === -1;
-            if (restrictedPage && !$sessionStorage.get('jwt')) {
-                $location.path('/login');
-            }
-        });
-
-    }]);
+.run(['$sessionStorage', '$rootScope', '$state', 'Authenticator',
+  function ($sessionStorage, $rootScope, $state, Authenticator) {
+  $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
+    var authenticated = Authenticator.isLoggedIn();
+    if (toState.module === 'restricted' && !authenticated) {
+      // If logged out and transitioning to a logged in page:
+      e.preventDefault();
+      $state.go('login');
+    } else if (toState.module === 'public' && authenticated) {
+      // If logged in and transitioning to a logged out page:
+      e.preventDefault();
+      $state.go('landing');
+    };
+  });
+}]);
