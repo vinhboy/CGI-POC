@@ -1,6 +1,6 @@
 package com.cgi.poc.dw.rest.resource;
 
-import com.cgi.poc.dw.rest.model.LoginUserDto;
+import com.cgi.poc.dw.rest.dto.LoginUserDto;
 import com.cgi.poc.dw.service.LoginService;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;

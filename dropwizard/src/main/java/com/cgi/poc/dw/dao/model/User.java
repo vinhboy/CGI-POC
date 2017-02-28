@@ -5,11 +5,11 @@
  */
 package com.cgi.poc.dw.dao.model;
 
-import com.cgi.poc.dw.util.LoginValidationGroup;
-import com.cgi.poc.dw.util.PasswordType;
-import com.cgi.poc.dw.util.PersistValidationGroup;
-import com.cgi.poc.dw.util.RestValidationGroup;
-import com.cgi.poc.dw.util.ValidationErrors;
+import com.cgi.poc.dw.validator.LoginValidationGroup;
+import com.cgi.poc.dw.validator.PasswordType;
+import com.cgi.poc.dw.validator.PersistValidationGroup;
+import com.cgi.poc.dw.validator.RestValidationGroup;
+import com.cgi.poc.dw.validator.ValidationErrors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;

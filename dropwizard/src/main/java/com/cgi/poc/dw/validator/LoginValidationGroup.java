@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cgi.poc.dw.util;
-
-import javax.validation.groups.Default;
+package com.cgi.poc.dw.validator;
 
 /**
  * @author dawna.floyd
  */
-public interface PersistValidationGroup extends Default {
+// this one does NOT inherit from default.. b/c we only want the ones defined w/ this group to execute
+public interface LoginValidationGroup {
 
 }
