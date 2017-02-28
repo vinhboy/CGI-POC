@@ -24,7 +24,7 @@ public class UserProfile {
 	WebElement clickCreateOneNow;
 	@FindBy(xpath = "//h3[contains(.,'Your Information')]")
 	WebElement UserProfileHeader;
-	@FindBy(xpath = "//input[@name='email']")
+	@FindBy(xpath = "//input[@name='username']")
 	WebElement profileEmail;
 	@FindBy(xpath = "//input[@id='firstName']")
 	WebElement profileFirstName;
@@ -192,7 +192,7 @@ public class UserProfile {
 	{
 		
 		JavascriptExecutor je = (JavascriptExecutor) driver;
-		//WebElement elementToClick=driver.findElement(By.xpath("//input[contains(@name, 'notification')][contains(@value, '1')]"));
+		//WebElement elementToClick=driver.findElement(By.xpath("//input[@ng-model='profile.emailNotification']"));
 		je.executeScript("arguments[0].scrollIntoView(true);",invalidzipCode);
 		BrowserFactory.waitFor();
 		String iinvalidZip = invalidzipCode.getText();
@@ -238,7 +238,7 @@ public class UserProfile {
 		
 		if (alertType == "email") {
 			JavascriptExecutor je = (JavascriptExecutor) driver;
-			WebElement elementToClick=driver.findElement(By.xpath("//input[contains(@name, 'notification')][contains(@value, '1')]"));
+			WebElement elementToClick=driver.findElement(By.xpath("//input[@ng-model='profile.emailNotification']"));
 			je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);
 
 			Actions action = new Actions(driver);
@@ -254,8 +254,8 @@ public class UserProfile {
 
 	public void checkNotification(String alertType) {
 		JavascriptExecutor je = (JavascriptExecutor) driver;
-		WebElement elementToClick = driver.findElement(By.xpath("//input[contains(@id, 'sms')][contains(@value, '2')]"));
-		WebElement elementToClick1 = driver.findElement(By.xpath("//input[contains(@id, 'push')][contains(@value, '3')]"));
+		WebElement elementToClick = driver.findElement(By.xpath("//input[@ng-model='profile.smsNotification']"));
+		WebElement elementToClick1 = driver.findElement(By.xpath("//input[@ng-model='profile.pushNotification']"));
 		if (alertType == "Push") {
 			je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);
 			elementToClick1.click();

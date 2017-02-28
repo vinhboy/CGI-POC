@@ -1,9 +1,12 @@
 package com.MyCAlerts.Testcases;
 
+import java.util.UUID;
+
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import com.MyCAlerts.BaseClass.BaseClass;
+import com.MyCAlerts.PageObjects.LoginPage;
 import com.MyCAlerts.PageObjects.UserProfile;
 import com.MyCAlerts.Utilities.ApplicationSpecific;
 import com.MyCAlerts.Utilities.GenericFunctions;
@@ -170,4 +173,69 @@ public class TC02_UserProfile_DisAllowRegistration extends BaseClass {
 		
 	}
 		
+		@Test(description="Verify Registration not allowed with already registered user")
+
+		public void TC02_DisAllowRegistration_8() throws InterruptedException {
+			// Start Create New HTML report for the Testcase
+			logger = report.startTest("TC08_VerifyRegistrationDisallopwithalreadyRegisteredUser");
+			logger.log(LogStatus.INFO, "Application is up and running on Chrome Browser");
+			//Inherits the Login Page to Main Testcase
+			UserProfile userProfile = PageFactory.initElements(driver, UserProfile.class);
+			//Click on the Create Profile
+			userProfile.clickCreateNow();
+			BrowserFactory.waitFor();
+			//Get the Text of User Profile in User Profile Page
+			String verifyMesg = userProfile.VerifyUserProfilePage();
+			//Verify User Profile Header
+			Assert.assertTrue(verifyMesg.contains("Your Information"));
+			logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
+			// Fetch the data from Excel Sheet
+			userProfile.EnterFistName(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0));
+			userProfile.EnterLastName(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 1));
+			String semail=DataProviderFactory.getExcel().getDatawithSheetIndex(0, 1, 0);
+			String sPassword=DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1,3);
+			String sConfirmPassword=DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 4);
+			String sZipcode =DataProviderFactory.getExcel().getNumericDatawithSheetIndex(1, 1, 5);	
+			userProfile.enterMandatoryFieldsinUserProfile(semail,sPassword,sConfirmPassword,sZipcode,"email");
+			userProfile.clickSaveProfile();
+			BrowserFactory.waitFor();
+			logger.log(LogStatus.INFO, "Already regsitered email id is enetered-"+semail);
+			String verInvPassword = userProfile.VerifyUserProfilealreadyExistMesg();
+			//Verify Invalid Phone Error Mesg in Profile Page
+			Assert.assertTrue(verInvPassword.contains("A profile already exists for that email address"));
+			//Wait
+			logger.log(LogStatus.PASS, "Error Message is display for already registered user --"+semail);
+			//Capture the Screenshot
+			logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC02_DisAllowRegistration_8")));
+		
+	}
+		
+		
+		@Test(description="Verify Registration not allowed with already registered user")
+
+		public void TC03_CancelRegistration_1() throws InterruptedException {
+			// Start Create New HTML report for the Testcase
+			logger = report.startTest("TC03_CancelRegistration");
+			logger.log(LogStatus.INFO, "Application is up and running on Chrome Browser");
+			//Inherits the Login Page to Main Testcase
+			UserProfile userProfile = PageFactory.initElements(driver, UserProfile.class);
+			//Click on the Create Profile
+			userProfile.clickCreateNow();
+			BrowserFactory.waitFor();
+			//Get the Text of User Profile in User Profile Page
+			String verifyMesg = userProfile.VerifyUserProfilePage();
+			//Verify User Profile Header
+			Assert.assertTrue(verifyMesg.contains("Your Information"));
+			logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
+			// Fetch the data from Excel Sheet
+			userProfile.clickCancelProfile();
+			BrowserFactory.isTextPresent("Please Login or Register", "Verify Login Page");
+			BrowserFactory.waitFor();
+			
+			//Wait
+			logger.log(LogStatus.PASS, "Login Page is displayed after clicking Cancel button on User Profile Page");
+			//Capture the Screenshot
+			logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC03_CancelRegistration_1")));
+		
+	}
 }
