@@ -29,11 +29,23 @@
 		<!-- bower:css -->
 		<!-- endbower -->
 		<!-- endbuild -->
-		<!-- build:css(.tmp) styles/cgipoc.css -->
-		<link rel="stylesheet" href="styles/cgipoc.css">
 		<!-- endbuild -->
 		<link rel="stylesheet" href="uswds-0.14.0/css/uswds.css">
+    	<!-- build:css(.tmp) styles/cgipoc.css -->
+		<link rel="stylesheet" href="styles/cgipoc.css">
+		<!-- endbuild -->
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+		<!-- Begin Inspectlet Embed Code -->
+		<script type="text/javascript" id="inspectletjs">
+			window.__insp = window.__insp || [];
+			__insp.push(['wid', 1754629138]);
+			(function() {
+				function ldinsp(){if(typeof window.__inspld != "undefined") return; window.__inspld = 1; var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); };
+				setTimeout(ldinsp, 500); document.readyState != "complete" ? (window.attachEvent ? window.attachEvent('onload', ldinsp) : window.addEventListener('load', ldinsp, false)) : ldinsp();
+			})();
+		</script>
+		<!-- End Inspectlet Embed Code -->
 
 	</head>
 	<body data-ng-app="cgi-web-app" ng-controller="bodyController">
@@ -77,15 +89,14 @@
 		<script src="/scripts/controllers/footerController.js"></script>
 		<script src="/scripts/controllers/eventController.js"></script>
 		<!-- endbuild -->
+
 		<div class="headerZone">
-                    <div data-ui-view data-name="header">
-     <ng-include src="'views/userHeader.html'" ng-controller="headerController"></ng-include>
-
-                    </div>
-    </div>
-    <div class="contentZone">
-      <div data-ui-view data-name="pageContent"></div>
-    </div>
-
+			<div data-ui-view data-name="header">
+				<ng-include src="'views/userHeader.html'" ng-controller="headerController"></ng-include>
+			</div>
+		</div>
+		<div class="contentZone">
+			<div data-ui-view data-name="pageContent"></div>
+		</div>
 	</body>
 </html>
