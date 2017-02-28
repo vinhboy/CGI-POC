@@ -1,4 +1,6 @@
 {
+  "features": [
+    {
       "attributes": {
         "objectid": 6356,
         "gaugelid": "RSTV2",
@@ -32,3 +34,5 @@
         "y": 37.266943999256185
       }
     }
+  ]
+}

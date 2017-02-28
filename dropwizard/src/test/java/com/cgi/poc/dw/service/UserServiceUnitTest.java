@@ -11,13 +11,13 @@ import static org.mockito.Mockito.when;
 
 import com.cgi.poc.dw.api.service.MapsApiService;
 import com.cgi.poc.dw.api.service.data.GeoCoordinates;
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.auth.data.Role;
 import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.factory.AddressBuilder;
 import com.cgi.poc.dw.factory.AddressBuilderImpl;
-import com.cgi.poc.dw.util.ValidationErrors;
+import com.cgi.poc.dw.validator.ValidationErrors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -138,7 +138,7 @@ public class UserServiceUnitTest {
           assertThat(violation.getMessageTemplate())
               .isEqualTo("must be at least 2 characters in length.");
         } else if (tmp.equals("password") && annotation
-            .equals("com.cgi.poc.dw.util.PasswordType")) {
+            .equals("com.cgi.poc.dw.validator.PasswordType")) {
           assertThat(violation.getMessage())
               .isEqualTo(ValidationErrors.INVALID_PASSWORD);
         } else {

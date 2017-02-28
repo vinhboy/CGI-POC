@@ -5,9 +5,7 @@
  */
 package com.cgi.poc.dw.dao.model;
 
-import com.cgi.poc.dw.util.JsonCoordinate;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;

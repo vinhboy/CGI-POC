@@ -65,7 +65,7 @@
             <span ng-message="maxLength" class="usa-input-error-message" role="alert"
               translate="NOTIFICATION.MESSAGE.INVALID.MESSAGETOOLONG"></span>
           </div>
-          <textarea id="message" name="message" rows="4" ng-model="notification.message" ng-required="true" ng-maxlength="135"
+          <textarea id="message" name="message" rows="4" ng-model="notification.message" ng-required="true" maxlength="135"
             placeholder="{{ 'NOTIFICATION.LABEL.MESSAGE' | translate }}"></textarea>
           <div class="notificationMessageInfo">({{ notification.messageMaxLength - notification.message.length }} characters remaining)</div>
         </div>

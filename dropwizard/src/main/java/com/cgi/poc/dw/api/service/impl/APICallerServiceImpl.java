@@ -1,29 +1,16 @@
 package com.cgi.poc.dw.api.service.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.hibernate.SessionFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.cgi.poc.dw.api.service.APICallerService;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import java.util.logging.Level;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.MediaType;
+import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * class to call API to collect the resources event information
@@ -54,7 +41,6 @@ public abstract class APICallerServiceImpl implements APICallerService {
     public void callServiceAPI() {
 
        try {
-
           String response = client 
              .target(eventUrl)
              .request(MediaType.APPLICATION_JSON)
@@ -64,13 +50,9 @@ public abstract class APICallerServiceImpl implements APICallerService {
             if (eventJson != null){
                 parsingEventsResponse(eventJson);
            }
-        } catch (JsonParseException e) {
-            LOG.error("Unable to parse the result for the url event : {}", eventUrl, e);
-        } catch (IOException ex) {
-            LOG.error("Unable to parse the result for the url event : {}", eventUrl, ex);
-        } 
-
-       
+        } catch (Exception e) {
+          LOG.error("Unable to parse the result for the url event : {}", eventUrl, e);
+       }
     }
 
     /**
