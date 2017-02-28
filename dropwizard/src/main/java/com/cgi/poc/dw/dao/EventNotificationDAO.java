@@ -40,6 +40,7 @@ public class EventNotificationDAO extends AbstractDAO<EventNotification> {
          Criteria criteria = this.currentSession().createCriteria(EventNotification.class)
                       .createAlias("eventNotificationUser", "a")
                       .add(Restrictions.eq("a.userId.id", user.getId()));
+        criteria.addOrder(Order.desc("generationDate"));
 
         List<EventNotification> resultList = criteria.list();
         return resultList;
