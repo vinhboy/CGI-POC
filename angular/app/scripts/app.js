@@ -79,7 +79,7 @@ cgiWebApp.constant('urls', {
 
 .run(['$sessionStorage', '$rootScope', '$state', 'Authenticator',
   function ($sessionStorage, $rootScope, $state, Authenticator) {
-  $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
+  $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) { // jshint ignore:line
     var authenticated = Authenticator.isLoggedIn();
     if (toState.module === 'restricted' && !authenticated) {
       // If logged out and transitioning to a logged in page:
