@@ -8,7 +8,7 @@ import com.cgi.poc.dw.dao.model.EventNotification;
 import com.cgi.poc.dw.dao.model.EventNotificationUser;
 import com.cgi.poc.dw.dao.model.EventNotificationZipcode;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.rest.model.EventNotificationDto;
+import com.cgi.poc.dw.rest.dto.EventNotificationDto;
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -1,9 +1,9 @@
-package com.cgi.poc.dw.rest.model;
+package com.cgi.poc.dw.rest.dto;
 
-import com.cgi.poc.dw.util.ValidationErrors;
-import com.cgi.poc.dw.util.LoginValidationGroup;
-import com.cgi.poc.dw.util.PasswordType;
-import com.cgi.poc.dw.util.RestValidationGroup;
+import com.cgi.poc.dw.validator.ValidationErrors;
+import com.cgi.poc.dw.validator.LoginValidationGroup;
+import com.cgi.poc.dw.validator.PasswordType;
+import com.cgi.poc.dw.validator.RestValidationGroup;
 import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Basic;
 import javax.persistence.Column;

@@ -1,6 +1,6 @@
 package com.cgi.poc.dw.auth;
 
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.auth.data.Role;
 import com.cgi.poc.dw.dao.model.User;
 import io.dropwizard.auth.Authorizer;
 import org.apache.commons.lang3.StringUtils;

@@ -1,4 +1,4 @@
-package com.cgi.poc.dw.util;
+package com.cgi.poc.dw.validator;
 
 public class ValidationErrors {
 

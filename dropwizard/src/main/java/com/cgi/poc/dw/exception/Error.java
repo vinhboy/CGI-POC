@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cgi.poc.dw.util;
+package com.cgi.poc.dw.exception;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

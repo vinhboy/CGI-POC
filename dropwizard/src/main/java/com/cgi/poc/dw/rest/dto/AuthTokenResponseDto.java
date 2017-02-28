@@ -1,7 +1,7 @@
-package com.cgi.poc.dw.rest.model;
+package com.cgi.poc.dw.rest.dto;
 
 
-import com.cgi.poc.dw.auth.model.Role;
+import com.cgi.poc.dw.auth.data.Role;
 
 public class AuthTokenResponseDto {
 

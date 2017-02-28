@@ -3,32 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cgi.poc.dw.util;
+package com.cgi.poc.dw.exception.mapper;
 
+import com.cgi.poc.dw.exception.ErrorInfo;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.hibernate.exception.ConstraintViolationException;
 
 /**
  * @author dawna.floyd
  */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
-public class CustomSQLConstraintViolationException implements
+public class CustomConstraintViolationExceptionMapper implements
     ExceptionMapper<ConstraintViolationException> {
 
   @Override
   public Response toResponse(ConstraintViolationException exception) {
     Response response;
     ErrorInfo errRet = new ErrorInfo();
-    String errorString = GeneralErrors.CONSTRAINT_VIOLATION.getMessage()
-        .replace("REPLACE", exception.getConstraintName());
-    errRet.addError(GeneralErrors.CONSTRAINT_VIOLATION.getCode(),
-        errorString + ": " + exception.getSQLException().getMessage());
-
+    Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+    for (ConstraintViolation violation : constraintViolations) {
+      String message = violation.getMessage();
+      errRet.addError(Integer.toString(Response.Status.BAD_REQUEST.getStatusCode()), message);
+    }
     response = Response.noContent().status(Response.Status.BAD_REQUEST).entity(errRet).build();
 
     return response;

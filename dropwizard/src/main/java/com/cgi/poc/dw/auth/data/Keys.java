@@ -1,4 +1,4 @@
-package com.cgi.poc.dw.auth.model;
+package com.cgi.poc.dw.auth.data;
 
 import org.jose4j.keys.HmacKey;
 

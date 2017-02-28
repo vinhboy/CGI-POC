@@ -1,4 +1,4 @@
-package com.cgi.poc.dw.rest.model;
+package com.cgi.poc.dw.rest.dto;
 
 import com.cgi.poc.dw.validator.StringListPattern;
 import java.util.Set;

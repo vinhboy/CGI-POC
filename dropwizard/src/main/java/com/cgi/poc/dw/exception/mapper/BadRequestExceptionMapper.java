@@ -1,7 +1,7 @@
-package com.cgi.poc.dw.util;
+package com.cgi.poc.dw.exception.mapper;
 
+import com.cgi.poc.dw.exception.ErrorInfo;
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
