@@ -91,30 +91,33 @@
         padding-left: 6em; }
 
   .contentZone.lightning-background {
-    background: url("../images/backgrounds/lightning-480.jpg") center bottom no-repeat; }
+    background: url("../images/backgrounds/lightning-480.jpg") #000000 center 0 no-repeat;
+    overflow: inherit; }
 
-  .usa-content h3 {
-    font-size: 1.8rem; }
-  .usa-content .centeredForm {
-    margin: 0% auto;
-    padding: 12px;
-    width: 90%;
-    background: rgba(237, 244, 247, 0.85);
-    box-shadow: 0 0 8px #888888; }
-    .usa-content .centeredForm .usa-form-large {
-      margin: 0 auto;
-      padding: 8px; }
-  .usa-content .site-description {
-    width: 80%;
-    height: auto;
-    margin: 60px auto;
-    padding: 2px 10px;
-    background: rgba(0, 52, 102, 0.6);
-    color: #ffffff;
-    font-size: 0.8em; }
-    .usa-content .site-description p {
-      width: 100% !important;
-      max-width: 100% !important; } }
+  .usa-content {
+    marginp: 25% 0% 2% !important; }
+    .usa-content h3 {
+      font-size: 1.8rem; }
+    .usa-content .centeredForm {
+      margin: 0% auto;
+      padding: 12px;
+      width: 90%;
+      background: rgba(237, 244, 247, 0.85);
+      box-shadow: 0 0 8px #888888; }
+      .usa-content .centeredForm .usa-form-large {
+        margin: 0 auto;
+        padding: 8px; }
+    .usa-content .site-description {
+      width: 80%;
+      height: auto;
+      margin: 60px auto;
+      padding: 2px 10px;
+      background: rgba(0, 52, 102, 0.6);
+      color: #ffffff;
+      font-size: 0.8em; }
+      .usa-content .site-description p {
+        width: 100% !important;
+        max-width: 100% !important; } }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 481px) and (max-device-width: 768px) {
   .headerZone {
@@ -151,28 +154,31 @@
                 margin-right: 10px; }
 
   .contentZone.lightning-background {
-    background: url("../images/backgrounds/lightning-768.jpg") center bottom no-repeat; }
+    background: url("../images/backgrounds/lightning-768.jpg") #000000 center 0 no-repeat;
+    overflow: inherit; }
 
-  .usa-content .centeredForm {
-    margin: 8% auto;
-    padding: 12px;
-    width: 400px;
-    background: rgba(237, 244, 247, 0.85);
-    box-shadow: 0 0 8px #888888; }
-    .usa-content .centeredForm .usa-form-large {
-      margin: 0 auto;
-      padding: 8px; }
-  .usa-content .site-description {
-    width: 80%;
-    height: auto;
-    margin: 60px auto;
-    padding: 2px 10px;
-    background: rgba(0, 52, 102, 0.6);
-    color: #ffffff;
-    font-size: 0.8em; }
-    .usa-content .site-description p {
-      width: 100% !important;
-      max-width: 100% !important; } }
+  .usa-content {
+    margin: 16% 0% 2% !important; }
+    .usa-content .centeredForm {
+      margin: 8% auto;
+      padding: 12px;
+      width: 400px;
+      background: rgba(237, 244, 247, 0.85);
+      box-shadow: 0 0 8px #888888; }
+      .usa-content .centeredForm .usa-form-large {
+        margin: 0 auto;
+        padding: 8px; }
+    .usa-content .site-description {
+      width: 80%;
+      height: auto;
+      margin: 60px auto;
+      padding: 2px 10px;
+      background: rgba(0, 52, 102, 0.6);
+      color: #ffffff;
+      font-size: 0.8em; }
+      .usa-content .site-description p {
+        width: 100% !important;
+        max-width: 100% !important; } }
 .angular-google-map-container {
   height: 400px; }
 
@@ -212,28 +218,31 @@
                 margin-right: 10px !important; }
 
   .contentZone.lightning-background {
-    background: url("../images/backgrounds/lightning-1024.jpg") center bottom no-repeat; }
+    background: url("../images/backgrounds/lightning-1024.jpg") #000000 center 0 no-repeat;
+    overflow: inherit; }
 
-  .usa-content .centeredForm {
-    margin: 10% auto;
-    padding: 12px;
-    width: 400px;
-    background: rgba(237, 244, 247, 0.85);
-    box-shadow: 0 0 8px #888888; }
-    .usa-content .centeredForm .usa-form-large {
-      margin: 0 auto;
-      padding: 8px; }
-  .usa-content .site-description {
-    width: 80%;
-    height: auto;
-    margin: 60px auto;
-    padding: 2px 10px;
-    background: rgba(0, 52, 102, 0.6);
-    color: #ffffff;
-    font-size: 0.8em; }
-    .usa-content .site-description p {
-      width: 100% !important;
-      max-width: 100% !important; } }
+  .usa-content {
+    margin: 12% 0% 2% !important; }
+    .usa-content .centeredForm {
+      margin: 10% auto;
+      padding: 12px;
+      width: 400px;
+      background: rgba(237, 244, 247, 0.85);
+      box-shadow: 0 0 8px #888888; }
+      .usa-content .centeredForm .usa-form-large {
+        margin: 0 auto;
+        padding: 8px; }
+    .usa-content .site-description {
+      width: 80%;
+      height: auto;
+      margin: 60px auto;
+      padding: 2px 10px;
+      background: rgba(0, 52, 102, 0.6);
+      color: #ffffff;
+      font-size: 0.8em; }
+      .usa-content .site-description p {
+        width: 100% !important;
+        max-width: 100% !important; } }
 /* Weird sizing ----------- */
 @media only screen and (min-device-width: 951px) and (max-device-width: 1024px) {
   .headerZone {
@@ -270,28 +279,31 @@
                 margin-right: 10px !important; }
 
   .contentZone.lightning-background {
-    background: url("../images/backgrounds/lightning-1024.jpg") center bottom no-repeat; }
+    background: url("../images/backgrounds/lightning-1024.jpg") #000000 center 0 no-repeat;
+    overflow: inherit; }
 
-  .usa-content .centeredForm {
-    margin: 10% auto;
-    padding: 12px;
-    width: 400px;
-    background: rgba(237, 244, 247, 0.85);
-    box-shadow: 0 0 8px #888888; }
-    .usa-content .centeredForm .usa-form-large {
-      margin: 0 auto;
-      padding: 8px; }
-  .usa-content .site-description {
-    width: 80%;
-    height: auto;
-    margin: 60px auto;
-    padding: 2px 10px;
-    background: rgba(0, 52, 102, 0.6);
-    color: #ffffff;
-    font-size: 0.8em; }
-    .usa-content .site-description p {
-      width: 100% !important;
-      max-width: 100% !important; } }
+  .usa-content {
+    margin: 14% 0% 2% !important; }
+    .usa-content .centeredForm {
+      margin: 10% auto;
+      padding: 12px;
+      width: 400px;
+      background: rgba(237, 244, 247, 0.85);
+      box-shadow: 0 0 8px #888888; }
+      .usa-content .centeredForm .usa-form-large {
+        margin: 0 auto;
+        padding: 8px; }
+    .usa-content .site-description {
+      width: 80%;
+      height: auto;
+      margin: 60px auto;
+      padding: 2px 10px;
+      background: rgba(0, 52, 102, 0.6);
+      color: #ffffff;
+      font-size: 0.8em; }
+      .usa-content .site-description p {
+        width: 100% !important;
+        max-width: 100% !important; } }
 /* Desktops and laptops ----------- */
 @media only screen and (min-width: 1025px) {
   .headerZone {
@@ -330,30 +342,32 @@
                 margin-right: 10px; }
 
   .contentZone.lightning-background {
-    background: url("../images/backgrounds/lightning-1080.jpg") center bottom no-repeat; }
+    background: url("../images/backgrounds/lightning-1080.jpg") #000000 center 0 no-repeat;
+    overflow: inherit; }
 
-  .usa-content .centeredForm {
-    margin: 10% auto;
-    padding: 12px;
-    width: 400px;
-    background: rgba(237, 244, 247, 0.85);
-    box-shadow: 0 0 8px #888888; }
-    .usa-content .centeredForm .usa-form-large {
-      margin: 0 auto;
-      padding: 8px; }
-  .usa-content .site-description {
-    width: 80%;
-    height: auto;
-    margin: 60px auto;
-    padding: 2px 10px;
-    background: rgba(0, 52, 102, 0.6);
-    color: #ffffff;
-    font-size: 0.8em; }
-    .usa-content .site-description p {
-      width: 100% !important;
-      max-width: 100% !important; } }
+  .usa-content {
+    margin: 11% 0% 2% !important; }
+    .usa-content .centeredForm {
+      margin: 10% auto;
+      padding: 12px;
+      width: 400px;
+      background: rgba(237, 244, 247, 0.85);
+      box-shadow: 0 0 8px #888888; }
+      .usa-content .centeredForm .usa-form-large {
+        margin: 0 auto;
+        padding: 8px; }
+    .usa-content .site-description {
+      width: 80%;
+      height: auto;
+      margin: 60px auto;
+      padding: 2px 10px;
+      background: rgba(0, 52, 102, 0.6);
+      color: #ffffff;
+      font-size: 0.8em; }
+      .usa-content .site-description p {
+        width: 100% !important;
+        max-width: 100% !important; } }
 .contentZone {
-  margin-top: 5em;
   padding-bottom: 2em;
   z-index: -1; }
 
