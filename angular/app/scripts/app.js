@@ -4,8 +4,8 @@ var cgiWebApp = angular.module('cgi-web-app', [ 'pascalprecht.translate','ngSess
 
 cgiWebApp.constant('urls', {
   // have to be change depending of the environment
-  BASE: 'https://testapp.mycalerts.com',
-  WS_BASE: 'ws://testapp.mycalerts.com'
+  BASE: 'http://localhost:8080',
+  WS_BASE: 'ws://localhost:8080''
 })
 .config([ '$translateProvider', '$urlRouterProvider', '$stateProvider','$sceDelegateProvider',
     function($translateProvider, $urlRouterProvider, $stateProvider,$sceDelegateProvider ) {
