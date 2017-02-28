@@ -4,8 +4,8 @@
 
       "attributes": {
         "objectid": 1,
-        "latitude": 34.5769,
-        "longitude": -95.9172,
+        "latitude": "wrong data",
+        "longitude": "incorrect",
         "acres": 500,
         "gacc": "SACC",
         "hotlink": "http://www.nifc.gov/fireInfo/nfn.htm",

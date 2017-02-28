@@ -220,7 +220,7 @@ public class IntegrationTestHelper {
       Statement st = sqlConnection.createStatement();
       st.executeUpdate("delete from event_notification_zipcode");
       st.executeUpdate("delete from event_notification");
-      st.executeUpdate("delete from user");
+      st.executeUpdate("delete from user where email != 'admin@cgi.com'");
 
       sqlConnection.commit();
     } catch (Exception ex) {

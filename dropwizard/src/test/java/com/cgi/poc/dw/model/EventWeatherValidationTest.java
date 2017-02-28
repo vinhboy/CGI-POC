@@ -83,15 +83,13 @@ public class EventWeatherValidationTest extends BaseTest {
      */
     @Test
     public void testExampleFromSource() throws  Exception {
-         ClassLoader classLoader = getClass().getClassLoader();
            File file = new File(ClassLoader.getSystemResource("exampleWeatherEvent.json").toURI());
          
          
             JsonParser  parser  = jsonFactory.createParser(new FileReader(file));
 	    parser.setCodec(mapper);
             ObjectNode node = parser.readValueAs(ObjectNode.class);
-            JsonNode event = node.get("attributes");
-            JsonNode geo = node.get("attributes");
+            JsonNode event = node.get("features").get(0).get("attributes");
             
            
            EventWeather tst = mapper.readValue(event.toString(), EventWeather.class);
