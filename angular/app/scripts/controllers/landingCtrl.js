@@ -75,7 +75,11 @@ cgiWebApp.controller('landingController',
    $scope.loadMore = function() {
        if ($scope.model.filteredNotifications!== undefined && $scope.model.filteredNotifications.length > 0) {
           var last = $scope.model.displayedNotifications.length;
-          for (var i = 0; i <= 100; i++) {
+          var iteamsToAdd = 40;
+          if ($scope.model.filteredNotifications.length - $scope.model.displayedNotifications.length < iteamsToAdd){
+              iteamsToAdd = $scope.model.filteredNotifications.length - $scope.model.displayedNotifications.length;
+          }
+           for (var i = 0; i < iteamsToAdd; i++) {
             $scope.model.displayedNotifications.push($scope.model.filteredNotifications[last + i]);
           }
        }
