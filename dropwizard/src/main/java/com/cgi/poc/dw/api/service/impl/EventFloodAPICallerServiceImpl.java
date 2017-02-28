@@ -130,9 +130,6 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
     }
   }
 
-  private boolean isChangedEvent(EventFlood retEvent, EventFlood eventFromDB) {
-    return !retEvent.getLastModified().equals(eventFromDB.getLastModified());
-  }
 
 
 }
