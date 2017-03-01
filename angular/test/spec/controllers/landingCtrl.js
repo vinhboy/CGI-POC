@@ -94,20 +94,9 @@ describe('landingController', function() {
     url1: 'http://forecast.weather.gov/product.php?site=EWX&issuedby=EWX&product=SVR',
     url2: 'www.cnn.com',
     citizensAffected: 500,
-    userId: {
-      firstName: 'Dawna',
-      lastName: 'Floyd',
-      email: 'me@me.com',
-      password: '0d78e8a655575f3aa49dab465349cd96e5773c507020ebe92ab05f:e3352e3a7cf37fcb885088a67979bd63792ed089bd830629d5acc9',
-      phone: '2183309196',
-      zipCode: '56401',
-      emailNotification: false,
-      pushNotification: false,
-      smsNotification: false
-    },
     eventNotificationZipcodes: []
   }];
-     var expectDate = Date.parse('2017-02-19T20:36:37.000+0000');
+     var expectDate = moment('2017-02-19T20:36:37.000+0000');
      var geometryObj = {
          x:-81.36500307953563,
          y: 27.776949558089495
@@ -129,6 +118,39 @@ describe('landingController', function() {
     $scope.isMobile = false;
     $scope.backToDefault(selectedEvent);
       expect($scope.showMapOrDetails).toBe('MAP');
- 
+
  });
+ it('return the right sring for Sent by for weathger', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {type: 'Weather', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    var retString = $scope.sentByLabel(selectedEvent);
+      expect(retString).toBe('Weather Hazards (NOAA)');
+ });
+ it('return the right sring for Sent by for fire', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {type: 'Fire', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    var retString = $scope.sentByLabel(selectedEvent);
+      expect(retString).toBe('Active Fire Boundaries (USGS GeoMAC)');
+ });
+it('return the right sring for Sent by for flood', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {type: 'Flood', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    var retString = $scope.sentByLabel(selectedEvent);
+      expect(retString).toBe('River Gauge - Current and Forecast (NOAA)');
+ });
+it('return the right sring for Sent by for ad-hocc', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {type: 'ADMIN_I', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    selectedEvent.userId={firstName:'Tom', lastName:'Cobbley'};
+    
+    var retString = $scope.sentByLabel(selectedEvent);
+      expect(retString).toBe('Tom Cobbley');
+      
+    selectedEvent.type='ADMIN_E';      
+    retString = $scope.sentByLabel(selectedEvent);
+    expect(retString).toBe('Tom Cobbley');      
+      
+ });
+
+
 });

@@ -10,7 +10,7 @@ public interface EmailService {
    * Sends an email message with no attachments.
    *
    * @param from email address from which the message will be sent.
-   * @param recipients the recipients of the message.
+   * @param recipients the bcc recipients of the message.
    * @param subject subject header field.
    * @param text content of the message.
    */
@@ -20,7 +20,7 @@ public interface EmailService {
    * Sends an email message to one recipient with one attachment.
    *
    * @param from email address from which the message will be sent.
-   * @param recipient the recipients of the message.
+   * @param recipient the bcc recipients of the message.
    * @param subject subject header field.
    * @param text content of the message.
    * @param attachment attachment to be included with the message.
@@ -34,7 +34,7 @@ public interface EmailService {
    * Sends an email message with attachments.
    *
    * @param from email address from which the message will be sent.
-   * @param recipients array of strings containing the recipients of the message.
+   * @param recipients array of strings containing the bcc recipients of the message.
    * @param subject subject header field.
    * @param text content of the message.
    * @param attachments attachments to be included with the message.

@@ -75,7 +75,7 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
       geoCoordinates.add(mapsApiService.getGeoCoordinatesByZipCode(zipcode.getZipCode()));
     }
 
-    List<User> affectedUsers = userDao.getGeoWithinRadius(geoCoordinates, 50.00);
+    List<User> affectedUsers = userDao.getGeoWithinRadius(geoCoordinates, 15.00);
 
     List<String> emailAddresses = new ArrayList<>(); //subscribed users by email
     List<String> phoneNumbers = new ArrayList<>(); //subscribed users by sms
@@ -92,11 +92,11 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
       eventNotification.addNotifiedUser(currENUser);
     }
 
-    String alertType = "ADMIN_E".equals(eventNotification.getType()) ? "Emergency alert from"
+    String alertType = "ADMIN_E".equals(eventNotification.getType()) ? "Emergency alert"
         : "Non-emergency alert";
 
     if (emailAddresses.size() > 0) {
-      String subject = alertType + " from MyCAlert";
+      String subject = alertType + " from MyCAlerts";
       LOG.info("Admin: {} sending email {} to: {}", eventNotification.getUserId().getEmail(),
           subject,
           emailAddresses.toString());

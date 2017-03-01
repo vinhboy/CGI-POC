@@ -1,6 +1,7 @@
 package com.cgi.poc.dw.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -71,8 +72,10 @@ public class EmailServiceUnitTest {
       assertTrue(GreenMailUtil.getHeaders(mail).contains(subject));
       assertTrue(GreenMailUtil.getBody(mail).contains(emailBody));
     }
-    assertEquals(recepients.get(0), receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
-    assertEquals(recepients.get(1), receivedMails[1].getRecipients(RecipientType.TO)[1].toString());
+    // BCC addresses are not contained in the message since other receivers are not allowed to know 
+    // the list of BCC recipients
+    assertNull(recepients.get(0), receivedMails[0].getAllRecipients());
+    assertNull(recepients.get(1), receivedMails[1].getAllRecipients());
   }
 
   @Test
@@ -99,7 +102,7 @@ public class EmailServiceUnitTest {
     assertEquals( "Should have received 1 email.", 1, receivedMails.length);
 
     MimeMessage mail = receivedMails[0];
-    assertEquals(recepient, receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
+    assertNull(recepient, receivedMails[0].getAllRecipients());
     assertTrue(GreenMailUtil.getHeaders(mail).contains(subject));
     assertTrue(GreenMailUtil.getBody(mail).contains(emailBody));
     assertTrue(GreenMailUtil.getBody(mail).contains(fileName));
@@ -139,8 +142,10 @@ public class EmailServiceUnitTest {
       assertTrue(GreenMailUtil.getBody(mail).contains(fileName));
       assertTrue(GreenMailUtil.getBody(mail).contains("This is a sample text for file attachment."));
     }
-    assertEquals(recepients.get(0), receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
-    assertEquals(recepients.get(1), receivedMails[1].getRecipients(RecipientType.TO)[1].toString());
+    // BCC addresses are not contained in the message since other receivers are not allowed to know 
+    // the list of BCC recipients
+    assertNull(recepients.get(0), receivedMails[0].getAllRecipients());
+    assertNull(recepients.get(1), receivedMails[1].getAllRecipients());
   }
 
 }

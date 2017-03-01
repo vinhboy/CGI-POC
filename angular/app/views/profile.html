@@ -1,4 +1,4 @@
-<div class="modal-content usa-content usa-form-large" ng-keydown="keyCallback($event)">
+<div class="usa-content" ng-keydown="keyCallback($event)">
   <div class="usa-grid registration-alert">
     <div class="usa-alert usa-alert-error" role="alert" ng-if="apiErrors.length > 0">
       <div class="usa-alert-body">
@@ -45,7 +45,7 @@
             </div>
             <input id="username" name="username" type="email" ng-model="profile.email" ng-required="true"
               placeholder="{{ 'REGISTRATION.LABEL.EMAIL' | translate }}"
-              class="username" />
+              class="username" ng-disabled="!isNew()" ng-class="{ 'input-disabled' : !isNew() }" />
             <div class="additional-input-info" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
           </div>
 
@@ -202,12 +202,6 @@
                   <label for="email" translate="REGISTRATION.LABEL.NOTIFICATIONS.EMAIL"></label>
                 </li>
                 <li>
-                  <input id="push" name="notification" type="checkbox"
-                    ng-model="profile.pushNotification" ng-required="!someSelected()"
-                    ng-blur="profileForm.notification.$setTouched();">
-                  <label for="push" translate="REGISTRATION.LABEL.NOTIFICATIONS.PUSH"></label>
-                </li>
-                <li>
                   <input id="sms" name="notification" type="checkbox"
                     ng-model="profile.smsNotification" ng-required="!someSelected()"
                     ng-blur="profileForm.notification.$setTouched();">
@@ -216,14 +210,12 @@
               </ul>
             </fieldset>
           </div>
-
           <div>
             <button type="button" class="cancel-button usa-width-one-half usa-button-gray"
                     translate="REGISTRATION.BUTTON.CANCEL" ng-click="goBack()"></button>
             <button type="submit" class="usa-width-one-half usa-button-primary"
                     translate="REGISTRATION.BUTTON.SAVE" ng-disabled="!profileForm.$dirty"></button>
           </div>
-
         </div>
       </fieldset>
     </form>

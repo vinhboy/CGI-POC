@@ -1,5 +1,4 @@
-
-     <div class="event" ng-repeat="item in model.displayedNotifications track by $index" ng-class="{'active' : activeItem.item === $index}" > 
+<div class="event" ng-repeat="item in model.displayedNotifications track by $index" ng-class="{'active' : activeItem.item === $index}" > 
         <table class="usa-table-borderless">
             <tr   ng-click="eventSelected(item,$index)">
                 <td class="event-logo">
@@ -9,7 +8,7 @@
                     <h5 class="usa-heading-alt">{{(eventTypes | filter : {id: item.type})[0].name }}</h5>
                     <span>{{item.generationDateFromatted }}</span>
                     <br />
-                    <span>Zip Codes: &nbsp;<span ng-repeat="z  in item.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
+                    <span ng-show="item.eventNotificationZipcodes.length > 0">Zip Codes: &nbsp;<span ng-repeat="z  in item.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
                 </td>
                 <td class="event-icons">
                     <div class="icon "><a ng-click="loadEventDetails(item, $event,$index)"><i  class="fa fa-fw fa-info-circle" ></i></a> </div>
@@ -17,4 +16,4 @@
                 </td>
             </tr>
         </table>
-    </div>
+</div>

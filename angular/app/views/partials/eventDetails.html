@@ -1,4 +1,4 @@
-<div ng-show="showMapOrDetails === 'DETAILS'" class="event-details-container ">
+<div ng-if="showMapOrDetails === 'DETAILS'" class="event-details-container ">
     <h4 class="usa-heading-alt">Notification Details</h4>
     <div class="event-details usa-grid event-info">
         <div class="usa-width-one-whole "  >
@@ -9,7 +9,7 @@
                         <h5 class="usa-heading">{{(eventTypes | filter : {id: currentSelectedEvent.type})[0].name }}</h5>
                         <span>{{currentSelectedEvent.generationDateFromatted}}</span>
                         <h5 translate="LANDING.DETAILS.SENT_BY"></h5>
-                        <span >{{currentSelectedEvent.userId.firstName}} {{currentSelectedEvent.userId.lastName}}</span>
+                        <span >{{sentByLabel(currentSelectedEvent)}}</span>
                         <h5 ng-show="currentSelectedEvent.eventNotificationZipcodes.length > 0"  translate="LANDING.DETAILS.AFFECTED_ZIPS"></h5>
                         <span ng-show="currentSelectedEvent.eventNotificationZipcodes.length > 0" ><span ng-repeat="z in currentSelectedEvent.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>
                         <h5 translate="LANDING.DETAILS.MESSAGE"></h5>
