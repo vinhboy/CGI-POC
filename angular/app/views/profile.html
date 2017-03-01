@@ -202,12 +202,6 @@
                   <label for="email" translate="REGISTRATION.LABEL.NOTIFICATIONS.EMAIL"></label>
                 </li>
                 <li>
-                  <input id="push" name="notification" type="checkbox"
-                    ng-model="profile.pushNotification" ng-required="!someSelected()"
-                    ng-blur="profileForm.notification.$setTouched();">
-                  <label for="push" translate="REGISTRATION.LABEL.NOTIFICATIONS.PUSH"></label>
-                </li>
-                <li>
                   <input id="sms" name="notification" type="checkbox"
                     ng-model="profile.smsNotification" ng-required="!someSelected()"
                     ng-blur="profileForm.notification.$setTouched();">

@@ -28,7 +28,6 @@ cgiWebApp.controller('ProfileController',
       state: '',
       zipCode: '',
       emailNotification: false,
-      pushNotification: false,
       smsNotification: false
     };
 
@@ -106,7 +105,7 @@ cgiWebApp.controller('ProfileController',
       state: $scope.profile.state,
       zipCode: $scope.profile.zipCode,
       emailNotification: $scope.profile.emailNotification,
-      pushNotification: $scope.profile.pushNotification,
+      pushNotification: false,
       smsNotification: $scope.profile.smsNotification
     };
 
@@ -162,7 +161,7 @@ cgiWebApp.controller('ProfileController',
   };
 
   $scope.someSelected = function() {
-    return $scope.profile.emailNotification || $scope.profile.pushNotification || $scope.profile.smsNotification;
+    return $scope.profile.emailNotification || $scope.profile.smsNotification;
   };
 
   $scope.isNew = function() {
