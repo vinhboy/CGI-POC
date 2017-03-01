@@ -65,5 +65,12 @@ describe('loginController', function() {
 
       expect($scope.popUp).toHaveBeenCalledWith('error', 'LOGIN.MESSAGE.INVALID');
     });
+
+    it('should force the username to lowercase', function() {
+      $scope.user.email = 'RaNDomCase@gmail.com';
+      $scope.user.password = 'Need That PW';
+      $scope.submitForm();
+      expect(authenticationService.authenticate).toHaveBeenCalledWith({ email: 'randomcase@gmail.com', password: 'Need That PW' });
+    });
   });
 });

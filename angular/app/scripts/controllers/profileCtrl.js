@@ -95,7 +95,7 @@ cgiWebApp.controller('ProfileController',
     $scope.generatePhoneNumber();
 
     var toSend = {
-      email: $scope.profile.email,
+      email: $scope.profile.email.toLowerCase(),
       password: $scope.profile.password,
       firstName: $scope.profile.firstName,
       lastName: $scope.profile.lastName,
