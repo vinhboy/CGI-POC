@@ -494,26 +494,25 @@
   border: 2px solid #000;
   margin: 5px;
   padding: 2px 4px 4px 4px; }
+  .event.active {
+    border: 4px solid #fbad23; }
   .event table {
     margin: 0;
     border: none !important; }
-  .event .event-logo {
-    width: 4em; }
-    .event .event-logo img {
-      margin: 6px 8px 4px 6px; }
-  .event .event-icons {
-    position: absolute;
-    right: 6px;
-    padding: 0.25em 0;
-    font-size: 1.6em; }
-  .event td {
-    border: none !important;
-    padding: 0; }
-  .event h5 {
-    margin-top: 8px; }
-
-.active {
-  border: 4px solid #fbad23; }
+    .event table tr td {
+      border: none !important;
+      padding: 0; }
+      .event table tr td img {
+        margin: 6px 8px 4px 6px; }
+      .event table tr td h5 {
+        margin-top: 8px; }
+      .event table tr td .event-logo {
+        width: 4em; }
+      .event table tr td.event-icons {
+        position: relative;
+        right: 0px;
+        padding: 0.25em 0;
+        font-size: 1.6em; }
 
 .footerZone {
   width: 100%;

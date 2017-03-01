@@ -1,5 +1,4 @@
-
-     <div class="event" ng-repeat="item in model.displayedNotifications track by $index" ng-class="{'active' : activeItem.item === $index}" > 
+<div class="event" ng-repeat="item in model.displayedNotifications track by $index" ng-class="{'active' : activeItem.item === $index}" > 
         <table class="usa-table-borderless">
             <tr   ng-click="eventSelected(item,$index)">
                 <td class="event-logo">
@@ -17,4 +16,4 @@
                 </td>
             </tr>
         </table>
-    </div>
+</div>
