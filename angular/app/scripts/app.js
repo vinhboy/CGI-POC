@@ -1,12 +1,11 @@
 'use strict';
 
 var cgiWebApp = angular.module('cgi-web-app',
-  ['pascalprecht.translate', 'ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages', 'uiGmapgoogle-maps']);
+  ['pascalprecht.translate', 'ngSessionStorage', 'ui.router', 'ngMessages', 'uiGmapgoogle-maps']);
 
 cgiWebApp.constant('urls', {
   // have to be change depending of the environment
-  BASE: 'http://localhost:8080',
-  WS_BASE: 'ws://localhost:8080'
+  BASE: 'http://localhost:8080'
 })
 .config(['$translateProvider', '$urlRouterProvider', '$stateProvider', '$sceDelegateProvider',
   function($translateProvider, $urlRouterProvider, $stateProvider, $sceDelegateProvider) {
