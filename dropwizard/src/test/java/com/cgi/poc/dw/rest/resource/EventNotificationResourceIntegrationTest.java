@@ -6,6 +6,7 @@ import com.cgi.poc.dw.helper.IntegrationTest;
 import com.cgi.poc.dw.helper.IntegrationTestHelper;
 import com.cgi.poc.dw.rest.dto.EventNotificationDto;
 import com.google.common.collect.Sets;
+import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
@@ -28,9 +29,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class NotificationEventResourceIntegrationTest extends IntegrationTest {
+public class EventNotificationResourceIntegrationTest extends IntegrationTest {
 
   private static final String url = "http://localhost:%d/notification";
 
@@ -68,9 +70,15 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
   }
   
   @Test
-  public void publishNotification_Success() throws JSONException, MessagingException {
+  public void publishAdHocEmergencyNotification()
+      throws JSONException, MessagingException, FolderException {
 
+    smtpServer.purgeEmailFromAllMailboxes();
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
+
+    eventNotificationDto.setType("ADMIN_E");
+    String description = "Tornado warning in your area.Please evacuate.";
+    eventNotificationDto.setDescription(description);
 
     Client client = new JerseyClientBuilder().build();
     Response response = client.
@@ -88,11 +96,47 @@ public class NotificationEventResourceIntegrationTest extends IntegrationTest {
     assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
 
     for(MimeMessage mail : receivedMails) {
-      assertTrue(GreenMailUtil.getHeaders(mail).contains("Emergency alert"));
-      assertTrue(GreenMailUtil.getBody(mail).contains("flood action"));
+      assertTrue(GreenMailUtil.getHeaders(mail).contains("Emergency alert from MyCAlerts"));
+      assertTrue(GreenMailUtil.getBody(mail).contains(description));
     }
-    assertEquals("res101@cgi.com", receivedMails[0].getRecipients(RecipientType.TO)[0].toString());
+    // BCC addresses are not contained in the message since other receivers are not allowed to know 
+    // the list of BCC recipients
+    assertNull(receivedMails[0].getAllRecipients());
+  }
 
+  @Test
+  public void publishAdHocNonEmergencyNotification()
+      throws JSONException, MessagingException, FolderException {
+
+    smtpServer.purgeEmailFromAllMailboxes();
+    String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
+
+    eventNotificationDto.setType("ADMIN_I");
+    String description = "Flood warning in your area.";
+    eventNotificationDto.setDescription(description);
+
+    Client client = new JerseyClientBuilder().build();
+    Response response = client.
+        target(String.format(url, RULE.getLocalPort())).
+        request().
+        header("Authorization", "Bearer " + authToken).
+        post(Entity.json(eventNotificationDto));
+
+    Assert.assertEquals(200, response.getStatus());
+
+    //verify email registration
+    smtpServer.waitForIncomingEmail(1);
+
+    MimeMessage[] receivedMails = smtpServer.getReceivedMessages();
+    assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
+
+    for(MimeMessage mail : receivedMails) {
+      assertTrue(GreenMailUtil.getHeaders(mail).contains("Non-emergency alert from MyCAlerts"));
+      assertTrue(GreenMailUtil.getBody(mail).contains(description));
+    }
+    // BCC addresses are not contained in the message since other receivers are not allowed to know 
+    // the list of BCC recipients
+    assertNull(receivedMails[0].getAllRecipients());
   }
 
   @Test
