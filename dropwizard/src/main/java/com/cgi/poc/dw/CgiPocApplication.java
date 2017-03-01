@@ -310,6 +310,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(APICallerService.class).annotatedWith(Names.named("weatherService")).to(FireEventAPICallerServiceImpl.class);
         bind(MapsApiService.class).to(MapsApiServiceImpl.class).asEagerSingleton();
         bind(AddressBuilder.class).to(AddressBuilderImpl.class).asEagerSingleton();
+        bind(FirebaseConfiguration.class).toInstance(conf.getFirebaseConfiguration());
         bind(FirebasePushService.class).to(FirebasePushServiceImpl.class).asEagerSingleton();
 
         //Create Jersey client.
