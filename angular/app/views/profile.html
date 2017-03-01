@@ -45,7 +45,7 @@
             </div>
             <input id="username" name="username" type="email" ng-model="profile.email" ng-required="true"
               placeholder="{{ 'REGISTRATION.LABEL.EMAIL' | translate }}"
-              class="username" />
+              class="username" ng-disabled="!isNew()" ng-class="{ 'input-disabled' : !isNew() }" />
             <div class="additional-input-info" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
           </div>
 
