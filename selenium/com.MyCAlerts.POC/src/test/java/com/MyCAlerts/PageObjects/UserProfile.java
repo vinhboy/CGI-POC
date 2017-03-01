@@ -238,11 +238,11 @@ public class UserProfile {
 		
 		if (alertType == "email") {
 			JavascriptExecutor je = (JavascriptExecutor) driver;
-			WebElement elementToClick=driver.findElement(By.xpath("//input[@ng-model='profile.emailNotification']"));
-			je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);
+			WebElement elementToClick=driver.findElement(By.id("email"));
+			//je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);
 
-			Actions action = new Actions(driver);
-			action.moveToElement(elementToClick).perform();
+			//Actions action = new Actions(driver);
+			//action.moveToElement(elementToClick).perform();
 			//WebElement elementToClick = driver.findElement(By.xpath("//input[contains(@name, 'notification')][contains(@value, '1')]"));
 			//WebElement elementToClick=driver.findElement(By.cssSelector("input[id='email'][value='1']"));
 			BrowserFactory.waitFor();
@@ -254,10 +254,12 @@ public class UserProfile {
 
 	public void checkNotification(String alertType) {
 		JavascriptExecutor je = (JavascriptExecutor) driver;
-		WebElement elementToClick = driver.findElement(By.xpath("//input[@ng-model='profile.smsNotification']"));
-		WebElement elementToClick1 = driver.findElement(By.xpath("//input[@ng-model='profile.pushNotification']"));
+		//WebElement elementToClick = driver.findElement(By.xpath("//input[@ng-model='profile.smsNotification']"));
+		//WebElement elementToClick1 = driver.findElement(By.xpath("//input[@ng-model='profile.pushNotification']"));
+		WebElement elementToClick = driver.findElement(By.id("sms"));
+		WebElement elementToClick1 = driver.findElement(By.id("push"));
 		if (alertType == "Push") {
-			je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);
+			//je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);
 			elementToClick1.click();
 			if (elementToClick1.isSelected()) {
 				Reporter.log("Push Notification is Checked");
@@ -269,7 +271,7 @@ public class UserProfile {
 		}
 
 		if (alertType == "sms") {
-			je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);
+			//je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);
 			elementToClick.click();
 			if (elementToClick.isSelected()) {
 				Reporter.log("smsNotification is Checked");

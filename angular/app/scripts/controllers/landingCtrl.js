@@ -13,7 +13,7 @@
 'use strict';
 
 cgiWebApp.controller('landingController',
-  ['$scope','$filter','$timeout','EventNotificationService' ,'uiGmapGoogleMapApi','$sessionStorage',
+  ['$scope','$filter','$timeout','EventNotificationService' ,'uiGmapGoogleMapApi','$sessionStorage', 
   function ($scope,$filter,$timeout,EventNotificationService,uiGmapGoogleMapApi,$sessionStorage ) {
   $scope.apiErrors = [];
   $scope.map = undefined;
@@ -55,8 +55,7 @@ cgiWebApp.controller('landingController',
     
     $scope.eventTypeFilter=undefined;
     $scope.changeFilters = function(){
-        $scope.model.filteredNotifications = angular.copy( $scope.model.notifications); 
-        $scope.model.filteredNotifications  =  $filter('filter')($scope.model.filteredNotifications, {type: $scope.eventTypeFilter}, true);
+        $scope.model.filteredNotifications  =  $filter('filter')($scope.model.notifications, {type: $scope.eventTypeFilter}, true);
         $scope.model.displayedNotifications =[];
         $scope.loadMore();
         $scope.currentSelectedEvent = $scope.model.displayedNotifications[0];
@@ -115,7 +114,9 @@ cgiWebApp.controller('landingController',
         $scope.model.notifications = data ;
         // need to convert date string into a proper date.
         angular.forEach($scope.model.notifications,function(value){
-           value.generationDate = Date.parse(value.generationDate); 
+            value.generationDate  = moment(value.generationDate);
+            value.generationDateFromatted = value.generationDate.format('MM-DD-YYYY  hh:mm:ss a');
+            
            if (value.geometry !== '' && value.geometry!==null && 
                value.geometry!== undefined){
                 value.geometry = JSON.parse(value.geometry);
