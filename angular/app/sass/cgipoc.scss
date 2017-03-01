@@ -134,7 +134,7 @@ and (max-device-width : 480px) {
 
     .event-details-container {
       border: solid;
-      height: 500px;
+      height: auto;
 
       .usa-heading-alt {
         border-bottom: solid;
@@ -156,7 +156,7 @@ and (max-device-width : 480px) {
   }
 
   .usa-content {
-    margin: 18% 0% 2% !important;
+    margin: 18% 0% 1% !important;
     h3 {
       font-size: 1.8rem;
     }
@@ -164,7 +164,7 @@ and (max-device-width : 480px) {
     .centeredForm {
       margin: 0 auto;
       padding: 12px;
-      width: 90%;
+      width: 96%;
       background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
@@ -258,13 +258,13 @@ and (max-device-width : 768px) {
   }
 
   .usa-content {
-    margin: 16% 0% 2% !important;
+    margin: 16% 0% 1% !important;
 
     .centeredForm {
       margin: 0 auto;
       margin: 0 auto;
       padding: 12px;
-      width: 400px;
+      width: 460px;
       background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
@@ -362,12 +362,12 @@ and (max-device-width : 1024px) {
   }
 
   .usa-content {
-    margin: 12% 0% 2% !important;
+    margin: 12% 0% 1% !important;
 
     .centeredForm {
       margin: 0 auto;
       padding: 12px;
-      width: 400px;
+      width: 460px;
       background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
@@ -461,13 +461,13 @@ and (max-width : 1024px) {
   }
 
   .usa-content {
-    margin: 12% 0% 2% !important;
+    margin: 12% 0% 1% !important;
 
     .centeredForm {
       margin: 0 auto;
       margin: 0 auto;
       padding: 12px;
-      width: 400px;
+      width: 460px;
       background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
@@ -561,12 +561,12 @@ and (max-device-width : 1024px) {
   }
 
   .usa-content {
-    margin: 11% 0% 2% !important;
+    margin: 11% 0% 1% !important;
 
     .centeredForm {
       margin: 0 auto;
       padding: 12px;
-      width: 400px;
+      width: 460px;
       background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
@@ -660,12 +660,12 @@ and (min-width : 1025px) {
   }
 
   .usa-content {
-    margin: 10.5% 0% 2% !important;
+    margin: 10.5% 0% 1% !important;
 
     .centeredForm {
       margin: 0 auto;
       padding: 12px;
-      width: 400px;
+      width: 460px;
       background: rgba(237, 244, 247, 0.85);
       box-shadow: 0 0 8px #888888;
 
@@ -732,7 +732,7 @@ and (min-width : 1025px) {
 
 .event-details-container {
   border: solid;
-  height: 500px;
+  height: auto;
 
   .usa-heading-alt {
     border-bottom: solid;
@@ -751,7 +751,7 @@ and (min-width : 1025px) {
 }
 
 .event-details {
-  height: 350px;
+  height: auto;
 
   .event-icons {
     text-align: left;
@@ -861,7 +861,7 @@ input.phoneLong {
 
 .emailAddressText {
   .additional-input-info {
-    font-size: 13px;
+    font-size: 0.9em;
   }
 
   input.zipCode {
@@ -1042,5 +1042,14 @@ input.username {
 
 .input-disabled {
   color: #CCCCCC !important;
-  border: 3px solid #666666 !important;
+  border: 3px solid #ababab !important;
+}
+
+.force-bottom {
+  position: relative;
+  bottom: 0;
+}
+
+.additional-input-info {
+  font-size: 0.9em !important;
 }
