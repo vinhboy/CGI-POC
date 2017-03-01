@@ -8,7 +8,7 @@
   "LOGIN.LABEL.PASSWORD": "Password",
   "LOGIN.LABEL.TITLE": "Please Login or Register",
   "LOGIN.LABEL.REMEMBERME": "Remember me",
-  "LOGIN.MESSAGE.INVALID.PASSWORDREQUIRED":"You must enter a valid password. Password must be at least 8 characters and contain 3 of the 4 following requirements: one upper case letter, one lower case letter, one number, and one special character",
+  "LOGIN.MESSAGE.INVALID.PASSWORDREQUIRED":"You must enter a valid password",
   "LOGIN.MESSAGE.INVALID.USERNAMEREQUIRED":"You must enter a valid username",
   "LOGIN.MESSAGE.INVALID.USERNAMEINVALID":"Invalid email address",
   "LOGIN.MESSAGE.PASSWORDFORGOT.LINK": "Forget username or password ?",
