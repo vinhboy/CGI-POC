@@ -1,35 +1,39 @@
 package com.cgi.poc.dw.rest.resource;
 
-import com.cgi.poc.dw.api.service.data.GeoCoordinates;
-import com.cgi.poc.dw.auth.data.Role;
-import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.dao.model.UserDto;
-import com.cgi.poc.dw.helper.IntegrationTest;
-import com.cgi.poc.dw.helper.IntegrationTestHelper;
-import com.cgi.poc.dw.exception.Error;
-import com.cgi.poc.dw.exception.ErrorInfo;
-import com.cgi.poc.dw.rest.dto.FcmTokenDto;
-import com.cgi.poc.dw.validator.ValidationErrors;
-import javax.ws.rs.core.Response.Status;
-import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.*;
-
-import javax.mail.MessagingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.sql.SQLException;
+import static com.cgi.poc.dw.helper.IntegrationTestHelper.requestPost;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import static com.cgi.poc.dw.helper.IntegrationTestHelper.requestPost;
+import com.cgi.poc.dw.api.service.data.GeoCoordinates;
+import com.cgi.poc.dw.auth.data.Role;
+import com.cgi.poc.dw.dao.model.User;
+import com.cgi.poc.dw.dao.model.UserDto;
+import com.cgi.poc.dw.exception.Error;
+import com.cgi.poc.dw.exception.ErrorInfo;
+import com.cgi.poc.dw.helper.IntegrationTest;
+import com.cgi.poc.dw.helper.IntegrationTestHelper;
+import com.cgi.poc.dw.rest.dto.FcmTokenDto;
+import com.cgi.poc.dw.validator.ValidationErrors;
+import java.sql.SQLException;
+import javax.mail.MessagingException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class UserResourceIntegrationTest extends IntegrationTest {
 
@@ -293,14 +297,14 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     fcmTokenDto.setFcmtoken("daj-nd_sj23232knj34fewf_vevre-v332f");
     String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
     Response response = client.
-        target(String.format(url+"/fcmtoken", RULE.getLocalPort())).
+        target(String.format(url + "/fcmtoken", RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
         put(Entity.entity(fcmTokenDto, MediaType.APPLICATION_JSON_TYPE));
-    
+
     assertEquals(200, response.getStatus());
     User user = IntegrationTestHelper.getUserFromDb(tstUser.getEmail());
-    
+
     assertEquals(fcmTokenDto.getFcmtoken(), user.getFcmtoken());
   }
 
@@ -309,10 +313,10 @@ public class UserResourceIntegrationTest extends IntegrationTest {
     Client client = new JerseyClientBuilder().build();
 
     FcmTokenDto fcmTokenDto = new FcmTokenDto();
-    
+
     String authToken = IntegrationTestHelper.getAuthToken("resident@cgi.com", "!QAZ1qaz", RULE);
     Response response = client.
-        target(String.format(url+"/fcmtoken", RULE.getLocalPort())).
+        target(String.format(url + "/fcmtoken", RULE.getLocalPort())).
         request().
         header("Authorization", "Bearer " + authToken).
         put(Entity.entity(fcmTokenDto, MediaType.APPLICATION_JSON_TYPE));

@@ -336,17 +336,17 @@ public class UserServiceUnitTest {
 
 		assertEquals(200, actual.getStatus());
 	}
-	
-	@Test
-	public void updateUserToken() {
+
+  @Test
+  public void updateUserToken() {
     String fcmtoken = "afbjk324bn2k34bklj43_2njn421_22-f23";
 
     FcmTokenDto fcmTokenDto = new FcmTokenDto();
     fcmTokenDto.setFcmtoken(fcmtoken);
-    
+
     Response actual = underTest.updateFcmToken(user, fcmTokenDto);
 
     assertEquals(200, actual.getStatus());
   }
-  
+
 }

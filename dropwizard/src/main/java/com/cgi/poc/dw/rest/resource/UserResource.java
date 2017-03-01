@@ -6,7 +6,6 @@ import com.cgi.poc.dw.service.UserService;
 import com.cgi.poc.dw.service.UserServiceImpl;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
-
 import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.swagger.annotations.Api;
@@ -18,10 +17,15 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,13 +88,14 @@ public class UserResource {
 	@Path("/fcmtoken")
 	@UnitOfWork
 	@ApiOperation(value = "User fcm token update", notes = "Allows a user to update its client fcm token.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
-			@ApiResponse(code = 500, message = "System Error") })
+	@ApiResponses(value = {@ApiResponse(code = 200, message = "Success"),
+			@ApiResponse(code = 500, message = "System Error")})
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", required = true, dataType = "string", paramType = "header")
 	})
 	@Timed(name = "User.save")
-	public Response updateFcmToken(@ApiParam(hidden = true) @Auth User user, @NotNull @Valid FcmTokenDto fcmTokenDto) {
+	public Response updateFcmToken(@ApiParam(hidden = true) @Auth User user,
+			@NotNull @Valid FcmTokenDto fcmTokenDto) {
 		Response response = userService.updateFcmToken(user, fcmTokenDto);
 		if (!response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
 			throw new WebApplicationException(response);
