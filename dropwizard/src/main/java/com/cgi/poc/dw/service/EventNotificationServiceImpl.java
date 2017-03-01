@@ -92,11 +92,11 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
       eventNotification.addNotifiedUser(currENUser);
     }
 
-    String alertType = "ADMIN_E".equals(eventNotification.getType()) ? "Emergency alert from"
+    String alertType = "ADMIN_E".equals(eventNotification.getType()) ? "Emergency alert"
         : "Non-emergency alert";
 
     if (emailAddresses.size() > 0) {
-      String subject = alertType + " from MyCAlert";
+      String subject = alertType + " from MyCAlerts";
       LOG.info("Admin: {} sending email {} to: {}", eventNotification.getUserId().getEmail(),
           subject,
           emailAddresses.toString());
