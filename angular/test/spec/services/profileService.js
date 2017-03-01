@@ -87,6 +87,21 @@ describe('ProfileService', function() {
     });
   });
 
+
+describe('updateFcmtoken', function() {
+  it('should patch an encoded json to a single endpoint', function() {
+    var _bodytopatch = { fcmtoken: 'AAAAA' };
+    $httpBackend.expectPUT('http://localhost:8080/user/fcmtoken', _bodytopatch)
+      .respond(200, {});
+
+    profileService.updateFcmtoken(_bodytopatch);
+    $httpBackend.flush();
+
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+};
+
   describe('getProfile', function() {
     it('should get to the expected endpoint', function() {
       $httpBackend.expectGET('http://localhost:8080/user')
