@@ -442,4 +442,11 @@
   </addColumn>
   </changeSet>
 
+  <changeSet id="24" author="Charles Jekal">
+    <comment>Update the push_notification field to be false for everyone</comment>
+    <update tableName="user">
+      <column name="push_notification" valueBoolean="false" />
+    </update>
+  </changeSet>
+
 </databaseChangeLog>

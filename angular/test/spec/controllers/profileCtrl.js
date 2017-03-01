@@ -49,7 +49,6 @@ describe('ProfileController', function() {
       expect($scope.profile.state).toBe('');
       expect($scope.profile.zipCode).toBe('');
       expect($scope.profile.emailNotification).toBe(false);
-      expect($scope.profile.pushNotification).toBe(false);
       expect($scope.profile.smsNotification).toBe(false);
     });
 
@@ -152,6 +151,14 @@ describe('ProfileController', function() {
         $scope.$apply();
         expect($scope.toSend.email).toBe('randomcase@gmail.com');
       });
+
+      it('should always send false for pushNotification value', function() {
+        $scope.profile.pushNotification = true;
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.toSend.pushNotification).toBe(false);
+      });
     });
 
     describe('registering new profile', function() {
@@ -220,21 +227,18 @@ describe('ProfileController', function() {
   describe('someSelected', function() {
     it('should be false if all are unchecked', function() {
       $scope.profile.emailNotification = false;
-      $scope.profile.pushNotification = false;
       $scope.profile.smsNotification = false;
       expect($scope.someSelected()).toBe(false);
     });
 
     it('should be true if all are checked', function() {
       $scope.profile.emailNotification = true;
-      $scope.profile.pushNotification = true;
       $scope.profile.smsNotification = true;
       expect($scope.someSelected()).toBe(true);
     });
 
     it('should be true if some are checked', function() {
       $scope.profile.emailNotification = false;
-      $scope.profile.pushNotification = false;
       $scope.profile.smsNotification = true;
       expect($scope.someSelected()).toBe(true);
     });
