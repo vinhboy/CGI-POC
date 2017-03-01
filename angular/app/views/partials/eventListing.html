@@ -5,7 +5,8 @@
                     <img height="54" width="54" class="" ng-src="{{eventIcons[item.type]}}" alt="Logo image" />
                 </td>
                 <td>
-                    <h5 class="usa-heading-alt">{{(eventTypes | filter : {id: item.type})[0].name }}</h5>
+                    <span class="usa-heading-alt event-title">{{formatListTitle(item)}}</span>
+                    <br />
                     <span>{{item.generationDateFromatted }}</span>
                     <br />
                     <span ng-show="item.eventNotificationZipcodes.length > 0">Zip Codes: &nbsp;<span ng-repeat="z  in item.eventNotificationZipcodes">{{z.zipCode}}{{$last ? '' : ', '}}</span></span>

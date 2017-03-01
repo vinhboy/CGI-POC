@@ -112,6 +112,8 @@ public class EventNotificationServiceImpl extends BaseServiceImpl implements
       }
     }
     eventNotification.setCitizensAffected(affectedUsers.size());
+    //Emergency alert or Non-Emergency alert
+    eventNotification.setTitle(alertType);
     eventNotificationDAO.save(eventNotification);
 
     return Response.ok().entity(eventNotification).build();

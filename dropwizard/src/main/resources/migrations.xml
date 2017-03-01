@@ -448,5 +448,12 @@
       <column name="push_notification" valueBoolean="false" />
     </update>
   </changeSet>
-
+  <changeSet id="25" author="Dawna Floyd">
+    <comment>Add a column for storing notification title (flood could be up to 500 char, though not likely)</comment>
+    <addColumn tableName="event_notification">
+    <column name="title" type="VARCHAR(500)">
+      <constraints nullable="true" />
+    </column>
+  </addColumn>
+  </changeSet>
 </databaseChangeLog>
