@@ -4,6 +4,11 @@ body {
 .blank {
 }
 
+.clickable-header-logo {
+  cursor: pointer;
+  cursor: hand;
+}
+
 .usa-grid {
   background: #edf4f7;
 }
@@ -861,6 +866,26 @@ input.phoneLong {
     display: inline-block;
     width: 7rem;
   }
+}
+
+input.username {
+  text-transform: lowercase !important;
+}
+
+::-webkit-input-placeholder {
+   text-transform: initial;
+}
+
+:-moz-placeholder {
+   text-transform: initial;
+}
+
+::-moz-placeholder {
+   text-transform: initial;
+}
+
+:-ms-input-placeholder {
+   text-transform: initial;
 }
 
 /* The Modal (background) */
