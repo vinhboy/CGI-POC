@@ -1,7 +1,7 @@
 'use strict';
 
 var cgiWebApp = angular.module('cgi-web-app',
-  ['pascalprecht.translate', 'ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages', 'uiGmapgoogle-maps']);
+  ['pascalprecht.translate', 'ngSessionStorage', 'ui.router', 'ngWebSocket', 'ngMessages', 'uiGmapgoogle-maps','ngGeolocation']);
 
 cgiWebApp.constant('urls', {
   // have to be change depending of the environment
