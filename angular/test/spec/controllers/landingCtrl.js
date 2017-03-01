@@ -120,4 +120,37 @@ describe('landingController', function() {
       expect($scope.showMapOrDetails).toBe('MAP');
 
  });
+ it('return the right sring for Sent by for weathger', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {type: 'Weather', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    var retString = $scope.sentByLabel(selectedEvent);
+      expect(retString).toBe('Weather Hazards (NOAA)');
+ });
+ it('return the right sring for Sent by for fire', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {type: 'Fire', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    var retString = $scope.sentByLabel(selectedEvent);
+      expect(retString).toBe('Active Fire Boundaries (USGS GeoMAC)');
+ });
+it('return the right sring for Sent by for flood', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {type: 'Flood', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    var retString = $scope.sentByLabel(selectedEvent);
+      expect(retString).toBe('River Gauge - Current and Forecast (NOAA)');
+ });
+it('return the right sring for Sent by for ad-hocc', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {type: 'ADMIN_I', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    selectedEvent.userId={firstName:'Tom', lastName:'Cobbley'};
+    
+    var retString = $scope.sentByLabel(selectedEvent);
+      expect(retString).toBe('Tom Cobbley');
+      
+    selectedEvent.type='ADMIN_E';      
+    retString = $scope.sentByLabel(selectedEvent);
+    expect(retString).toBe('Tom Cobbley');      
+      
+ });
+
+
 });
