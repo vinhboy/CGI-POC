@@ -29,24 +29,6 @@ import com.cgi.poc.dw.dao.model.EventVolcano;
 import com.cgi.poc.dw.dao.model.EventWeather;
 import com.cgi.poc.dw.dao.model.FireEvent;
 import com.cgi.poc.dw.dao.model.User;
-import com.cgi.poc.dw.rest.resource.EventNotificationResource;
-import com.cgi.poc.dw.jobs.JobExecutionService;
-import com.cgi.poc.dw.jobs.JobFactory;
-import com.cgi.poc.dw.jobs.JobFactoryImpl;
-import com.cgi.poc.dw.factory.AddressBuilder;
-import com.cgi.poc.dw.factory.AddressBuilderImpl;
-import com.cgi.poc.dw.service.EmailService;
-import com.cgi.poc.dw.service.EmailServiceImpl;
-import com.cgi.poc.dw.rest.resource.LoginResource;
-import com.cgi.poc.dw.rest.resource.UserResource;
-import com.cgi.poc.dw.service.TextMessageService;
-import com.cgi.poc.dw.service.TextMessageServiceImpl;
-import com.cgi.poc.dw.sockets.AlertEndpoint;
-import com.cgi.poc.dw.service.EventNotificationServiceImpl;
-import com.cgi.poc.dw.service.LoginService;
-import com.cgi.poc.dw.service.LoginServiceImpl;
-import com.cgi.poc.dw.service.UserService;
-import com.cgi.poc.dw.service.UserServiceImpl;
 import com.cgi.poc.dw.exception.mapper.BadRequestExceptionMapper;
 import com.cgi.poc.dw.exception.mapper.CustomConstraintViolationExceptionMapper;
 import com.cgi.poc.dw.exception.mapper.CustomSQLConstraintViolationExceptionMapper;
@@ -54,6 +36,24 @@ import com.cgi.poc.dw.exception.mapper.InternalServerExceptionMapper;
 import com.cgi.poc.dw.exception.mapper.JsonMappingExceptionMapper;
 import com.cgi.poc.dw.exception.mapper.NotFoundExceptionMapper;
 import com.cgi.poc.dw.exception.mapper.RuntimeExceptionMapper;
+import com.cgi.poc.dw.factory.AddressBuilder;
+import com.cgi.poc.dw.factory.AddressBuilderImpl;
+import com.cgi.poc.dw.jobs.JobExecutionService;
+import com.cgi.poc.dw.jobs.JobFactory;
+import com.cgi.poc.dw.jobs.JobFactoryImpl;
+import com.cgi.poc.dw.rest.resource.EventNotificationResource;
+import com.cgi.poc.dw.rest.resource.LoginResource;
+import com.cgi.poc.dw.rest.resource.UserResource;
+import com.cgi.poc.dw.service.EmailService;
+import com.cgi.poc.dw.service.EmailServiceImpl;
+import com.cgi.poc.dw.service.EventNotificationService;
+import com.cgi.poc.dw.service.EventNotificationServiceImpl;
+import com.cgi.poc.dw.service.LoginService;
+import com.cgi.poc.dw.service.LoginServiceImpl;
+import com.cgi.poc.dw.service.TextMessageService;
+import com.cgi.poc.dw.service.TextMessageServiceImpl;
+import com.cgi.poc.dw.service.UserService;
+import com.cgi.poc.dw.service.UserServiceImpl;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
@@ -73,7 +73,6 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import io.dropwizard.websockets.WebsocketBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import java.security.NoSuchAlgorithmException;
@@ -95,7 +94,6 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.cgi.poc.dw.service.EventNotificationService;
 
 /**
  * Main Dropwizard Application class.
@@ -156,12 +154,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         return configuration.swaggerBundleConfiguration;
       }
     });
-
-    /**
-     * Adding Websocket bundle.
-     */
-    bootstrap.addBundle(new WebsocketBundle(AlertEndpoint.class));
-
+    
     bootstrap.setConfigurationSourceProvider(
         new SubstitutingSourceProvider(
             bootstrap.getConfigurationSourceProvider(),
@@ -206,7 +199,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     // CORS support
     configureCors(environment, configuration.getCorsConfiguration());
     // authentication
-    registerAuthentication(environment, injector, keys);
+    registerAuthentication(environment, injector, keys, configuration);
 
     /**
      * Adding Job Scheduler
@@ -252,11 +245,12 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     env.jersey().register(injector.getInstance(theClass));
   }
 
-  private void registerAuthentication(Environment env, Injector injector, Keys keys) {
+  private void registerAuthentication(Environment env, Injector injector, Keys keys,
+      CgiPocConfiguration configuration) {
 
     final JwtConsumer consumer = new JwtConsumerBuilder()
         .setRequireExpirationTime() // the JWT must have an expiration time
-        .setMaxFutureValidityInMinutes(60) // but the  expiration time can't be too crazy
+        .setMaxFutureValidityInMinutes(configuration.getJwtExpiryInMinutes())
         .setAllowedClockSkewInSeconds(
             30) // allow some leeway in validating time based claims to account for clock skew
         .setRequireSubject() // the JWT must have a subject claim
@@ -283,9 +277,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
     Injector injector = Guice.createInjector(new AbstractModule() {
       @Override
       protected void configure() {
-        // keys
         bind(Keys.class).toInstance(keys);
-	// scheduler
         bind(JobsConfiguration.class).toInstance(conf.getJobsConfiguration());
         bindConstant().annotatedWith(Names.named("eventUrl")).to(200);
         bind(Validator.class).toInstance(env.getValidator());
@@ -308,7 +300,7 @@ public class CgiPocApplication extends Application<CgiPocConfiguration> {
         bind(APICallerService.class).annotatedWith(Names.named("weatherService")).to(FireEventAPICallerServiceImpl.class);
         bind(MapsApiService.class).to(MapsApiServiceImpl.class).asEagerSingleton();
         bind(AddressBuilder.class).to(AddressBuilderImpl.class).asEagerSingleton();
-
+        bindConstant().annotatedWith(Names.named("jwtExpiryInMinutes")).to(conf.getJwtExpiryInMinutes());
         //Create Jersey client.
         final Client client = new JerseyClientBuilder(env)
             .using(conf.getJerseyClientConfiguration())
