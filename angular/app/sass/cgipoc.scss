@@ -769,39 +769,41 @@ and (min-width : 1025px) {
   margin: 5px;
   padding: 2px 4px 4px 4px;
 
+  &.active {
+    border: 4px solid #fbad23;
+  }
+
   table {
     margin: 0;
     border: none !important;
-  }
 
-  .event-logo {
-    width: 4em;
+    tr {
 
-    img {
-      margin: 6px 8px 4px 6px;
+      td {
+        border: none !important;
+        padding: 0;
+
+        img {
+          margin: 6px 8px 4px 6px;
+        }
+
+        h5 {
+          margin-top: 8px;
+        }
+
+        .event-logo {
+          width: 4em;
+        }
+
+        &.event-icons {
+          position: relative;
+          right: 0px;
+          padding: 0.25em 0;
+          font-size: 1.6em;
+        }
+      }
     }
   }
-
-  .event-icons {
-    position: absolute;
-    right: 6px;
-    padding: 0.25em 0;
-    font-size: 1.6em;
-  }
-
-  td {
-    border: none !important;
-    padding: 0;
-  }
-
-  h5 {
-    margin-top: 8px;
-  }
-
-}
-
-.active {
-  border: 4px solid #fbad23;
 }
 
 .footerZone {
@@ -873,19 +875,19 @@ input.username {
 }
 
 ::-webkit-input-placeholder {
-   text-transform: initial;
+  text-transform: initial;
 }
 
 :-moz-placeholder {
-   text-transform: initial;
+  text-transform: initial;
 }
 
 ::-moz-placeholder {
-   text-transform: initial;
+  text-transform: initial;
 }
 
 :-ms-input-placeholder {
-   text-transform: initial;
+  text-transform: initial;
 }
 
 /* The Modal (background) */
