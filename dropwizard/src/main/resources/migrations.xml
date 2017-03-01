@@ -432,4 +432,14 @@
       <column name="email" valueComputed="lower(email)" />
     </update>
   </changeSet>
+
+  <changeSet id="22" author="Valon Sejdini">
+    <comment>Add a column for storing users firebase token</comment>
+    <addColumn tableName="user">
+    <column name="fcm_token" type="VARCHAR(500)">
+      <constraints nullable="true" />
+    </column>
+  </addColumn>
+  </changeSet>
+
 </databaseChangeLog>

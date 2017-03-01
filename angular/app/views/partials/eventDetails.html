@@ -7,7 +7,7 @@
                     <td class="event-icons"><a><i  class="fa fa-5x fa-info-circle" ></i></a> </td>
                     <td>
                         <h5 class="usa-heading">{{(eventTypes | filter : {id: currentSelectedEvent.type})[0].name }}</h5>
-                        <span>{{currentSelectedEvent.generationDate|  date:'MM-dd-yyyy  hh:mm:ss a'}}</span>
+                        <span>{{currentSelectedEvent.generationDateFromatted}}</span>
                         <h5 translate="LANDING.DETAILS.SENT_BY"></h5>
                         <span >{{currentSelectedEvent.userId.firstName}} {{currentSelectedEvent.userId.lastName}}</span>
                         <h5 ng-show="currentSelectedEvent.eventNotificationZipcodes.length > 0"  translate="LANDING.DETAILS.AFFECTED_ZIPS"></h5>
