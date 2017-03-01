@@ -173,6 +173,12 @@ public class User implements Serializable, Principal {
   @Column(name = "sms_notification")
   private Boolean smsNotification;
 
+  @Nullable
+  @Size(max = 500)
+  @Column(name = "fcm_token")
+  @JsonIgnore
+  private String fcmtoken;
+
   public User() {
   }
 
@@ -337,6 +343,14 @@ public class User implements Serializable, Principal {
 
   public void setSmsNotification(Boolean smsNotification) {
     this.smsNotification = smsNotification;
+  }
+
+  public String getFcmtoken() {
+    return fcmtoken;
+  }
+
+  public void setFcmtoken(String fcmtoken) {
+    this.fcmtoken = fcmtoken;
   }
 
   @Override

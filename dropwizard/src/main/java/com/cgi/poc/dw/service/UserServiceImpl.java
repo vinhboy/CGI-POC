@@ -6,6 +6,7 @@ import com.cgi.poc.dw.auth.service.PasswordHash;
 import com.cgi.poc.dw.dao.UserDao;
 import com.cgi.poc.dw.dao.model.User;
 import com.cgi.poc.dw.factory.AddressBuilder;
+import com.cgi.poc.dw.rest.dto.FcmTokenDto;
 import com.cgi.poc.dw.validator.LoginValidationGroup;
 import com.cgi.poc.dw.validator.PersistValidationGroup;
 import com.cgi.poc.dw.validator.RestValidationGroup;
@@ -68,6 +69,16 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		modifiedUser.setId(user.getId());
 		modifiedUser.setRole(user.getRole());
 		return processForSave(modifiedUser, keepPassword);
+	}
+
+	@Override
+	public Response updateFcmToken(User user, FcmTokenDto fcmTokenDto) {
+		user.setFcmtoken(fcmTokenDto.getFcmtoken());
+
+		validate(user, "save fcm token", Default.class, PersistValidationGroup.class);
+		userDao.save(user);
+
+		return Response.ok().build();
 	}
 
 	private Response processForSave(User user, boolean keepPassword) {
