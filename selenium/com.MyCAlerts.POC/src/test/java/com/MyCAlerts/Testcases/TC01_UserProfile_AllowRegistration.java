@@ -52,7 +52,7 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		// Fetch the data from Excel Sheet
 		userProfile.EnterFistName(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0));
 		userProfile.EnterLastName(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 1));
-		String semail=(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0))+UUID.randomUUID().toString() + "@cgi.com";
+		String semail=(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0))+UUID.randomUUID().toString() + "@mailinator.com";
 		String sPassword=DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1,3);
 		String sConfirmPassword=DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 4);
 		String sZipcode =DataProviderFactory.getExcel().getNumericDatawithSheetIndex(1, 1, 5);	
@@ -93,7 +93,7 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 		userProfile.EnterFistName(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0));
 		userProfile.EnterLastName(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 1));
-		String semail=(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0))+UUID.randomUUID().toString() + "@cgi.com";
+		String semail=(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0))+UUID.randomUUID().toString() + "@mailinator.com";
 		String sPassword=DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1,3);
 		String sConfirmPassword=DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 4);
 		String sZipcode =DataProviderFactory.getExcel().getNumericDatawithSheetIndex(1, 1, 5);		
@@ -144,19 +144,19 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		logger.log(LogStatus.INFO, "User Profile Page is Sucessfully displayed");
 		userProfile.EnterFistName("");
 		userProfile.EnterLastName("");
-		String semail=(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0))+UUID.randomUUID().toString() + "@cgi.com";
+		String semail=(DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 0))+UUID.randomUUID().toString() + "@mailinator.com";
 		String sPassword=DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1,3);
 		String sConfirmPassword=DataProviderFactory.getExcel().getDatawithSheetIndex(1, 1, 4);
 		String sZipcode =DataProviderFactory.getExcel().getNumericDatawithSheetIndex(1, 1, 5);		
 		
 		userProfile.enterMandatoryFieldsinUserProfile(semail,sPassword,sConfirmPassword,sZipcode,"email");
-		userProfile.checkNotification("sms");
+		//userProfile.checkNotification("sms");
 		//Wait
 		BrowserFactory.waitFor();
 		logger.log(LogStatus.INFO, "Required Fields are Entered in Registration Page with Last and First Name Blank");
 		userProfile.clickSaveProfile();
 		
-		userProfile.onMousePhone();
+	/*	userProfile.onMousePhone();
 	
 		String verInvPhNum = userProfile.VerifyinvalidPhNumErrorMesgProfilePage();
 		//Verify Invalid Phone Error Mesg in Profile Page
@@ -169,15 +169,16 @@ public class TC01_UserProfile_AllowRegistration extends BaseClass {
 		userProfile.clickSaveProfile();
 		BrowserFactory.waitFor();
 		//Capture the Text of Notification message
-		String verifyNotifyMesg = userProfile.VerifyNotficationMesg();
+		
 		//Verify Notification text
-		BrowserFactory.waitFor();
+*/		BrowserFactory.waitFor();
+		String verifyNotifyMesg = userProfile.VerifyNotficationMesg();
 		Assert.assertEquals(verifyNotifyMesg, "Event Notifications");
 		logger.log(LogStatus.PASS, "Sucessfully Landing page is displayed");
 		//Capture the Screenshot
 		logger.log(LogStatus.INFO, logger.addScreenCapture(GenericFunctions.CaptureScreenshot(driver, "TC01_AllowRegistration_4")));
 	
 }
-	
+
 	
 }
