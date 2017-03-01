@@ -94,12 +94,15 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
         List<User> users = userDao.getGeoWithinRadius(Arrays.asList(geo), 15.00);
 
                     EventNotification eventNotification = new EventNotification();
+                    // <state> - <incident name>
+                    eventNotification.setTitle(event.getState() + " - " + event.getIncidentname());
+                    eventNotification.setType("Fire");
                     eventNotification.setCitizensAffected(users.size());
-                    eventNotification.setDescription("Emergency alert: Fire near "+event.getIncidentname()+" in your area. Please log in at https://mycalerts.com/ for more information.");
+                     // “Emergency alert: ” + Event title + “. Please log in at https://mycalerts.com/ for more information.”
+                    eventNotification.setDescription("Emergency alert: "+ eventNotification.getType() +" - "+ eventNotification.getTitle() + ". Please log in at https://mycalerts.com/ for more information.");
                     eventNotification.setGenerationDate(new Date());
                     eventNotification.setGeometry(event.getGeometry());
                     eventNotification.setUrl1(event.getHotlink());
-                    eventNotification.setType("Fire");
                     eventNotification.setUserId(userDao.getAdminUser());
 
         if (users.size() > 0) {
@@ -114,8 +117,9 @@ public class FireEventAPICallerServiceImpl extends APICallerServiceImpl {
               textMessageService.send(user.getPhone(), eventNotification.getDescription());
             }
             if (user.getEmailNotification()) {
+                // “Emergency alert from MyCAlerts: ” + Event type (camel case)
               emailService.send(null, Arrays.asList(user.getEmail()),
-                  "Emergency alert from MyCAlerts: Fire near " + event.getIncidentname(),
+                  "Emergency alert from MyCAlerts: " + eventNotification.getType() + " - " + eventNotification.getTitle(),
                   eventNotification.getDescription());
             }
           }

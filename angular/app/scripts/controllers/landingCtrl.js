@@ -83,6 +83,15 @@ cgiWebApp.controller('landingController',
           }
        }
    };
+   $scope.formatListTitle = function(item) {
+       var truncTitle = item.title;
+       if (item.title.length > 20)
+       {
+           truncTitle = item.title.substring(0, 20) + '...';
+       }
+       return truncTitle;
+   };
+   
    $scope.sentByLabel = function(currEvent) {
        var sentByString ='';
        if (currEvent.type ==='Fire'){

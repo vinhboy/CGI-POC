@@ -94,8 +94,11 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
         List<User> users = userDao.getGeoWithinRadius(Arrays.asList(geo), 15.00);
 
                 EventNotification eventNotification = new EventNotification();
+                // <waterbody> near <location>
+                eventNotification.setTitle(event.getWaterbody() + " near " + event.getLocation() );
+                eventNotification.setType("Flood");
                 eventNotification.setCitizensAffected(users.size());
-                eventNotification.setDescription("Emergency alert: Flood near "+event.getWaterbody()+" in your area. Please log in at https://mycalerts.com/ for more information.");
+                eventNotification.setDescription("Emergency alert: "+ eventNotification.getType() +" - "+ eventNotification.getTitle() + ". Please log in at https://mycalerts.com/ for more information.");
                 eventNotification.setGenerationDate(new Date());
                 eventNotification.setGeometry(event.getGeometry());
                 eventNotification.setUrl1(event.getUrl());
@@ -115,7 +118,7 @@ public class EventFloodAPICallerServiceImpl extends APICallerServiceImpl {
             }
             if (user.getEmailNotification()) {
               emailService.send(null, Arrays.asList(user.getEmail()),
-                  "Emergency alert from MyCAlerts: Flood near " + event.getWaterbody(),
+                  "Emergency alert from MyCAlerts: " + eventNotification.getType() + " - " + eventNotification.getTitle(),
                   eventNotification.getDescription());
             }
           }

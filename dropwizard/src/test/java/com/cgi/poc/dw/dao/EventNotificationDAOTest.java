@@ -81,6 +81,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         event.setType("FIRE");
         event.setUrl1("www.msn.com");
         event.setUrl2("www.cnn.com");
+        event.setTitle("Here's a Title");
         event.setUserId(admUser);
         event.setDescription("CRUD TEST EVENT");
         event.setCitizensAffected(Integer.valueOf(1000));
@@ -107,6 +108,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         assertEquals(result.getUrl1(),event.getUrl1());
         assertEquals(result.getUrl2(),event.getUrl2());
         assertEquals(result.getDescription(),event.getDescription());
+        assertEquals(result.getTitle(),event.getTitle());
         assertEquals(result.getUserId(),event.getUserId());
         assertEquals(result.getCitizensAffected(),event.getCitizensAffected());
         assertEquals(result.getEventNotificationZipcodes(),event.getEventNotificationZipcodes());
@@ -118,6 +120,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         assertEquals(result2.getType(),result.getType());
         assertEquals(result2.getUrl1(),result.getUrl1());
         assertEquals(result2.getUrl2(),result.getUrl2());
+        assertEquals(result2.getTitle(),result.getTitle());
         assertEquals(result2.getDescription(),result.getDescription());
         assertEquals(result2.getUserId(),result.getUserId());
         assertEquals(result2.getCitizensAffected(),result.getCitizensAffected());
@@ -131,6 +134,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         assertEquals(result3.getId(),result.getId());
         assertEquals(result3.getType(),result.getType());
         assertEquals(result3.getUrl1(),result.getUrl1());
+        assertEquals(result3.getTitle(),result.getTitle());
         assertEquals(result3.getUrl2(),result.getUrl2());
         assertEquals(result3.getDescription(),result.getDescription());
         assertEquals(result3.getUserId(),result.getUserId());
@@ -145,6 +149,7 @@ public class EventNotificationDAOTest extends DaoUnitTestBase  {
         assertEquals(result4.getType(),result.getType());
         assertEquals(result4.getUrl1(),result.getUrl1());
         assertEquals(result4.getUrl2(),result.getUrl2());
+        assertEquals(result4.getTitle(),result.getTitle());
         assertEquals(result4.getDescription(),result.getDescription());
         assertEquals(result4.getUserId(),result.getUserId());
         assertEquals(result4.getCitizensAffected(),result.getCitizensAffected());
