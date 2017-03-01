@@ -32,4 +32,12 @@ cgiWebApp.service('ProfileService',
       headers: { 'Authorization': 'Bearer ' + authToken }
     });
   };
+
+  this.updateCoordinates = function(coordinates) {
+    var authToken = $sessionStorage.get('jwt');
+    var endpoint = urls.BASE + '/user/coordinates';
+    return $http.put(endpoint, coordinates, {
+      headers: { 'Authorization': 'Bearer ' + authToken }
+    });
+  };
 }]);
