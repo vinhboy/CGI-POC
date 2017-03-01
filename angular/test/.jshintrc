@@ -23,7 +23,7 @@
     "angular": false,
     "browser": false,
     "inject": false,
-    "cgiWebApp": true
+    "cgiWebApp": true,
+    "moment": false
   }
 }
-

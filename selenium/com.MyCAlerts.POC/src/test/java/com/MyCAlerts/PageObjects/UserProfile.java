@@ -254,10 +254,9 @@ public class UserProfile {
 
 	public void checkNotification(String alertType) {
 		JavascriptExecutor je = (JavascriptExecutor) driver;
-		//WebElement elementToClick = driver.findElement(By.xpath("//input[@ng-model='profile.smsNotification']"));
-		//WebElement elementToClick1 = driver.findElement(By.xpath("//input[@ng-model='profile.pushNotification']"));
+		
 		WebElement elementToClick = driver.findElement(By.id("sms"));
-		WebElement elementToClick1 = driver.findElement(By.id("push"));
+		/*WebElement elementToClick1 = driver.findElement(By.id("push"));
 		if (alertType == "Push") {
 			//je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);
 			elementToClick1.click();
@@ -268,7 +267,7 @@ public class UserProfile {
 			else {
 				Reporter.log("Push Notification is not  Checked");
 			}
-		}
+		}*/
 
 		if (alertType == "sms") {
 			//je.executeScript("arguments[0].scrollIntoView(true);",elementToClick);

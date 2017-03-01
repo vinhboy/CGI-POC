@@ -116,7 +116,7 @@ scheduler:
        #the delay to start the job after the server start
        delay: 1
        #the delay between to running job's
-       period: 5
+       period: 21600
        #the time unit to define the delay and the period
        timeUnit: SECONDS
       # the URL of the API event
@@ -125,15 +125,15 @@ scheduler:
        #the delay to start the job after the server start
        delay: 1
        #the delay between to running job's
-       period: 10
+       period: 21600
        #the time unit to define the delay and the period
        timeUnit: SECONDS
      - eventType: Flood
-       eventURL: https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27action%27%20OR%20status%20%3D%20%27minor%27%20OR%20status%20%3D%20%27major%27%20OR%20status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326
+       eventURL: https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/ahps_riv_gauges/MapServer/0/query?f=json&where=(status%20%3D%20%27minor%27%20OR%20status%20%3D%20%27major%27%20OR%20status%20%3D%20%27moderate%27)%20AND%20(1%3D1)&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326
        #the delay to start the job after the server start
        delay: 1
        #the delay between to running job's
-       period: 5
+       period: 21600
        #the time unit to define the delay and the period
        timeUnit: SECONDS
 twilio:

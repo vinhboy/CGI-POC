@@ -116,7 +116,7 @@ public class EventNotificationServiceUnitTest {
     geoCoordinates.setLongitude(10.00);
     geoCoordinates.setLongitude(20.00);
 
-    Double radius = 50.00;
+    Double radius = 15.00;
 
     when(userDao.getGeoWithinRadius(anyList(), eq(radius))).thenReturn(affectedUsers);
     when(eventNotificationDAO.save(eq(eventNotification))).thenReturn(eventNotification);

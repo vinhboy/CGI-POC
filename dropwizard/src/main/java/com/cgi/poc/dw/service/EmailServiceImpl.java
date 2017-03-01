@@ -66,7 +66,7 @@ public class EmailServiceImpl implements EmailService {
       String[] toEmails = recipients.toArray(new String[]{});
 
       email.setFrom(from);
-      email.addTo(toEmails);
+      email.addBcc(toEmails);
       email.setSubject(subject);
       email.setHtmlMsg(text);
 

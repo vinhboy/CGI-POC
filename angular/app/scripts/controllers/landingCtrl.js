@@ -83,6 +83,23 @@ cgiWebApp.controller('landingController',
           }
        }
    };
+   $scope.sentByLabel = function(currEvent) {
+       var sentByString ='';
+       if (currEvent.type ==='Fire'){
+           sentByString  = 'Active Fire Boundaries (USGS GeoMAC)';
+       }else if (currEvent.type ==='Flood'){
+           sentByString  = 'River Gauge - Current and Forecast (NOAA)';
+               
+       }else if (currEvent.type ==='Weather'){
+           sentByString  = 'Weather Hazards (NOAA)';               
+       }
+       else
+       {
+           sentByString  = currEvent.userId.firstName + ' ' + currEvent.userId.lastName;
+       }
+       
+       return sentByString;
+   };
    
    uiGmapGoogleMapApi.then(function(maps) {
           $scope.maps =maps;

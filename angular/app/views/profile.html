@@ -45,7 +45,7 @@
             </div>
             <input id="username" name="username" type="email" ng-model="profile.email" ng-required="true"
               placeholder="{{ 'REGISTRATION.LABEL.EMAIL' | translate }}"
-              class="username" />
+              class="username" ng-disabled="!isNew()" ng-class="{ 'input-disabled' : !isNew() }" />
             <div class="additional-input-info" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
           </div>
 
@@ -200,12 +200,6 @@
                     ng-model="profile.emailNotification" ng-required="!someSelected()"
                     ng-blur="profileForm.notification.$setTouched();">
                   <label for="email" translate="REGISTRATION.LABEL.NOTIFICATIONS.EMAIL"></label>
-                </li>
-                <li>
-                  <input id="push" name="notification" type="checkbox"
-                    ng-model="profile.pushNotification" ng-required="!someSelected()"
-                    ng-blur="profileForm.notification.$setTouched();">
-                  <label for="push" translate="REGISTRATION.LABEL.NOTIFICATIONS.PUSH"></label>
                 </li>
                 <li>
                   <input id="sms" name="notification" type="checkbox"

@@ -26,7 +26,7 @@ cgiWebApp.service('Authenticator',
   this.logout = function() {
     $sessionStorage.remove('role');
     $sessionStorage.remove('jwt');
-    $http.defaults.headers.common.Authorization = 'Bearer ';
+    $http.defaults.headers.common.Authorization = 'Bearer';
   };
 
   this.isLoggedIn = function(){
