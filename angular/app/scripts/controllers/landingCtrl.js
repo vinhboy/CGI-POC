@@ -13,8 +13,8 @@
 'use strict';
 
 cgiWebApp.controller('landingController',
-  ['$scope','$filter','$timeout','EventNotificationService' ,'uiGmapGoogleMapApi','$sessionStorage',
-  function ($scope,$filter,$timeout,EventNotificationService,uiGmapGoogleMapApi,$sessionStorage ) {
+  ['$scope','$filter','$timeout','EventNotificationService' ,'uiGmapGoogleMapApi','$sessionStorage','$geolocation',
+  function ($scope,$filter,$timeout,EventNotificationService,uiGmapGoogleMapApi,$sessionStorage, $geolocation ) {
   $scope.apiErrors = [];
   $scope.map = undefined;
   $scope.googleMaps = undefined;
@@ -25,15 +25,15 @@ cgiWebApp.controller('landingController',
   if (/Mobi/.test(navigator.userAgent)) {
      $scope.isMobile=true;
 
-  } 
+  }
     $scope.eventIcons = {};
     $scope.eventIcons.ADMIN_E ='/images/admin-emergency.svg';
     $scope.eventIcons.ADMIN_I = '/images/admin-non-emergency.svg';
     $scope.eventIcons.Weather = '/images/weather.svg';
     $scope.eventIcons.Flood = '/images/flood.svg';
     $scope.eventIcons.Fire = '/images/fire.svg';
-  
-  
+
+
   $scope.currentSelectedEvent=null;
     $scope.eventTypes = [
         { name: 'All', id: undefined},
@@ -52,10 +52,10 @@ cgiWebApp.controller('landingController',
       notifications: []
     };
         $scope.model.displayedNotifications =[];
-    
+
     $scope.eventTypeFilter=undefined;
     $scope.changeFilters = function(){
-        $scope.model.filteredNotifications = angular.copy( $scope.model.notifications); 
+        $scope.model.filteredNotifications = angular.copy( $scope.model.notifications);
         $scope.model.filteredNotifications  =  $filter('filter')($scope.model.filteredNotifications, {type: $scope.eventTypeFilter}, true);
         $scope.model.displayedNotifications =[];
         $scope.loadMore();
@@ -67,9 +67,9 @@ cgiWebApp.controller('landingController',
    $scope.moreToLoad = function() {
        var bMoreToLoad = true;
        if ($scope.model.displayedNotifications.length === $scope.model.filteredNotifications.length)
-       { 
+       {
            bMoreToLoad = false;
-       }   
+       }
        return bMoreToLoad;
     };
    $scope.loadMore = function() {
@@ -84,23 +84,23 @@ cgiWebApp.controller('landingController',
           }
        }
    };
-   
+
    uiGmapGoogleMapApi.then(function(maps) {
           $scope.maps =maps;
- 
-   }); 
+
+   });
    $scope.backToDefault = function(currentSelectedEvent) {
        if ($scope.isMobile){
             $scope.showMapOrDetails='LIST';
        }else {
             $scope.showMapOrDetails='MAP';
             $scope.loadMap(currentSelectedEvent);
-           
+
        }
 
    };
 
- 
+
    $scope.processApiErrors = function(response) {
     $scope.apiErrors = [];
     if (response.data && response.data.errors) {
@@ -115,24 +115,41 @@ cgiWebApp.controller('landingController',
         $scope.model.notifications = data ;
         // need to convert date string into a proper date.
         angular.forEach($scope.model.notifications,function(value){
-           value.generationDate = Date.parse(value.generationDate); 
-           if (value.geometry !== '' && value.geometry!==null && 
+           value.generationDate = Date.parse(value.generationDate);
+           if (value.geometry !== '' && value.geometry!==null &&
                value.geometry!== undefined){
                 value.geometry = JSON.parse(value.geometry);
            }
         });
         $scope.changeFilters();
-        
-        
+
+
     };
- 
+
+    $scope.loadLocalGeo = function(){
+      $geolocation.getCurrentPosition({
+            timeout: 10000,
+            enableHighAccuracy: false
+         }).then(function(position) {
+           console.log(' Location ? ', position);
+            if (!position.error){
+              //error is a truthy property
+
+              if (position.coords){
+                //TODO send
+                //accuracy thats a low number is a good thing, e.g. 44 is fairly accurate
+              }
+            }
+         });
+    }
+
     $scope.initLoad = function(){
         if ($scope.role === 'ADMIN'){
              EventNotificationService.allNotifications().then(function(response) {
                  $scope.convertApiData(response.data);
              }).catch(function(response) {
                         $scope.processApiErrors(response);
-  
+
              });
         } else {
              EventNotificationService.userNotifications().then(function(response) {
@@ -140,21 +157,23 @@ cgiWebApp.controller('landingController',
              }).catch(function(response) {
                     // omce implemented...this changes to report an error
                         $scope.processApiErrors(response);
-  
+
              });
-            
+
+             $scope.loadLocalGeo();
+
         }
 
-        
+
     };
     $scope.eventSelected = function(selectedEvent, index){
           $scope.activeItem.item = index;
           if (!$scope.isMobile){
                $scope.loadMap(selectedEvent);
-              
+
           }
     };
-    
+
     $scope.loadEventDetails = function(selectedEvent, event,index){
           $scope.activeItem.item = index;
        $scope.currentSelectedEvent = selectedEvent;
@@ -162,10 +181,10 @@ cgiWebApp.controller('landingController',
        if(event){
          event.stopPropagation();
          event.preventDefault();
-       }            
+       }
     };
-    
-    $scope.mapLoadASimplePoint = function (xValue, yValue) {        
+
+    $scope.mapLoadASimplePoint = function (xValue, yValue) {
                     // just a map point
                     var myLatLng = {lat: yValue, lng: xValue};
                     $scope.map.setCenter({lat: myLatLng.lat, lng: myLatLng.lng});
@@ -196,7 +215,7 @@ cgiWebApp.controller('landingController',
             fillColor: '#FF0000',
             fillOpacity: 0.35
         });
-        ring.setMap($scope.map);        
+        ring.setMap($scope.map);
     };
     $scope.mapLoadFromForZipCodes = function (listOfZips) {
                      var geocoder = new $scope.maps.Geocoder();
@@ -215,16 +234,16 @@ cgiWebApp.controller('landingController',
                             }
                         });
                     });
-                    $scope.map.fitBounds(bounds);      
+                    $scope.map.fitBounds(bounds);
     };
 
-    
+
     $scope.loadMap = function (selectedEvent) {
         $scope.currentSelectedEvent = selectedEvent;
         $scope.showMapOrDetails = 'MAP';
         // the 2 variables above hide/show the map.
         // because of the way google mas renders, we need to make sure
-        //that the map is set up AFTER the UI render. So we 
+        //that the map is set up AFTER the UI render. So we
         // have this timeout whic forces the render to complete first.
         $timeout(function () {
             var ele = angular.element(document.querySelector('#map'));
