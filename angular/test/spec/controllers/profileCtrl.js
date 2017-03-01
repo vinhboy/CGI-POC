@@ -144,6 +144,14 @@ describe('ProfileController', function() {
         $scope.$apply();
         expect($scope.toSend.password).toBe('abcABC123');
       });
+
+      it('should use force email to lowercase', function() {
+        $scope.profile.email = 'RandOmCaSe@gmail.com';
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.toSend.email).toBe('randomcase@gmail.com');
+      });
     });
 
     describe('registering new profile', function() {
@@ -197,6 +205,14 @@ describe('ProfileController', function() {
         expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'address2');
         expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'city');
         expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'state');
+      });
+
+      it('should use force email to lowercase', function() {
+        $scope.profile.email = 'RandOmCaSe@gmail.com';
+        $scope.saveProfile();
+        deferred.resolve({ status: 200, data: {} });
+        $scope.$apply();
+        expect($scope.toSend.email).toBe('randomcase@gmail.com');
       });
     });
   });
