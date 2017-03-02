@@ -1,5 +1,4 @@
-
-![]()
+![](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/MyCAlerts%20Logo.png)
 
 
 
