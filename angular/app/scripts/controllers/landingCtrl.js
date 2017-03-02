@@ -22,8 +22,12 @@ cgiWebApp.controller('landingController',
   $scope.activeItem = {item: -1};
   $scope.isMobile = false;
   $scope.role = $sessionStorage.get('role');
+  
   if (/Mobi/.test(navigator.userAgent)) {
-     $scope.isMobile=true;
+      if(!navigator.userAgent.match(/iPad/i)) { 
+         $scope.isMobile=true;
+          
+      }
 
   } 
     $scope.eventIcons = {};
