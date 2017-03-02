@@ -183,28 +183,22 @@
             <div class="additional-input-info" translate="REGISTRATION.LABEL.ZIPCODE.INFO"></div>
           </div>
 
-          <div ng-class="{ 'usa-input-error': profileForm.notification.$touched && profileForm.notification.$invalid }">
+          <div>
             <h3>
-              <span class="usa-input-required notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.OPTIONS"></span>
+              <span class="notifications" translate="REGISTRATION.LABEL.NOTIFICATIONS.OPTIONS"></span>
             </h3>
             <hr />
-            <div ng-messages="profileForm.notification.$error" ng-if="profileForm.notification.$touched">
-              <span ng-message="required" class="usa-input-error-message" role="alert"
-                translate="REGISTRATION.MESSAGE.INVALID.CHECKBOXREQUIRED"></span>
-            </div>
             <fieldset class="usa-fieldset-inputs usa-sans">
               <legend class="usa-sr-only" translate="REGISTRATION.LABEL.NOTIFICATIONS.OPTIONS"></legend>
               <ul class="usa-unstyled-list" >
                 <li>
                   <input id="email" name="notification" type="checkbox"
-                    ng-model="profile.emailNotification" ng-required="!someSelected()"
-                    ng-blur="profileForm.notification.$setTouched();">
+                    ng-model="profile.emailNotification">
                   <label for="email" translate="REGISTRATION.LABEL.NOTIFICATIONS.EMAIL"></label>
                 </li>
                 <li>
                   <input id="sms" name="notification" type="checkbox"
-                    ng-model="profile.smsNotification" ng-required="!someSelected()"
-                    ng-blur="profileForm.notification.$setTouched();">
+                    ng-model="profile.smsNotification">
                   <label for="sms" translate="REGISTRATION.LABEL.NOTIFICATIONS.TEXT"></label>
                 </li>
               </ul>
