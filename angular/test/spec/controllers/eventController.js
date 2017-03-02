@@ -33,7 +33,7 @@ describe('eventController', function() {
     it('should initialize the controller', function() {
       $scope.init();
       expect($scope.notification.messageMaxLength).toBe(135);
-      expect($scope.notification.notificationType).toBe('');
+      expect($scope.notification.notificationType).toBe('ADMIN_E');
       expect($scope.notification.zipCodes).toBe('');
       expect($scope.notification.message).toBe('');
     });
