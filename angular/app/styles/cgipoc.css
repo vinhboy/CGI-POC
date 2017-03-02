@@ -469,6 +469,9 @@
   height: inherit;
   height: 500px; }
 
+.event-title {
+  font-weight: bold; }
+
 .event-details-container {
   border: solid;
   height: auto; }
@@ -532,9 +535,6 @@ label.notifications {
 
 .login-error {
   float: left; }
-
-.login-alert {
-  padding: 0px; }
 
 .usa-form-note {
   clear: both; }
