@@ -56,6 +56,7 @@ cgiWebApp.controller('landingController',
       notifications: []
     };
         $scope.model.displayedNotifications =[];
+    $scope.loadingData=true;
     
     $scope.eventTypeFilter=undefined;
     $scope.changeFilters = function(){
@@ -161,6 +162,7 @@ cgiWebApp.controller('landingController',
         if ($scope.role === 'ADMIN'){
              EventNotificationService.allNotifications().then(function(response) {
                  $scope.convertApiData(response.data);
+                 $scope.loadingData=false;
              }).catch(function(response) {
                         $scope.processApiErrors(response);
   
@@ -168,6 +170,7 @@ cgiWebApp.controller('landingController',
         } else {
              EventNotificationService.userNotifications().then(function(response) {
                  $scope.convertApiData(response.data);
+                 $scope.loadingData=false;
              }).catch(function(response) {
                     // omce implemented...this changes to report an error
                         $scope.processApiErrors(response);
