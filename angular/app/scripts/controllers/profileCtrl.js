@@ -51,6 +51,8 @@ cgiWebApp.controller('ProfileController',
 
         // the password is not sent from the API
         $scope.profile.password = '';
+        $scope.profile.passwordConfirmation = '';
+        $scope.profile.shouldComparePassword = false;
       });
     }
 
@@ -199,12 +201,16 @@ cgiWebApp.controller('ProfileController',
     $state.go('landing');
   };
 
-  $scope.keyCallback= function($event) {
-      $scope.keyCode = $event.which;
-      if($scope.keyCode === 27){
-        $scope.goBack();
-      }
-    };
+  $scope.keyCallback = function($event) {
+    $scope.keyCode = $event.which;
+    if($scope.keyCode === 27){
+      $scope.goBack();
+    }
+  };
+
+  $scope.shouldComparePasswords = function() {
+    return $scope.profile.shouldComparePassword || $scope.profile.password !== '' || $scope.profile.passwordConfirmation !== '';
+  };
 
   $scope.init();
 
