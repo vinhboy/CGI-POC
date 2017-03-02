@@ -122,7 +122,6 @@ and (max-device-width : 480px) {
     }
 
     .event-list-container {
-      height: inherit;
       height: 500px;
 
     }
@@ -134,7 +133,7 @@ and (max-device-width : 480px) {
 
     .event-details-container {
       border: solid;
-      height: auto;
+      height: 500px;
 
       .usa-heading-alt {
         border-bottom: solid;
