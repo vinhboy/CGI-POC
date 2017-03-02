@@ -37,7 +37,10 @@ cgiWebApp.controller('eventController',
     }
   };
 
-  $scope.publishEvent = function() {
+  $scope.publishEvent = function(form) {
+    if (!form.$valid) {
+      return;
+    }
     $scope.generateZipCodes();
 
     var toPost = {

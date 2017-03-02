@@ -411,4 +411,34 @@ describe('ProfileController', function() {
       expect($state.go).toHaveBeenCalledWith('landing');
     });
   });
+
+  describe('shouldComparePasswords', function() {
+    it('should compare passwords if shouldComparePassword is true', function() {
+      $scope.profile.shouldComparePassword = true;
+      $scope.profile.password = '';
+      $scope.profile.passwordConfirmation = '';
+      expect($scope.shouldComparePasswords()).toBe(true);
+    });
+
+    it('should compare passwords if password is not blank', function() {
+      $scope.profile.shouldComparePassword = false;
+      $scope.profile.password = 'blah';
+      $scope.profile.passwordConfirmation = '';
+      expect($scope.shouldComparePasswords()).toBe(true);
+    });
+
+    it('should compare passwords if passwordConfirmation is not blank', function() {
+      $scope.profile.shouldComparePassword = false;
+      $scope.profile.password = '';
+      $scope.profile.passwordConfirmation = 'blue';
+      expect($scope.shouldComparePasswords()).toBe(true);
+    });
+
+    it('should NOT compare passwords for the conditions below', function() {
+      $scope.profile.shouldComparePassword = false;
+      $scope.profile.password = '';
+      $scope.profile.passwordConfirmation = '';
+      expect($scope.shouldComparePasswords()).toBe(false);
+    });
+  });
 });

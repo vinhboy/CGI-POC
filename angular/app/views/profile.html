@@ -49,8 +49,8 @@
             <div class="additional-input-info" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
           </div>
 
-          <div ng-class="{ 'usa-input-error': (profileForm.password.$touched && profileForm.password.$invalid) ||
-            (profileForm.passwordConfirmation.$touched && profileForm.passwordConfirmation.$invalid) }">
+          <div ng-class="{ 'usa-input-error': (profileForm.password.$touched || profileForm.passwordConfirmation.$touched) &&
+            (profileForm.password.$invalid || profileForm.passwordConfirmation.$invalid) }">
             <label for="password" ng-class="{ 'usa-input-required' : isNew() }"
                    translate="REGISTRATION.LABEL.PASSWORD"></label>
             <div ng-messages="profileForm.password.$error" ng-if="profileForm.password.$touched && !isPasswordValid()">
@@ -71,7 +71,7 @@
                   translate="REGISTRATION.MESSAGE.INVALID.PASSWORDNOMATCH"></span>
             </div>
             <input id="passwordConfirmation" name="passwordConfirmation" type="password" ng-model="profile.passwordConfirmation"
-                   ng-attr-compare-to="profile.password" should-compare="{{profile.shouldComparePassword}}" ng-required="isNew()" />
+                   compare-to="profile.password" should-compare="{{ shouldComparePasswords() }}" ng-required="isNew()" />
           </div>
 
           <div ng-class="{ 'usa-input-error': profileForm.phone.$touched && profileForm.phone.$invalid }">
