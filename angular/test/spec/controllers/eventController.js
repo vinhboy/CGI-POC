@@ -50,7 +50,7 @@ describe('eventController', function() {
 
   describe('publishEvent', function() {
     it('should call the EventNotificationService.publish', function() {
-      $scope.publishEvent();
+      $scope.publishEvent({ $valid: true });
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
       expect(eventService.publish).toHaveBeenCalledWith($scope.toSend);
@@ -59,7 +59,7 @@ describe('eventController', function() {
     it('should construct the zipCodes', function() {
       $scope.notification.zipCodes = '12345, 23456, 34567';
       spyOn($scope, 'generateZipCodes').and.callThrough();
-      $scope.publishEvent();
+      $scope.publishEvent({ $valid: true });
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
       expect($scope.generateZipCodes).toHaveBeenCalled();
@@ -67,7 +67,7 @@ describe('eventController', function() {
 
     it('should redirect if successful', function() {
       spyOn($state, 'go');
-      $scope.publishEvent();
+      $scope.publishEvent({ $valid: true });
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith('landing');
@@ -75,7 +75,7 @@ describe('eventController', function() {
 
     it('should construct apiErrors if failed', function() {
       spyOn($scope, 'processApiErrors');
-      $scope.publishEvent();
+      $scope.publishEvent({ $valid: true });
       var response = { status: 404, data: {} };
       deferred.reject(response);
       $scope.$apply();
@@ -87,7 +87,7 @@ describe('eventController', function() {
       $scope.notification.zipCodes = '12345, 23456 , 45678';
       $scope.notification.message = 'blah blah message. get away!';
 
-      $scope.publishEvent();
+      $scope.publishEvent({ $valid: true });
       deferred.resolve({ status: 200, data: {} });
       $scope.$apply();
       expect($scope.toSend.type).toBe('ADMIN_I');
@@ -96,6 +96,11 @@ describe('eventController', function() {
       expect($scope.toSend.zipCodes[0]).toBe('12345');
       expect($scope.toSend.zipCodes[1]).toBe('23456');
       expect($scope.toSend.zipCodes[2]).toBe('45678');
+    });
+
+    it('should do NOTHING if the form is not valid', function() {
+      $scope.publishEvent({ $valid: false });
+      expect(eventService.publish).not.toHaveBeenCalled();
     });
   });
 

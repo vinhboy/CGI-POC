@@ -15,7 +15,7 @@
   <div class="centeredForm">
     <h3 translate="NOTIFICATION.FORMLABEL"></h3>
     <hr />
-    <form class="usa-form-large" name="notificationForm" ng-submit="publishEvent()">
+    <form class="usa-form-large" name="notificationForm" ng-submit="publishEvent(notificationForm)">
       <fieldset>
         <div>
           <div ng-class="{ 'usa-input-error': notificationForm.notificationType.$touched && notificationForm.notificationType.$invalid }">
