@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="centeredForm">
-    <form class="usa-form-large" name="profileForm" ng-submit="saveProfile()">
+    <form class="usa-form-large" name="profileForm" ng-submit="saveProfile(profileForm)">
       <fieldset>
         <div>
           <h3 translate="REGISTRATION.LABEL.TITLE"></h3>
@@ -49,8 +49,8 @@
             <div class="additional-input-info" translate="REGISTRATION.LABEL.EMAIL.INFO"></div>
           </div>
 
-          <div ng-class="{ 'usa-input-error': profileForm.password.$touched && !isPasswordValid() ||
-          (profileForm.password.$touched && profileForm.passwordConfirmation.$touched && profile.password !== profile.passwordConfirmation) }">
+          <div ng-class="{ 'usa-input-error': (profileForm.password.$touched && profileForm.password.$invalid) ||
+            (profileForm.passwordConfirmation.$touched && profileForm.passwordConfirmation.$invalid) }">
             <label for="password" ng-class="{ 'usa-input-required' : isNew() }"
                    translate="REGISTRATION.LABEL.PASSWORD"></label>
             <div ng-messages="profileForm.password.$error" ng-if="profileForm.password.$touched && !isPasswordValid()">
@@ -71,7 +71,7 @@
                   translate="REGISTRATION.MESSAGE.INVALID.PASSWORDNOMATCH"></span>
             </div>
             <input id="passwordConfirmation" name="passwordConfirmation" type="password" ng-model="profile.passwordConfirmation"
-                   compare-to="profile.password" ng-required="isNew()" />
+                   ng-attr-compare-to="profile.password" should-compare="{{profile.shouldComparePassword}}" ng-required="isNew()" />
           </div>
 
           <div ng-class="{ 'usa-input-error': profileForm.phone.$touched && profileForm.phone.$invalid }">

@@ -52,6 +52,13 @@ describe('ProfileController', function() {
       expect($scope.profile.zipCode).toBe('');
       expect($scope.profile.emailNotification).toBe(true);
       expect($scope.profile.smsNotification).toBe(false);
+      expect($scope.profile.shouldComparePassword).toBe(true);
+    });
+
+    it('should NOT compare passwords for updates', function() {
+      $state.current.name = 'manageProfile';
+      $scope.init();
+      expect($scope.profile.shouldComparePassword).toBe(false);
     });
 
     it('initializes the apiErrors', function() {
@@ -98,7 +105,7 @@ describe('ProfileController', function() {
       });
 
       it('should call the ProfileService.update', function() {
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect(profileService.update).toHaveBeenCalledWith($scope.toSend);
@@ -107,7 +114,7 @@ describe('ProfileController', function() {
       it('should construct the phoneNumber', function() {
         $scope.profile.phone = '313-252-7456';
         spyOn($scope, 'generatePhoneNumber').and.callThrough();
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect($scope.generatePhoneNumber).toHaveBeenCalled();
@@ -115,7 +122,7 @@ describe('ProfileController', function() {
 
       it('should redirect if successful', function() {
         spyOn($state, 'go');
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect($state.go).toHaveBeenCalledWith('landing');
@@ -123,7 +130,7 @@ describe('ProfileController', function() {
 
       it('should construct apiErrors if failed', function() {
         spyOn($scope, 'processApiErrors');
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         var response = { status: 404, data: {} };
         deferred.reject(response);
         $scope.$apply();
@@ -132,7 +139,7 @@ describe('ProfileController', function() {
 
       it('should use blank for password value if it is not populated', function() {
         $scope.profile.password = '';
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect($scope.toSend.password).toBe('');
@@ -140,7 +147,7 @@ describe('ProfileController', function() {
 
       it('should use provided value for password value if it is populated', function() {
         $scope.profile.password = 'abcABC123';
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect($scope.toSend.password).toBe('abcABC123');
@@ -148,7 +155,7 @@ describe('ProfileController', function() {
 
       it('should use force email to lowercase', function() {
         $scope.profile.email = 'RandOmCaSe@gmail.com';
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect($scope.toSend.email).toBe('randomcase@gmail.com');
@@ -156,10 +163,15 @@ describe('ProfileController', function() {
 
       it('should always send false for pushNotification value', function() {
         $scope.profile.pushNotification = true;
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect($scope.toSend.pushNotification).toBe(false);
+      });
+
+      it('should not do anything if form is invalid', function() {
+        $scope.saveProfile({ $valid: false });
+        expect(profileService.update).not.toHaveBeenCalled();
       });
     });
 
@@ -169,7 +181,7 @@ describe('ProfileController', function() {
       });
 
       it('should call the ProfileService.register', function() {
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect(profileService.register).toHaveBeenCalledWith($scope.toSend);
@@ -178,7 +190,7 @@ describe('ProfileController', function() {
       it('should construct the phoneNumber', function() {
         $scope.profile.phone = '313-252-7456';
         spyOn($scope, 'generatePhoneNumber').and.callThrough();
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect($scope.generatePhoneNumber).toHaveBeenCalled();
@@ -186,7 +198,7 @@ describe('ProfileController', function() {
 
       it('should redirect if successful', function() {
         spyOn($state, 'go');
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         authDeferred.resolve({ status: 200, data: {} });
         $scope.$apply();
@@ -195,7 +207,7 @@ describe('ProfileController', function() {
 
       it('should construct apiErrors if failed', function() {
         spyOn($scope, 'processApiErrors');
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         var response = { status: 404, data: {} };
         deferred.reject(response);
         $scope.$apply();
@@ -204,7 +216,7 @@ describe('ProfileController', function() {
 
       it('should process these optional fields for null', function() {
         spyOn($scope, 'processForNull');
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect($scope.processForNull).toHaveBeenCalledWith($scope.toSend, 'firstName');
@@ -218,10 +230,15 @@ describe('ProfileController', function() {
 
       it('should use force email to lowercase', function() {
         $scope.profile.email = 'RandOmCaSe@gmail.com';
-        $scope.saveProfile();
+        $scope.saveProfile({ $valid: true });
         deferred.resolve({ status: 200, data: {} });
         $scope.$apply();
         expect($scope.toSend.email).toBe('randomcase@gmail.com');
+      });
+
+      it('should not do anything if form is invalid', function() {
+        $scope.saveProfile({ $valid: false });
+        expect(profileService.register).not.toHaveBeenCalled();
       });
     });
   });

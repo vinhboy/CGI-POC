@@ -28,11 +28,13 @@ cgiWebApp.controller('ProfileController',
       state: '',
       zipCode: '',
       emailNotification: false,
-      smsNotification: false
+      smsNotification: false,
+      shouldComparePassword: false
     };
 
     if ($scope.isNew()) {
       $scope.profile.emailNotification = true;
+      $scope.profile.shouldComparePassword = true;
     }
 
     if ($scope.isEdit()) {
@@ -148,7 +150,10 @@ cgiWebApp.controller('ProfileController',
     });
   };
 
-  $scope.saveProfile = function() {
+  $scope.saveProfile = function(form) {
+    if (!form.$valid) {
+      return;
+    }
     if ($scope.isNew()) {
       var beforeNavPromise = function(toSend) {
         var credentials = {
@@ -213,10 +218,17 @@ cgiWebApp.directive('compareTo', function() {
     },
     link: function(scope, element, attributes, ngModel) {
       ngModel.$validators.compareTo = function(modelValue) {
-        return modelValue === scope.otherModelValue;
+        if (attributes.shouldCompare) {
+          return modelValue === scope.otherModelValue;
+        }
+        return true;
       };
 
       scope.$watch('otherModelValue', function() {
+        ngModel.$validate();
+      });
+
+      attributes.$observe('shouldCompare', function() {
         ngModel.$validate();
       });
     }
