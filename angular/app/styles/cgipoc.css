@@ -71,8 +71,7 @@
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px; }
     .headerZone .data-ui-view {
-      padding: 5em;
-      padding-bottom: 5em; }
+      padding: 5em; }
     .headerZone .mapArea {
       height: 500px;
       position: relative;
@@ -453,8 +452,7 @@
     border: none !important; }
 
 .data-ui-view {
-  padding: 5em;
-  padding-bottom: 5em; }
+  padding: 5em; }
 
 .mapArea {
   height: 500px;
