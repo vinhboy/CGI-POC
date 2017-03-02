@@ -88,11 +88,10 @@
         border-bottom: solid;
         margin-right: 2em;
         margin-left: 2em; }
-      .headerZone .event-details-container .button_wrapper {
-        padding-left: 6em; }
 
   .contentZone.lightning-background {
     background: url("../images/backgrounds/lightning-480.jpg") #000000 center 0 no-repeat;
+    display: -ms-flexbox;
     overflow: inherit; }
 
   .usa-content {
@@ -157,6 +156,7 @@
 
   .contentZone.lightning-background {
     background: url("../images/backgrounds/lightning-768.jpg") #000000 center 0 no-repeat;
+    display: -ms-flexbox;
     overflow: inherit; }
 
   .usa-content {
@@ -222,6 +222,7 @@
 
   .contentZone.lightning-background {
     background: url("../images/backgrounds/lightning-1024.jpg") #000000 center 0 no-repeat;
+    display: -ms-flexbox;
     overflow: inherit; }
 
   .usa-content {
@@ -284,6 +285,7 @@
 
   .contentZone.lightning-background {
     background: url("../images/backgrounds/lightning-768.jpg") #000000 center 0 no-repeat;
+    display: -ms-flexbox;
     overflow: inherit; }
 
   .usa-content {
@@ -346,6 +348,7 @@
 
   .contentZone.lightning-background {
     background: url("../images/backgrounds/lightning-1024.jpg") #000000 center 0 no-repeat;
+    display: -ms-flexbox;
     overflow: inherit; }
 
   .usa-content {
@@ -410,6 +413,7 @@
 
   .contentZone.lightning-background {
     background: url("../images/backgrounds/lightning-1080.jpg") #000000 center 0 no-repeat;
+    display: -ms-flexbox;
     overflow: inherit; }
 
   .usa-content {
@@ -498,16 +502,21 @@
     .event table tr td {
       border: none !important;
       padding: 0; }
-      .event table tr td img {
-        margin: 6px 8px 4px 6px; }
       .event table tr td h5 {
         margin-top: 8px; }
-      .event table tr td .event-logo {
-        width: 4em; }
+      .event table tr td.event-logo {
+        width: 18%;
+        padding-right: 2%; }
+        .event table tr td.event-logo img {
+          width: 100%;
+          height: auto; }
+      .event table tr td.event-content {
+        width: 68%;
+        height: auto; }
       .event table tr td.event-icons {
-        position: relative;
-        right: 0px;
-        padding: 0.25em 0;
+        width: 8%;
+        height: auto;
+        padding-left: 2%;
         font-size: 1.6em; }
 
 .footerZone {
