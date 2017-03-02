@@ -1,5 +1,4 @@
 .clickable-header-logo {
-  cursor: pointer;
   cursor: hand; }
 
 .usa-grid {
@@ -72,14 +71,12 @@
               .headerZone .usa-header .usa-nav-inner .usa-nav-secondary ul li a:first-child {
                 margin-right: 10px; }
     .headerZone .data-ui-view {
-      padding: 5em;
-      padding-bottom: 5em; }
+      padding: 5em; }
     .headerZone .mapArea {
-      height: 100%;
+      height: 500px;
       position: relative;
       width: 100%; }
     .headerZone .event-list-container {
-      height: inherit;
       height: 500px; }
     .headerZone .event-info {
       height: 100%;
@@ -165,7 +162,6 @@
   .usa-content {
     margin: 16% 0% 1% !important; }
     .usa-content .centeredForm {
-      margin: 0 auto;
       margin: 0 auto;
       padding: 12px;
       width: 460px;
@@ -293,7 +289,6 @@
   .usa-content {
     margin: 12% 0% 1% !important; }
     .usa-content .centeredForm {
-      margin: 0 auto;
       margin: 0 auto;
       padding: 12px;
       width: 460px;
@@ -457,16 +452,14 @@
     border: none !important; }
 
 .data-ui-view {
-  padding: 5em;
-  padding-bottom: 5em; }
+  padding: 5em; }
 
 .mapArea {
-  height: 100%;
+  height: 500px;
   position: relative;
   width: 100%; }
 
 .event-list-container {
-  height: inherit;
   height: 500px; }
 
 .event-title {
