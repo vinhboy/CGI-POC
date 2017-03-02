@@ -83,7 +83,7 @@
       overflow: auto; }
     .headerZone .event-details-container {
       border: solid;
-      height: 500px; }
+      height: auto; }
       .headerZone .event-details-container .usa-heading-alt {
         border-bottom: solid;
         margin-right: 2em;
