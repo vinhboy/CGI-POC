@@ -1,6 +1,117 @@
+
+
+
+
 ![](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/MyCAlerts%20Logo.png)
 
+# I.	Technical Approach #
 
+**Sprint Zero**
+
+We began with a review of the draft RFI. CGI established our team and began Sprint 0 planning. We determined the technical architecture and environments we would use. We deployed our standard developer tools and agile collaboration resources, to build a “Hello World” application (a simple login page) to test our technical stack and Continuous Integration/Continuous Deployment (CI/CD) framework.
+
+**Prototype Selection and Kickoff**
+
+Upon receipt of the final RFI, our Product Manager (PM) led a prototype analysis session.  The team came together and held a planning and sizing session to evaluate the complexity, team interest, and risks of each prototype. With great enthusiasm our team selected Working Prototype B.
+
+Based on initial user interviews, the PM selected the three datasets deemed most relevant to CA users. He selected to poll for automated emergency notifications wildfires (Active Fire Boundaries service from USGS GeoMAC), floods (River Gauge - Current and Forecast service from NOAA) and weather (Weather Hazards service from NOAA). 
+
+At the kickoff, our PM provided his vision for the prototype and a high-level roadmap for completion of the work. The team established roles and responsibilities as well as a collaborative team agreement.  We solidified and established our team working relationships. Using the roadmap and prototype requirements, the team developed an initial series of user stories. Our PM prioritized these stories along with UX/UI and technical infrastructure setup stories to establish our product backlog.
+
+**User-Centric – User Driven**
+
+Our UX/UI Designer facilitated a user centric – user driven design approach by engaging users early through the use of persona interviews and surveys. We leveraged AngularJS along with the standards and component set from the U.S. Web-design (USWDS) style guide for to implement a modern accessible web application.  We also tested for ADA 508 and WCAG 2.0 compliance. We tapped into users of various ages, roles, experiences, and backgrounds. During Sprint 1 we interviewed users and our results were quickly turned into wireflows leveraging a responsive design accommodating both desktop and mobile platforms. These wireflows were continuously refined based on user input. Our wireflows provided a visual to communicate the look and feel of the prototype to the developers. Beyond the initial design, users were engaged through usability testing and their input was evaluated and prioritized through improvement stories which were then added  in the product backlog for inclusion in subsequent sprints. 
+
+**Agile Process**
+
+We followed an agile process (Figure 1) of weekly sprint cycles, with each cycle starting on Wednesday and ending the following Tuesday. 
+
+![Figure 1 - Our Agile Process](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/Agile%20Sprint%20Cycle%20-%20New.png)
+
+Each week the key Sprint rituals included:
+
+**Stand-Up**- Monday-Friday (except Tuesday) @ 8:45 – 9:00 AM facilitated by the Agile Coach. Development team members reported work completed since the last session; planned work before the next session and any blockers. Blockers identified were then cleared by the Agile Coach and Delivery Manager. Stand-Up provided a great forum for coordinated ideas and next steps across the team.
+ 
+**Backlog Grooming** – Monday afternoon, our PM reviewed and reprioritized items in the backlog. The Agile coach and Delivery Manager supported the review and confirmed User Stories agreed with team’s “Definition of Ready”. 
+
+**Sprint Review** - Tuesday morning, the Development team presented completed User Stories in the Sprint to the PM for review and approval. Approved User stories aligned with the team’s “Definition of Done”.
+
+**Sprint Retrospective** – Tuesday morning, the team reflected on how their tools, processes and peers performed on the recently completed sprint. Each team member was asked to identify one improvement trait they wanted to see the team start doing; one they wanted the team to stop doing and one they wanted the team to continue.  Facilitated by the Agile Coach, the identified start/stop/continue traits were consolidated and next steps defined by the Development team.
+
+**Sprint Planning** – Tuesday afternoon, a one hour session for the PM and Development team interactively discussed and agreed on the payload of the next sprint. Sizing of the items in the sprint was coordinated by the Agile Coach and Delivery Manager.  We used “sprint poker” to collect estimates from the Development team members.
+ 
+See our Team Photo Album for visual examples of the team and our agile process in action. 
+
+With each iteration, the prototype became increasingly aligned to the vision of the PM, as well as the needs of our users. Our high-level roadmap included several user stories that ultimately were not included in the Working Prototype. These included spike research for an iOS native client application and native push notification functionality. While both were not in the posted Minimum Viable Product (MVP), they are included in the product backlog, architecture artifacts and GitHub source code.
+
+Throughout the process, the team was able to coordinate work and monitor progress by using our Scrum board. We used JIRA to track user stories on an electronic board (as well as bugs), and also maintained a physical board in the team room. We used Confluence for document sharing and HipChat as our team collaboration tool. Metrics were tracked so the team understood how they were doing and potential areas for process improvement with each Sprint. Metrics showed the team their development velocity, technical backlog, and what percent of story points actually was implemented with each sprint.
+
+**Technology Stack**
+For every technology decision, we considered open options, resulting in a stack that is predominately open source. Our technology target was a browser-based modern web application, but we also investigated the possibility of a native mobile app on iOS.
+
+![Figure 2 – Our Technology Stack](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/Modern%20Web%20Application%20graphic.png)
+
+- AngularJS frontend modern web framework
+- DropWizard Java Application framework
+- MySQL database
+- JUnit unit testing framework
+- Jasmine JavaScript testing
+- Karma test runner
+- Mockito mock test dependent services in the development environment
+- Selenium automated running of functional tests 
+
+From a DevOps standpoint:
+
+- Jenkins configuration management
+- CI platform continuous build, test, and prep for deployment to Docker. 
+- Docker containerization solution for its cross-platform robustness for  deployments from non-production to production environments
+- Docker images development environment, allowing new developers to get up and running quickly.
+
+We tested and deployed the prototype on Microsoft’s Azure Infrastructure as a Service (IaaS) solution.  We used Azure’s monitoring solution for continuous infrastructure monitoring including networking, and New Relic for continuous application performance monitoring. We used the Key Performance Indicators (KPI) data to fine-tune our infrastructure solution and application.
+
+**Continuous Integration and Deployment**
+
+Our solution used GitHub to document code and unit test commits in our public [GitHub repository](https://github.com/CGI-Zahid/CGI-POC).  Our GitHub structure has master and integration branches as well as feature branches. Development of individual stories was done in a feature branch in a local environment. Before checking code in, developers issued a pull request to trigger a code review. Once the code review was approved, code was merged into the integration branch, triggering the continuous integration process. 
+
+Figure 2 displays the tools view and high level code migration from development to production using our CI/CD process. 
+
+![Figure 3 – Continuous Integration and Deployment ](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/CI%20and%20Deployment%20Graphic.%20-%20Tool%20View.png)
+
+Jenkins retrieved the code from GitHub, built the application, and executed unit tests. If all unit tests passed, Docker created a distribution image. We employed a moderated CD approach to the test environment nightly to avoid interfering with ongoing functional testing. Ad hoc deployments were accommodated as needed. Once a build was deployed to test, our functional test suite (using Selenium) ran automatically.
+
+![Figure 4 – Continuous Integration and Deployment (Process View)](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/CI%20and%20Deployment%20Graphic%20-%20Process%20View.png)
+
+Here is an overview of the steps we followed in our approach:
+
+a.	Developer sets their local development environment using Docker files to mimic the operations environment and creates feature branches from the GitHub master branch (step 0). 
+
+b.	Developer creates unit tests (step 1) and writes the appropriate source code (step 2) to implement a user story/feature. 
+
+c.	To merge the unit test and source code, developer submits a pull request; triggers code review by a peer developer; reviewer approves/ denies the merge into the integration branch; finally developer resolves the code review observations. Once the code review is approved, the feature branch is merged into the integration branch (step 4). 
+
+d.	Testers create automated functional scripts (step 3), which are merged in the integration branch (step 4). 
+
+e.	On a pre-determined schedule, Jenkins compiles the source code and all unit tests are executed automatically (step 5). 
+
+f.	If the unit tests fail, a notification is sent regarding the failure and the developer fixes it in the correspondent feature branch (step 15). Steps 4 and 5 are repeated until the unit tests pass.
+
+g.	Once the unit tests pass, Jenkins executes Docker files to build the Docker images for the UI and the backend (Step 6). 
+
+h.	Docker pushes the images to the Azure Registry (Step 7), and then deploys them to the test environment where the functional tests are executed automatically (Step 8). 
+
+i.	If the functional tests fail, a notification is sent (Step 14), and the developers fix the issues (Step 15). Steps 4, 5, 6, 7 and 8 are repeated until the functional tests pass. 
+
+j.	Once the functional tests succeed, a notification is sent regarding the successful test execution (Step 9). 
+
+k.	QA performs ad-hoc tests. If these fail, developer is notified to fix the issue (Step 15). Steps 4, 5, 6, 7, 8, 9 and 10 are repeated until the ad-hoc tests pass. 
+
+l.	Once the error is fixed, the integration branch is merged with production tag in the master branch (Step 11).
+ 
+m.	Finally, the image created for testing is deployed to the production environment (Step 12). 
+
+**Code Flow**
+
+Our source code is structured to follow our distributed architecture and the software used to implement it. The frontend is stored in the [angular folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/angular), and the backend in the [DropWizard folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard). We also have folders for automated functional tests in the [selenium folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/main/java/com/cgi/poc/dw/rest/resource).
 
 
 ## II.	A-T Responses and Evidence 
