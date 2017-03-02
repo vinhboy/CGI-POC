@@ -6,11 +6,13 @@
 
 # I.	Technical Approach #
 
-**Sprint Zero**
+Our UX/UI Designer facilitated a user centric – user driven design approach by engaging users early through the use of persona interviews and surveys. We leveraged AngularJS along with the standards and component set from the U.S. Web-design (USWDS) style guide for to implement a modern accessible web application.  We also tested for ADA 508 and WCAG 2.0 compliance. We tapped into users of various ages, roles, experiences, and backgrounds. During Sprint 1 we interviewed users and our results were quickly turned into wireflows leveraging a responsive design accommodating both desktop and mobile platforms. These wireflows were continuously refined based on user input. Our wireflows provided a visual to communicate the look and feel of the prototype to the developers. Beyond the initial design, users were engaged through usability testing and their input was evaluated and prioritized through improvement stories which were then added  in the product backlog for inclusion in subsequent sprints. 
+
+### Sprint Zero###
 
 We began with a review of the draft RFI. CGI established our team and began Sprint 0 planning. We determined the technical architecture and environments we would use. We deployed our standard developer tools and agile collaboration resources, to build a “Hello World” application (a simple login page) to test our technical stack and Continuous Integration/Continuous Deployment (CI/CD) framework.
 
-**Prototype Selection and Kickoff**
+### Prototype Selection and Kickoff ###
 
 Upon receipt of the final RFI, our Product Manager (PM) led a prototype analysis session.  The team came together and held a planning and sizing session to evaluate the complexity, team interest, and risks of each prototype. With great enthusiasm our team selected Working Prototype B.
 
@@ -18,14 +20,15 @@ Based on initial user interviews, the PM selected the three datasets deemed most
 
 At the kickoff, our PM provided his vision for the prototype and a high-level roadmap for completion of the work. The team established roles and responsibilities as well as a collaborative team agreement.  We solidified and established our team working relationships. Using the roadmap and prototype requirements, the team developed an initial series of user stories. Our PM prioritized these stories along with UX/UI and technical infrastructure setup stories to establish our product backlog.
 
-**User-Centric – User Driven**
+### User-Centric – User Driven###
 
 Our UX/UI Designer facilitated a user centric – user driven design approach by engaging users early through the use of persona interviews and surveys. We leveraged AngularJS along with the standards and component set from the U.S. Web-design (USWDS) style guide for to implement a modern accessible web application.  We also tested for ADA 508 and WCAG 2.0 compliance. We tapped into users of various ages, roles, experiences, and backgrounds. During Sprint 1 we interviewed users and our results were quickly turned into wireflows leveraging a responsive design accommodating both desktop and mobile platforms. These wireflows were continuously refined based on user input. Our wireflows provided a visual to communicate the look and feel of the prototype to the developers. Beyond the initial design, users were engaged through usability testing and their input was evaluated and prioritized through improvement stories which were then added  in the product backlog for inclusion in subsequent sprints. 
 
-**Agile Process**
+### Agile Process###
 
 We followed an agile process (Figure 1) of weekly sprint cycles, with each cycle starting on Wednesday and ending the following Tuesday. 
 
+*Figure 1 - Our Agile Process*
 ![Figure 1 - Our Agile Process](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/Agile%20Sprint%20Cycle%20-%20New.png)
 
 Each week the key Sprint rituals included:
@@ -46,9 +49,11 @@ With each iteration, the prototype became increasingly aligned to the vision of 
 
 Throughout the process, the team was able to coordinate work and monitor progress by using our Scrum board. We used JIRA to track user stories on an electronic board (as well as bugs), and also maintained a physical board in the team room. We used Confluence for document sharing and HipChat as our team collaboration tool. Metrics were tracked so the team understood how they were doing and potential areas for process improvement with each Sprint. Metrics showed the team their development velocity, technical backlog, and what percent of story points actually was implemented with each sprint.
 
-**Technology Stack**
+## Technology Stack ##
+
 For every technology decision, we considered open options, resulting in a stack that is predominately open source. Our technology target was a browser-based modern web application, but we also investigated the possibility of a native mobile app on iOS.
 
+*Figure 2 – Our Technology Stack*
 ![Figure 2 – Our Technology Stack](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/Modern%20Web%20Application%20graphic.png)
 
 - AngularJS frontend modern web framework
@@ -69,16 +74,18 @@ From a DevOps standpoint:
 
 We tested and deployed the prototype on Microsoft’s Azure Infrastructure as a Service (IaaS) solution.  We used Azure’s monitoring solution for continuous infrastructure monitoring including networking, and New Relic for continuous application performance monitoring. We used the Key Performance Indicators (KPI) data to fine-tune our infrastructure solution and application.
 
-**Continuous Integration and Deployment**
+## **Continuous Integration and Deployment** ##
 
 Our solution used GitHub to document code and unit test commits in our public [GitHub repository](https://github.com/CGI-Zahid/CGI-POC).  Our GitHub structure has master and integration branches as well as feature branches. Development of individual stories was done in a feature branch in a local environment. Before checking code in, developers issued a pull request to trigger a code review. Once the code review was approved, code was merged into the integration branch, triggering the continuous integration process. 
 
 Figure 2 displays the tools view and high level code migration from development to production using our CI/CD process. 
 
+*Figure 3 – Continuous Integration and Deployment (Tools)*
 ![Figure 3 – Continuous Integration and Deployment ](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/CI%20and%20Deployment%20Graphic.%20-%20Tool%20View.png)
 
 Jenkins retrieved the code from GitHub, built the application, and executed unit tests. If all unit tests passed, Docker created a distribution image. We employed a moderated CD approach to the test environment nightly to avoid interfering with ongoing functional testing. Ad hoc deployments were accommodated as needed. Once a build was deployed to test, our functional test suite (using Selenium) ran automatically.
 
+*Figure 4 – Continuous Integration and Deployment (Process View)*
 ![Figure 4 – Continuous Integration and Deployment (Process View)](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/CI%20and%20Deployment%20Graphic%20-%20Process%20View.png)
 
 Here is an overview of the steps we followed in our approach:
@@ -109,9 +116,25 @@ l.	Once the error is fixed, the integration branch is merged with production tag
  
 m.	Finally, the image created for testing is deployed to the production environment (Step 12). 
 
-**Code Flow**
+## Code Flow ##
 
 Our source code is structured to follow our distributed architecture and the software used to implement it. The frontend is stored in the [angular folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/angular), and the backend in the [DropWizard folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard). We also have folders for automated functional tests in the [selenium folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/main/java/com/cgi/poc/dw/rest/resource).
+
+### Client UI and JavaScript library ###
+
+The UI is built using AngularJS. Within the [angular folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/angular/app), the app folder includes subfolders for images, language, cascading stylesheets, scripts, and views. The [scripts folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/angular/app/scripts/services) contains controllers, factory, and services. The [controller folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/angular/app/scripts/controllers) in turn hosts the JavaScript files, while the view folder contains HTML files. Unit tests are kept separately from the code in the [test folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/angular/test). 
+
+The frontend communicates with the backend using RESTful APIs. The frontend code invoking the services resides in a [services subfolder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/angular/app/scripts/services) under the scripts folder.
+
+Other backend code resides elsewhere in the DropWizard folder. For instance, user profile business logic resides in the [resource folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/main/java/com/cgi/poc/dw/rest/resource). Unit tests reside in the [test folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/test).
+
+Source code for our iOS native application spike research can be found the {folder name}, to allow review of our future product development efforts.  
+
+### Database ###
+
+The application communicates with the relational database (MySQL) using Hibernate. We use standard jaxb bean validations for data validation. The data access objects and model objects are located [here](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/main/java/com/cgi/poc/dw/dao). 
+
+
 
 
 ## II.	A-T Responses and Evidence 
