@@ -1,0 +1,186 @@
+<html>
+<head>
+<title>TestNG:  SmokeSuite</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>SmokeSuite</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>20/0/0</td>
+</tr><tr>
+<td>Started on:</td><td>Wed Mar 01 17:45:13 CST 2017</td>
+</tr>
+<tr><td>Total time:</td><td>180 seconds (180551 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC01_LoginFlow.TC01_AllowLogin_1()'><b>TC01_AllowLogin_1</b><br>Test class: com.MyCAlerts.Testcases.TC01_LoginFlow<br>Test method: Verify login success message with Registered user</td>
+<td></td>
+<td>3</td>
+<td>com.MyCAlerts.Testcases.TC01_LoginFlow@73f792cf</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC01_LoginFlow.TC01_AllowLogin_2()'><b>TC01_AllowLogin_2</b><br>Test class: com.MyCAlerts.Testcases.TC01_LoginFlow<br>Test method: Verify login success message with Admin user</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC01_LoginFlow@73f792cf</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration.TC01_AllowRegistration_1()'><b>TC01_AllowRegistration_1</b><br>Test class: com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration<br>Test method: Verify User Profile Page is displayed</td>
+<td></td>
+<td>0</td>
+<td>com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration@79698539</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration.TC01_AllowRegistration_2()'><b>TC01_AllowRegistration_2</b><br>Test class: com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration<br>Test method: Verify Registration Sucess with Mandatory Fields with one Notification</td>
+<td></td>
+<td>9</td>
+<td>com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration@79698539</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration.TC01_AllowRegistration_3()'><b>TC01_AllowRegistration_3</b><br>Test class: com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration<br>Test method: Verify Registration Sucess with Mandatory Fields with more than 1 Notification<br/>
+<a href="#Output-458817438" onClick='toggleBox("Output-458817438", this, "Show output", "Hide output");'>Show output</a>
+
+<a href="#Output-458817438" onClick="toggleAllBoxes();">Show all outputs</a>
+<div class='log' id="Output-458817438">
+smsNotification is Checked<br/>
+</div>
+</td>
+<td></td>
+<td>13</td>
+<td>com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration@79698539</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration.TC01_AllowRegistration_4()'><b>TC01_AllowRegistration_4</b><br>Test class: com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration<br>Test method: Verify Registration Sucess with Mandatory Fields with FirstName & last Name Blank</td>
+<td></td>
+<td>9</td>
+<td>com.MyCAlerts.Testcases.TC01_UserProfile_AllowRegistration@79698539</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC01_Admin_ListFilterEvents.TC01_ListFilterEvent_2()'><b>TC01_ListFilterEvent_2</b><br>Test class: com.MyCAlerts.Testcases.TC01_Admin_ListFilterEvents<br>Test method: Verify Admin User see all Event Types in Filter List</td>
+<td></td>
+<td>3</td>
+<td>com.MyCAlerts.Testcases.TC01_Admin_ListFilterEvents@6bf256fa</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration.TC02_DisAllowRegistration_2()'><b>TC02_DisAllowRegistration_2</b><br>Test class: com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration<br>Test method: Verify Registration not allowed with Invalid Phone Number</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration@79b4d0f</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration.TC02_DisAllowRegistration_3()'><b>TC02_DisAllowRegistration_3</b><br>Test class: com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration<br>Test method: Verify Registration not allowed with Invalid Email</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration@79b4d0f</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration.TC02_DisAllowRegistration_4()'><b>TC02_DisAllowRegistration_4</b><br>Test class: com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration<br>Test method: Verify Registration not allowed with Invalid ZipCode</td>
+<td></td>
+<td>6</td>
+<td>com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration@79b4d0f</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration.TC02_DisAllowRegistration_5()'><b>TC02_DisAllowRegistration_5</b><br>Test class: com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration<br>Test method: Verify Registration not allowed with Invalid Confirm Password</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration@79b4d0f</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration.TC02_DisAllowRegistration_6()'><b>TC02_DisAllowRegistration_6</b><br>Test class: com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration<br>Test method: Verify Registration not allowed with Invalid Password Characters</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration@79b4d0f</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration.TC02_DisAllowRegistration_8()'><b>TC02_DisAllowRegistration_8</b><br>Test class: com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration<br>Test method: Verify Registration not allowed with already registered user</td>
+<td></td>
+<td>9</td>
+<td>com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration@79b4d0f</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_disAllowLogin.TC02_DisallowLogin_1()'><b>TC02_DisallowLogin_1</b><br>Test class: com.MyCAlerts.Testcases.TC02_disAllowLogin<br>Test method: Verify login error message with nonregister user</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_disAllowLogin@6b2fad11</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_disAllowLogin.TC02_DisallowLogin_2()'><b>TC02_DisallowLogin_2</b><br>Test class: com.MyCAlerts.Testcases.TC02_disAllowLogin<br>Test method: Enter Blank Username & Verify the Error Mesg</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_disAllowLogin@6b2fad11</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_disAllowLogin.TC02_DisallowLogin_3()'><b>TC02_DisallowLogin_3</b><br>Test class: com.MyCAlerts.Testcases.TC02_disAllowLogin<br>Test method: Enter Blank Password & Verify the Error Mesg</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_disAllowLogin@6b2fad11</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_disAllowLogin.TC02_DisallowLogin_4()'><b>TC02_DisallowLogin_4</b><br>Test class: com.MyCAlerts.Testcases.TC02_disAllowLogin<br>Test method: Enter Blank Username & Password & Verify the Error Mesg</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_disAllowLogin@6b2fad11</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_disAllowLogin.TC02_DisallowLogin_5()'><b>TC02_DisallowLogin_5</b><br>Test class: com.MyCAlerts.Testcases.TC02_disAllowLogin<br>Test method: Verify Error Text Invalid Password</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_disAllowLogin@6b2fad11</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_disAllowLogin.TC02_NavigationManagementSession_2()'><b>TC02_NavigationManagementSession_2</b><br>Test class: com.MyCAlerts.Testcases.TC02_disAllowLogin<br>Test method: Verify User not able login on clicking back button after logout</td>
+<td></td>
+<td>2</td>
+<td>com.MyCAlerts.Testcases.TC02_disAllowLogin@6b2fad11</td></tr>
+<tr>
+<td title='com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration.TC03_CancelRegistration_1()'><b>TC03_CancelRegistration_1</b><br>Test class: com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration<br>Test method: Verify Registration not allowed with already registered user</td>
+<td></td>
+<td>4</td>
+<td>com.MyCAlerts.Testcases.TC02_UserProfile_DisAllowRegistration@79b4d0f</td></tr>
+</table><p>
+</body>
+</html>
