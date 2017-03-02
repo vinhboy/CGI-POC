@@ -36,6 +36,9 @@ describe('eventController', function() {
       expect($scope.notification.notificationType).toBe('ADMIN_E');
       expect($scope.notification.zipCodes).toBe('');
       expect($scope.notification.message).toBe('');
+      expect($scope.notification.submitting).toBe(false);
+      expect($scope.notification.defaultSubmitButtonText).toBe('SEND');
+      expect($scope.notification.submitButtonText).toBe('SEND');
     });
 
     it('should have these pattern validations', function() {
@@ -49,6 +52,30 @@ describe('eventController', function() {
   });
 
   describe('publishEvent', function() {
+    it('should set submit status to submitting', function() {
+      spyOn($scope, 'setAsSubmitting');
+      $scope.publishEvent({ $valid: true });
+      deferred.resolve({ status: 200, data: {} });
+      $scope.$apply();
+      expect($scope.setAsSubmitting).toHaveBeenCalled();
+    });
+
+    it('should set submit status to submitted when resolved successfully', function() {
+      spyOn($scope, 'setAsSubmitted');
+      $scope.publishEvent({ $valid: true });
+      deferred.resolve({ status: 200, data: {} });
+      $scope.$apply();
+      expect($scope.setAsSubmitted).toHaveBeenCalled();
+    });
+
+    it('should set submit status to submitted when failed', function() {
+      spyOn($scope, 'setAsSubmitted');
+      $scope.publishEvent({ $valid: true });
+      deferred.reject({ status: 404, data: {} });
+      $scope.$apply();
+      expect($scope.setAsSubmitted).toHaveBeenCalled();
+    });
+
     it('should call the EventNotificationService.publish', function() {
       $scope.publishEvent({ $valid: true });
       deferred.resolve({ status: 200, data: {} });
@@ -177,6 +204,34 @@ describe('eventController', function() {
       expect($scope.notification.zipCodesSplit[2]).toBe('34567');
       expect($scope.notification.zipCodesSplit[3]).toBe('69483');
       expect($scope.notification.zipCodesSplit[4]).toBe('39383');
+    });
+  });
+
+  describe('setAsSubmitting', function() {
+    it('should set the submitting flag to true', function () {
+      $scope.notification.submitting = false;
+      $scope.setAsSubmitting();
+      expect($scope.notification.submitting).toBe(true);
+    });
+
+    it('should set the submit button text to SUBMITTING...', function () {
+      $scope.notification.submitButtonText = 'Yankee';
+      $scope.setAsSubmitting();
+      expect($scope.notification.submitButtonText).toBe('SUBMITTING...');
+    });
+  });
+
+  describe('setAsSubmitted', function() {
+    it('should set the submitting flag to false', function () {
+      $scope.notification.submitting = true;
+      $scope.setAsSubmitted();
+      expect($scope.notification.submitting).toBe(false);
+    });
+
+    it('should set the submit button text back to SEND', function () {
+      $scope.notification.submitButtonText = 'Yankee';
+      $scope.setAsSubmitted();
+      expect($scope.notification.submitButtonText).toBe('SEND');
     });
   });
 });
