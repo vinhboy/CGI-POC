@@ -9,7 +9,7 @@ cgiWebApp.controller('eventController',
 
     $scope.notification = {
       messageMaxLength: 135,
-      notificationType: '',
+      notificationType: 'ADMIN_E',
       zipCodes: '',
       zipCodesSplit: [],
       message: ''

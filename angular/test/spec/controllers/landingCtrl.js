@@ -151,6 +151,19 @@ it('return the right sring for Sent by for ad-hocc', function() {
     expect(retString).toBe('Tom Cobbley');      
       
  });
+it('return the title for an event', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {title:'A title less than 20', type: 'ADMIN_I', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    selectedEvent.userId={firstName:'Tom', lastName:'Cobbley'};
+    
+    var retString = $scope.formatListTitle(selectedEvent);
+      expect(retString).toBe('A title less than 20');
+      
+    selectedEvent.title= 'A title that is more than 20';      
+    retString = $scope.formatListTitle(selectedEvent);
+    expect(retString).toBe('A title that is more...');      
+      
+ });
 
 
 });

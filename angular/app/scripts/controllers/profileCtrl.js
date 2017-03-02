@@ -31,6 +31,10 @@ cgiWebApp.controller('ProfileController',
       smsNotification: false
     };
 
+    if ($scope.isNew()) {
+      $scope.profile.emailNotification = true;
+    }
+
     if ($scope.isEdit()) {
       ProfileService.getProfile().then(function(response) {
         $scope.profile = response.data;
@@ -158,10 +162,6 @@ cgiWebApp.controller('ProfileController',
     } else {
       $scope.process();
     }
-  };
-
-  $scope.someSelected = function() {
-    return $scope.profile.emailNotification || $scope.profile.smsNotification;
   };
 
   $scope.isNew = function() {

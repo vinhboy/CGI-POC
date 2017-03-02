@@ -89,12 +89,14 @@ public class EventWeatherAPICallerServiceImpl extends APICallerServiceImpl {
         List<User> users = userDao.getGeoWithinRadius(geoJson, 15.00);
 
                 EventNotification eventNotification = new EventNotification();
+                // prod type for the title
+                eventNotification.setTitle(event.getProdType());
+                eventNotification.setType("Weather");
                 eventNotification.setCitizensAffected(users.size());
-                eventNotification.setDescription("Emergency alert: "+event.getProdType()+" in your area. Please log in at https://mycalerts.com/ for more information.");
+                eventNotification.setDescription("Emergency alert: "+ eventNotification.getType() +" - "+ eventNotification.getTitle() + ". Please log in at https://mycalerts.com/ for more information.");
                 eventNotification.setGenerationDate(new Date());
                 eventNotification.setGeometry(event.getGeometry());
                 eventNotification.setUrl1(event.getUrl());
-                eventNotification.setType("Weather");
                 eventNotification.setUserId(userDao.getAdminUser());
 
         if (users.size() > 0) {
@@ -110,7 +112,7 @@ public class EventWeatherAPICallerServiceImpl extends APICallerServiceImpl {
             }
             if (user.getEmailNotification()) {
               emailService.send(null, Arrays.asList(user.getEmail()),
-                  "Emergency alert from MyCAlerts: " + event.getProdType(),
+                  "Emergency alert from MyCAlerts: " + eventNotification.getType() + " - " + eventNotification.getTitle(),
                   eventNotification.getDescription());
             }
           }

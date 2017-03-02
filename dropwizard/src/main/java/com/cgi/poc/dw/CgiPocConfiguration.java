@@ -71,6 +71,9 @@ public class CgiPocConfiguration extends Configuration {
   @NotEmpty
   private String jwtSignatureSecret;
 
+  @NotNull
+  private Integer jwtExpiryInMinutes;
+
   /**
    * Jersey client default configuration.
    */
@@ -121,6 +124,16 @@ public class CgiPocConfiguration extends Configuration {
   @JsonProperty
   public void setJwtSignatureSecret(String jwtSignatureSecret) {
     this.jwtSignatureSecret = jwtSignatureSecret;
+  }
+
+  @JsonProperty
+  public Integer getJwtExpiryInMinutes() {
+    return jwtExpiryInMinutes;
+  }
+
+  @JsonProperty
+  public void setJwtExpiryInMinutes(Integer jwtExpiryInMinutes) {
+    this.jwtExpiryInMinutes = jwtExpiryInMinutes;
   }
 
   /**

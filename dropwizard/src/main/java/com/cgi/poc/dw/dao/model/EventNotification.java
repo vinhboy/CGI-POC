@@ -94,6 +94,11 @@ public class EventNotification implements Serializable {
     
     @Column(name = "citizensAffected")
     private Integer citizensAffected;
+
+    @Size(max = 500)
+    @Column(name = "title")
+    private String title;
+
     
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -186,6 +191,14 @@ public class EventNotification implements Serializable {
 
     public void setCitizensAffected(Integer citizensAffected) {
         this.citizensAffected = citizensAffected;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
   public User getUserId() {
