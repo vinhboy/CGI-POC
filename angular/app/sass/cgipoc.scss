@@ -140,7 +140,6 @@ and (max-device-width : 480px) {
       }
 
       .button_wrapper {
-        padding-left: 6em;
       }
     }
   }
@@ -148,6 +147,7 @@ and (max-device-width : 480px) {
   .contentZone {
     &.lightning-background {
       background: url("../images/backgrounds/lightning-480.jpg") #000000 center 0 no-repeat;
+      display: -ms-flexbox;
       overflow: inherit;
     }
   }
@@ -250,6 +250,7 @@ and (max-device-width : 768px) {
   .contentZone {
     &.lightning-background {
       background: url("../images/backgrounds/lightning-768.jpg") #000000 center 0 no-repeat;
+      display: -ms-flexbox;
       overflow: inherit;
     }
   }
@@ -353,6 +354,7 @@ and (max-device-width : 1024px) {
   .contentZone {
     &.lightning-background {
       background: url("../images/backgrounds/lightning-1024.jpg") #000000 center 0 no-repeat;
+      display: -ms-flexbox;
       overflow: inherit;
     }
   }
@@ -452,6 +454,7 @@ and (max-width : 1024px) {
   .contentZone {
     &.lightning-background {
       background: url("../images/backgrounds/lightning-768.jpg") #000000 center 0 no-repeat;
+      display: -ms-flexbox;
       overflow: inherit;
     }
   }
@@ -551,6 +554,7 @@ and (max-device-width : 1024px) {
   .contentZone {
     &.lightning-background {
       background: url("../images/backgrounds/lightning-1024.jpg") #000000 center 0 no-repeat;
+      display: -ms-flexbox;
       overflow: inherit;
     }
   }
@@ -650,6 +654,7 @@ and (min-width : 1025px) {
   .contentZone {
     &.lightning-background {
       background: url("../images/backgrounds/lightning-1080.jpg") #000000 center 0 no-repeat;
+      display: -ms-flexbox;
       overflow: inherit;
     }
   }
@@ -776,22 +781,30 @@ and (min-width : 1025px) {
         border: none !important;
         padding: 0;
 
-        img {
-          margin: 6px 8px 4px 6px;
-        }
-
         h5 {
           margin-top: 8px;
         }
 
-        .event-logo {
-          width: 4em;
+        &.event-logo {
+          width: 18%;
+          padding-right: 2%;
+
+          img {
+            width: 100%;
+            height: auto;
+          }
         }
 
+        &.event-content {
+          width: 68%;
+          height: auto;
+        }
+
+
         &.event-icons {
-          position: relative;
-          right: 0px;
-          padding: 0.25em 0;
+          width: 8%;
+          height: auto;
+          padding-left: 2%;
           font-size: 1.6em;
         }
       }
