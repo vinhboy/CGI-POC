@@ -469,6 +469,9 @@
   height: inherit;
   height: 500px; }
 
+.event-title {
+  font-weight: bold; }
+
 .event-details-container {
   border: solid;
   height: auto; }
