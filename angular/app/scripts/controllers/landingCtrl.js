@@ -137,9 +137,10 @@ cgiWebApp.controller('landingController',
       for (var i = 0; i < response.data.errors.length; i++) {
         if (response.data.errors[i].message) {
           $scope.apiErrors.push(response.data.errors[i].message);
-          $scope.loadingData=false;
         }
       }
+    }else {
+        $scope.apiErrors.push('External service returned data in unexpected format. We cannot display your events');
     }
    };
     $scope.convertApiData = function(data){
@@ -163,19 +164,21 @@ cgiWebApp.controller('landingController',
         if ($scope.role === 'ADMIN'){
              EventNotificationService.allNotifications().then(function(response) {
                  $scope.convertApiData(response.data);
-                 $scope.loadingData=false;
              }).catch(function(response) {
                         $scope.processApiErrors(response);
   
+             }).finally(function() {
+                 $scope.loadingData=false;
              });
         } else {
              EventNotificationService.userNotifications().then(function(response) {
                  $scope.convertApiData(response.data);
-                 $scope.loadingData=false;
              }).catch(function(response) {
                     // omce implemented...this changes to report an error
                         $scope.processApiErrors(response);
   
+             }).finally(function() {
+                 $scope.loadingData=false;
              });
             
         }

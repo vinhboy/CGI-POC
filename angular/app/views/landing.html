@@ -1,4 +1,17 @@
 <div class="usa-content">
+  <div class="usa-grid">
+    <div class="usa-alert usa-alert-error" role="alert" ng-if="apiErrors.length > 0">
+      <div class="usa-alert-body">
+        <h3 class="usa-alert-heading">Error</h3>
+        <ul>
+          <li ng-repeat="apiError in apiErrors">
+            {{ apiError }}
+          </li>
+        </ul>
+        <p class="usa-alert-text" translate="{{model.errorMessage}}"></p>
+      </div>
+    </div>
+  </div>
     <div class="usa-grid-full ">
         <h3 ng-if="role === 'ADMIN'"  class="usa-heading" translate="LANDING.ADMIN.TITLE"></h3>
         <h3 ng-if="role !== 'ADMIN'"  class="usa-heading" translate="LANDING.USER.TITLE"></h3>
