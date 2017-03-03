@@ -81,5 +81,6 @@
   "LANDING.FILTER.TITLE" : "Find events by",
   "LANDING.DETAILS.SENT_BY" : "Sent by",
   "LANDING.DETAILS.AFFECTED_ZIPS" : "Affected Zip Codes",
-  "LANDING.DETAILS.MESSAGE" : "Message"
+  "LANDING.DETAILS.MESSAGE" : "Message",
+  "LANDING.LOADING" : "Loading Events"
 }

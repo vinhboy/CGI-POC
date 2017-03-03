@@ -56,6 +56,7 @@ cgiWebApp.controller('landingController',
       notifications: []
     };
         $scope.model.displayedNotifications =[];
+    $scope.loadingData=true;
     
     $scope.eventTypeFilter=undefined;
     $scope.changeFilters = function(){
@@ -138,6 +139,8 @@ cgiWebApp.controller('landingController',
           $scope.apiErrors.push(response.data.errors[i].message);
         }
       }
+    }else {
+        $scope.apiErrors.push('External service returned data in unexpected format. We cannot display your events');
     }
    };
     $scope.convertApiData = function(data){
@@ -164,6 +167,8 @@ cgiWebApp.controller('landingController',
              }).catch(function(response) {
                         $scope.processApiErrors(response);
   
+             }).finally(function() {
+                 $scope.loadingData=false;
              });
         } else {
              EventNotificationService.userNotifications().then(function(response) {
@@ -172,6 +177,8 @@ cgiWebApp.controller('landingController',
                     // omce implemented...this changes to report an error
                         $scope.processApiErrors(response);
   
+             }).finally(function() {
+                 $scope.loadingData=false;
              });
             
         }
