@@ -11,7 +11,7 @@ public class EventNotificationDto {
 
   @Basic(optional = false)
   @NotNull
-  @Size(min = 5, max = 2048)
+  @Size(min = 1, max = 2048)
   private String description;
 
   @Basic(optional = false)

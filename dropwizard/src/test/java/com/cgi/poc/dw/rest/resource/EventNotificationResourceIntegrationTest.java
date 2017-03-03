@@ -174,21 +174,36 @@ public class EventNotificationResourceIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  public void invalidDescription() throws JSONException {
+  public void shortDescriptionsAreOK() throws JSONException, MessagingException, FolderException {
+    smtpServer.purgeEmailFromAllMailboxes();
     String authToken = IntegrationTestHelper.getAuthToken("admin100@cgi.com", "adminpw", RULE);
-    eventNotificationDto.setDescription("abc");
+
+    eventNotificationDto.setType("ADMIN_I");
+    String description = "a";
+    eventNotificationDto.setDescription(description);
+
     Client client = new JerseyClientBuilder().build();
     Response response = client.
-        target(String.format(url, RULE.getLocalPort())).
-        request().
-        header("Authorization", "Bearer " + authToken).
-        post(Entity.json(eventNotificationDto));
+            target(String.format(url, RULE.getLocalPort())).
+            request().
+            header("Authorization", "Bearer " + authToken).
+            post(Entity.json(eventNotificationDto));
 
-    Assert.assertEquals(422, response.getStatus());
-    JSONObject responseJo = new JSONObject(response.readEntity(String.class));
-    Assert.assertTrue(!StringUtils.isBlank(responseJo.optString("errors")));
-    Assert.assertEquals("[\"description size must be between 5 and 2048\"]",
-        responseJo.optString("errors"));
+    Assert.assertEquals(200, response.getStatus());
+
+    //verify email registration
+    smtpServer.waitForIncomingEmail(1);
+
+    MimeMessage[] receivedMails = smtpServer.getReceivedMessages();
+    assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
+
+    for(MimeMessage mail : receivedMails) {
+      assertTrue(GreenMailUtil.getHeaders(mail).contains("Non-emergency alert (ad hoc) from MyCAlerts"));
+      assertTrue(GreenMailUtil.getBody(mail).contains(description));
+    }
+    // BCC addresses are not contained in the message since other receivers are not allowed to know
+    // the list of BCC recipients
+    assertNull(receivedMails[0].getAllRecipients());
   }
 
   @Test
