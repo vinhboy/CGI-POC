@@ -43,7 +43,9 @@
 
     </div>
     <div ng-show="model.filteredNotifications.length === 0" class="usa-grid-full ">
-            <label for="options" translate="LANDING.NO_EVENT"></label>
+            <h2 ng-if="role !== 'ADMIN'" class="usa-heading-alt " translate="LANDING.USER.NO_EVENT_THANKS"></h3>
+            <p   ng-if="role !== 'ADMIN'" class="usa-heading-alt "  translate="LANDING.USER.NO_EVENT"></p>
+            <p   ng-if="role === 'ADMIN'" class="usa-heading-alt "  translate="LANDING.ADMIN.NO_EVENT"></p>
     </div>
 
 </div>
