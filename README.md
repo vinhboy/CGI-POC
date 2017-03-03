@@ -2,6 +2,8 @@
 
 https:Github.com/cgi-zahid/cgi-poc
 
+[Getting Started in CAlerts](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Getting%20Started%20in%20CAlerts.pdf)
+
 ![](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/MyCAlerts%20Logo.png)
 
 # I.	Technical Approach #
@@ -136,8 +138,6 @@ Source code for our iOS native application spike research can be found the {fold
 The application communicates with the relational database (MySQL) using Hibernate. We use standard jaxb bean validations for data validation. The data access objects and model objects are located [here](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/main/java/com/cgi/poc/dw/dao). 
 
 
-
-
 ## II.	A-T Responses and Evidence 
 
 **a.	Assigned one (1) leader and gave that person authority and responsibility and held that person accountable for the quality of the prototype submitted**
@@ -177,11 +177,13 @@ Commits can be viewed in GitHub: [https://github.com/CGI-Zahid/CGI-POC](https://
 
 **f.	Used Swagger to document the RESTful API, and provided a link to the Swagger API;**
 
-All communication with the middle tier was done using REST API.  Middle Tier exposes the REST API using JAX RX and is documented in Swagger.  
+All communication with the middle tier was done using REST API.  Middle Tier exposes the REST API using JAX RX and is documented in [Swagger](https://app.mycalerts.com/swagger).  
 
 **g.	Complied with Section 508 of the Americans with Disabilities Act and WCAG 2.0;**
 
 As part of our usability testing, we tested for [508 and WCAG 2.0 compliance.](https://github.com/CGI-Zahid/CGI-POC/tree/integration/README_Evidence/UI-UX/Usability%20Testing/508%20Compliance)  We used automated testing to test for readability and low vision.  We addressed errors as part of our backlog process.  Other testing results were evaluated to determine which to add to the backlog and ones that did not apply to our prototype.
+
+We used ACTF aDesigner
 
 **h.	Created or used a design style guide and/or a pattern library;**
 
