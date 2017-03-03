@@ -96,7 +96,7 @@ public class EventNotificationResourceIntegrationTest extends IntegrationTest {
     assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
 
     for(MimeMessage mail : receivedMails) {
-      assertTrue(GreenMailUtil.getHeaders(mail).contains("Emergency alert from MyCAlerts"));
+      assertTrue(GreenMailUtil.getHeaders(mail).contains("Emergency alert (ad hoc) from MyCAlerts"));
       assertTrue(GreenMailUtil.getBody(mail).contains(description));
     }
     // BCC addresses are not contained in the message since other receivers are not allowed to know 
@@ -131,7 +131,7 @@ public class EventNotificationResourceIntegrationTest extends IntegrationTest {
     assertEquals( "Should have received 1 emails.", 1, receivedMails.length);
 
     for(MimeMessage mail : receivedMails) {
-      assertTrue(GreenMailUtil.getHeaders(mail).contains("Non-emergency alert from MyCAlerts"));
+      assertTrue(GreenMailUtil.getHeaders(mail).contains("Non-emergency alert (ad hoc) from MyCAlerts"));
       assertTrue(GreenMailUtil.getBody(mail).contains(description));
     }
     // BCC addresses are not contained in the message since other receivers are not allowed to know 
