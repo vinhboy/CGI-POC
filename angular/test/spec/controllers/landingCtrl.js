@@ -164,6 +164,29 @@ it('return the title for an event', function() {
     expect(retString).toBe('A title that is more...');      
       
  });
-
+it('loadingData starts out true and get set to false', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {title:'A title less than 20', type: 'ADMIN_I', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    selectedEvent.userId={firstName:'Tom', lastName:'Cobbley'};
+    expect($scope.loadingData).toBe(true);      
+   
+    $scope.initLoad();
+    deferred.resolve({ status: 200, data: {} });
+    $scope.$apply();
+    expect($scope.loadingData).toBe(false);      
+      
+ });
+it('loadingData starts out true and get set to false even on error', function() {
+    var todaysDate = new Date();
+    var selectedEvent =  {title:'A title less than 20', type: 'ADMIN_I', generationDate: todaysDate, zipcodes: [], description: 'Pick up essentials and leave', citizensAffected: 111};
+    selectedEvent.userId={firstName:'Tom', lastName:'Cobbley'};
+    expect($scope.loadingData).toBe(true);      
+   
+    $scope.initLoad();
+    deferred.reject({ status: 404, data: {} });
+    $scope.$apply();
+    expect($scope.loadingData).toBe(false);      
+      
+ });
 
 });
