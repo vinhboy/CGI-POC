@@ -4,13 +4,14 @@
 
 [Obtain Admin and sample End User credential](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/MyCAlerts_GettingStarted.pdf)
 
-![](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Graphics/MyCAlerts%20Logo.png)
+[![LOGO](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Graphics/MyCAlerts%20Logo.png)](https://MyCAlerts.com)
+
 Link to our application:
-[https://MyCAlerts.com](https://MyCAlerts.com)
+[https://MyCAlerts.com]
 
 # I.	Technical Approach #
 
-CGI’s approach to the Pre-Qualified Vendor Pool for Digital Services – Agile Development (PQVP DS-AD) effort employed user-centric design techniques, a sprint based development workflow and modern and open-source technologies to design and build MyCAlerts, our implementation of Working Prototype B. MyCAlerts allows California residents to establish and manage user profiles, subscribe to receive **severe** fire/weather/flood/ad hoc alerts, and track their past notifications. Users can receive notifications via Short Message Service (SMS) and e-mail based on the street-location and contact information provided in their user profile.  MyCAlerts allows authorized administrative users to track and visualize events and send out notifications of ad hoc emergency and non-emergency events.
+CGI’s approach to the Pre-Qualified Vendor Pool for Digital Services – Agile Development (PQVP DS-AD) effort employed user-centric design techniques, a sprint based development workflow and modern and open-source technologies to design and build MyCAlerts, our implementation of Working Prototype B. MyCAlerts allows California residents to establish and manage user profiles, subscribe to receive severe fire/weather/flood/ad hoc alerts, and track their past notifications. Users can receive notifications via Short Message Service (SMS) and e-mail based on the street-location and contact information provided in their user profile.  MyCAlerts allows authorized administrative users to track and visualize events and send out notifications of ad hoc emergency and non-emergency events.
 
 ## Our Approach ##
 ### Sprint Zero###
