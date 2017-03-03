@@ -1,12 +1,12 @@
 
 
-[https://Github.com/cgi-zahid/cgi-poc](https://Github.com/cgi-zahid/cgi-poc)
+Github: [https://Github.com/cgi-zahid/cgi-poc](https://Github.com/cgi-zahid/cgi-poc)
 
 
 
 [![LOGO](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Graphics/MyCAlerts%20Logo.png)](https://MyCAlerts.com)
 
-Link to our application:
+Application:
 [https://MyCAlerts.com]
 
 [Obtain Admin and sample End User credential](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/MyCAlerts_GettingStarted.pdf)
@@ -24,7 +24,7 @@ We began with a review of the draft RFI. CGI established our team and began Spri
 
 Upon receipt of the final RFI, our Product Manager (PM) led a prototype analysis session.  The team came together and held a planning and sizing session to evaluate the complexity, team interest, and risks of each prototype. With great enthusiasm our team selected Working Prototype B.
 
-Based on initial user interviews, the PM selected the three datasets deemed most relevant to CA users. He selected to poll for automated emergency notifications wildfires (Active Fire Boundaries service from USGS GeoMAC), floods (River Gauge - Current and Forecast service from NOAA) and weather (Weather Hazards service from NOAA). 
+Based on initial user interviews, the PM selected the three datasets deemed most relevant to CA users. He elected to poll for the following automated emergency notifications: wildfires (Active Fire Boundaries service from USGS GeoMAC - every 15 minutes), floods (River Gauge - Current and Forecast service from NOAA - every 6 hours) and severe weather (Weather Hazards service from NOAA - every 15 minutes). 
 
 At the kickoff, our PM provided his vision for the prototype and a high-level [roadmap](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Process/Roadmap.pdf) for completion of the work. The team established roles and responsibilities as well as a collaborative [team agreement](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Team/Teaming%20Agreeement.pdf).  We solidified and established our team working relationships. Using the roadmap and prototype requirements, the team developed an initial series of user stories. Our PM prioritized these stories along with UX/UI and technical infrastructure setup stories to establish our product backlog.
 
