@@ -235,6 +235,10 @@ We deployed our software using Docker
 
 **s.	Provided sufficient documentation to install and run their prototype on another machine;**
 
+Below is a link to our install instructions.
+
+[Instructions](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Technology/Setup%20Instructions%20for%20Another%20Machine.pdf)
+
 **t.	Prototype and underlying platforms used to create and run the prototype are openly licensed and free of charge.**
 
 We used openly licensed and free of charge platforms
