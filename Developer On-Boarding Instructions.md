@@ -1,11 +1,8 @@
+# MyCAlerts POC project
 
-========
+## Developer Onboarding Instructions
 
-CAlerts POC project
-
-## Welcome to POC
-
-This is a prepatory site for the POC.
+See also the [Developer Onboarding List](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Technology/PQVP%20Developer%20Onboarding%20List.pdf)
 
 ## Getting Started
 
