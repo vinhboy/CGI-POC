@@ -50,7 +50,7 @@ See our [Team Photo Album](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evid
 
 With each iteration, the prototype became increasingly aligned to the vision of the PM, as well as the needs of our users. Our high-level roadmap included several user stories that ultimately were not included in the Working Prototype. These included [spike research](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Spike%20Research.pdf) for an iOS native client application and native push notification functionality. While both were not in the posted Minimum Viable Product (MVP), they are included in the product backlog, architecture artifacts and GitHub source code.
 
-Throughout the process, the team was able to coordinate work and monitor progress by using our Scrum board. We used JIRA to track user stories on an electronic board (as well as bugs), and maintained a physical board in the team room. We used Confluence for document sharing and [HipChat](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Communication/HipChat%20Team%20Communication%202017-2-21_15-27-38.png) as our team collaboration tool. Metrics were tracked so the team understood how they were doing and potential areas for process improvement with each Sprint. Metrics showed the team their development velocity, technical backlog, and what percent of story points actually was implemented with each sprint.
+Throughout the process, the team was able to coordinate work and monitor progress by using our [Scrum board](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Physical%20Scrum%20Board%20.png). We used [JIRA](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Example%20JIRA%20Board%20Sprint%203.pdf) to track user stories on an electronic board (as well as bugs), and maintained a physical board in the team room. We used Confluence for document sharing and [HipChat](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Communication/HipChat%20Team%20Communication%202017-2-21_15-27-38.png) as our team collaboration tool. Metrics were tracked so the team understood how they were doing and potential areas for process improvement with each Sprint. Metrics showed the team their development velocity, technical backlog, and what percent of story points actually was implemented with each sprint.
 
 ## Technology Stack ##
 
@@ -163,7 +163,7 @@ Our Team:
 
 **c.	Understood what people needed, by including people in the prototype development and design process;**
 
-CGI followed a user centric approach to the design and development of our prototype.  Our UX/UI designer engaged users early through the use of persona interviews and surveys.  The results of the interviews were quickly turned into wireframes.  The wireframes were refined based on user surveys.  The wireframes provided a quick and visual way to communicate to the developers the look and feel we wanted for the prototype so that development could begin once the PM approved the initial stories.  
+CGI followed a user-centric approach to the design and development of our prototype.  Our UX/UI designer engaged users early through the use of persona interviews and surveys.  The interview results were quickly turned into wireflows.  The wireflows were refined based on user surveys as well as usability testing with our users.  The wireflows provided a quick, visual way to communicate to developers the desired prototype look and feel so development could begin once the PM approved the initial stories.  
 
 We applied design techniques and tools including Persona Interviews, Wireflow Development, Usability Testing, and Lean UX to develop our UI. To support a responsive browser-based interface, we leveraged the guidelines from U.S. Web Design (USWD) for modern web standards and AngularJS. Applying these standards, along with input from users, allowed us to build a prototype that was simple and intuitive to navigate and use. We also tested for [ADA 508 and WCAG 2.0 ](https://github.com/CGI-Zahid/CGI-POC/tree/README_Evidence/README_Evidence/UI-UX/Usability%20Testing/508%20Compliance)compliance, using automated tools to test for adaptive reader support and other low vision options. 
 
@@ -212,7 +212,7 @@ We tested on:
 
 **l.	Used at least five (5) modern and open-source technologies, regardless of architectural layer (frontend, backend, etc.);**
 
-We used the following six (6) modern and open-source technologies and standards:
+We used the following six (6) modern and [open-source technologie](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Technology/PQVP%20Tool%20List.xlsx)s and standards:
 
 1.	USWDS
 2.	Docker
