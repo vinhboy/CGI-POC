@@ -12,8 +12,12 @@ cgiWebApp.controller('eventController',
       notificationType: 'ADMIN_E',
       zipCodes: '',
       zipCodesSplit: [],
-      message: ''
+      message: '',
+      submitting: false,
+      defaultSubmitButtonText: 'SEND'
     };
+
+    $scope.notification.submitButtonText = $scope.notification.defaultSubmitButtonText;
 
     $scope.regexZipCodes = /^\d{5}(?:\s*,\s*\d{5})*$/;
   };
@@ -41,6 +45,7 @@ cgiWebApp.controller('eventController',
     if (!form.$valid) {
       return;
     }
+    $scope.setAsSubmitting();
     $scope.generateZipCodes();
 
     var toPost = {
@@ -56,7 +61,19 @@ cgiWebApp.controller('eventController',
       $state.go('landing');
     }).catch(function(response) {
       $scope.processApiErrors(response);
+    }).finally(function() {
+      $scope.setAsSubmitted();
     });
+  };
+
+  $scope.setAsSubmitting = function() {
+    $scope.notification.submitting = true;
+    $scope.notification.submitButtonText = 'SUBMITTING...';
+  };
+
+  $scope.setAsSubmitted = function() {
+    $scope.notification.submitting = false;
+    $scope.notification.submitButtonText = $scope.notification.defaultSubmitButtonText;
   };
 
   $scope.init();

@@ -73,9 +73,9 @@
             <div>
               <br />
               <button type="button" class="usa-width-one-half usa-button-gray"
-                      translate="BUTTON.CANCEL" ui-sref="landing"></button>
+                ui-sref="landing">CANCEL</button>
               <button type="submit" class="usa-width-one-half usa-button-primary"
-                      translate="BUTTON.SEND" ng-disabled="!notificationForm.$dirty"></button>
+                ng-disabled="notificationForm.$pristine || notification.submitting">{{notification.submitButtonText}}</button>
             </div>
         </div>
       </fieldset>
