@@ -50,7 +50,7 @@ See our [Team Photo Album](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evid
 
 With each iteration, the prototype became increasingly aligned to the vision of the PM, as well as the needs of our users. Our high-level roadmap included several user stories that ultimately were not included in the Working Prototype. These included [spike research](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Spike%20Research.pdf) for an iOS native client application and native push notification functionality. While both were not in the posted Minimum Viable Product (MVP), they are included in the product backlog, architecture artifacts and GitHub source code.
 
-Throughout the process, the team was able to coordinate work and monitor progress by using our [Scrum board](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Physical%20Scrum%20Board%20.png). We used [JIRA](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Example%20JIRA%20Board%20Sprint%203.pdf) to track user stories on an electronic board (as well as bugs), and maintained a physical board in the team room. We used Confluence for document sharing and [HipChat](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Communication/HipChat%20Team%20Communication%202017-2-21_15-27-38.png) as our team collaboration tool. Metrics were tracked so the team understood how they were doing and potential areas for process improvement with each Sprint. Metrics showed the team their development velocity, technical backlog, and what percent of story points actually was implemented with each sprint.
+Throughout the process, the team was able to coordinate work and monitor progress by using our [Scrum board](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Physical%20Scrum%20Board%20.png). We used [JIRA](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/JIRA_Export.xlsx) to track user stories on an [electronic board](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Example%20JIRA%20Board%20Sprint%203.pdf) (as well as bugs), and maintained a physical board in the team room. We used Confluence for document sharing and [HipChat](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Communication/HipChat%20Team%20Communication%202017-2-21_15-27-38.png) as our team collaboration tool. Metrics were tracked so the team understood how they were doing and potential areas for process improvement with each Sprint. Metrics showed the team their development velocity, technical backlog, and what percent of story points actually was implemented with each sprint.
 
 ## Technology Stack ##
 
@@ -95,7 +95,7 @@ Here is an overview of the steps we followed in our approach:
 
 a.	Developer sets their local development environment using Docker files to mimic the operations environment and creates feature branches from the GitHub master branch (step 0). 
 
-b.	Developer creates unit tests (step 1) and writes the appropriate source code (step 2) to implement a user story/feature. 
+b.	Developer creates [unit tests](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Testing/Unit%20Functional%20Test%20Log.pdf) (step 1) and writes the appropriate source code (step 2) to implement a user story/feature. 
 
 c.	To merge the unit test and source code, developer submits a pull request; triggers code review by a peer developer; reviewer approves/ denies the merge into the integration branch; finally developer resolves the code review observations. Once the code review is approved, the feature branch is merged into the integration branch (step 4). 
 
@@ -130,8 +130,6 @@ The UI is built using AngularJS. Within the [angular folder](https://github.com/
 The frontend communicates with the backend using RESTful APIs. The frontend code invoking the services resides in a [services subfolder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/angular/app/scripts/services) under the scripts folder.
 
 Other backend code resides elsewhere in the DropWizard folder. For instance, user profile business logic resides in the [resource folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/main/java/com/cgi/poc/dw/rest/resource). Unit tests reside in the [test folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/test).
-
-Source code for our iOS native application spike research can be found the, to allow review of our future product development efforts.  
 
 ### Database ###
 
@@ -212,7 +210,7 @@ We tested on:
 
 **l.	Used at least five (5) modern and open-source technologies, regardless of architectural layer (frontend, backend, etc.);**
 
-We used the following six (6) modern and [open-source technologie](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Technology/PQVP%20Tool%20List.xlsx)s and standards:
+We used the following seven (7) modern and technologies and standards:
 
 1.	USWDS
 2.	Docker
@@ -220,6 +218,9 @@ We used the following six (6) modern and [open-source technologie](https://githu
 4.	Karma
 5.	Grunt
 6.	DropWizard v1.0.0
+7.	GULP
+
+A list of of all of our technologies is provided:[Technology List](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Technology/PQVP%20Tool%20List.xlsx).  The rows highlighted in green on the spreadsheet are the open source technologies.
 
 **m.	Deployed the prototype on an Infrastructure as a Service (IaaS) or Platform as Service (PaaS) provider, and indicated which provider they used;**
 
