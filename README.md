@@ -220,14 +220,14 @@ We tested on:
 
 **l.	Used at least five (5) modern and open-source technologies, regardless of architectural layer (frontend, backend, etc.);**
 
-We used the following six (6) modern and technologies and standards:
-
-1.	USWDS
+We used the following six (6) modern and open-source technologies:
+	
 2.	Docker
 3.	Bower
 4.	Karma
 5.	Grunt
 6.	DropWizard v1.0.0
+7.	USWDS
 
 
 A list of of all of our technologies is provided: [Technology List](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Technology/PQVP%20Tool%20List.xlsx).  The rows highlighted in green on the spreadsheet are the modern and open source technologies.
