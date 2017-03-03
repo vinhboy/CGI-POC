@@ -1,13 +1,15 @@
 
 
-[https:Github.com/cgi-zahid/cgi-poc](https:Github.com/cgi-zahid/cgi-poc)
+[https://Github.com/cgi-zahid/cgi-poc](https://Github.com/cgi-zahid/cgi-poc)
 
-[Obtain Admin and sample End User credential](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/MyCAlerts_GettingStarted.pdf)
+
 
 [![LOGO](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Graphics/MyCAlerts%20Logo.png)](https://MyCAlerts.com)
 
 Link to our application:
 [https://MyCAlerts.com]
+
+[Obtain Admin and sample End User credential](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/MyCAlerts_GettingStarted.pdf)
 
 # I.	Technical Approach #
 
@@ -82,7 +84,7 @@ We tested and deployed the prototype on Microsoft’s Azure Infrastructure as a 
 
 ## **Continuous Integration and Deployment** ##
 
-Our solution used GitHub to document code and unit test commits in our public [GitHub repository](https://github.com/CGI-Zahid/CGI-POC).  Our GitHub structure has master and integration branches as well as feature branches. Development of individual stories was done in a feature branch in a local environment. Before checking code in, developers issued a pull request to trigger a code review. Once the code review was approved, code was merged into the integration branch, triggering the continuous integration process. 
+Our solution used GitHub to document code and unit test commits in our public [GitHub repository](https://github.com/CGI-Zahid/CGI-POC/tree/master).  Our GitHub structure has master and integration branches as well as feature branches. Development of individual stories was done in a feature branch in a local environment. Before checking code in, developers issued a pull request to trigger a code review. Once the code review was approved, code was merged into the integration branch, triggering the continuous integration process. 
 
 Figure 3 displays the tools view and high level code migration from development to production using our CI/CD process. 
 
@@ -104,7 +106,7 @@ c.	To merge the unit test and [source code](https://github.com/CGI-Zahid/CGI-POC
 
 d.	Testers create automated functional scripts (step 3), which are merged in the integration branch (step 4). 
 
-e.	A pre-determined schedule, Jenkins compiles the source code and all unit tests are executed automatically (step 5). 
+e.	On a pre-determined schedule, Jenkins compiles the source code and all unit tests are executed automatically (step 5). 
 
 f.	If the unit tests fail, a notification is sent regarding the failure and the developer fixes it in the correspondent feature branch (step 15). Steps 4 and 5 are repeated until the unit tests pass.
 
@@ -159,7 +161,7 @@ Our Team:
 - Roberto Obando, Technical Architect
 - Gabriel Roth, Interaction Designer/User Researcher/Usability Tester/Visual Designer
 - Nicole Williams, Writer / Content Designer / Content Strategist
-- Dawna Floyd and Valon Sejdini, Frontend Developers
+- Dawna Floyd and Charles Jekal, Frontend Developers
 - Valon Sejdini and Andrew Lucas, Backend Developers
 - Sravan Neppalli, DevOps Engineer
 - Chuck Ritchie, Security Engineer
@@ -228,11 +230,11 @@ We used the following six (6) modern and technologies and standards:
 6.	DropWizard v1.0.0
 
 
-A list of of all of our technologies is provided:[Technology List](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Technology/PQVP%20Tool%20List.xlsx).  The rows highlighted in green on the spreadsheet are the open source technologies.
+A list of of all of our technologies is provided: [Technology List](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Technology/PQVP%20Tool%20List.xlsx).  The rows highlighted in green on the spreadsheet are the modern and open source technologies.
 
 **m.	Deployed the prototype on an Infrastructure as a Service (IaaS) or Platform as Service (PaaS) provider, and indicated which provider they used;**
 
-We used IaaS on Azure.
+We used Azure as our IaaS provider.
 
 **n.	Developed automated unit tests for their code;**
  
