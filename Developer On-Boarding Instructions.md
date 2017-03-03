@@ -13,6 +13,8 @@ This is a prepatory site for the POC.
 
 2. Ensure Perl is installed (ideally at `/usr/bin/perl`, type `which perl` to confirm)
 
+3. Install Docker, npm, and bower if you don't have them already.
+
 ## Using Docker/Docker Compose
 
 1. Ensure you are at the root of the project directory
@@ -53,4 +55,3 @@ If you need to shut down the docker containers: `./dc down`
 2. `grunt serve` to start up a development web server. You can browse to http://localhost:9000
 
 3. `grunt` when you are ready to serve from nginx. You can browse to http://localhost
-
