@@ -1,8 +1,8 @@
 
 
-https:Github.com/cgi-zahid/cgi-poc
+[https:Github.com/cgi-zahid/cgi-poc](https:Github.com/cgi-zahid/cgi-poc)
 
-[Getting Started in CAlerts](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Getting%20Started%20in%20CAlerts.pdf)
+[Obtain Admin and sample End User credential](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Getting%20Started%20in%20CAlerts.pdf)
 
 ![](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Graphics/MyCAlerts%20Logo.png)
 
@@ -21,11 +21,11 @@ Upon receipt of the final RFI, our Product Manager (PM) led a prototype analysis
 
 Based on initial user interviews, the PM selected the three datasets deemed most relevant to CA users. He selected to poll for automated emergency notifications wildfires (Active Fire Boundaries service from USGS GeoMAC), floods (River Gauge - Current and Forecast service from NOAA) and weather (Weather Hazards service from NOAA). 
 
-At the kickoff, our PM provided his vision for the prototype and a high-level roadmap for completion of the work. The team established roles and responsibilities as well as a collaborative team agreement.  We solidified and established our team working relationships. Using the roadmap and prototype requirements, the team developed an initial series of user stories. Our PM prioritized these stories along with UX/UI and technical infrastructure setup stories to establish our product backlog.
+At the kickoff, our PM provided his vision for the prototype and a high-level [roadmap](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Roadmap.pdf) for completion of the work. The team established roles and responsibilities as well as a collaborative [team agreement](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Team/Teaming%20Agreeement.pdf).  We solidified and established our team working relationships. Using the roadmap and prototype requirements, the team developed an initial series of user stories. Our PM prioritized these stories along with UX/UI and technical infrastructure setup stories to establish our product backlog.
 
 ### User-Centric – User Driven###
 
-Our UX/UI Designer facilitated a user centric – user driven design approach by engaging users early through the use of persona interviews and surveys. We leveraged AngularJS along with the standards and component set from the U.S. Web-design (USWDS) style guide for to implement a modern accessible web application.  We also tested for ADA 508 and WCAG 2.0 compliance. We tapped into users of various ages, roles, experiences, and backgrounds. During Sprint 1 we interviewed users and our results were quickly turned into wireflows leveraging a responsive design accommodating both desktop and mobile platforms. These wireflows were continuously refined based on user input. Our wireflows provided a visual to communicate the look and feel of the prototype to the developers. Beyond the initial design, users were engaged through usability testing and their input was evaluated and prioritized through improvement stories which were then added  in the product backlog for inclusion in subsequent sprints. 
+Our UX/UI Designer facilitated a user centric – user driven design approach by engaging users early through the use of [persona interviews](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Team/Teaming%20Agreeement.pdf) and surveys. We leveraged AngularJS along with the standards and component set from the [U.S. Web-design (USWDS) style guide](https://standards.usa.gov/) for to implement a modern accessible web application.  We also tested for [ADA 508 and WCAG 2.0 compliance](https://github.com/CGI-Zahid/CGI-POC/tree/README_Evidence/README_Evidence/UI-UX/Usability%20Testing/508%20Compliance). We tapped into users of various ages, roles, experiences, and backgrounds. During Sprint 1 we interviewed users and our results were quickly turned into [wireflows](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/UI-UX/MyCAlerts_SystemWireflow.pdf) leveraging a responsive design accommodating both desktop and mobile platforms. These wireflows were continuously refined based on user input. Our wireflows provided a visual to communicate the look and feel of the prototype to the developers. Beyond the initial design, users were engaged through usability testing and their input was evaluated and prioritized through improvement stories which were then added  in the product backlog for inclusion in subsequent sprints. 
 
 ### Agile Process###
 
@@ -39,18 +39,18 @@ Stand-Up - Monday-Friday @ 8:45 – 9:00 AM facilitated by the Agile Coach. Deve
 
 Backlog Grooming – Monday, our PM reviewed and reprioritized backlog items. The Agile coach and Delivery Manager supported the review and confirmed User Stories agreed with team’s “Definition of Ready”. 
 
-Sprint Review - Tuesday, the team presented completed User Stories in the Sprint to the PM for review and approval. Approved User stories aligned with the team’s “Definition of Done”.
+Sprint Review - Tuesday morning, the team presented completed User Stories in the Sprint to the PM for review and approval. Approved User stories aligned with the team’s “Definition of Done”.
 
-Sprint Retrospective – Tuesday, team reflected on how their tools, processes and peers performed on the recently completed sprint. Each team member was asked to identify one improvement trait they wanted to see the team start doing; one they wanted the team to stop doing and one they wanted the team to continue. 
+Sprint Retrospective – Tuesday morning, team reflected on how their tools, processes and peers performed on the recently completed sprint. Each team member was asked to identify one improvement trait they wanted to see the team start doing; one they wanted the team to stop doing and one they wanted the team to continue. 
  Facilitated by the Agile Coach, the identified start/stop/continue traits were consolidated and next steps defined by the team.
  
-Sprint Planning – Tuesday , a one hour session for the PM and team interactively discussed and agreed on the payload of the next sprint. Sizing of the items in the sprint was coordinated by the Agile Coach and Delivery Manager.  PlanITPoker.com was used for story estimation. 
+Sprint Planning – Tuesday afternoon, a one hour session for the PM and team interactively discussed and agreed on the payload of the next sprint. Sizing of the items in the sprint was coordinated by the Agile Coach and Delivery Manager.  [PlanITPoker.com](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Sprint%20Estimation%20Poker.jpg) was used for story estimation. 
 
-See our Team Photo Album for visual examples of the team and our agile process in action. 
+See our [Team Photo Album](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/TeamPhotoAlbum.pdf) for visual examples of the team and our agile process in action. 
 
-With each iteration, the prototype became increasingly aligned to the vision of the PM, as well as the needs of our users. Our high-level roadmap included several user stories that ultimately were not included in the Working Prototype. These included spike research for an iOS native client application and native push notification functionality. While both were not in the posted Minimum Viable Product (MVP), they are included in the product backlog, architecture artifacts and GitHub source code.
+With each iteration, the prototype became increasingly aligned to the vision of the PM, as well as the needs of our users. Our high-level roadmap included several user stories that ultimately were not included in the Working Prototype. These included [spike research](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Process/Spike%20Research.pdf) for an iOS native client application and native push notification functionality. While both were not in the posted Minimum Viable Product (MVP), they are included in the product backlog, architecture artifacts and GitHub source code.
 
-Throughout the process, the team was able to coordinate work and monitor progress by using our Scrum board. We used JIRA to track user stories on an electronic board (as well as bugs), and maintained a physical board in the team room. We used Confluence for document sharing and HipChat as our team collaboration tool. Metrics were tracked so the team understood how they were doing and potential areas for process improvement with each Sprint. Metrics showed the team their development velocity, technical backlog, and what percent of story points actually was implemented with each sprint.
+Throughout the process, the team was able to coordinate work and monitor progress by using our Scrum board. We used JIRA to track user stories on an electronic board (as well as bugs), and maintained a physical board in the team room. We used Confluence for document sharing and [HipChat](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Communication/HipChat%20Team%20Communication%202017-2-21_15-27-38.png) as our team collaboration tool. Metrics were tracked so the team understood how they were doing and potential areas for process improvement with each Sprint. Metrics showed the team their development velocity, technical backlog, and what percent of story points actually was implemented with each sprint.
 
 ## Technology Stack ##
 
@@ -113,7 +113,7 @@ i.	If the functional tests fail, a notification is sent (Step 14), and the devel
 
 j.	Once the functional tests succeed, a notification is sent regarding the successful test execution (Step 9). 
 
-k.	QA performs ad-hoc/manual tests. If these fail, developer is notified to fix the issue (Step 15). Steps 4, 5, 6, 7, 8, 9 and 10 are repeated until the ad-hoc tests pass. 
+k.	QA performs [ad-hoc/manual tests](https://github.com/CGI-Zahid/CGI-POC/tree/README_Evidence/README_Evidence/Testing). If these fail, developer is notified to fix the issue (Step 15). Steps 4, 5, 6, 7, 8, 9 and 10 are repeated until the ad-hoc tests pass. 
 
 l.	Once the error is fixed, the integration branch is merged with production tag in the master branch (Step 11).
  
@@ -131,7 +131,7 @@ The frontend communicates with the backend using RESTful APIs. The frontend code
 
 Other backend code resides elsewhere in the DropWizard folder. For instance, user profile business logic resides in the [resource folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/main/java/com/cgi/poc/dw/rest/resource). Unit tests reside in the [test folder](https://github.com/CGI-Zahid/CGI-POC/tree/integration/dropwizard/src/test).
 
-Source code for our iOS native application spike research can be found the {folder name}, to allow review of our future product development efforts.  
+Source code for our iOS native application spike research can be found the, to allow review of our future product development efforts.  
 
 ### Database ###
 
@@ -183,7 +183,7 @@ All communication with the middle tier was done using REST API.  Middle Tier exp
 
 As part of our usability testing, we tested for [508 and WCAG 2.0 compliance.](https://github.com/CGI-Zahid/CGI-POC/tree/integration/README_Evidence/UI-UX/Usability%20Testing/508%20Compliance)  We used automated testing to test for readability and low vision.  We addressed errors as part of our backlog process.  Other testing results were evaluated to determine which to add to the backlog and ones that did not apply to our prototype.
 
-We used ACTF aDesigner
+We used ACTF aDesigner for our 508 testing.
 
 **h.	Created or used a design style guide and/or a pattern library;**
 
@@ -200,6 +200,15 @@ Within each sprint, inputs received from the Product Manager, usability testers,
 **k.	Created a prototype that works on multiple devices, and presents a responsive design;**
 
 Our code has been testing using multiple devices and works with multiple web browsers.  In addition our code has been tested using Apple and Android devices.
+
+We tested on:
+
+1. PC: IE11; Chrome; Firefox
+2. Mac:  Safari 
+3. iPad: Chrome; Safari 
+4. iPhone: Safari 
+5. Android: Chrome
+
 
 **l.	Used at least five (5) modern and open-source technologies, regardless of architectural layer (frontend, backend, etc.);**
 
@@ -223,13 +232,14 @@ Before checking code into the feature branch developers do a pull request to tri
 **o.	Setup or used a continuous integration system to automate the running of tests and continuously deployed their code to their IaaS or PaaS provider;**
 
 We used Jenkins for continuous integration.  It grabs code from GitHub and compiles and executes tests.  If the code passes the tests then Docker creates an image.  The image is deployed to the system test environment where an end to end functional test is performed using Selenium.  
+
 **p.	Setup or used configuration management;**
 
 Azure container registries were used to store and manage our Docker images allowing us to manage configuration
 
 **q.	Setup or used continuous monitoring;**
 
-Azure and New Relic were used to continuously monitor the health of the environment and the application
+[Azure and New Relic](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Technology/Azure%20and%20New%20Relic%20Dashboard%20Screen%20Captures.pdf) were used to continuously monitor the health of the environment and the application
 
 **r.	Deployed their software in an open source container, such as Docker (i.e., utilized operating-system-level virtualization);**
 
@@ -245,7 +255,7 @@ Below is a link to our install instructions.
 
 We used openly licensed and free of charge platforms
 
-[List of software](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Technology/PQVP%20Tool%20List.xlsx)
+[List of tools](https://github.com/CGI-Zahid/CGI-POC/blob/README_Evidence/README_Evidence/Technology/PQVP%20Tool%20List.xlsx)
 
 ## III.	US Web Design Standards 
 Our process for the design and development of our prototype followed and met many of the standards outlined in the U.S. Digital Services Playbook.  We provided a detailed document on GitHub which links to our evidence, as well as our response to each item.
