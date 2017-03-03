@@ -104,6 +104,7 @@ public class EventNotificationServiceUnitTest {
 
     doNothing().when(emailService).send(anyString(), anyList(), anyString(), anyString());
     when(textMessageService.send(anyString(), anyString())).thenReturn(true);
+
   }
 
   @Test
@@ -157,28 +158,13 @@ public class EventNotificationServiceUnitTest {
   }
 
   @Test
-  public void publishNotification_InvalidDescription() {
+  public void publishNotification_ShortDescriptionsAreOK() {
 
     eventNotificationDto.setDescription("abc");
-    try {
-      Response actual = underTest.publishNotification(user, eventNotificationDto);
-      fail("Expected an exception to be thrown");
+    Response actual = underTest.publishNotification(user, eventNotificationDto);
 
-    } catch (ConstraintViolationException exception) {
-      Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-      for (ConstraintViolation violation : constraintViolations) {
-        String tmp = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
-        String annotation = violation.getConstraintDescriptor().getAnnotation().annotationType()
-            .getCanonicalName();
-
-        if (tmp.equals("description") && annotation.equals("javax.validation.constraints.Size")) {
-          assertThat(violation.getMessage())
-              .isEqualTo("size must be between 5 and 2048");
-        } else {
-          fail("not an expected constraint violation");
-        }
-      }
-    }
+    assertEquals(200, actual.getStatus());
+    assertEquals(eventNotification, actual.getEntity());
   }
 
     @Test
