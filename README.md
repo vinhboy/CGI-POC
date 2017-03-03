@@ -226,7 +226,7 @@ We used the following six (6) modern and open-source technologies:
 3.	Bower
 4.	Karma
 5.	Grunt
-6.	DropWizard v1.0.0
+6.	DropWizard
 7.	USWDS
 
 
