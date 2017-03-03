@@ -137,6 +137,7 @@ cgiWebApp.controller('landingController',
       for (var i = 0; i < response.data.errors.length; i++) {
         if (response.data.errors[i].message) {
           $scope.apiErrors.push(response.data.errors[i].message);
+          $scope.loadingData=false;
         }
       }
     }
