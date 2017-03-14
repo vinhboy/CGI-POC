@@ -11,6 +11,49 @@ Application:
 
 [Obtain Admin and sample End User credential](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/MyCAlerts_GettingStarted.pdf)
 
+## Getting started
+
+```console
+$ git clone https://github.com/CGI-Zahid/CGI-POC.git
+```
+
+Install npm and bower dependencies
+
+```console
+$ cd CGI-POC/angular
+$ npm install
+$ bower install
+$ grunt build
+```
+
+Download and install Docker from [The Docker Store](https://store.docker.com/search?type=edition&offering=community)
+
+Build and run docker images using docker-compose
+
+```console
+$ docker-compose up -d
+```
+
+Enter the dropwizard container to start the dropwizard application
+
+```console
+$ docker-compose exec dropwizard /bin/bash
+```
+
+Compile and run the dropwizard application
+
+```console
+$ mvn clean package
+$ java -jar target/cgi-poc-dw-1.0-SNAPSHOT.jar db migrate config.yml
+$ java -jar target/cgi-poc-dw-1.0-SNAPSHOT.jar server config.yml
+```
+
+Access the application via
+
+```
+http://localhost/
+```
+
 # I.	Technical Approach #
 
 CGI’s approach to the Pre-Qualified Vendor Pool for Digital Services – Agile Development (PQVP DS-AD) effort employed user-centric design techniques, a sprint based development workflow and modern and open-source technologies to design and build MyCAlerts, our implementation of Working Prototype B. MyCAlerts allows California residents to establish and manage user profiles, subscribe to receive severe fire/weather/flood/ad hoc alerts, and track their past notifications. Users can receive notifications via Short Message Service (SMS) and e-mail based on the street-location and contact information provided in their user profile.  MyCAlerts allows authorized administrative users to track and visualize events and send out notifications of ad hoc emergency and non-emergency events.
@@ -24,34 +67,34 @@ We began with a review of the draft RFI. CGI established our team and began Spri
 
 Upon receipt of the final RFI, our Product Manager (PM) led a prototype analysis session.  The team came together and held a planning and sizing session to evaluate the complexity, team interest, and risks of each prototype. With great enthusiasm our team selected Working Prototype B.
 
-Based on initial user interviews, the PM selected the three datasets deemed most relevant to CA users. He elected to poll for the following automated emergency notifications: wildfires (Active Fire Boundaries service from USGS GeoMAC - every 15 minutes), floods (River Gauge - Current and Forecast service from NOAA - every 6 hours) and severe weather (Weather Hazards service from NOAA - every 15 minutes). 
+Based on initial user interviews, the PM selected the three datasets deemed most relevant to CA users. He elected to poll for the following automated emergency notifications: wildfires (Active Fire Boundaries service from USGS GeoMAC - every 15 minutes), floods (River Gauge - Current and Forecast service from NOAA - every 6 hours) and severe weather (Weather Hazards service from NOAA - every 15 minutes).
 
 At the kickoff, our PM provided his vision for the prototype and a high-level [roadmap](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Process/Roadmap.pdf) for completion of the work. The team established roles and responsibilities as well as a collaborative [team agreement](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Team/Teaming%20Agreeement.pdf).  We solidified and established our team working relationships. Using the roadmap and prototype requirements, the team developed an initial series of user stories. Our PM prioritized these stories along with UX/UI and technical infrastructure setup stories to establish our product backlog.
 
 ### User-Centric – User Driven###
 
-Our UX/UI Designer facilitated a user centric – user driven design approach by engaging users early through the use of [persona interviews](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/UI-UX/MyCAlerts_Personas.pdf) and [surveys](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/UI-UX/Usability%20Testing/MyCAlerts_End-User_AuthorizedParticipantExitQuestionnaire.pdf). We leveraged AngularJS along with the standards and component set from the [U.S. Web-design (USWDS) style guide](https://standards.usa.gov/) to implement a modern accessible web application.  We also tested for [ADA 508 and WCAG 2.0 compliance](https://github.com/CGI-Zahid/CGI-POC/tree/master/README_Evidence/UI-UX/Usability%20Testing/508%20Compliance). We tapped into users of various ages, roles, experiences, and backgrounds. During Sprint 1 we interviewed users and our results were quickly turned into [wireflows](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/UI-UX/MyCAlerts_SystemWireflow.pdf) leveraging a responsive design accommodating both desktop and mobile platforms. These wireflows were continuously refined based on user input. Our wireflows provided a visual to communicate the look and feel of the prototype to the developers. Beyond the initial design, users were engaged through usability testing and their input was evaluated and prioritized through improvement stories which were then added  in the product backlog for inclusion in subsequent sprints. 
+Our UX/UI Designer facilitated a user centric – user driven design approach by engaging users early through the use of [persona interviews](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/UI-UX/MyCAlerts_Personas.pdf) and [surveys](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/UI-UX/Usability%20Testing/MyCAlerts_End-User_AuthorizedParticipantExitQuestionnaire.pdf). We leveraged AngularJS along with the standards and component set from the [U.S. Web-design (USWDS) style guide](https://standards.usa.gov/) to implement a modern accessible web application.  We also tested for [ADA 508 and WCAG 2.0 compliance](https://github.com/CGI-Zahid/CGI-POC/tree/master/README_Evidence/UI-UX/Usability%20Testing/508%20Compliance). We tapped into users of various ages, roles, experiences, and backgrounds. During Sprint 1 we interviewed users and our results were quickly turned into [wireflows](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/UI-UX/MyCAlerts_SystemWireflow.pdf) leveraging a responsive design accommodating both desktop and mobile platforms. These wireflows were continuously refined based on user input. Our wireflows provided a visual to communicate the look and feel of the prototype to the developers. Beyond the initial design, users were engaged through usability testing and their input was evaluated and prioritized through improvement stories which were then added  in the product backlog for inclusion in subsequent sprints.
 
 ### Agile Process###
 
-We followed an agile process (Figure 1) of weekly sprint cycles, with each cycle starting on Wednesday and ending the following Tuesday. 
+We followed an agile process (Figure 1) of weekly sprint cycles, with each cycle starting on Wednesday and ending the following Tuesday.
 
 *Figure 1 - Our Agile Process*
 ![Figure 1 - Our Agile Process](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Graphics/Agile%20Sprint%20Cycle%20-%20New.png)
 
 Each week Sprint rituals included:
-Stand-Up - Monday-Friday @ 8:45 – 9:00 AM facilitated by the Agile Coach. Development team members reported work completed since the last session; planned work before the next session and any blockers. Blockers identified were cleared by the Agile Coach and Delivery Manager. Stand-Up provided a great forum for coordination  across the team. 
+Stand-Up - Monday-Friday @ 8:45 – 9:00 AM facilitated by the Agile Coach. Development team members reported work completed since the last session; planned work before the next session and any blockers. Blockers identified were cleared by the Agile Coach and Delivery Manager. Stand-Up provided a great forum for coordination  across the team.
 
-Backlog Grooming – Monday, our PM reviewed and reprioritized backlog items. The Agile coach and Delivery Manager supported the review and confirmed User Stories agreed with team’s “Definition of Ready”. 
+Backlog Grooming – Monday, our PM reviewed and reprioritized backlog items. The Agile coach and Delivery Manager supported the review and confirmed User Stories agreed with team’s “Definition of Ready”.
 
 Sprint Review - Tuesday morning, the team presented completed User Stories in the Sprint to the PM for review and approval. Approved User stories aligned with the team’s “Definition of Done”.
 
-Sprint Retrospective – Tuesday morning, team reflected on how their tools, processes and peers performed on the recently completed sprint. Each team member was asked to identify one improvement trait they wanted to see the team start doing; one they wanted the team to stop doing and one they wanted the team to continue. 
+Sprint Retrospective – Tuesday morning, team reflected on how their tools, processes and peers performed on the recently completed sprint. Each team member was asked to identify one improvement trait they wanted to see the team start doing; one they wanted the team to stop doing and one they wanted the team to continue.
  Facilitated by the Agile Coach, the identified start/stop/continue traits were consolidated and next steps defined by the team.
- 
-Sprint Planning – Tuesday afternoon, a one hour session for the PM and team interactively discussed and agreed on the payload of the next sprint. Sizing of the items in the sprint was coordinated by the Agile Coach and Delivery Manager.  [PlanITPoker.com](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Process/Sprint%20Estimation%20Poker.jpg) was used for story estimation. 
 
-See our [Team Photo Album](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Process/CGITeamPhotoAlbum.pdf) for visual examples of the team and our agile process in action. 
+Sprint Planning – Tuesday afternoon, a one hour session for the PM and team interactively discussed and agreed on the payload of the next sprint. Sizing of the items in the sprint was coordinated by the Agile Coach and Delivery Manager.  [PlanITPoker.com](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Process/Sprint%20Estimation%20Poker.jpg) was used for story estimation.
+
+See our [Team Photo Album](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Process/CGITeamPhotoAlbum.pdf) for visual examples of the team and our agile process in action.
 
 With each iteration, the prototype became increasingly aligned to the vision of the PM, as well as the needs of our users. Our high-level roadmap included several user stories that ultimately were not included in the Working Prototype. These included [spike research](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Process/Spike%20Research.pdf) for an iOS native client application and native push notification functionality. While both were not in the posted Minimum Viable Product (MVP), they are included in the product backlog, architecture artifacts and GitHub source code.
 
@@ -71,12 +114,12 @@ For every technology decision, we considered open options, resulting in a stack 
 - Jasmine JavaScript testing
 - Karma test runner
 - Mockito mock test dependent services in the development environment
-- Selenium automated running of functional tests 
+- Selenium automated running of functional tests
 
 From a DevOps standpoint:
 
 - Jenkins configuration management
-- CI platform continuous build, test, and prep for deployment to Docker. 
+- CI platform continuous build, test, and prep for deployment to Docker.
 - Docker containerization solution for its cross-platform robustness for  deployments from non-production to production environments
 - Docker images development environment, allowing new developers to get up and running quickly.
 
@@ -84,9 +127,9 @@ We tested and deployed the prototype on Microsoft’s Azure Infrastructure as a 
 
 ## **Continuous Integration and Deployment** ##
 
-Our solution used GitHub to document code and unit test commits in our public [GitHub repository](https://github.com/CGI-Zahid/CGI-POC/tree/master).  Our GitHub structure has master and integration branches as well as feature branches. Development of individual stories was done in a feature branch in a local environment. Before checking code in, developers issued a pull request to trigger a code review. Once the code review was approved, code was merged into the integration branch, triggering the continuous integration process. 
+Our solution used GitHub to document code and unit test commits in our public [GitHub repository](https://github.com/CGI-Zahid/CGI-POC/tree/master).  Our GitHub structure has master and integration branches as well as feature branches. Development of individual stories was done in a feature branch in a local environment. Before checking code in, developers issued a pull request to trigger a code review. Once the code review was approved, code was merged into the integration branch, triggering the continuous integration process.
 
-Figure 3 displays the tools view and high level code migration from development to production using our CI/CD process. 
+Figure 3 displays the tools view and high level code migration from development to production using our CI/CD process.
 
 *Figure 3 – Continuous Integration and Deployment (Tools)*
 ![Figure 3 – Continuous Integration and Deployment ](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Graphics/CI%20and%20Deployment%20Graphic.%20-%20Tool%20View.png)
@@ -98,31 +141,31 @@ Jenkins retrieved the code from GitHub, built the application, and executed unit
 
 Here is an overview of the steps we followed in our approach:
 
-a.	Developer sets their local development environment using Docker files to mimic the operations environment and creates feature branches from the GitHub master branch (step 0). 
+a.	Developer sets their local development environment using Docker files to mimic the operations environment and creates feature branches from the GitHub master branch (step 0).
 
-b.	Developer creates [unit tests](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Testing/Unit%20Functional%20Test%20Log.pdf) (step 1) and writes the appropriate source code (step 2) to implement a user story/feature. 
+b.	Developer creates [unit tests](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Testing/Unit%20Functional%20Test%20Log.pdf) (step 1) and writes the appropriate source code (step 2) to implement a user story/feature.
 
-c.	To merge the unit test and [source code](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Process/Source%20Code%20Management.pdf), developer submits a pull request; triggers code review by a peer developer; reviewer approves/ denies the merge into the integration branch; finally developer resolves the code review observations. Once the code review is approved, the feature branch is merged into the integration branch (step 4). 
+c.	To merge the unit test and [source code](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Process/Source%20Code%20Management.pdf), developer submits a pull request; triggers code review by a peer developer; reviewer approves/ denies the merge into the integration branch; finally developer resolves the code review observations. Once the code review is approved, the feature branch is merged into the integration branch (step 4).
 
-d.	Testers create automated functional scripts (step 3), which are merged in the integration branch (step 4). 
+d.	Testers create automated functional scripts (step 3), which are merged in the integration branch (step 4).
 
-e.	On a pre-determined schedule, Jenkins compiles the source code and all unit tests are executed automatically (step 5). 
+e.	On a pre-determined schedule, Jenkins compiles the source code and all unit tests are executed automatically (step 5).
 
 f.	If the unit tests fail, a notification is sent regarding the failure and the developer fixes it in the correspondent feature branch (step 15). Steps 4 and 5 are repeated until the unit tests pass.
 
-g.	Once the unit tests pass, Jenkins executes Docker files to build the Docker images for the UI and the backend (Step 6). 
+g.	Once the unit tests pass, Jenkins executes Docker files to build the Docker images for the UI and the backend (Step 6).
 
-h.	Docker pushes the images to the Azure Registry (Step 7), and then deploys them to the test environment where the functional tests are executed automatically (Step 8). 
+h.	Docker pushes the images to the Azure Registry (Step 7), and then deploys them to the test environment where the functional tests are executed automatically (Step 8).
 
-i.	If the functional tests fail, a notification is sent (Step 14), and the developers fix the issues (Step 15). Steps 4, 5, 6, 7 and 8 are repeated until the functional tests pass. 
+i.	If the functional tests fail, a notification is sent (Step 14), and the developers fix the issues (Step 15). Steps 4, 5, 6, 7 and 8 are repeated until the functional tests pass.
 
-j.	Once the functional tests succeed, a notification is sent regarding the successful test execution (Step 9). 
+j.	Once the functional tests succeed, a notification is sent regarding the successful test execution (Step 9).
 
-k.	QA performs [ad-hoc/manual tests](https://github.com/CGI-Zahid/CGI-POC/tree/master/README_Evidence/Testing). If these fail, developer is notified to fix the issue (Step 15). Steps 4, 5, 6, 7, 8, 9 and 10 are repeated until the ad-hoc tests pass. 
+k.	QA performs [ad-hoc/manual tests](https://github.com/CGI-Zahid/CGI-POC/tree/master/README_Evidence/Testing). If these fail, developer is notified to fix the issue (Step 15). Steps 4, 5, 6, 7, 8, 9 and 10 are repeated until the ad-hoc tests pass.
 
 l.	Once the error is fixed, the integration branch is merged with production tag in the master branch (Step 11).
- 
-m.	Finally, the image created for testing is deployed to the production environment (Step 12). 
+
+m.	Finally, the image created for testing is deployed to the production environment (Step 12).
 
 ## Code Flow ##
 
@@ -146,16 +189,16 @@ Unit tests reside in the [test folder](https://github.com/CGI-Zahid/CGI-POC/tree
 
 The application communicates with the relational database (MySQL) using Hibernate. We use standard jaxb bean validations for data validation. The data access objects and model objects are located in the [dao folder](https://github.com/CGI-Zahid/CGI-POC/tree/master/dropwizard/src/main/java/com/cgi/poc/dw/dao).
 
-## II.	A-T Responses and Evidence 
+## II.	A-T Responses and Evidence
 
 **a.	Assigned one (1) leader and gave that person authority and responsibility and held that person accountable for the quality of the prototype submitted**
 
-During the RFI evaluation, CGI selected a Product Manager (PM) based on his technical and management experience.  CGI gave the PM final decision making authority on the design and development of the prototype. 
+During the RFI evaluation, CGI selected a Product Manager (PM) based on his technical and management experience.  CGI gave the PM final decision making authority on the design and development of the prototype.
 
 **b.	Assembled a multidisciplinary and collaborative team that includes, at a minimum, five (5) of the labor categories as identified in Attachment B: PQVP DS-AD Labor Category Descriptions**
 
 Under the PM’s leadership, CGI assembled a multidisciplinary team with various technical and Agile capabilities.  
-Our Team:	
+Our Team:
 
 - Zahid Ali, Product Manager
 - Roberto Obando, Technical Architect
@@ -173,7 +216,7 @@ Our Team:
 
 CGI followed a user-centric approach to the design and development of our prototype.  Our UX/UI designer engaged users early through the use of persona interviews and surveys.  The interview results were quickly turned into wireflows.  The wireflows were refined based on user surveys as well as usability testing with our users.  The wireflows provided a quick, visual way to communicate to developers the desired prototype look and feel so development could begin once the PM approved the initial stories.  
 
-We applied design techniques and tools including Persona Interviews, Wireflow Development, Usability Testing, and Lean UX to develop our UI. To support a responsive browser-based interface, we leveraged the guidelines from U.S. Web Design (USWD) for modern web standards and AngularJS. Applying these standards, along with input from users, allowed us to build a prototype that was simple and intuitive to navigate and use. We also tested for [ADA 508 and WCAG 2.0 ](https://github.com/CGI-Zahid/CGI-POC/tree/master/README_Evidence/UI-UX/Usability%20Testing/508%20Compliance)compliance, using automated tools to test for adaptive reader support and other low vision options. 
+We applied design techniques and tools including Persona Interviews, Wireflow Development, Usability Testing, and Lean UX to develop our UI. To support a responsive browser-based interface, we leveraged the guidelines from U.S. Web Design (USWD) for modern web standards and AngularJS. Applying these standards, along with input from users, allowed us to build a prototype that was simple and intuitive to navigate and use. We also tested for [ADA 508 and WCAG 2.0 ](https://github.com/CGI-Zahid/CGI-POC/tree/master/README_Evidence/UI-UX/Usability%20Testing/508%20Compliance)compliance, using automated tools to test for adaptive reader support and other low vision options.
 
 **d.	Used at least a minimum of three (3) “user-centric design” techniques and/or tools;**
 
@@ -195,11 +238,11 @@ We used ACTF aDesigner for our 508 testing.
 
 **h.	Created or used a design style guide and/or a pattern library;**
 
-UX/UI created a style guide using the [US Web Design Standards](https://standards.usa.gov/).  Our color scheme was selected based on State of California colors and approved by user feedback.  Applying the US Web Design Standards along with input from users allowed us to build a prototype which was simple and intuitive to navigate and use. 
+UX/UI created a style guide using the [US Web Design Standards](https://standards.usa.gov/).  Our color scheme was selected based on State of California colors and approved by user feedback.  Applying the US Web Design Standards along with input from users allowed us to build a prototype which was simple and intuitive to navigate and use.
 
 **i.	Performed usability tests with people;**
 
-As part of our user centric approach we incorporated [usability testing](https://github.com/CGI-Zahid/CGI-POC/tree/master/README_Evidence/UI-UX/Usability%20Testing) into our process.  Usability testing was done through user surveys on our wireframes as well as feedback from users who tested our prototype throughout our sprints.  Feedback from the usability tests was evaluated by PM and UX designer to determine what to include in the backlog.  Based on PM direction new stories were created, prioritized, and placed in our backlog. 
+As part of our user centric approach we incorporated [usability testing](https://github.com/CGI-Zahid/CGI-POC/tree/master/README_Evidence/UI-UX/Usability%20Testing) into our process.  Usability testing was done through user surveys on our wireframes as well as feedback from users who tested our prototype throughout our sprints.  Feedback from the usability tests was evaluated by PM and UX designer to determine what to include in the backlog.  Based on PM direction new stories were created, prioritized, and placed in our backlog.
 
 **j.	Used an iterative approach, where feedback informed subsequent work or versions of the prototype;**
 
@@ -212,16 +255,16 @@ Our code has been testing using multiple devices and works with multiple web bro
 We tested on:
 
 1. PC: IE11; Chrome; Firefox
-2. Mac:  Safari 
-3. iPad: Chrome; Safari 
-4. iPhone: Safari 
+2. Mac:  Safari
+3. iPad: Chrome; Safari
+4. iPhone: Safari
 5. Android: Chrome
 
 
 **l.	Used at least five (5) modern and open-source technologies, regardless of architectural layer (frontend, backend, etc.);**
 
 We used the following six (6) modern and open-source technologies:
-	
+
 2.	Docker
 3.	Bower
 4.	Karma
@@ -237,7 +280,7 @@ A list of of all of our technologies is provided: [Technology List](https://gith
 We used Azure as our IaaS provider.
 
 **n.	Developed automated unit tests for their code;**
- 
+
 Before checking code into the feature branch developers do a pull request to trigger a code review.  Once the code review is approved the code is merged into the integration branch which triggers the continuous deployment process.  
 
 **o.	Setup or used a continuous integration system to automate the running of tests and continuously deployed their code to their IaaS or PaaS provider;**
@@ -268,11 +311,7 @@ We used openly licensed and free of charge platforms
 
 [List of tools](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/Technology/PQVP%20Tool%20List.xlsx)
 
-## III.	US Web Design Standards 
+## III.	US Web Design Standards
 Our process for the design and development of our prototype followed and met many of the standards outlined in the U.S. Digital Services Playbook.  We provided a detailed document on GitHub which links to our evidence, as well as our response to each item.
 
 [Our US Digital Service Playbook Responses ](https://github.com/CGI-Zahid/CGI-POC/blob/master/README_Evidence/US%20Digital%20Playbook%20Checklist.xlsx)
-
-
-
-
